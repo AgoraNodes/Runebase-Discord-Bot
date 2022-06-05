@@ -5,7 +5,7 @@ export const updateBotSettings = async (
   res,
   next,
 ) => {
-  const settings = await db.bots.findOne({
+  const settings = await db.setting.findOne({
     where: {
       id: req.body.id,
     },
@@ -19,6 +19,7 @@ export const updateBotSettings = async (
   res.locals.result = await settings.update({
     enabled: req.body.enabled,
     maintenance: req.body.maintenance,
+    discordHomeServerGuildId: req.body.guildId,
   });
   next();
 };
@@ -29,7 +30,7 @@ export const fetchBotSettings = async (
   next,
 ) => {
   res.locals.name = 'botSettings';
-  res.locals.count = await db.bots.count();
-  res.locals.result = await db.bots.findAll();
+  res.locals.count = await db.setting.count();
+  res.locals.result = await db.setting.findAll();
   next();
 };

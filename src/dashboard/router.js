@@ -57,7 +57,6 @@ import {
 
 import { verifyMyCaptcha } from './controllers/recaptcha';
 
-
 import {
   fetchDashboardUsers,
 } from './controllers/dashboardUsers';
@@ -97,12 +96,12 @@ import {
   fetchUser,
 } from './controllers/user';
 
-
 // import storeIp from './helpers/storeIp';
 
 const requireSignin = passport.authenticate('local', {
   session: true,
   failWithError: true,
+  keepSessionInfo: true,
 });
 
 const IsAuthenticated = (req, res, next) => {
