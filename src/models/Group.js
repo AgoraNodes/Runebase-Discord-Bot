@@ -38,6 +38,7 @@ module.exports = (sequelize, DataTypes) => {
   const GroupModel = sequelize.define('group', modelDefinition, modelOptions);
 
   GroupModel.associate = (model) => {
+    GroupModel.hasMany(model.active);
     GroupModel.hasMany(model.channel);
   };
 

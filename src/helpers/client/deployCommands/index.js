@@ -8,9 +8,10 @@ config();
 
 const commands = [
   new SlashCommandBuilder().setName('help').setDescription('DM\'s you with a help message'),
-  new SlashCommandBuilder().setName('deposit').setDescription('Replies with a deposit address!'),
-  new SlashCommandBuilder().setName('account').setDescription('Replies with account info'),
+  // new SlashCommandBuilder().setName('account').setDescription('Replies with account info'),
   new SlashCommandBuilder().setName('myrank').setDescription('Replies with user\'s rank'),
+  new SlashCommandBuilder().setName('deposit').setDescription('Replies with your deposit address!'),
+  new SlashCommandBuilder().setName('withdraw').setDescription('Starts Withdrawal process'),
 ].map((command) => command.toJSON());
 
 export const deployCommands = async (

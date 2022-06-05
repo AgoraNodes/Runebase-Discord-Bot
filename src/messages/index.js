@@ -504,14 +504,20 @@ export const helpMessage = (withdraw) => {
   const result = new MessageEmbed()
     .setColor(settings.bot.color)
     .setTitle(`${`${settings.bot.name} v${pjson.version}`} Help`)
-    .setDescription(`\`${settings.bot.command.discord}\`
+    .setDescription(`\`${settings.bot.command}\`
 Displays this message
 
-\`${settings.bot.command.discord} help\`
+\`${settings.bot.command} help\`
 Displays this message
 
-\`${settings.bot.command.discord} account\`
-Displays your account information`)
+\`${settings.bot.command} myrank\`
+Displays your account information
+
+\`${settings.bot.command} deposit\`
+Displays your deposit address
+
+\`${settings.bot.command} withdraw\`
+starts withdrawal process`)
     .setTimestamp()
     .setFooter({
       text: `${settings.bot.name} v${pjson.version}`,

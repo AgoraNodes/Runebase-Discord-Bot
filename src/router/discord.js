@@ -68,9 +68,22 @@ export const discordRouter = (
       const { commandName } = interaction;
 
       if (commandName === 'help') {
-        console.log('help command used');
-        await interaction.deferUpdate().catch((e) => {
+        const limited = await myRateLimiter(
+          discordClient,
+          interaction,
+          'Help',
+        );
+        if (limited) return;
+        await interaction.reply('\u200b').catch((e) => {
           console.log(e);
+        });
+        await queue.add(async () => {
+          console.log(interaction);
+          const task = await discordHelp(
+            discordClient,
+            interaction,
+            io,
+          );
         });
       }
     }
@@ -92,6 +105,7 @@ export const discordRouter = (
       await queue.add(async () => {
         groupTask = await updateDiscordGroup(discordClient, message);
         channelTask = await updateDiscordChannel(message, groupTask);
+        console.log('before last seen');
         lastSeenDiscordTask = await updateDiscordLastSeen(
           message,
           message.author,
@@ -100,7 +114,8 @@ export const discordRouter = (
       groupTaskId = groupTask && groupTask.id;
       channelTaskId = channelTask && channelTask.id;
     }
-    if (!message.content.startsWith(settings.bot.command.discord) || message.author.bot) return;
+    console.log('after last seen');
+    if (!message.content.startsWith(settings.bot.command) || message.author.bot) return;
     const maintenance = await isMaintenanceOrDisabled(message, 'discord');
     if (maintenance.maintenance || !maintenance.enabled) return;
     if (groupTask && groupTask.banned) {
@@ -154,19 +169,8 @@ export const discordRouter = (
       );
       if (limited) return;
       await queue.add(async () => {
-        const task = await discordHelp(message, io);
-      });
-    }
-
-    if (filteredMessageDiscord[1] && filteredMessageDiscord[1].toLowerCase() === 'help') {
-      const limited = await myRateLimiter(
-        discordClient,
-        message,
-        'Help',
-      );
-      if (limited) return;
-      await queue.add(async () => {
         const task = await discordHelp(
+          discordClient,
           message,
           io,
         );
@@ -174,6 +178,7 @@ export const discordRouter = (
     }
 
     if (filteredMessageDiscord[1] && filteredMessageDiscord[1].toLowerCase() === 'help') {
+      console.log('used help');
       const limited = await myRateLimiter(
         discordClient,
         message,
@@ -182,6 +187,7 @@ export const discordRouter = (
       if (limited) return;
       await queue.add(async () => {
         const task = await discordHelp(
+          discordClient,
           message,
           io,
         );

@@ -11,6 +11,7 @@ import logger from "../helpers/logger";
 import { userWalletExist } from "../helpers/client/userWalletExist";
 
 export const discordHelp = async (
+  discordClient,
   message,
   io,
 ) => {
@@ -31,27 +32,47 @@ export const discordHelp = async (
     }
     if (!user) return;
 
-    if (message.channel.type === 'DM') {
-      await message.author.send({
+    if (message.type && message.type === 'APPLICATION_COMMAND') {
+      const discordUser = await discordClient.users.cache.get(message.user.id);
+      if (message.guildId) {
+        const discordChannel = await discordClient.channels.cache.get(message.channelId);
+        await discordChannel.send({
+          embeds: [
+            warnDirectMessage(
+              message.user.id,
+              'Help',
+            ),
+          ],
+        });
+      }
+      await discordUser.send({
         embeds: [
           helpMessage(),
         ],
       });
-    }
-    if (message.channel.type === 'GUILD_TEXT') {
-      await message.author.send({
-        embeds: [
-          helpMessage(),
-        ],
-      });
-      await message.channel.send({
-        embeds: [
-          warnDirectMessage(
-            message.author.id,
-            'Help',
-          ),
-        ],
-      });
+    } else {
+      if (message.channel.type === 'DM') {
+        await message.author.send({
+          embeds: [
+            helpMessage(),
+          ],
+        });
+      }
+      if (message.channel.type === 'GUILD_TEXT') {
+        await message.author.send({
+          embeds: [
+            helpMessage(),
+          ],
+        });
+        await message.channel.send({
+          embeds: [
+            warnDirectMessage(
+              message.author.id,
+              'Help',
+            ),
+          ],
+        });
+      }
     }
 
     const preActivity = await db.activity.create({
@@ -87,11 +108,36 @@ export const discordHelp = async (
     }
     logger.error(`Error Discord Help Requested by: ${message.author.id}-${message.author.username}#${message.author.discriminator} - ${err}`);
     if (err.code && err.code === 50007) {
-      await message.channel.send({
+      if (message.type && message.type === 'APPLICATION_COMMAND') {
+        const discordChannel = await discordClient.channels.cache.get(message.channelId);
+        await discordChannel.send({
+          embeds: [
+            cannotSendMessageUser(
+              "Help",
+              message,
+            ),
+          ],
+        }).catch((e) => {
+          console.log(e);
+        });
+      } else {
+        await message.channel.send({
+          embeds: [
+            cannotSendMessageUser(
+              "Help",
+              message,
+            ),
+          ],
+        }).catch((e) => {
+          console.log(e);
+        });
+      }
+    } else if (message.type && message.type === 'APPLICATION_COMMAND') {
+      const discordChannel = await discordClient.channels.cache.get(message.channelId);
+      await discordChannel.send({
         embeds: [
-          cannotSendMessageUser(
+          discordErrorMessage(
             "Help",
-            message,
           ),
         ],
       }).catch((e) => {

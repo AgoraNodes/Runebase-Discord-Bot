@@ -47,8 +47,13 @@ module.exports = (sequelize, DataTypes) => {
   const UserModel = sequelize.define('user', modelDefinition, modelOptions);
 
   UserModel.associate = (model) => {
+    UserModel.hasMany(model.active);
     UserModel.hasOne(model.wallet);
     UserModel.hasMany(model.transaction);
+    UserModel.belongsToMany(
+      model.rank,
+      { through: 'UserRank' },
+    );
   };
 
   return UserModel;
