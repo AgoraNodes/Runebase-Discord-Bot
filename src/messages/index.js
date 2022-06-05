@@ -275,12 +275,15 @@ Estimated value of <@${userId}>'s balance: $${(((user.wallet.available + user.wa
   return result;
 };
 
-export const depositAddressMessage = (userId, user) => {
+export const depositAddressMessage = (
+  userId,
+  user,
+) => {
   const result = new MessageEmbed()
     .setColor(settings.bot.color)
     .setTitle('Deposit')
     .setDescription(`<@${userId}>'s deposit address:
-*${user.wallet.addresses[0].address}*`)
+*${user.wallet.address.address}*`)
     .setImage("attachment://qr.png")
     .setTimestamp()
     .setFooter({

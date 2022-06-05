@@ -26,6 +26,16 @@ const rateLimiterRanks = new RateLimiterFlexible.default.RateLimiterMemory({
   duration: 30,
 });
 
+const rateLimiterDeposit = new RateLimiterFlexible.default.RateLimiterMemory({
+  points: 2,
+  duration: 30,
+});
+
+const rateLimiterBalance = new RateLimiterFlexible.default.RateLimiterMemory({
+  points: 2,
+  duration: 30,
+});
+
 export const myRateLimiter = async (
   client,
   message,
@@ -61,6 +71,14 @@ export const myRateLimiter = async (
       }
       if (title.toLowerCase() === 'myrank') {
         await rateLimiterMyrank.consume(userId, 1);
+        return false;
+      }
+      if (title.toLowerCase() === 'deposit') {
+        await rateLimiterDeposit.consume(userId, 1);
+        return false;
+      }
+      if (title.toLowerCase() === 'balance') {
+        await rateLimiterBalance.consume(userId, 1);
         return false;
       }
 

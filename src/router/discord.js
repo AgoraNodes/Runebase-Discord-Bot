@@ -9,6 +9,7 @@ import { createUpdateDiscordUser, updateDiscordLastSeen } from '../controllers/u
 
 import { discordMyRank } from '../controllers/myrank';
 import { discordRanks } from '../controllers/ranks';
+import { discordDeposit } from '../controllers/deposit';
 import { discordExpTest } from '../controllers/expTest';
 import { myRateLimiter } from '../helpers/rateLimit';
 import { isMaintenanceOrDisabled } from '../helpers/isMaintenanceOrDisabled';
@@ -72,15 +73,21 @@ export const discordRouter = (
       const { commandName } = interaction;
 
       if (commandName === 'help') {
+        await interaction.deferReply().catch((e) => {
+          console.log(e);
+        });
         const limited = await myRateLimiter(
           discordClient,
           interaction,
           'Help',
         );
-        if (limited) return;
-        await interaction.reply('\u200b').catch((e) => {
-          console.log(e);
-        });
+        if (limited) {
+          await interaction.editReply('rate limited').catch((e) => {
+            console.log(e);
+          });
+          return;
+        }
+
         await queue.add(async () => {
           console.log(interaction);
           const task = await discordHelp(
@@ -89,17 +96,26 @@ export const discordRouter = (
             io,
           );
         });
+        await interaction.editReply('\u200b').catch((e) => {
+          console.log(e);
+        });
       }
       if (commandName === 'myrank') {
+        await interaction.deferReply().catch((e) => {
+          console.log(e);
+        });
         const limited = await myRateLimiter(
           discordClient,
           interaction,
           'Myrank',
         );
-        if (limited) return;
-        await interaction.deferReply().catch((e) => {
-          console.log(e);
-        });
+        if (limited) {
+          await interaction.editReply('rate limited').catch((e) => {
+            console.log(e);
+          });
+          return;
+        }
+
         await queue.add(async () => {
           const task = await discordMyRank(
             discordClient,
@@ -112,17 +128,48 @@ export const discordRouter = (
         });
       }
       if (commandName === 'ranks') {
+        await interaction.deferReply().catch((e) => {
+          console.log(e);
+        });
         const limited = await myRateLimiter(
           discordClient,
           interaction,
           'Ranks',
         );
-        if (limited) return;
+        if (limited) {
+          await interaction.editReply('rate limited').catch((e) => {
+            console.log(e);
+          });
+          return;
+        }
+        await queue.add(async () => {
+          const task = await discordRanks(
+            discordClient,
+            interaction,
+            io,
+          );
+        });
+        await interaction.editReply('\u200b').catch((e) => {
+          console.log(e);
+        });
+      }
+      if (commandName === 'deposit') {
         await interaction.deferReply().catch((e) => {
           console.log(e);
         });
+        const limited = await myRateLimiter(
+          discordClient,
+          interaction,
+          'Deposit',
+        );
+        if (limited) {
+          await interaction.editReply('rate limited').catch((e) => {
+            console.log(e);
+          });
+          return;
+        }
         await queue.add(async () => {
-          const task = await discordRanks(
+          const task = await discordDeposit(
             discordClient,
             interaction,
             io,
@@ -265,6 +312,22 @@ export const discordRouter = (
       if (limited) return;
       await queue.add(async () => {
         const task = await discordRanks(
+          discordClient,
+          message,
+          io,
+        );
+      });
+    }
+
+    if (filteredMessageDiscord[1] && filteredMessageDiscord[1].toLowerCase() === 'deposit') {
+      const limited = await myRateLimiter(
+        discordClient,
+        message,
+        'Deposit',
+      );
+      if (limited) return;
+      await queue.add(async () => {
+        const task = await discordDeposit(
           discordClient,
           message,
           io,
