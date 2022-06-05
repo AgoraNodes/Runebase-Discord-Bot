@@ -1,6 +1,6 @@
 module.exports = {
   up: async (queryInterface, DataTypes) => {
-    await queryInterface.createTable('channel', {
+    await queryInterface.createTable('active', {
       id: {
         type: DataTypes.BIGINT,
         allowNull: false,
@@ -40,6 +40,6 @@ module.exports = {
     });
   },
   down: async (queryInterface, DataTypes) => {
-    await queryInterface.dropTable('channel');
+    await queryInterface.dropTable('active');
   },
 };

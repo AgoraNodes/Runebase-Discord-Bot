@@ -403,6 +403,42 @@ export const cancelUnlinkAddress = (
   return result;
 };
 
+export const gainExpMessage = (
+  userId,
+  amount,
+) => {
+  const result = new MessageEmbed()
+    .setColor(settings.bot.color)
+    .setTitle('Gain Exp')
+    .setDescription(`<@${userId}>, you have been rewarded ${amount} exp`)
+    .setTimestamp()
+    .setFooter({
+      text: `${settings.bot.name} v${pjson.version}`,
+      iconURL: settings.bot.logo,
+    });
+
+  return result;
+};
+
+export const levelUpMessage = (
+  userId,
+  rank,
+) => {
+  const result = new MessageEmbed()
+    .setColor(settings.bot.color)
+    .setTitle('Gain Exp')
+    .setDescription(`Congratulations <@${userId}>
+You gained a level
+You are now a ${rank.name} (lvl ${rank.id})`)
+    .setTimestamp()
+    .setFooter({
+      text: `${settings.bot.name} v${pjson.version}`,
+      iconURL: settings.bot.logo,
+    });
+
+  return result;
+};
+
 export const timeOutUnlinkAddressMessage = (
   message,
 ) => {

@@ -6,6 +6,7 @@ import { discordHelp } from '../controllers/help';
 import { discordAccount } from '../controllers/account';
 
 import { createUpdateDiscordUser, updateDiscordLastSeen } from '../controllers/user';
+import { discordExpTest } from '../controllers/expTest';
 import { myRateLimiter } from '../helpers/rateLimit';
 import { isMaintenanceOrDisabled } from '../helpers/isMaintenanceOrDisabled';
 import settings from '../config/settings';
@@ -203,6 +204,16 @@ export const discordRouter = (
       if (limited) return;
       await queue.add(async () => {
         const task = await discordAccount(
+          message,
+          io,
+        );
+      });
+    }
+
+    if (filteredMessageDiscord[1] && filteredMessageDiscord[1].toLowerCase() === 'exptest') {
+      await queue.add(async () => {
+        const task = await discordExpTest(
+          discordClient,
           message,
           io,
         );

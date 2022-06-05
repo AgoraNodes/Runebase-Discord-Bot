@@ -20,6 +20,7 @@ export const updateBotSettings = async (
     enabled: req.body.enabled,
     maintenance: req.body.maintenance,
     discordHomeServerGuildId: req.body.guildId,
+    expRewardChannelId: req.body.expRewardChannelId,
   });
   next();
 };
