@@ -38,6 +38,8 @@ module.exports = (sequelize, DataTypes) => {
         'deposit_f',
         'balance_s',
         'balance_f',
+        'price_s',
+        'price_f',
       ],
     },
     amount: {

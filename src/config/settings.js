@@ -7,4 +7,8 @@ module.exports = {
     logo: 'https://downloads.runebase.io/runes.png',
     command: "!runebase",
   },
+  coin: {
+    ticker: 'RUNES',
+    name: 'runebase',
+  },
 };

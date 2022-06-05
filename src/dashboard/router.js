@@ -103,6 +103,14 @@ import {
   updateRank,
 } from './controllers/rank';
 
+import {
+  fetchPriceCurrencies,
+  addPriceCurrency,
+  removePriceCurrency,
+  updatePriceCurrency,
+  updatePriceCurrencyPrices,
+} from './controllers/priceCurrencies';
+
 // import storeIp from './helpers/storeIp';
 
 const requireSignin = passport.authenticate('local', {
@@ -384,6 +392,61 @@ export const dashboardRouter = (
     use(insertIp),
     use(ensuretfa),
     use(updateRank),
+    respondResult,
+  );
+
+  app.post(
+    '/api/management/pricecurrencies',
+    use(IsAuthenticated),
+    use(isAdmin),
+    use(isDashboardUserBanned),
+    use(insertIp),
+    use(ensuretfa),
+    use(fetchPriceCurrencies),
+    respondCountAndResult,
+  );
+
+  app.post(
+    '/api/management/pricecurrencies/remove',
+    use(IsAuthenticated),
+    use(isAdmin),
+    use(isDashboardUserBanned),
+    use(insertIp),
+    use(ensuretfa),
+    use(removePriceCurrency),
+    respondResult,
+  );
+
+  app.post(
+    '/api/management/pricecurrencies/update',
+    use(IsAuthenticated),
+    use(isAdmin),
+    use(isDashboardUserBanned),
+    use(insertIp),
+    use(ensuretfa),
+    use(updatePriceCurrency),
+    respondResult,
+  );
+
+  app.post(
+    '/api/management/pricecurrencies/add',
+    use(IsAuthenticated),
+    use(isAdmin),
+    use(isDashboardUserBanned),
+    use(insertIp),
+    use(ensuretfa),
+    use(addPriceCurrency),
+    respondResult,
+  );
+
+  app.post(
+    '/api/management/pricecurrencies/updateprice',
+    use(IsAuthenticated),
+    use(isAdmin),
+    use(isDashboardUserBanned),
+    use(insertIp),
+    use(ensuretfa),
+    use(updatePriceCurrencyPrices),
     respondResult,
   );
 

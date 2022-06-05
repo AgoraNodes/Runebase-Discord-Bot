@@ -13,6 +13,7 @@ const commands = [
   new SlashCommandBuilder().setName('balance').setDescription('Display your balance'),
   new SlashCommandBuilder().setName('deposit').setDescription('Displays your deposit address!'),
   new SlashCommandBuilder().setName('withdraw').setDescription('Starts Withdrawal process'),
+  new SlashCommandBuilder().setName('price').setDescription('Displays Runebase price'),
 ].map((command) => command.toJSON());
 
 export const deployCommands = async (
@@ -23,7 +24,11 @@ export const deployCommands = async (
 
   const rest = new REST({ version: '9' }).setToken(botToken);
 
-  rest.put(Routes.applicationGuildCommands(clientId, setting.discordHomeServerGuildId), { body: commands })
+  rest.put(Routes.applicationCommands(clientId), { body: commands })
     .then(() => console.log('Successfully registered application commands.'))
     .catch(console.error);
+
+  // rest.put(Routes.applicationGuildCommands(clientId, setting.discordHomeServerGuildId), { body: commands })
+  //  .then(() => console.log('Successfully registered application commands.'))
+  //  .catch(console.error);
 };

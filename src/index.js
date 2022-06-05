@@ -28,6 +28,8 @@ import { startRunebaseSync } from "./services/syncRunebase";
 import { patchRunebaseDeposits } from "./helpers/blockchain/runebase/patcher";
 import logger from "./helpers/logger";
 import { deployCommands } from './helpers/client/deployCommands';
+import { updatePrice } from "./helpers/price/updatePrice";
+import { updateConversionRatesFiat, updateConversionRatesCrypto } from "./helpers/price/updateConversionRates";
 
 Object.freeze(Object.prototype);
 
@@ -224,6 +226,20 @@ const conditionalCSRF = function (
     patchRunebaseDeposits(
       discordClient,
     );
+  });
+
+  const scheduleUpdateConversionRatesFiat = schedule.scheduleJob('0 */8 * * *', () => { // Update Fiat conversion rates every 8 hours
+    updateConversionRatesFiat();
+  });
+
+  updateConversionRatesCrypto();
+  const scheduleUpdateConversionRatesCrypto = schedule.scheduleJob('*/10 * * * *', () => { // Update price every 10 minutes
+    updateConversionRatesCrypto();
+  });
+
+  updatePrice();
+  const schedulePriceUpdate = schedule.scheduleJob('*/5 * * * *', () => { // Update price every 5 minutes
+    updatePrice();
   });
 
   app.use((err, req, res, next) => {

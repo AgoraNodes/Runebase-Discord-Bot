@@ -3,6 +3,18 @@ import db from '../models';
 export const initDatabaseRecords = async (
   discordClient,
 ) => {
+  // ADD USD RECORD PRICEINFO
+  const createUSDCurrencytRecord = await db.currency.findOrCreate({
+    where: {
+      id: 1,
+    },
+    defaults: {
+      id: 1,
+      currency_name: "USD",
+      iso: 'USD',
+      type: 'FIAT',
+    },
+  });
   // Create Bot user for tagging
   const discordBotUser = await db.user.findOne({
     where: {

@@ -10,6 +10,8 @@ import { createUpdateDiscordUser, updateDiscordLastSeen } from '../controllers/u
 import { discordMyRank } from '../controllers/myrank';
 import { discordRanks } from '../controllers/ranks';
 import { discordDeposit } from '../controllers/deposit';
+import { discordPrice } from '../controllers/price';
+import { discordBalance } from '../controllers/balance';
 import { discordExpTest } from '../controllers/expTest';
 import { myRateLimiter } from '../helpers/rateLimit';
 import { isMaintenanceOrDisabled } from '../helpers/isMaintenanceOrDisabled';
@@ -179,6 +181,58 @@ export const discordRouter = (
           console.log(e);
         });
       }
+      if (commandName === 'price') {
+        await interaction.deferReply().catch((e) => {
+          console.log(e);
+        });
+        const limited = await myRateLimiter(
+          discordClient,
+          interaction,
+          'Price',
+        );
+        if (limited) {
+          await interaction.editReply('rate limited').catch((e) => {
+            console.log(e);
+          });
+          return;
+        }
+        await queue.add(async () => {
+          const task = await discordPrice(
+            discordClient,
+            interaction,
+            io,
+          );
+        });
+        await interaction.editReply('\u200b').catch((e) => {
+          console.log(e);
+        });
+      }
+      if (commandName === 'balance') {
+        await interaction.deferReply().catch((e) => {
+          console.log(e);
+        });
+        const limited = await myRateLimiter(
+          discordClient,
+          interaction,
+          'Balance',
+        );
+        if (limited) {
+          await interaction.editReply('rate limited').catch((e) => {
+            console.log(e);
+          });
+          return;
+        }
+        await queue.add(async () => {
+          const task = await discordBalance(
+            discordClient,
+            interaction,
+            io,
+          );
+        });
+        await interaction.editReply('\u200b').catch((e) => {
+          console.log(e);
+        });
+      }
     }
   });
 
@@ -328,6 +382,38 @@ export const discordRouter = (
       if (limited) return;
       await queue.add(async () => {
         const task = await discordDeposit(
+          discordClient,
+          message,
+          io,
+        );
+      });
+    }
+
+    if (filteredMessageDiscord[1] && filteredMessageDiscord[1].toLowerCase() === 'price') {
+      const limited = await myRateLimiter(
+        discordClient,
+        message,
+        'Price',
+      );
+      if (limited) return;
+      await queue.add(async () => {
+        const task = await discordPrice(
+          discordClient,
+          message,
+          io,
+        );
+      });
+    }
+
+    if (filteredMessageDiscord[1] && filteredMessageDiscord[1].toLowerCase() === 'balance') {
+      const limited = await myRateLimiter(
+        discordClient,
+        message,
+        'Balance',
+      );
+      if (limited) return;
+      await queue.add(async () => {
+        const task = await discordBalance(
           discordClient,
           message,
           io,
