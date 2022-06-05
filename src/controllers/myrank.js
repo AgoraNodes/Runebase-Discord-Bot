@@ -181,6 +181,12 @@ export const discordMyRank = async (
             attachment,
           ],
         });
+      } else {
+        await discordUser.send({
+          files: [
+            attachment,
+          ],
+        });
       }
     } else {
       if (message.channel.type === 'DM') {

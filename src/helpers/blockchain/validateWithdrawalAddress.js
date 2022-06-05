@@ -1,8 +1,5 @@
 import db from '../../models';
 import { getInstance } from '../../services/rclient';
-import getCoinSettings from '../../config/settings';
-
-const settings = getCoinSettings();
 
 export const validateWithdrawalAddress = async (
   address,
@@ -14,57 +11,17 @@ export const validateWithdrawalAddress = async (
   let isInvalidAddress = false;
   let isNodeOffline = false;
 
-  if (settings.coin.setting === 'Runebase') {
-    try {
-      getAddressInfo = await getInstance().validateAddress(address);
-      console.log(getAddressInfo);
-      if (getAddressInfo && !getAddressInfo.isvalid) {
-        isInvalidAddress = true;
-      }
-      if (getAddressInfo && getAddressInfo.isvalid) {
-        isInvalidAddress = false;
-      }
-    } catch (e) {
-      isNodeOffline = true;
+  try {
+    getAddressInfo = await getInstance().validateAddress(address);
+    console.log(getAddressInfo);
+    if (getAddressInfo && !getAddressInfo.isvalid) {
+      isInvalidAddress = true;
     }
-  } else if (settings.coin.setting === 'Pirate') {
-    try {
-      getAddressInfo = await getInstance().zValidateAddress(address);
-      if (getAddressInfo && !getAddressInfo.isvalid) {
-        isInvalidAddress = true;
-      }
-      if (getAddressInfo && getAddressInfo.isvalid) {
-        isInvalidAddress = false;
-      }
-    } catch (e) {
-      isNodeOffline = true;
+    if (getAddressInfo && getAddressInfo.isvalid) {
+      isInvalidAddress = false;
     }
-  } else if (settings.coin.setting === 'Komodo') {
-    try {
-      getAddressInfo = await getInstance().validateAddress(address);
-      console.log(getAddressInfo);
-      if (getAddressInfo && !getAddressInfo.isvalid) {
-        isInvalidAddress = true;
-      }
-      if (getAddressInfo && getAddressInfo.isvalid) {
-        isInvalidAddress = false;
-      }
-    } catch (e) {
-      isNodeOffline = true;
-    }
-  } else {
-    try {
-      getAddressInfo = await getInstance().validateAddress(address);
-      console.log(getAddressInfo);
-      if (getAddressInfo && !getAddressInfo.isvalid) {
-        isInvalidAddress = true;
-      }
-      if (getAddressInfo && getAddressInfo.isvalid) {
-        isInvalidAddress = false;
-      }
-    } catch (e) {
-      isNodeOffline = true;
-    }
+  } catch (e) {
+    isNodeOffline = true;
   }
 
   if (!getAddressInfo) {

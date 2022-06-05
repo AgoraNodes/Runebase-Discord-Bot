@@ -6,14 +6,16 @@ import { discordHelp } from '../controllers/help';
 import { discordAccount } from '../controllers/account';
 
 import { createUpdateDiscordUser, updateDiscordLastSeen } from '../controllers/user';
-
+import { preWithdraw } from '../helpers/withdraw/preWithdraw';
 import { discordMyRank } from '../controllers/myrank';
 import { discordRanks } from '../controllers/ranks';
 import { discordDeposit } from '../controllers/deposit';
 import { discordPrice } from '../controllers/price';
 import { discordBalance } from '../controllers/balance';
+import { discordWithdraw } from '../controllers/withdraw';
 import { discordExpTest } from '../controllers/expTest';
 import { myRateLimiter } from '../helpers/rateLimit';
+import { discordFeatureSettings } from '../controllers/featureSetting';
 import { isMaintenanceOrDisabled } from '../helpers/isMaintenanceOrDisabled';
 import settings from '../config/settings';
 
@@ -233,6 +235,50 @@ export const discordRouter = (
           console.log(e);
         });
       }
+      if (commandName === 'withdraw') {
+        await interaction.deferReply().catch((e) => {
+          console.log(e);
+        });
+        const limited = await myRateLimiter(
+          discordClient,
+          interaction,
+          'Withdraw',
+        );
+        if (limited) {
+          await interaction.editReply('rate limited').catch((e) => {
+            console.log(e);
+          });
+          return;
+        }
+        const setting = await discordFeatureSettings(
+          interaction,
+          'withdraw',
+          groupTaskId,
+          channelTaskId,
+        );
+        if (!setting) return;
+        const [
+          success,
+          filteredMessage,
+        ] = await preWithdraw(
+          discordClient,
+          interaction,
+        );
+        if (success) {
+          await queue.add(async () => {
+            const task = await discordWithdraw(
+              discordClient,
+              interaction,
+              filteredMessage,
+              setting,
+              io,
+            );
+          });
+        }
+        await interaction.editReply('\u200b').catch((e) => {
+          console.log(e);
+        });
+      }
     }
   });
 
@@ -419,6 +465,38 @@ export const discordRouter = (
           io,
         );
       });
+    }
+    if (filteredMessageDiscord[1] && filteredMessageDiscord[1].toLowerCase() === 'withdraw') {
+      const limited = await myRateLimiter(
+        discordClient,
+        message,
+        'Withdraw',
+      );
+      if (limited) return;
+      const setting = await discordFeatureSettings(
+        message,
+        'withdraw',
+        groupTaskId,
+        channelTaskId,
+      );
+      const [
+        success,
+        filteredMessage,
+      ] = await preWithdraw(
+        discordClient,
+        message,
+      );
+      if (success) {
+        await queue.add(async () => {
+          const task = await discordWithdraw(
+            discordClient,
+            message,
+            filteredMessage,
+            setting,
+            io,
+          );
+        });
+      }
     }
 
     if (filteredMessageDiscord[1] && filteredMessageDiscord[1].toLowerCase() === 'account') {

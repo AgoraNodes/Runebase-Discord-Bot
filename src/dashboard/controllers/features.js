@@ -35,7 +35,7 @@ export const updateFeature = async (
   if (amount < 1e4) {
     throw new Error(`minimum amount is ${1e4 / 1e8}`);
   }
-  const feature = await db.features.findOne({
+  const feature = await db.featureSetting.findOne({
     where: {
       id: req.body.id,
     },
@@ -48,7 +48,7 @@ export const updateFeature = async (
     enabled: req.body.enabled,
   });
   res.locals.name = 'updateFeature';
-  res.locals.result = await db.features.findOne({
+  res.locals.result = await db.featureSetting.findOne({
     where: {
       id: updatedFeature.id,
     },
@@ -78,7 +78,7 @@ export const removeFeature = async (
   res,
   next,
 ) => {
-  const feature = await db.features.findOne({
+  const feature = await db.featureSetting.findOne({
     where: {
       id: req.body.id,
     },
@@ -118,8 +118,8 @@ export const fetchFeatures = async (
   };
 
   res.locals.name = 'features';
-  res.locals.count = await db.features.count(options);
-  res.locals.result = await db.features.findAll(options);
+  res.locals.count = await db.featureSetting.count(options);
+  res.locals.result = await db.featureSetting.findAll(options);
   next();
 };
 
@@ -191,13 +191,13 @@ export const addFeature = async (
     ],
   };
 
-  const feature = await db.features.findOne(options);
+  const feature = await db.featureSetting.findOne(options);
 
   if (feature) {
     throw new Error("Already Exists");
   }
 
-  const newFeature = await db.features.create({
+  const newFeature = await db.featureSetting.create({
     type: 'local',
     name: req.body.feature,
     groupId: req.body.server,
@@ -209,7 +209,7 @@ export const addFeature = async (
   });
 
   res.locals.name = 'addFeature';
-  res.locals.result = await db.features.findOne({
+  res.locals.result = await db.featureSetting.findOne({
     where: {
       id: newFeature.id,
     },

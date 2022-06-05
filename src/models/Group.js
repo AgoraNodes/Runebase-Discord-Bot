@@ -40,6 +40,7 @@ module.exports = (sequelize, DataTypes) => {
   GroupModel.associate = (model) => {
     GroupModel.hasMany(model.active);
     GroupModel.hasMany(model.channel);
+    GroupModel.hasMany(model.featureSetting);
   };
 
   return GroupModel;

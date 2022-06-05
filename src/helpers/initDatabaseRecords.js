@@ -38,4 +38,32 @@ export const initDatabaseRecords = async (
       name: 'discord',
     });
   }
+
+  // FeatureSetting
+  const autoWithdrawalSetting = await db.featureSetting.findOne({
+    where: {
+      type: 'global',
+      name: 'autoWithdrawal',
+    },
+  });
+  if (!autoWithdrawalSetting) {
+    await db.featureSetting.create({
+      type: 'global',
+      name: 'autoWithdrawal',
+      enabled: true,
+    });
+  }
+  const withdrawSetting = await db.featureSetting.findOne({
+    where: {
+      type: 'global',
+      name: 'withdraw',
+    },
+  });
+  if (!withdrawSetting) {
+    await db.featureSetting.create({
+      type: 'global',
+      name: 'withdraw',
+      enabled: true,
+    });
+  }
 };

@@ -462,12 +462,179 @@ export const warnDirectMessage = (userId, title) => {
   return result;
 };
 
+export const timeOutMessage = () => {
+  const result = new MessageEmbed()
+    .setColor(settings.bot.color)
+    .setTitle('Time out')
+    .setDescription(`Operation canceled`)
+    .setThumbnail(settings.bot.logo)
+    .setTimestamp()
+    .setFooter({
+      text: `${settings.bot.name} v${pjson.version}`,
+      iconURL: settings.bot.logo,
+    });
+
+  return result;
+};
+
+export const enterWithdrawalAddress = () => {
+  const result = new MessageEmbed()
+    .setColor(settings.bot.color)
+    .setTitle('Withdraw')
+    .setDescription(`Please enter a Runebase withdrawal address:`)
+    .setTimestamp()
+    .setFooter({
+      text: `${settings.bot.name} v${pjson.version}`,
+      iconURL: settings.bot.logo,
+    });
+
+  return result;
+};
+
+export const enterWithdrawalAmount = () => {
+  const result = new MessageEmbed()
+    .setColor(settings.bot.color)
+    .setTitle('Withdraw')
+    .setDescription(`Please enter the amount of runes you want to withdraw:`)
+    .setTimestamp()
+    .setFooter({
+      text: `${settings.bot.name} v${pjson.version}`,
+      iconURL: settings.bot.logo,
+    });
+
+  return result;
+};
+
+export const invalidAmountMessage = (
+  userId,
+  title,
+) => {
+  const result = new MessageEmbed()
+    .setColor(settings.bot.color)
+    .setTitle(title)
+    .setDescription(`<@${userId}>, Invalid Amount`)
+    .setTimestamp()
+    .setFooter({
+      text: `${settings.bot.name} v${pjson.version}`,
+      iconURL: settings.bot.logo,
+    });
+
+  return result;
+};
+
+export const insufficientBalanceMessage = (
+  userId,
+  title,
+) => {
+  const result = new MessageEmbed()
+    .setColor(settings.bot.color)
+    .setTitle(title)
+    .setDescription(`<@${userId}>, Insufficient balance`)
+    .setTimestamp()
+    .setFooter({
+      text: `${settings.bot.name} v${pjson.version}`,
+      iconURL: settings.bot.logo,
+    });
+
+  return result;
+};
+
+export const minimumMessage = (
+  userId,
+  setting,
+  type,
+) => {
+  const result = new MessageEmbed()
+    .setColor(settings.bot.color)
+    .setTitle(type)
+    .setDescription(`<@${userId}>, Minimum ${type} is ${setting.min / 1e8} ${settings.coin.ticker}`)
+    .setTimestamp()
+    .setFooter({
+      text: `${settings.bot.name} v${pjson.version}`,
+      iconURL: settings.bot.logo,
+    });
+
+  return result;
+};
+
+export const invalidAddressMessage = (
+  userId,
+) => {
+  const result = new MessageEmbed()
+    .setColor(settings.bot.color)
+    .setTitle('Withdraw')
+    .setDescription(`<@${userId}>, Invalid ${settings.coin.name} Address`)
+    .setTimestamp()
+    .setFooter({
+      text: `${settings.bot.name} v${pjson.version}`,
+      iconURL: settings.bot.logo,
+    });
+
+  return result;
+};
+
+export const unableToWithdrawToSelfMessage = (message) => {
+  const result = new MessageEmbed()
+    .setColor(settings.bot.color)
+    .setTitle('Tip')
+    .setDescription(`<@${message.author.id}>, unable to withdraw to your own deposit address`)
+    .setTimestamp()
+    .setFooter({
+      text: `${settings.bot.name} v${pjson.version}`,
+      iconURL: settings.bot.logo,
+    });
+
+  return result;
+};
+
 export const AccountInfoMessage = () => {
   const result = new MessageEmbed()
     .setColor(settings.bot.color)
     .setTitle('Account Information')
     .setDescription(`Shows discord account information`)
     .setThumbnail(settings.bot.logo)
+    .setTimestamp()
+    .setFooter({
+      text: `${settings.bot.name} v${pjson.version}`,
+      iconURL: settings.bot.logo,
+    });
+
+  return result;
+};
+
+export const featureDisabledChannelMessage = (name) => {
+  const result = new MessageEmbed()
+    .setColor(settings.bot.color)
+    .setTitle(name)
+    .setDescription(`This Feature has been disabled for this channel`)
+    .setTimestamp()
+    .setFooter({
+      text: `${settings.bot.name} v${pjson.version}`,
+      iconURL: settings.bot.logo,
+    });
+
+  return result;
+};
+
+export const featureDisabledServerMessage = (name) => {
+  const result = new MessageEmbed()
+    .setColor(settings.bot.color)
+    .setTitle(name)
+    .setDescription(`This Feature has been disabled for this server`)
+    .setTimestamp()
+    .setFooter({
+      text: `${settings.bot.name} v${pjson.version}`,
+      iconURL: settings.bot.logo,
+    });
+
+  return result;
+};
+
+export const featureDisabledGlobalMessage = (name) => {
+  const result = new MessageEmbed()
+    .setColor(settings.bot.color)
+    .setTitle(name)
+    .setDescription(`This Feature has been disabled`)
     .setTimestamp()
     .setFooter({
       text: `${settings.bot.name} v${pjson.version}`,
