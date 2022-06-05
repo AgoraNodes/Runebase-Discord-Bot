@@ -188,14 +188,13 @@ const conditionalCSRF = function (
 
   await discordClient.login(process.env.DISCORD_CLIENT_TOKEN);
 
-  console.log(discordClient);
+  await initDatabaseRecords(
+    discordClient,
+  );
+
   await deployCommands(
     process.env.DISCORD_CLIENT_TOKEN,
     discordClient.user.id,
-  );
-
-  await initDatabaseRecords(
-    discordClient,
   );
 
   await startRunebaseSync(

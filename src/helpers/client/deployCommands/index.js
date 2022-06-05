@@ -9,7 +9,7 @@ config();
 const commands = [
   new SlashCommandBuilder().setName('help').setDescription('DM\'s you with a help message'),
   // new SlashCommandBuilder().setName('account').setDescription('Replies with account info'),
-  new SlashCommandBuilder().setName('myrank').setDescription('Replies with user\'s rank'),
+  new SlashCommandBuilder().setName('myrank').setDescription('Displays the user\'s rank'),
   new SlashCommandBuilder().setName('deposit').setDescription('Replies with your deposit address!'),
   new SlashCommandBuilder().setName('withdraw').setDescription('Starts Withdrawal process'),
 ].map((command) => command.toJSON());
@@ -19,6 +19,7 @@ export const deployCommands = async (
   clientId,
 ) => {
   const setting = await db.setting.findOne();
+
   const rest = new REST({ version: '9' }).setToken(botToken);
 
   rest.put(Routes.applicationGuildCommands(clientId, setting.discordHomeServerGuildId), { body: commands })

@@ -1,10 +1,9 @@
+import { Op } from "sequelize";
 import db from "../../models";
 import {
   gainExpMessage,
   levelUpMessage,
 } from '../../messages';
-
-const { Op } = require("sequelize");
 
 export const gainExp = async (
   discordClient,
@@ -53,27 +52,51 @@ export const gainExp = async (
     lock: t.LOCK.UPDATE,
   });
 
-  const guild = discordClient.guilds.cache.get(setting.discordHomeServerGuildId);
-  const member = guild.members.cache.get(updatedUser.user_id);
-
-  if (!member.roles.cache.has(currentRank.discordRankRoleId)) {
-    await member.roles.add(currentRank.discordRankRoleId);
-    await discordChannel.send({
-      embeds: [
-        levelUpMessage(
-          updatedUser.user_id,
-          currentRank,
-        ),
-      ],
-    });
-  }
-  // eslint-disable-next-line no-restricted-syntax
-  for (const rank of allRanks) {
-    if (currentRank.id !== rank.id) {
-      if (member.roles.cache.has(rank.discordRankRoleId)) {
-        // eslint-disable-next-line no-await-in-loop
-        await member.roles.remove(rank.discordRankRoleId);
+  if (currentRank) {
+    const guild = await discordClient.guilds.cache.get(setting.discordHomeServerGuildId);
+    const member = await guild.members.cache.get(updatedUser.user_id);
+    if (!member.roles.cache.has(currentRank.discordRankRoleId)) {
+      await member.roles.add(currentRank.discordRankRoleId);
+      await discordChannel.send({
+        embeds: [
+          levelUpMessage(
+            updatedUser.user_id,
+            currentRank,
+          ),
+        ],
+      });
+    }
+    // eslint-disable-next-line no-restricted-syntax
+    for (const rank of allRanks) {
+      if (currentRank.id !== rank.id) {
+        if (member.roles.cache.has(rank.discordRankRoleId)) {
+          // eslint-disable-next-line no-await-in-loop
+          await member.roles.remove(rank.discordRankRoleId);
+        }
       }
+    }
+    const userRankRecord = await db.UserRank.findOne({
+      where: {
+        userId: updatedUser.id,
+      },
+      transaction: t,
+      lock: t.LOCK.UPDATE,
+    });
+    if (!userRankRecord) {
+      await db.UserRank.create({
+        userId: updatedUser.id,
+        rankId: currentRank.id,
+      }, {
+        transaction: t,
+        lock: t.LOCK.UPDATE,
+      });
+    } else if (currentRank.id !== userRankRecord.rankId) {
+      await userRankRecord.update({
+        rankId: currentRank.id,
+      }, {
+        transaction: t,
+        lock: t.LOCK.UPDATE,
+      });
     }
   }
 };

@@ -6,32 +6,17 @@ const errorConsumer = new RateLimiterFlexible.default.RateLimiterMemory({
   duration: 15,
 });
 
-const rateLimiterHalving = new RateLimiterFlexible.default.RateLimiterMemory({
-  points: 2,
-  duration: 30,
-});
-
-const rateLimiterMining = new RateLimiterFlexible.default.RateLimiterMemory({
-  points: 2,
-  duration: 30,
-});
-
 const rateLimiterHelp = new RateLimiterFlexible.default.RateLimiterMemory({
   points: 2,
   duration: 30,
 });
 
-const rateLimiterLink = new RateLimiterFlexible.default.RateLimiterMemory({
-  points: 2,
-  duration: 30,
-});
-
-const rateLimiterUnlink = new RateLimiterFlexible.default.RateLimiterMemory({
-  points: 2,
-  duration: 30,
-});
-
 const rateLimiterAccount = new RateLimiterFlexible.default.RateLimiterMemory({
+  points: 2,
+  duration: 30,
+});
+
+const rateLimiterMyrank = new RateLimiterFlexible.default.RateLimiterMemory({
   points: 2,
   duration: 30,
 });
@@ -70,6 +55,10 @@ export const myRateLimiter = async (
       }
       if (title.toLowerCase() === 'unlink') {
         await rateLimiterUnlink.consume(userId, 1);
+        return false;
+      }
+      if (title.toLowerCase() === 'myrank') {
+        await rateLimiterMyrank.consume(userId, 1);
         return false;
       }
 

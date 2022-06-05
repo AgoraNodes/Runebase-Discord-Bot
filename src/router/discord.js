@@ -6,6 +6,8 @@ import { discordHelp } from '../controllers/help';
 import { discordAccount } from '../controllers/account';
 
 import { createUpdateDiscordUser, updateDiscordLastSeen } from '../controllers/user';
+
+import { discordMyRank } from '../controllers/myrank';
 import { discordExpTest } from '../controllers/expTest';
 import { myRateLimiter } from '../helpers/rateLimit';
 import { isMaintenanceOrDisabled } from '../helpers/isMaintenanceOrDisabled';
@@ -85,6 +87,27 @@ export const discordRouter = (
             interaction,
             io,
           );
+        });
+      }
+      if (commandName === 'myrank') {
+        const limited = await myRateLimiter(
+          discordClient,
+          interaction,
+          'Myrank',
+        );
+        if (limited) return;
+        await interaction.deferReply().catch((e) => {
+          console.log(e);
+        });
+        await queue.add(async () => {
+          const task = await discordMyRank(
+            discordClient,
+            interaction,
+            io,
+          );
+        });
+        await interaction.editReply('\u200b').catch((e) => {
+          console.log(e);
         });
       }
     }
@@ -188,6 +211,22 @@ export const discordRouter = (
       if (limited) return;
       await queue.add(async () => {
         const task = await discordHelp(
+          discordClient,
+          message,
+          io,
+        );
+      });
+    }
+
+    if (filteredMessageDiscord[1] && filteredMessageDiscord[1].toLowerCase() === 'myrank') {
+      const limited = await myRateLimiter(
+        discordClient,
+        message,
+        'Myrank',
+      );
+      if (limited) return;
+      await queue.add(async () => {
+        const task = await discordMyRank(
           discordClient,
           message,
           io,

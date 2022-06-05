@@ -17,6 +17,9 @@ export const userWalletExist = async (
   } else if (message.author) {
     userId = message.author.id;
   }
+  console.log(message);
+  console.log('userId');
+  console.log(userId);
   const user = await db.user.findOne({
     where: {
       user_id: `${userId}`,

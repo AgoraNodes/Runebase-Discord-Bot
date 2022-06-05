@@ -25,6 +25,8 @@ module.exports = {
           'help_f',
           'account_s',
           'account_f',
+          'myrank_s',
+          'myrank_f',
         ],
       },
       amount: {

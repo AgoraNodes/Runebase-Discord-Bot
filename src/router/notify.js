@@ -1,9 +1,6 @@
 /* eslint-disable no-restricted-syntax */
 import walletNotifyRunebase from '../helpers/blockchain/runebase/walletNotify';
 import { startRunebaseSync } from "../services/syncRunebase";
-import { linkedAddressVerified } from '../messages';
-
-// import { incomingDepositMessageHandler } from '../helpers/messageHandlers';
 
 const localhostOnly = (
   req,
@@ -43,7 +40,7 @@ export const notifyRouter = (
     '/api/rpc/walletnotify',
     localhostOnly,
     async (req, res, next) => {
-      if (req.body.ticker === 'TKL') {
+      if (req.body.ticker === 'RUNES') {
         walletNotifyRunebase(req, res, next);
       }
     },
@@ -62,20 +59,6 @@ export const notifyRouter = (
             // );
           }
         }
-      }
-      if (
-        res.locals.verifyAddress
-        && Object.keys(res.locals.verifyAddress).length > 0
-      ) {
-        const myClient = await discordClient.users.fetch(res.locals.verifyAddress.discordId, false);
-        await myClient.send({
-          embeds: [
-            linkedAddressVerified(
-              res.locals.verifyAddress.discordId,
-              res.locals.verifyAddress.linkedAddress,
-            ),
-          ],
-        });
       }
       if (res.locals.activity) {
         try {
