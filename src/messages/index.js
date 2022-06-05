@@ -209,7 +209,7 @@ export const reviewMessage = (
 
 amount: **${amount} ${settings.coin.ticker}**
 fee: **${fee} ${settings.coin.ticker}**
-total: **${total} ${settings.coin.ticker}**${settings.coin.setting === 'Pirate' && transaction.memo && transaction.memo !== '' ? `\nmemo: **${transaction.memo}**` : ''}`)
+total: **${total} ${settings.coin.ticker}**`)
     .setTimestamp()
     .setFooter({
       text: `${settings.bot.name} v${pjson.version}`,
@@ -370,36 +370,26 @@ export const discordBotMaintenanceMessage = () => {
   return result;
 };
 
-export const successUnlinkAddress = (
-  message,
-  address,
+export const ranksMessage = async (
+  ranks,
 ) => {
+  const rankIdString = ranks.map((e) => e.id).join("\n");
+  const rankNameString = ranks.map((e) => e.name).join("\n");
+  const expNeededString = ranks.map((e) => e.expNeeded).join("\n");
   const result = new MessageEmbed()
     .setColor(settings.bot.color)
-    .setTitle('Unlink Tokel Address')
-    .setDescription(`<@${message.author.id}>, successfully unlinked ${address}`)
+    .setTitle('Ranks')
+    // .setDescription(`<@${userId}>, you canceled unlinking your address`)
+    .addFields(
+      { name: 'level', value: rankIdString, inline: true },
+      { name: 'rank', value: rankNameString, inline: true },
+      { name: 'exp needed', value: expNeededString, inline: true },
+    )
     .setTimestamp()
     .setFooter({
       text: `${settings.bot.name} v${pjson.version}`,
       iconURL: settings.bot.logo,
     });
-
-  return result;
-};
-
-export const cancelUnlinkAddress = (
-  message,
-) => {
-  const result = new MessageEmbed()
-    .setColor(settings.bot.color)
-    .setTitle('Unlink Tokel Address')
-    .setDescription(`<@${message.author.id}>, you canceled unlinking your address`)
-    .setTimestamp()
-    .setFooter({
-      text: `${settings.bot.name} v${pjson.version}`,
-      iconURL: settings.bot.logo,
-    });
-
   return result;
 };
 
@@ -430,39 +420,6 @@ export const levelUpMessage = (
     .setDescription(`Congratulations <@${userId}>
 You gained a level
 You are now a ${rank.name} (lvl ${rank.id})`)
-    .setTimestamp()
-    .setFooter({
-      text: `${settings.bot.name} v${pjson.version}`,
-      iconURL: settings.bot.logo,
-    });
-
-  return result;
-};
-
-export const timeOutUnlinkAddressMessage = (
-  message,
-) => {
-  const result = new MessageEmbed()
-    .setColor(settings.bot.color)
-    .setTitle('Unlink Tokel Address')
-    .setDescription(`<@${message.author.id}>, your request to unlink a tokel address has expired`)
-    .setTimestamp()
-    .setFooter({
-      text: `${settings.bot.name} v${pjson.version}`,
-      iconURL: settings.bot.logo,
-    });
-
-  return result;
-};
-
-export const confirmUnlinkAddress = (
-  message,
-  address,
-) => {
-  const result = new MessageEmbed()
-    .setColor(settings.bot.color)
-    .setTitle('Unlink Tokel Address')
-    .setDescription(`<@${message.author.id}>, are you sure you want to unlink ${address}?`)
     .setTimestamp()
     .setFooter({
       text: `${settings.bot.name} v${pjson.version}`,
@@ -517,25 +474,6 @@ export const AccountInfoMessage = () => {
   return result;
 };
 
-export const discordTransactionMemoTooLongMessage = (
-  message,
-  memoLength,
-) => {
-  const result = new MessageEmbed()
-    .setColor(settings.bot.color)
-    .setTitle('Withdraw')
-    .setDescription(`<@${message.author.id}>, Your withdrawal memo is too long!
-We found ${memoLength} characters, maximum length is 512`)
-    .setThumbnail(settings.bot.logo)
-    .setTimestamp()
-    .setFooter({
-      text: `${settings.bot.name} v${pjson.version}`,
-      iconURL: settings.bot.logo,
-    });
-
-  return result;
-};
-
 export const helpMessage = (withdraw) => {
   const result = new MessageEmbed()
     .setColor(settings.bot.color)
@@ -548,6 +486,12 @@ Displays this message
 
 \`${settings.bot.command} myrank\`
 Displays your account information
+
+\`${settings.bot.command} ranks\`
+Displays all the ranks
+
+\`${settings.bot.command} balance\`
+Displays your balance
 
 \`${settings.bot.command} deposit\`
 Displays your deposit address

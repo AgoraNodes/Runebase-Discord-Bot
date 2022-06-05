@@ -21,6 +21,11 @@ const rateLimiterMyrank = new RateLimiterFlexible.default.RateLimiterMemory({
   duration: 30,
 });
 
+const rateLimiterRanks = new RateLimiterFlexible.default.RateLimiterMemory({
+  points: 2,
+  duration: 30,
+});
+
 export const myRateLimiter = async (
   client,
   message,
@@ -49,12 +54,9 @@ export const myRateLimiter = async (
         await rateLimiterAccount.consume(userId, 1);
         return false;
       }
-      if (title.toLowerCase() === 'link') {
-        await rateLimiterLink.consume(userId, 1);
-        return false;
-      }
-      if (title.toLowerCase() === 'unlink') {
-        await rateLimiterUnlink.consume(userId, 1);
+      if (title.toLowerCase() === 'ranks') {
+        console.log('consume ranks');
+        await rateLimiterRanks.consume(userId, 1);
         return false;
       }
       if (title.toLowerCase() === 'myrank') {

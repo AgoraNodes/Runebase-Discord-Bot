@@ -10,8 +10,10 @@ const commands = [
   new SlashCommandBuilder().setName('help').setDescription('DM\'s you with a help message'),
   // new SlashCommandBuilder().setName('account').setDescription('Replies with account info'),
   new SlashCommandBuilder().setName('myrank').setDescription('Displays the user\'s rank'),
+  new SlashCommandBuilder().setName('ranks').setDescription('Displays all the ranks'),
   new SlashCommandBuilder().setName('deposit').setDescription('Replies with your deposit address!'),
   new SlashCommandBuilder().setName('withdraw').setDescription('Starts Withdrawal process'),
+  new SlashCommandBuilder().setName('balance').setDescription('Display your balance'),
 ].map((command) => command.toJSON());
 
 export const deployCommands = async (
