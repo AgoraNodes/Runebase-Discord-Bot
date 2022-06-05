@@ -1,0 +1,521 @@
+import { MessageEmbed } from "discord.js";
+// import moment from 'moment';
+import settings from '../config/settings';
+import pjson from "../../package.json";
+import { capitalize } from "../helpers/utils";
+
+export const discordUserBannedMessage = (
+  user,
+) => {
+  const result = new MessageEmbed()
+    .setColor("#C70039")
+    .setTitle(`🚫     User: ${user.username} Banned     🚫`)
+    .setDescription(`Reason:
+${user.banMessage}`)
+    .setTimestamp()
+    .setFooter({
+      text: `${settings.bot.name} v${pjson.version}`,
+      iconURL: settings.bot.logo,
+    });
+
+  return result;
+};
+
+export const discordServerBannedMessage = (
+  server,
+) => {
+  const result = new MessageEmbed()
+    .setColor(`#C70039`)
+    .setTitle('🚫     Server Banned     🚫')
+    .setDescription(`Reason:
+${server.banMessage}`)
+    .setTimestamp()
+    .setFooter({
+      text: `${settings.bot.name} v${pjson.version}`,
+      iconURL: settings.bot.logo,
+    });
+
+  return result;
+};
+
+export const priceMessage = (replyString) => {
+  const result = new MessageEmbed()
+    .setColor(settings.bot.color)
+    .setTitle('Price')
+    .setThumbnail(settings.bot.logo)
+    .setDescription(replyString)
+    .setTimestamp()
+    .setFooter({
+      text: `${settings.bot.name} v${pjson.version}`,
+      iconURL: settings.bot.logo,
+    });
+
+  return result;
+};
+
+export const discordChannelBannedMessage = (channel) => {
+  const result = new MessageEmbed()
+    .setColor('#FF7900')
+    .setTitle('❗     Channel Restricted     ❗')
+    .setDescription(`Reason:
+${channel.banMessage}`)
+    .setTimestamp()
+    .setFooter({
+      text: `${settings.bot.name} v${pjson.version}`,
+      iconURL: settings.bot.logo,
+    });
+
+  return result;
+};
+
+export const coinInfoMessage = (
+  blockHeight,
+  priceInfo,
+  walletVersion,
+) => {
+  const result = new MessageEmbed()
+    .setColor(settings.bot.color)
+    .setTitle('Tipbot')
+    .addField("Coin Info", settings.coin.description)
+    .addField("\u200b", "\u200b")
+    .addFields(
+      { name: "Coin Name", value: settings.coin.name, inline: true },
+      { name: "Ticker", value: settings.coin.ticker, inline: true },
+    )
+    .addField("\u200b", "\u200b")
+    .addFields(
+      { name: "Current block height", value: `${blockHeight}`, inline: true },
+      { name: "Wallet version", value: `${walletVersion}`, inline: true },
+    )
+    .addField("\u200b", "\u200b")
+    .addField("Website", settings.coin.website)
+    .addField("Github", settings.coin.github)
+    .addField("Block Explorer", settings.coin.explorer)
+    .addField("Discord Server", settings.coin.discord)
+    .addField("Telegram Group", settings.coin.telegram)
+    .addField("Exchanges", settings.coin.exchanges.join('\n'))
+    .addField("Current price", `$${priceInfo.price} (source: coinpaprika)`)
+    .setTimestamp()
+    .setFooter({
+      text: `${settings.bot.name} v${pjson.version}`,
+      iconURL: settings.bot.logo,
+    });
+
+  return result;
+};
+
+export const discordLimitSpamMessage = (userId, myFunctionName) => {
+  const result = new MessageEmbed()
+    .setColor(settings.bot.color)
+    .setTitle(myFunctionName)
+    .setDescription(`🚫 Slow down! 🚫
+<@${userId}>, you're using this command too fast, wait a while before using it again.`)
+    .setTimestamp()
+    .setFooter({
+      text: `${settings.bot.name} v${pjson.version}`,
+      iconURL: settings.bot.logo,
+    });
+
+  return result;
+};
+
+export const cannotSendMessageUser = (title, message) => {
+  const result = new MessageEmbed()
+    .setColor(settings.bot.color)
+    .setTitle(title)
+    .setDescription(`<@${message.author.id}>, ${settings.bot.name} was unable to send you a direct message.\nPlease check your discord privacy settings.`)
+    .setTimestamp()
+    .setFooter({
+      text: `${settings.bot.name} v${pjson.version}`,
+      iconURL: settings.bot.logo,
+    });
+
+  return result;
+};
+
+export const discordErrorMessage = (title) => {
+  const result = new MessageEmbed()
+    .setColor(settings.bot.color)
+    .setTitle(title)
+    .setDescription(`Something went wrong.`)
+    .setTimestamp()
+    .setFooter({
+      text: `${settings.bot.name} v${pjson.version}`,
+      iconURL: settings.bot.logo,
+    });
+
+  return result;
+};
+
+export const discordDepositConfirmedMessage = (
+  amount,
+  trans,
+) => {
+  const result = new MessageEmbed()
+    .setColor(settings.bot.color)
+    .setTitle(`Deposit #${trans.id}`)
+    .setDescription(`Deposit Confirmed
+${trans.amount / 1e8} ${settings.coin.ticker} has been credited to your wallet`)
+    .setTimestamp()
+    .setFooter({
+      text: `${settings.bot.name} v${pjson.version}`,
+      iconURL: settings.bot.logo,
+    });
+
+  return result;
+};
+
+export const discordIncomingDepositMessage = (detail) => {
+  const result = new MessageEmbed()
+    .setColor(settings.bot.color)
+    .setTitle(`Deposit #${detail.transaction[0].id}`)
+    .setDescription(`incoming deposit detected for ${detail.amount} ${settings.coin.ticker}
+Balance will be reflected in your wallet in ~${settings.min.confirmations}+ confirmations
+${settings.coin.explorer}/tx/${detail.transaction[0].txid}`)
+    .setTimestamp()
+    .setFooter({
+      text: `${settings.bot.name} v${pjson.version}`,
+      iconURL: settings.bot.logo,
+    });
+
+  return result;
+};
+
+export const discordUserWithdrawalRejectMessage = (title) => {
+  const result = new MessageEmbed()
+    .setColor(settings.bot.color)
+    .setTitle('Withdraw')
+    .setDescription(`Your withdrawal has been rejected`)
+    .setTimestamp()
+    .setFooter({
+      text: `${settings.bot.name} v${pjson.version}`,
+      iconURL: settings.bot.logo,
+    });
+
+  return result;
+};
+
+export const reviewMessage = (
+  message,
+  transaction,
+) => {
+  const amount = ((transaction.amount / 1e8).toFixed(8)).replace(/(\.0+|0+)$/, '');
+  const fee = ((transaction.feeAmount / 1e8).toFixed(8)).replace(/(\.0+|0+)$/, '');
+  const total = (((transaction.amount - transaction.feeAmount) / 1e8).toFixed(8)).replace(/(\.0+|0+)$/, '');
+  const result = new MessageEmbed()
+    .setColor(settings.bot.color)
+    .setTitle(`Withdraw #${transaction.id}`)
+    .setDescription(`<@${message.author.id}>, Your withdrawal is being reviewed
+
+amount: **${amount} ${settings.coin.ticker}**
+fee: **${fee} ${settings.coin.ticker}**
+total: **${total} ${settings.coin.ticker}**${settings.coin.setting === 'Pirate' && transaction.memo && transaction.memo !== '' ? `\nmemo: **${transaction.memo}**` : ''}`)
+    .setTimestamp()
+    .setFooter({
+      text: `${settings.bot.name} v${pjson.version}`,
+      iconURL: settings.bot.logo,
+    });
+
+  return result;
+};
+
+export const discordWithdrawalAcceptedMessage = (
+  updatedTrans,
+) => {
+  const amount = ((updatedTrans.amount / 1e8).toFixed(8)).replace(/(\.0+|0+)$/, '');
+  const fee = ((updatedTrans.feeAmount / 1e8).toFixed(8)).replace(/(\.0+|0+)$/, '');
+  const total = (((updatedTrans.amount - updatedTrans.feeAmount) / 1e8).toFixed(8)).replace(/(\.0+|0+)$/, '');
+  const result = new MessageEmbed()
+    .setColor(settings.bot.color)
+    .setTitle(`Withdraw #${updatedTrans.id}`)
+    .setDescription(`Your withdrawal has been accepted
+
+amount: **${amount} ${settings.coin.ticker}**
+fee: **${fee} ${settings.coin.ticker}**
+total: **${total} ${settings.coin.ticker}**${settings.coin.setting === 'Pirate' && updatedTrans.memo && updatedTrans.memo !== '' ? `\nmemo: **${updatedTrans.memo}**` : ''}
+
+${settings.coin.explorer}/tx/${updatedTrans.txid}`)
+    .setTimestamp()
+    .setFooter({
+      text: `${settings.bot.name} v${pjson.version}`,
+      iconURL: settings.bot.logo,
+    });
+
+  return result;
+};
+
+export const discordWithdrawalConfirmedMessage = (userId, trans) => {
+  const result = new MessageEmbed()
+    .setColor(settings.bot.color)
+    .setTitle(`Withdraw #${trans.id}`)
+    .setDescription(`<@${userId}>, Your withdrawal has been complete`)
+    .setTimestamp()
+    .setFooter({
+      text: `${settings.bot.name} v${pjson.version}`,
+      iconURL: settings.bot.logo,
+    });
+
+  return result;
+};
+
+export const balanceMessage = (userId, user, priceInfo) => {
+  const result = new MessageEmbed()
+    .setColor(settings.bot.color)
+    .setTitle('Balance')
+    .setDescription(`<@${userId}>'s current available balance: ${user.wallet.available / 1e8} ${settings.coin.ticker}
+<@${userId}>'s current locked balance: ${user.wallet.locked / 1e8} ${settings.coin.ticker}
+Estimated value of <@${userId}>'s balance: $${(((user.wallet.available + user.wallet.locked) / 1e8) * priceInfo.price).toFixed(2)}`)
+    .setThumbnail(settings.bot.logo)
+    .setTimestamp()
+    .setFooter({
+      text: `${settings.bot.name} v${pjson.version}`,
+      iconURL: settings.bot.logo,
+    });
+
+  return result;
+};
+
+export const depositAddressMessage = (userId, user) => {
+  const result = new MessageEmbed()
+    .setColor(settings.bot.color)
+    .setTitle('Deposit')
+    .setDescription(`<@${userId}>'s deposit address:
+*${user.wallet.addresses[0].address}*`)
+    .setImage("attachment://qr.png")
+    .setTimestamp()
+    .setFooter({
+      text: `${settings.bot.name} v${pjson.version}`,
+      iconURL: settings.bot.logo,
+    });
+
+  return result;
+};
+
+export const walletNotFoundMessage = (message, title) => {
+  const result = new MessageEmbed()
+    .setColor(settings.bot.color)
+    .setTitle(title)
+    .setDescription(`<@${message.author.id}>, Wallet not found`)
+    .setTimestamp()
+    .setFooter({
+      text: `${settings.bot.name} v${pjson.version}`,
+      iconURL: settings.bot.logo,
+    });
+
+  return result;
+};
+
+export const userNotFoundMessage = (
+  message,
+  title,
+) => {
+  const result = new MessageEmbed()
+    .setColor(settings.bot.color)
+    .setTitle(title)
+    .setDescription(`<@${message.author.id}>, User not found`)
+    .setTimestamp()
+    .setFooter({
+      text: `${settings.bot.name} v${pjson.version}`,
+      iconURL: settings.bot.logo,
+    });
+
+  return result;
+};
+
+export const NotInDirectMessage = (message, title) => {
+  const result = new MessageEmbed()
+    .setColor(settings.bot.color)
+    .setTitle(title)
+    .setDescription(`<@${message.author.id}>, Can't use this command in a direct message`)
+    .setThumbnail(settings.bot.logo)
+    .setTimestamp()
+    .setFooter({
+      text: `${settings.bot.name} v${pjson.version}`,
+      iconURL: settings.bot.logo,
+    });
+
+  return result;
+};
+
+export const discordWelcomeMessage = (
+  userInfo,
+) => {
+  const result = new MessageEmbed()
+    .setColor(settings.bot.color)
+    .setTitle(`Bot`)
+    .setDescription(`Welcome <@${userInfo.id}>, Welcome to Runebase.
+Type "${settings.bot.command} help" for bot usage info`)
+    .setThumbnail(settings.bot.logo)
+    .setTimestamp()
+    .setFooter({
+      text: `${settings.bot.name} v${pjson.version}`,
+      iconURL: settings.bot.logo,
+    });
+
+  return result;
+};
+
+export const discordBotMaintenanceMessage = () => {
+  const result = new MessageEmbed()
+    .setColor(settings.bot.color)
+    .setTitle(`Bot`)
+    .setDescription(`Discord tipbot maintenance`)
+    .setThumbnail(settings.bot.logo)
+    .setTimestamp()
+    .setFooter({
+      text: `${settings.bot.name} v${pjson.version}`,
+      iconURL: settings.bot.logo,
+    });
+
+  return result;
+};
+
+export const successUnlinkAddress = (
+  message,
+  address,
+) => {
+  const result = new MessageEmbed()
+    .setColor(settings.bot.color)
+    .setTitle('Unlink Tokel Address')
+    .setDescription(`<@${message.author.id}>, successfully unlinked ${address}`)
+    .setTimestamp()
+    .setFooter({
+      text: `${settings.bot.name} v${pjson.version}`,
+      iconURL: settings.bot.logo,
+    });
+
+  return result;
+};
+
+export const cancelUnlinkAddress = (
+  message,
+) => {
+  const result = new MessageEmbed()
+    .setColor(settings.bot.color)
+    .setTitle('Unlink Tokel Address')
+    .setDescription(`<@${message.author.id}>, you canceled unlinking your address`)
+    .setTimestamp()
+    .setFooter({
+      text: `${settings.bot.name} v${pjson.version}`,
+      iconURL: settings.bot.logo,
+    });
+
+  return result;
+};
+
+export const timeOutUnlinkAddressMessage = (
+  message,
+) => {
+  const result = new MessageEmbed()
+    .setColor(settings.bot.color)
+    .setTitle('Unlink Tokel Address')
+    .setDescription(`<@${message.author.id}>, your request to unlink a tokel address has expired`)
+    .setTimestamp()
+    .setFooter({
+      text: `${settings.bot.name} v${pjson.version}`,
+      iconURL: settings.bot.logo,
+    });
+
+  return result;
+};
+
+export const confirmUnlinkAddress = (
+  message,
+  address,
+) => {
+  const result = new MessageEmbed()
+    .setColor(settings.bot.color)
+    .setTitle('Unlink Tokel Address')
+    .setDescription(`<@${message.author.id}>, are you sure you want to unlink ${address}?`)
+    .setTimestamp()
+    .setFooter({
+      text: `${settings.bot.name} v${pjson.version}`,
+      iconURL: settings.bot.logo,
+    });
+
+  return result;
+};
+
+export const discordBotDisabledMessage = () => {
+  const result = new MessageEmbed()
+    .setColor(settings.bot.color)
+    .setTitle(`Bot`)
+    .setDescription(`Discord tipbot disabled`)
+    .setThumbnail(settings.bot.logo)
+    .setTimestamp()
+    .setFooter({
+      text: `${settings.bot.name} v${pjson.version}`,
+      iconURL: settings.bot.logo,
+    });
+
+  return result;
+};
+
+export const warnDirectMessage = (userId, title) => {
+  const result = new MessageEmbed()
+    .setColor(settings.bot.color)
+    .setTitle(title)
+    .setDescription(`<@${userId}>, I've sent you a direct message.`)
+    .setThumbnail(settings.bot.logo)
+    .setTimestamp()
+    .setFooter({
+      text: `${settings.bot.name} v${pjson.version}`,
+      iconURL: settings.bot.logo,
+    });
+
+  return result;
+};
+
+export const AccountInfoMessage = () => {
+  const result = new MessageEmbed()
+    .setColor(settings.bot.color)
+    .setTitle('Account Information')
+    .setDescription(`Shows discord account information`)
+    .setThumbnail(settings.bot.logo)
+    .setTimestamp()
+    .setFooter({
+      text: `${settings.bot.name} v${pjson.version}`,
+      iconURL: settings.bot.logo,
+    });
+
+  return result;
+};
+
+export const discordTransactionMemoTooLongMessage = (
+  message,
+  memoLength,
+) => {
+  const result = new MessageEmbed()
+    .setColor(settings.bot.color)
+    .setTitle('Withdraw')
+    .setDescription(`<@${message.author.id}>, Your withdrawal memo is too long!
+We found ${memoLength} characters, maximum length is 512`)
+    .setThumbnail(settings.bot.logo)
+    .setTimestamp()
+    .setFooter({
+      text: `${settings.bot.name} v${pjson.version}`,
+      iconURL: settings.bot.logo,
+    });
+
+  return result;
+};
+
+export const helpMessage = (withdraw) => {
+  const result = new MessageEmbed()
+    .setColor(settings.bot.color)
+    .setTitle(`${`${settings.bot.name} v${pjson.version}`} Help`)
+    .setDescription(`\`${settings.bot.command.discord}\`
+Displays this message
+
+\`${settings.bot.command.discord} help\`
+Displays this message
+
+\`${settings.bot.command.discord} account\`
+Displays your account information`)
+    .setTimestamp()
+    .setFooter({
+      text: `${settings.bot.name} v${pjson.version}`,
+      iconURL: settings.bot.logo,
+    });
+  return result;
+};
