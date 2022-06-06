@@ -45,7 +45,7 @@ export const discordExpTest = async (
   }).catch(async (err) => {
     try {
       await db.error.create({
-        type: 'help',
+        type: 'expTest',
         error: `${err}`,
       });
     } catch (e) {
@@ -58,7 +58,7 @@ export const discordExpTest = async (
         await discordChannel.send({
           embeds: [
             cannotSendMessageUser(
-              "Help",
+              "expTest",
               message,
             ),
           ],
@@ -69,7 +69,7 @@ export const discordExpTest = async (
         await message.channel.send({
           embeds: [
             cannotSendMessageUser(
-              "Help",
+              "expTest",
               message,
             ),
           ],
@@ -82,7 +82,7 @@ export const discordExpTest = async (
       await discordChannel.send({
         embeds: [
           discordErrorMessage(
-            "Help",
+            "expTest",
           ),
         ],
       }).catch((e) => {
@@ -92,7 +92,7 @@ export const discordExpTest = async (
       await message.channel.send({
         embeds: [
           discordErrorMessage(
-            "Help",
+            "expTest",
           ),
         ],
       }).catch((e) => {

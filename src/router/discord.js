@@ -499,30 +499,30 @@ export const discordRouter = (
       }
     }
 
-    if (filteredMessageDiscord[1] && filteredMessageDiscord[1].toLowerCase() === 'account') {
-      const limited = await myRateLimiter(
-        discordClient,
-        message,
-        'Account',
-      );
-      if (limited) return;
-      await queue.add(async () => {
-        const task = await discordAccount(
-          message,
-          io,
-        );
-      });
-    }
+    // if (filteredMessageDiscord[1] && filteredMessageDiscord[1].toLowerCase() === 'account') {
+    //   const limited = await myRateLimiter(
+    //     discordClient,
+    //     message,
+    //     'Account',
+    //   );
+    //   if (limited) return;
+    //   await queue.add(async () => {
+    //     const task = await discordAccount(
+    //       message,
+    //       io,
+    //     );
+    //   });
+    // }
 
-    if (filteredMessageDiscord[1] && filteredMessageDiscord[1].toLowerCase() === 'exptest') {
-      await queue.add(async () => {
-        const task = await discordExpTest(
-          discordClient,
-          message,
-          io,
-        );
-      });
-    }
+    // if (filteredMessageDiscord[1] && filteredMessageDiscord[1].toLowerCase() === 'exptest') {
+    //   await queue.add(async () => {
+    //     const task = await discordExpTest(
+    //       discordClient,
+    //       message,
+    //       io,
+    //     );
+    //   });
+    // }
   });
   console.log(`Logged in as ${discordClient.user.tag}!`);
 };

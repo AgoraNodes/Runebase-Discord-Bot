@@ -40,7 +40,6 @@ export const discordWithdraw = async (
     }
     if (!user) return;
 
-    console.log('before validate amount withdraw');
     const [
       validAmount,
       activityValiateAmount,
@@ -145,7 +144,7 @@ export const discordWithdraw = async (
 
     const fee = ((amount / 100) * (setting.fee / 1e2)).toFixed(0);
     const transaction = await db.transaction.create({
-      addressId: wallet.addresses[0].id,
+      addressId: wallet.address.id,
       addressExternalId: addressExternal.id,
       phase: 'review',
       type: 'send',
@@ -171,34 +170,49 @@ export const discordWithdraw = async (
     );
     activity.unshift(activityCreate);
 
-    if (message.channel.type === 'DM') {
-      await message.author.send({
-        embeds: [
-          reviewMessage(
-            message,
-            transaction,
-          ),
-        ],
-      });
-    }
-
-    if (message.channel.type === 'GUILD_TEXT') {
-      await message.author.send({
-        embeds: [
-          reviewMessage(
-            message,
-            transaction,
-          ),
-        ],
-      });
-      await message.channel.send({
-        embeds: [
-          warnDirectMessage(
-            user.user_id,
-            'Withdraw',
-          ),
-        ],
-      });
+    if (message.type && message.type === 'APPLICATION_COMMAND') {
+      const discordUser = await discordClient.users.cache.get(message.user.id);
+      if (message.guildId) {
+        const discordChannel = await discordClient.channels.cache.get(message.channelId);
+        await discordChannel.send({
+          embeds: [
+            reviewMessage(
+              message.user.id,
+              transaction,
+            ),
+          ],
+        });
+      } else {
+        await discordUser.send({
+          embeds: [
+            reviewMessage(
+              message.user.id,
+              transaction,
+            ),
+          ],
+        });
+      }
+    } else {
+      if (message.channel.type === 'DM') {
+        await message.author.send({
+          embeds: [
+            reviewMessage(
+              message.author.id,
+              transaction,
+            ),
+          ],
+        });
+      }
+      if (message.channel.type === 'GUILD_TEXT') {
+        await message.channel.send({
+          embeds: [
+            reviewMessage(
+              message.author.id,
+              transaction,
+            ),
+          ],
+        });
+      }
     }
 
     t.afterCommit(() => {
@@ -207,7 +221,7 @@ export const discordWithdraw = async (
   }).catch(async (err) => {
     try {
       await db.error.create({
-        type: 'help',
+        type: 'withdraw',
         error: `${err}`,
       });
     } catch (e) {

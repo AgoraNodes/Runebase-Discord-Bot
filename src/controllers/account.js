@@ -79,7 +79,7 @@ export const discordAccount = async (
   }).catch(async (err) => {
     try {
       await db.error.create({
-        type: 'help',
+        type: 'account',
         error: `${err}`,
       });
     } catch (e) {
@@ -90,7 +90,7 @@ export const discordAccount = async (
       await message.channel.send({
         embeds: [
           cannotSendMessageUser(
-            "Help",
+            "Account",
             message,
           ),
         ],
@@ -101,7 +101,7 @@ export const discordAccount = async (
       await message.channel.send({
         embeds: [
           discordErrorMessage(
-            "Help",
+            "Account",
           ),
         ],
       }).catch((e) => {

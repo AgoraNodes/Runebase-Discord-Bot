@@ -104,7 +104,7 @@ export const discordPrice = async (
   }).catch(async (err) => {
     try {
       await db.error.create({
-        type: 'help',
+        type: 'price',
         error: `${err}`,
       });
     } catch (e) {

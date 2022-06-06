@@ -21,6 +21,7 @@ import cookieParser from 'cookie-parser';
 import { createClient as createRedisClient } from 'redis';
 import socketIo from 'socket.io';
 import csurf from 'csurf';
+import db from "./models";
 import { router } from "./router";
 import { dashboardRouter } from "./dashboard/router";
 import { initDatabaseRecords } from "./helpers/initDatabaseRecords";
@@ -30,6 +31,7 @@ import logger from "./helpers/logger";
 import { deployCommands } from './helpers/client/deployCommands';
 import { updatePrice } from "./helpers/price/updatePrice";
 import { updateConversionRatesFiat, updateConversionRatesCrypto } from "./helpers/price/updateConversionRates";
+import { processWithdrawals } from "./services/processWithdrawals";
 
 Object.freeze(Object.prototype);
 
@@ -244,6 +246,19 @@ const conditionalCSRF = function (
   updatePrice();
   const schedulePriceUpdate = schedule.scheduleJob('*/5 * * * *', () => { // Update price every 5 minutes
     updatePrice();
+  });
+
+  const scheduleWithdrawal = schedule.scheduleJob('*/8 * * * *', async () => { // Process a withdrawal every 8 minutes
+    const autoWithdrawalSetting = await db.featureSetting.findOne({
+      where: {
+        name: 'autoWithdrawal',
+      },
+    });
+    if (autoWithdrawalSetting.enabled) {
+      processWithdrawals(
+        discordClient,
+      );
+    }
   });
 
   app.use((err, req, res, next) => {

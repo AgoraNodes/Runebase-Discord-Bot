@@ -152,7 +152,7 @@ export const discordDeposit = async (
   }).catch(async (err) => {
     try {
       await db.error.create({
-        type: 'help',
+        type: 'deposit',
         error: `${err}`,
       });
     } catch (e) {

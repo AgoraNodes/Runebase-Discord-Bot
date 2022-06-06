@@ -196,7 +196,7 @@ export const discordUserWithdrawalRejectMessage = (title) => {
 };
 
 export const reviewMessage = (
-  message,
+  userId,
   transaction,
 ) => {
   const amount = ((transaction.amount / 1e8).toFixed(8)).replace(/(\.0+|0+)$/, '');
@@ -205,7 +205,7 @@ export const reviewMessage = (
   const result = new MessageEmbed()
     .setColor(settings.bot.color)
     .setTitle(`Withdraw #${transaction.id}`)
-    .setDescription(`<@${message.author.id}>, Your withdrawal is being reviewed
+    .setDescription(`<@${userId}>, Your withdrawal is being reviewed
 
 amount: **${amount} ${settings.coin.ticker}**
 fee: **${fee} ${settings.coin.ticker}**
