@@ -12,14 +12,14 @@ export const userWalletExist = async (
 ) => {
   let activity;
   let userId;
-  if (message.user) {
+  if (message.user && message.user.id) {
     userId = message.user.id;
   } else if (message.author) {
     userId = message.author.id;
+  } else {
+    userId = message.user;
   }
-  console.log(message);
-  console.log('userId');
-  console.log(userId);
+
   const user = await db.user.findOne({
     where: {
       user_id: `${userId}`,
@@ -48,16 +48,20 @@ export const userWalletExist = async (
       lock: t.LOCK.UPDATE,
       transaction: t,
     });
-    await message.reply({
-      embeds: [
-        userNotFoundMessage(
-          message,
-          capitalize(functionName),
-        ),
-      ],
-    });
+    if (
+      (message.user && message.user.id)
+      || (message.author && message.author.id)
+    ) {
+      await message.reply({
+        embeds: [
+          userNotFoundMessage(
+            message,
+            capitalize(functionName),
+          ),
+        ],
+      });
+    }
   }
-  console.log(user);
   return [
     user,
     activity,

@@ -396,14 +396,49 @@ export const ranksMessage = async (
   return result;
 };
 
-export const gainExpMessage = (
+export const gainTestExpMessage = (
   userId,
   amount,
 ) => {
   const result = new MessageEmbed()
     .setColor(settings.bot.color)
     .setTitle('Gain Exp')
-    .setDescription(`<@${userId}>, you have been rewarded ${amount} exp`)
+    .setDescription(`<@${userId}>, you have been rewarded ${amount} test experience`)
+    .setTimestamp()
+    .setFooter({
+      text: `${settings.bot.name} v${pjson.version}`,
+      iconURL: settings.bot.logo,
+    });
+
+  return result;
+};
+
+export const alreadyVotedTopGG = (
+  userId,
+) => {
+  const result = new MessageEmbed()
+    .setColor(settings.bot.color)
+    .setTitle('Gain Exp')
+    .setDescription(`<@${userId}>, Thank you for your enthousiasme.
+You already voted past 12h, so we could not grant you experience`)
+    .setTimestamp()
+    .setFooter({
+      text: `${settings.bot.name} v${pjson.version}`,
+      iconURL: settings.bot.logo,
+    });
+
+  return result;
+};
+
+export const gainVoteTopggExpMessage = (
+  userId,
+  amount,
+) => {
+  const result = new MessageEmbed()
+    .setColor(settings.bot.color)
+    .setTitle('Gain Exp')
+    .setDescription(`<@${userId}>, Thank you for voting for Runebase on TopGG.
+you have been rewarded ${amount} experience`)
     .setTimestamp()
     .setFooter({
       text: `${settings.bot.name} v${pjson.version}`,

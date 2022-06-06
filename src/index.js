@@ -36,6 +36,7 @@ Object.freeze(Object.prototype);
 config();
 
 const checkCSRFRoute = (req) => {
+  console.log('Checking CSFT ROUTE');
   const hostmachine = req.headers.host.split(':')[0];
   if (
     (
@@ -51,6 +52,9 @@ const checkCSRFRoute = (req) => {
         hostmachine === 'localhost'
         || hostmachine === '127.0.0.1'
       )
+    )
+    || (
+      req.url === '/api/vote/topgg'
     )
   ) {
     return true;

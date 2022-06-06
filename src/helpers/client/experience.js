@@ -4,11 +4,13 @@ import {
   gainExpMessage,
   levelUpMessage,
 } from '../../messages';
+import { handleExperienceMessage } from './messageHandlers/expierenceMessageHandler';
 
 export const gainExp = async (
   discordClient,
   userId,
   amount,
+  gainExpType,
   t,
 ) => {
   const user = await db.user.findOne({
@@ -26,15 +28,13 @@ export const gainExp = async (
   });
   const setting = await db.setting.findOne();
   const discordChannel = await discordClient.channels.cache.get(setting.expRewardChannelId);
-  await discordChannel.send({
-    content: `<@${updatedUser.user_id}>`,
-    embeds: [
-      gainExpMessage(
-        updatedUser.user_id,
-        amount,
-      ),
-    ],
-  });
+  await handleExperienceMessage(
+    discordChannel,
+    updatedUser,
+    amount,
+    gainExpType,
+  );
+
   const currentRank = await db.rank.findOne({
     where: {
       expNeeded: {

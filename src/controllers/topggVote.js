@@ -1,8 +1,7 @@
 /* eslint-disable import/prefer-default-export */
-import { Transaction } from "sequelize";
+import { Transaction, Op } from "sequelize";
 import {
-  warnDirectMessage,
-  helpMessage,
+  alreadyVotedTopGG,
   cannotSendMessageUser,
   discordErrorMessage,
 } from '../messages';
@@ -11,12 +10,11 @@ import logger from "../helpers/logger";
 import { userWalletExist } from "../helpers/client/userWalletExist";
 import { gainExp } from "../helpers/client/experience";
 
-export const discordExpTest = async (
+export const discordTopggVote = async (
   discordClient,
   message,
   io,
 ) => {
-  console.log('start exp test');
   const activity = [];
   await db.sequelize.transaction({
     isolationLevel: Transaction.ISOLATION_LEVELS.SERIALIZABLE,
@@ -27,38 +25,97 @@ export const discordExpTest = async (
     ] = await userWalletExist(
       message,
       t,
-      'expTest',
+      'topggvote',
     );
     if (userActivity) {
+      console.log('user not found');
       activity.unshift(userActivity);
     }
     if (!user) return;
 
+    console.log(new Date(Date.now() - (12 * 60 * 60 * 1000)));
+    const topggVoteRecord = await db.topggVote.findOne({
+      where: {
+        userId: user.id,
+        createdAt: {
+          [Op.gt]: new Date(Date.now() - (12 * 60 * 60 * 1000)),
+        },
+      },
+      lock: t.LOCK.UPDATE,
+      transaction: t,
+    });
+    console.log('after topgg voteRecord');
+    console.log(topggVoteRecord);
+    if (topggVoteRecord) {
+      console.log('record found skip voting');
+      const setting = await db.setting.findOne();
+      const discordChannel = await discordClient.channels.cache.get(setting.expRewardChannelId);
+      await discordChannel.send({
+        content: `<@${user.user_id}>`,
+        embeds: [
+          alreadyVotedTopGG(
+            user.user_id,
+          ),
+        ],
+      });
+      return;
+    }
+
+    const newTopggRecord = await db.topggVote.create({
+      userId: user.id,
+    }, {
+      lock: t.LOCK.UPDATE,
+      transaction: t,
+    });
+    console.log('after record create');
+
     const newExp = await gainExp(
       discordClient,
-      message.author.id,
+      message.user,
       10,
-      'testExp',
+      'topggVote',
       t,
     );
-    console.log('after exp test');
+
+    const preActivity = await db.activity.create({
+      type: 'topggvote_s',
+      earnerId: user.id,
+    }, {
+      lock: t.LOCK.UPDATE,
+      transaction: t,
+    });
+
+    const finalActivity = await db.activity.findOne({
+      where: {
+        id: preActivity.id,
+      },
+      include: [
+        {
+          model: db.user,
+          as: 'earner',
+        },
+      ],
+      lock: t.LOCK.UPDATE,
+      transaction: t,
+    });
+    activity.unshift(finalActivity);
   }).catch(async (err) => {
     try {
       await db.error.create({
-        type: 'help',
+        type: 'topggvote',
         error: `${err}`,
       });
     } catch (e) {
       logger.error(`Error Discord: ${e}`);
     }
-    logger.error(`Error Discord Help Requested by: ${message.author.id}-${message.author.username}#${message.author.discriminator} - ${err}`);
+    logger.error(`Error Discord topggvote Requested by: ${message.author.id}-${message.author.username}#${message.author.discriminator} - ${err}`);
     if (err.code && err.code === 50007) {
       if (message.type && message.type === 'APPLICATION_COMMAND') {
         const discordChannel = await discordClient.channels.cache.get(message.channelId);
         await discordChannel.send({
           embeds: [
             cannotSendMessageUser(
-              "Help",
+              "TopggVote",
               message,
             ),
           ],
@@ -69,7 +126,7 @@ export const discordExpTest = async (
         await message.channel.send({
           embeds: [
             cannotSendMessageUser(
-              "Help",
+              "TopggVote",
               message,
             ),
           ],
@@ -82,7 +139,7 @@ export const discordExpTest = async (
       await discordChannel.send({
         embeds: [
           discordErrorMessage(
-            "Help",
+            "TopggVote",
           ),
         ],
       }).catch((e) => {
@@ -92,7 +149,7 @@ export const discordExpTest = async (
       await message.channel.send({
         embeds: [
           discordErrorMessage(
-            "Help",
+            "TopggVote",
           ),
         ],
       }).catch((e) => {

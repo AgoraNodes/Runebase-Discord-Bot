@@ -1,9 +1,18 @@
 /* eslint-disable no-restricted-syntax */
+import { config } from "dotenv";
+import db from '../models';
 import walletNotifyRunebase from '../helpers/blockchain/runebase/walletNotify';
 import { startRunebaseSync } from "../services/syncRunebase";
 import {
   discordIncomingDepositMessage,
 } from '../messages';
+import { discordTopggVote } from '../controllers/topggVote';
+
+const Topgg = require("@top-gg/sdk");
+
+config();
+
+const webhook = new Topgg.Webhook(process.env.TOPGGAUTH);
 
 const localhostOnly = (
   req,
@@ -48,17 +57,6 @@ export const notifyRouter = (
       }
     },
     async (req, res) => {
-      console.log('FOUND DEPOSIT 1');
-      console.log('FOUND DEPOSIT 1');
-      console.log('FOUND DEPOSIT 1');
-      console.log('FOUND DEPOSIT 1');
-      console.log('FOUND DEPOSIT 1');
-      console.log('FOUND DEPOSIT 1');
-      console.log('FOUND DEPOSIT 1');
-      console.log('FOUND DEPOSIT 1');
-      console.log('FOUND DEPOSIT 1');
-      console.log('FOUND DEPOSIT 1');
-
       if (res.locals.error) {
         console.log(res.locals.error);
       } else if (!res.locals.error
@@ -66,18 +64,7 @@ export const notifyRouter = (
         && res.locals.detail.length > 0
       ) {
         for await (const detail of res.locals.detail) {
-          console.log('555555555555555555');
           if (detail.amount) {
-            console.log('FOUND DEPOSIT 2');
-            console.log('FOUND DEPOSIT 2');
-            console.log('FOUND DEPOSIT 2');
-            console.log('FOUND DEPOSIT 2');
-            console.log('FOUND DEPOSIT 2');
-            console.log('FOUND DEPOSIT 2');
-            console.log('FOUND DEPOSIT 2');
-            console.log('FOUND DEPOSIT 2');
-            console.log('FOUND DEPOSIT 2');
-
             try {
               const myClient = await discordClient.users.fetch(detail.userId, false);
               await myClient.send({
@@ -103,4 +90,25 @@ export const notifyRouter = (
       res.sendStatus(200);
     },
   );
+
+  app.post("/api/vote/topgg", webhook.listener(async (vote) => {
+    console.log(vote);
+    const isOurGuild = await db.setting.findOne({
+      where: {
+        discordHomeServerGuildId: vote.guild,
+      },
+    });
+    if (
+      isOurGuild
+      && vote.type === 'upvote'
+    ) {
+      await queue.add(async () => {
+        const task = await discordTopggVote(
+          discordClient,
+          vote,
+          io,
+        );
+      });
+    }
+  }));
 };

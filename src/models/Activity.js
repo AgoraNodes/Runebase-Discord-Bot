@@ -43,6 +43,8 @@ module.exports = (sequelize, DataTypes) => {
         'withdraw_s',
         'withdraw_f',
         'withdraw_i',
+        'topggvote_s',
+        'topggvote_f',
       ],
     },
     amount: {
@@ -87,6 +89,10 @@ module.exports = (sequelize, DataTypes) => {
     ActivityModel.belongsTo(model.transaction, {
       as: 'transaction',
       foreignKey: 'transactionId',
+    });
+    ActivityModel.belongsTo(model.topggVote, {
+      as: 'topggVote',
+      foreignKey: 'topggVoteId',
     });
   };
 
