@@ -4,7 +4,7 @@
   "description": "Bot for tokelverse discord",
   "scripts": {
     "dev": "nodemon --exec babel-node --max-old-space-size=8192 src/index.js",
-    "build": "rm -rf dist && babel src --out-dir dist",
+    "build": "rm -rf dist && babel src --out-dir dist --copy-files",
     "start": "NODE_ENV=production node dist/index.js",
     "lint": "eslint src",
     "db:makemigrations": "./node_modules/sequelize-auto-migrations/bin/makemigration.js"
