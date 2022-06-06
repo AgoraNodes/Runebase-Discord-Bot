@@ -170,7 +170,7 @@ export const discordIncomingDepositMessage = (detail) => {
     .setColor(settings.bot.color)
     .setTitle(`Deposit #${detail.transaction[0].id}`)
     .setDescription(`incoming deposit detected for ${detail.amount} ${settings.coin.ticker}
-Balance will be reflected in your wallet in ~${settings.min.confirmations}+ confirmations
+Balance will be reflected in your wallet in ~${settings.confirmations}+ confirmations
 ${settings.coin.explorer}/tx/${detail.transaction[0].txid}`)
     .setTimestamp()
     .setFooter({

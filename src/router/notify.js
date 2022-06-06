@@ -1,6 +1,9 @@
 /* eslint-disable no-restricted-syntax */
 import walletNotifyRunebase from '../helpers/blockchain/runebase/walletNotify';
 import { startRunebaseSync } from "../services/syncRunebase";
+import {
+  discordIncomingDepositMessage,
+} from '../messages';
 
 const localhostOnly = (
   req,
@@ -45,6 +48,17 @@ export const notifyRouter = (
       }
     },
     async (req, res) => {
+      console.log('FOUND DEPOSIT 1');
+      console.log('FOUND DEPOSIT 1');
+      console.log('FOUND DEPOSIT 1');
+      console.log('FOUND DEPOSIT 1');
+      console.log('FOUND DEPOSIT 1');
+      console.log('FOUND DEPOSIT 1');
+      console.log('FOUND DEPOSIT 1');
+      console.log('FOUND DEPOSIT 1');
+      console.log('FOUND DEPOSIT 1');
+      console.log('FOUND DEPOSIT 1');
+
       if (res.locals.error) {
         console.log(res.locals.error);
       } else if (!res.locals.error
@@ -52,11 +66,28 @@ export const notifyRouter = (
         && res.locals.detail.length > 0
       ) {
         for await (const detail of res.locals.detail) {
+          console.log('555555555555555555');
           if (detail.amount) {
-            // await incomingDepositMessageHandler(
-            //   discordClient,
-            //   detail,
-            // );
+            console.log('FOUND DEPOSIT 2');
+            console.log('FOUND DEPOSIT 2');
+            console.log('FOUND DEPOSIT 2');
+            console.log('FOUND DEPOSIT 2');
+            console.log('FOUND DEPOSIT 2');
+            console.log('FOUND DEPOSIT 2');
+            console.log('FOUND DEPOSIT 2');
+            console.log('FOUND DEPOSIT 2');
+            console.log('FOUND DEPOSIT 2');
+
+            try {
+              const myClient = await discordClient.users.fetch(detail.userId, false);
+              await myClient.send({
+                embeds: [
+                  discordIncomingDepositMessage(detail),
+                ],
+              });
+            } catch (e) {
+              console.log(e);
+            }
           }
         }
       }

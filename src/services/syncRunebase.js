@@ -5,9 +5,11 @@ import { Transaction } from "sequelize";
 import db from '../models';
 import settings from '../config/settings';
 import { getInstance } from "./rclient";
-// import { waterFaucet } from "../helpers/waterFaucet";
-// import { isDepositOrWithdrawalCompleteMessageHandler } from '../helpers/messageHandlers';
 import logger from "../helpers/logger";
+import {
+  discordDepositConfirmedMessage,
+  discordWithdrawalConfirmedMessage,
+} from '../messages';
 
 const sequentialLoop = async (
   iterations,
@@ -147,21 +149,6 @@ const syncTransactions = async (
                 lock: t.LOCK.UPDATE,
               });
 
-              // const faucetSetting = await db.features.findOne({
-              //   where: {
-              //     type: 'global',
-              //     name: 'faucet',
-              //   },
-              //   transaction: t,
-              //   lock: t.LOCK.UPDATE,
-              // });
-
-              // const faucetWatered = await waterFaucet(
-              //   t,
-              //   Number(processTransaction.feeAmount),
-              //   faucetSetting,
-              // );
-
               userToMessage = await db.user.findOne({
                 where: {
                   id: updatedWallet.userId,
@@ -220,16 +207,28 @@ const syncTransactions = async (
               },
             );
           }
-          // await isDepositOrWithdrawalCompleteMessageHandler(
-          //   isDepositComplete,
-          //   isWithdrawalComplete,
-          //   discordClient,
-          //   telegramClient,
-          //   matrixClient,
-          //   userToMessage,
-          //   trans,
-          //   detail.amount,
-          // );
+          if (isDepositComplete) {
+            const myClient = await discordClient.users.fetch(userToMessage.user_id, false);
+            await myClient.send({
+              embeds: [
+                discordDepositConfirmedMessage(
+                  detail.amount,
+                  trans,
+                ),
+              ],
+            });
+          }
+          if (isWithdrawalComplete) {
+            const myClient = await discordClient.users.fetch(userToMessage.user_id, false);
+            await myClient.send({
+              embeds: [
+                discordWithdrawalConfirmedMessage(
+                  userToMessage.user_id,
+                  trans,
+                ),
+              ],
+            });
+          }
         });
       }).catch(async (err) => {
         try {
@@ -245,7 +244,6 @@ const syncTransactions = async (
       });
     }
   }
-  // return true;
 };
 
 const insertBlock = async (startBlock) => {

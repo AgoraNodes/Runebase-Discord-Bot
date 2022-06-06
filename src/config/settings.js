@@ -10,5 +10,6 @@ module.exports = {
   coin: {
     ticker: 'RUNES',
     name: 'runebase',
+    explorer: 'https://explorer.runebase.io',
   },
 };
