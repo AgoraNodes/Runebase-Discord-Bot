@@ -6,10 +6,9 @@ export const fetchBalance = async (
   res,
   next,
 ) => {
-  let response;
-  res.locals.name = 'balance';
+  const response = await getInstance().getWalletInfo();
 
-  response = await getInstance().getWalletInfo();
+  res.locals.name = 'balance';
   res.locals.result = {
     amount: response.balance,
   };

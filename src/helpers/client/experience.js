@@ -1,7 +1,6 @@
 import { Op } from "sequelize";
 import db from "../../models";
 import {
-  gainExpMessage,
   levelUpMessage,
 } from '../../messages';
 import { handleExperienceMessage } from './messageHandlers/expierenceMessageHandler';
@@ -12,6 +11,7 @@ export const gainExp = async (
   amount,
   gainExpType,
   t,
+  userJoined = false,
 ) => {
   const user = await db.user.findOne({
     where: {
@@ -33,6 +33,7 @@ export const gainExp = async (
     updatedUser,
     amount,
     gainExpType,
+    userJoined,
   );
 
   const currentRank = await db.rank.findOne({

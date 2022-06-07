@@ -1,6 +1,7 @@
 import {
   gainTestExpMessage,
   gainVoteTopggExpMessage,
+  invitedNewUserRewardMessage,
 } from '../../../messages';
 
 export const handleExperienceMessage = async (
@@ -8,6 +9,7 @@ export const handleExperienceMessage = async (
   updatedUser,
   amount,
   gainExpType,
+  userJoined = false,
 ) => {
   if (gainExpType === 'testExp') {
     await discordChannel.send({
@@ -26,6 +28,18 @@ export const handleExperienceMessage = async (
       embeds: [
         gainVoteTopggExpMessage(
           updatedUser.user_id,
+          amount,
+        ),
+      ],
+    });
+  }
+  if (gainExpType === 'userJoined') {
+    await discordChannel.send({
+      content: `<@${updatedUser.user_id}>`,
+      embeds: [
+        invitedNewUserRewardMessage(
+          updatedUser.user_id,
+          userJoined,
           amount,
         ),
       ],

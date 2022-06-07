@@ -21,6 +21,7 @@ export const updateBotSettings = async (
     maintenance: req.body.maintenance,
     discordHomeServerGuildId: req.body.guildId,
     expRewardChannelId: req.body.expRewardChannelId,
+    joinedRoleId: req.body.joinedRoleId,
   });
   next();
 };

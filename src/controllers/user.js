@@ -107,12 +107,14 @@ export const createUpdateDiscordUser = async (
   queue,
 ) => {
   // let user;
+  let user;
+  let newAccount;
   await queue.add(async () => {
     // let newAccount = false;
     await db.sequelize.transaction({
       isolationLevel: Transaction.ISOLATION_LEVELS.SERIALIZABLE,
     }, async (t) => {
-      const [
+      [
         user,
         newAccount,
       ] = await generateUserWalletAndAddress(
@@ -150,6 +152,7 @@ export const createUpdateDiscordUser = async (
       console.log(err.message);
     });
   });
+  return user;
 };
 
 export const updateDiscordLastSeen = async (

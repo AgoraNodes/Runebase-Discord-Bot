@@ -430,6 +430,25 @@ You already voted past 12h, so we could not grant you experience`)
   return result;
 };
 
+export const invitedNewUserRewardMessage = (
+  userId,
+  joinedUserId,
+  amount,
+) => {
+  const result = new MessageEmbed()
+    .setColor(settings.bot.color)
+    .setTitle('Gain Exp')
+    .setDescription(`<@${userId}>, Thank you for inviting <@${joinedUserId}> to the Runebase server.
+you have been rewarded ${amount} experience`)
+    .setTimestamp()
+    .setFooter({
+      text: `${settings.bot.name} v${pjson.version}`,
+      iconURL: settings.bot.logo,
+    });
+
+  return result;
+};
+
 export const gainVoteTopggExpMessage = (
   userId,
   amount,

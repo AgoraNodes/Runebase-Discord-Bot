@@ -13,6 +13,7 @@ import { discordDeposit } from '../controllers/deposit';
 import { discordPrice } from '../controllers/price';
 import { discordBalance } from '../controllers/balance';
 import { discordWithdraw } from '../controllers/withdraw';
+import { discordUserJoined } from '../controllers/userJoined';
 import { discordExpTest } from '../controllers/expTest';
 import { myRateLimiter } from '../helpers/rateLimit';
 import { discordFeatureSettings } from '../controllers/featureSetting';
@@ -24,19 +25,88 @@ import {
   discordServerBannedMessage,
   discordChannelBannedMessage,
 } from '../messages';
+import db from "../models";
 
 config();
 
-export const discordRouter = (
+export const discordRouter = async (
   discordClient,
   queue,
   io,
 ) => {
-  discordClient.user.setPresence({
-    activities: [{
-      name: `${settings.bot.command}`,
-      type: "PLAYING",
-    }],
+  const userInvites = {};
+
+  discordClient.on('ready', async () => {
+    const setting = await db.setting.findOne();
+    discordClient.guilds.cache.each((guild) => {
+      if (guild.id === setting.discordHomeServerGuildId) {
+        guild.invites.fetch().then((guildInvites) => {
+          guildInvites.each((guildInvite) => {
+            userInvites[guildInvite.code] = guildInvite.uses;
+          });
+        });
+      }
+    });
+  });
+
+  discordClient.on('inviteCreate', (invite) => {
+    userInvites[invite.code] = invite.uses;
+  });
+
+  discordClient.on('guildMemberAdd', async (member) => {
+    const setting = await db.setting.findOne();
+
+    if (member.guild.id === setting.discordHomeServerGuildId) {
+      const newUser = await createUpdateDiscordUser(
+        discordClient,
+        member.user,
+        queue,
+      );
+      member.guild.invites.fetch().then((guildInvites) => { // get all guild invites
+        guildInvites.each(async (invite) => { // basically a for loop over the invites
+          if (invite.uses !== userInvites[invite.code]) { // if it doesn't match what we stored:
+            await queue.add(async () => {
+              const findUserJoinedRecord = await db.userJoined.findOne({
+                where: {
+                  userJoinedId: newUser.id,
+                },
+              });
+              if (!findUserJoinedRecord) {
+                const inviter = await db.user.findOne({
+                  where: {
+                    user_id: invite.inviter.id,
+                  },
+                });
+                if (inviter) {
+                  const newUserJoinedRecord = await db.userJoined.create({
+                    userJoinedId: newUser.id,
+                    userInvitedById: inviter.id,
+                  });
+                }
+              }
+            });
+          }
+        });
+      });
+    }
+  });
+
+  discordClient.on('guildMemberUpdate', async (
+    oldMember,
+    newMember,
+  ) => {
+    const setting = await db.setting.findOne();
+    const newHas = newMember.roles.cache.has(setting.joinedRoleId);
+    if (newHas) {
+      // Role has been added
+      await queue.add(async () => {
+        const task = await discordUserJoined(
+          discordClient,
+          newMember,
+          io,
+        );
+      });
+    }
   });
 
   discordClient.on('voiceStateUpdate', async (oldMember, newMember) => {
@@ -524,5 +594,4 @@ export const discordRouter = (
     //  });
     // }
   });
-  console.log(`Logged in as ${discordClient.user.tag}!`);
 };

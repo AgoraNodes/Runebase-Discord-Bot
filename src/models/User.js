@@ -38,6 +38,11 @@ module.exports = (sequelize, DataTypes) => {
       defaultValue: 0,
       allowNull: false,
     },
+    totalInvitedUsersCount: {
+      type: DataTypes.BIGINT,
+      defaultValue: 0,
+      allowNull: false,
+    },
   };
 
   const modelOptions = {
