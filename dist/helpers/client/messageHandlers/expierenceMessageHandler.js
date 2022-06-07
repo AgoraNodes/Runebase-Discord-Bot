@@ -15,34 +15,50 @@ var _messages = require("../../../messages");
 
 var handleExperienceMessage = /*#__PURE__*/function () {
   var _ref = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(discordChannel, updatedUser, amount, gainExpType) {
+    var userJoined,
+        _args = arguments;
     return _regenerator["default"].wrap(function _callee$(_context) {
       while (1) {
         switch (_context.prev = _context.next) {
           case 0:
+            userJoined = _args.length > 4 && _args[4] !== undefined ? _args[4] : false;
+
             if (!(gainExpType === 'testExp')) {
-              _context.next = 3;
+              _context.next = 4;
               break;
             }
 
-            _context.next = 3;
+            _context.next = 4;
             return discordChannel.send({
               content: "<@".concat(updatedUser.user_id, ">"),
               embeds: [(0, _messages.gainTestExpMessage)(updatedUser.user_id, amount)]
             });
 
-          case 3:
+          case 4:
             if (!(gainExpType === 'topggVote')) {
-              _context.next = 6;
+              _context.next = 7;
               break;
             }
 
-            _context.next = 6;
+            _context.next = 7;
             return discordChannel.send({
               content: "<@".concat(updatedUser.user_id, ">"),
               embeds: [(0, _messages.gainVoteTopggExpMessage)(updatedUser.user_id, amount)]
             });
 
-          case 6:
+          case 7:
+            if (!(gainExpType === 'userJoined')) {
+              _context.next = 10;
+              break;
+            }
+
+            _context.next = 10;
+            return discordChannel.send({
+              content: "<@".concat(updatedUser.user_id, ">"),
+              embeds: [(0, _messages.invitedNewUserRewardMessage)(updatedUser.user_id, userJoined, amount)]
+            });
+
+          case 10:
           case "end":
             return _context.stop();
         }

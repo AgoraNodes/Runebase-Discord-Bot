@@ -5,7 +5,7 @@ var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefau
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.warnDirectMessage = exports.walletNotFoundMessage = exports.userNotFoundMessage = exports.unableToWithdrawToSelfMessage = exports.timeOutMessage = exports.reviewMessage = exports.ranksMessage = exports.priceMessage = exports.minimumMessage = exports.levelUpMessage = exports.invalidAmountMessage = exports.invalidAddressMessage = exports.insufficientBalanceMessage = exports.helpMessage = exports.gainVoteTopggExpMessage = exports.gainTestExpMessage = exports.featureDisabledServerMessage = exports.featureDisabledGlobalMessage = exports.featureDisabledChannelMessage = exports.enterWithdrawalAmount = exports.enterWithdrawalAddress = exports.discordWithdrawalConfirmedMessage = exports.discordWithdrawalAcceptedMessage = exports.discordWelcomeMessage = exports.discordUserWithdrawalRejectMessage = exports.discordUserBannedMessage = exports.discordServerBannedMessage = exports.discordLimitSpamMessage = exports.discordIncomingDepositMessage = exports.discordErrorMessage = exports.discordDepositConfirmedMessage = exports.discordChannelBannedMessage = exports.discordBotMaintenanceMessage = exports.discordBotDisabledMessage = exports.depositAddressMessage = exports.coinInfoMessage = exports.cannotSendMessageUser = exports.balanceMessage = exports.alreadyVotedTopGG = exports.NotInDirectMessage = exports.AccountInfoMessage = void 0;
+exports.warnDirectMessage = exports.walletNotFoundMessage = exports.userNotFoundMessage = exports.unableToWithdrawToSelfMessage = exports.timeOutMessage = exports.reviewMessage = exports.ranksMessage = exports.priceMessage = exports.minimumMessage = exports.levelUpMessage = exports.invitedNewUserRewardMessage = exports.invalidAmountMessage = exports.invalidAddressMessage = exports.insufficientBalanceMessage = exports.helpMessage = exports.gainVoteTopggExpMessage = exports.gainTestExpMessage = exports.featureDisabledServerMessage = exports.featureDisabledGlobalMessage = exports.featureDisabledChannelMessage = exports.enterWithdrawalAmount = exports.enterWithdrawalAddress = exports.discordWithdrawalConfirmedMessage = exports.discordWithdrawalAcceptedMessage = exports.discordWelcomeMessage = exports.discordUserWithdrawalRejectMessage = exports.discordUserBannedMessage = exports.discordServerBannedMessage = exports.discordLimitSpamMessage = exports.discordIncomingDepositMessage = exports.discordErrorMessage = exports.discordDepositConfirmedMessage = exports.discordChannelBannedMessage = exports.discordBotMaintenanceMessage = exports.discordBotDisabledMessage = exports.depositAddressMessage = exports.coinInfoMessage = exports.cannotSendMessageUser = exports.balanceMessage = exports.alreadyVotedTopGG = exports.NotInDirectMessage = exports.AccountInfoMessage = void 0;
 
 var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
 
@@ -321,6 +321,16 @@ var alreadyVotedTopGG = function alreadyVotedTopGG(userId) {
 };
 
 exports.alreadyVotedTopGG = alreadyVotedTopGG;
+
+var invitedNewUserRewardMessage = function invitedNewUserRewardMessage(userId, joinedUserId, amount) {
+  var result = new _discord.MessageEmbed().setColor(_settings["default"].bot.color).setTitle('Gain Exp').setDescription("<@".concat(userId, ">, Thank you for inviting <@").concat(joinedUserId, "> to the Runebase server.\nyou have been rewarded ").concat(amount, " experience")).setTimestamp().setFooter({
+    text: "".concat(_settings["default"].bot.name, " v").concat(_package["default"].version),
+    iconURL: _settings["default"].bot.logo
+  });
+  return result;
+};
+
+exports.invitedNewUserRewardMessage = invitedNewUserRewardMessage;
 
 var gainVoteTopggExpMessage = function gainVoteTopggExpMessage(userId, amount) {
   var result = new _discord.MessageEmbed().setColor(_settings["default"].bot.color).setTitle('Gain Exp').setDescription("<@".concat(userId, ">, Thank you for voting for Runebase on TopGG.\nyou have been rewarded ").concat(amount, " experience")).setTimestamp().setFooter({

@@ -44,7 +44,8 @@ var updateBotSettings = /*#__PURE__*/function () {
               enabled: req.body.enabled,
               maintenance: req.body.maintenance,
               discordHomeServerGuildId: req.body.guildId,
-              expRewardChannelId: req.body.expRewardChannelId
+              expRewardChannelId: req.body.expRewardChannelId,
+              joinedRoleId: req.body.joinedRoleId
             });
 
           case 8:

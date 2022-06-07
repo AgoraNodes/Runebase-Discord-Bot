@@ -22,12 +22,12 @@ var fetchBalance = /*#__PURE__*/function () {
       while (1) {
         switch (_context.prev = _context.next) {
           case 0:
-            res.locals.name = 'balance';
-            _context.next = 3;
+            _context.next = 2;
             return (0, _rclient.getInstance)().getWalletInfo();
 
-          case 3:
+          case 2:
             response = _context.sent;
+            res.locals.name = 'balance';
             res.locals.result = {
               amount: response.balance
             };

@@ -190,6 +190,7 @@ exports.generateUserWalletAndAddress = generateUserWalletAndAddress;
 
 var createUpdateDiscordUser = /*#__PURE__*/function () {
   var _ref2 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee6(discordClient, userInfo, queue) {
+    var user, newAccount;
     return _regenerator["default"].wrap(function _callee6$(_context6) {
       while (1) {
         switch (_context6.prev = _context6.next) {
@@ -205,7 +206,7 @@ var createUpdateDiscordUser = /*#__PURE__*/function () {
                         isolationLevel: _sequelize.Transaction.ISOLATION_LEVELS.SERIALIZABLE
                       }, /*#__PURE__*/function () {
                         var _ref4 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee3(t) {
-                          var _yield$generateUserWa, _yield$generateUserWa2, user, newAccount;
+                          var _yield$generateUserWa, _yield$generateUserWa2;
 
                           return _regenerator["default"].wrap(function _callee3$(_context3) {
                             while (1) {
@@ -317,6 +318,9 @@ var createUpdateDiscordUser = /*#__PURE__*/function () {
             })));
 
           case 2:
+            return _context6.abrupt("return", user);
+
+          case 3:
           case "end":
             return _context6.stop();
         }

@@ -19,7 +19,7 @@ var _models = _interopRequireDefault(require("../../models"));
 
 var fetchLiability = /*#__PURE__*/function () {
   var _ref = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(req, res, next) {
-    var available, locked, runningReactdrops, runningTrivia, unconfirmedDeposits, unconfirmledWithdrawals, faucetAmount, sumAvailable, sumLocked, sumUnconfirmedDeposits, sumUnconfirmedWithdrawals, sumRunningReactdrops, sumRunningTrivia, faucet;
+    var available, locked, runningReactdrops, runningTrivia, unconfirmedDeposits, unconfirmledWithdrawals, faucetAmount, sumAvailable, sumLocked, sumUnconfirmedDeposits, sumUnconfirmedWithdrawals;
     return _regenerator["default"].wrap(function _callee$(_context) {
       while (1) {
         switch (_context.prev = _context.next) {
@@ -69,45 +69,19 @@ var fetchLiability = /*#__PURE__*/function () {
 
           case 18:
             sumUnconfirmedWithdrawals = _context.sent;
-            _context.next = 21;
-            return _models["default"].reactdrop.findAll({
-              attributes: [[_sequelize.Sequelize.fn('sum', _sequelize.Sequelize.col('amount')), 'total_amount']],
-              where: (0, _defineProperty2["default"])({}, _sequelize.Op.and, [{
-                ended: false
-              }])
-            });
-
-          case 21:
-            sumRunningReactdrops = _context.sent;
-            _context.next = 24;
-            return _models["default"].trivia.findAll({
-              attributes: [[_sequelize.Sequelize.fn('sum', _sequelize.Sequelize.col('amount')), 'total_amount']],
-              where: (0, _defineProperty2["default"])({}, _sequelize.Op.and, [{
-                ended: false
-              }])
-            });
-
-          case 24:
-            sumRunningTrivia = _context.sent;
-            _context.next = 27;
-            return _models["default"].faucet.findOne();
-
-          case 27:
-            faucet = _context.sent;
-            faucetAmount = faucet.amount ? faucet.amount : 0;
+            // const faucet = await db.faucet.findOne();
+            // faucetAmount = faucet.amount ? faucet.amount : 0;
             available = sumAvailable[0].dataValues.total_available ? sumAvailable[0].dataValues.total_available : 0;
             locked = sumLocked[0].dataValues.total_locked ? sumLocked[0].dataValues.total_locked : 0;
             unconfirmedDeposits = sumUnconfirmedDeposits[0].dataValues.total_amount ? sumUnconfirmedDeposits[0].dataValues.total_amount : 0;
             unconfirmledWithdrawals = sumUnconfirmedWithdrawals[0].dataValues.total_amount ? sumUnconfirmedWithdrawals[0].dataValues.total_amount : 0;
-            runningReactdrops = sumRunningReactdrops[0].dataValues.total_amount ? sumRunningReactdrops[0].dataValues.total_amount : 0;
-            runningTrivia = sumRunningTrivia[0].dataValues.total_amount ? sumRunningTrivia[0].dataValues.total_amount : 0;
             res.locals.name = "liability";
             res.locals.result = {
-              amount: Number(available) + Number(locked) + Number(unconfirmedDeposits) - Number(unconfirmledWithdrawals) + Number(runningTrivia) + Number(runningReactdrops) + Number(faucetAmount)
+              amount: Number(available) + Number(locked) + Number(unconfirmedDeposits) - Number(unconfirmledWithdrawals)
             };
             next();
 
-          case 38:
+          case 26:
           case "end":
             return _context.stop();
         }

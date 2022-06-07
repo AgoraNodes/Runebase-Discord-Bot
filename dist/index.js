@@ -66,6 +66,8 @@ var _updateConversionRates = require("./helpers/price/updateConversionRates");
 
 var _processWithdrawals = require("./services/processWithdrawals");
 
+var _settings = _interopRequireDefault(require("./config/settings"));
+
 /* eslint-disable import/first */
 Object.freeze(Object.prototype);
 (0, _dotenv.config)();
@@ -210,27 +212,37 @@ var conditionalCSRF = function conditionalCSRF(req, res, next) {
             partials: ['MESSAGE', 'CHANNEL', 'REACTION']
           });
           _context3.next = 32;
-          return discordClient.login(process.env.DISCORD_CLIENT_TOKEN);
+          return (0, _router.router)(app, discordClient, io, queue);
 
         case 32:
           _context3.next = 34;
-          return (0, _initDatabaseRecords.initDatabaseRecords)(discordClient);
+          return discordClient.login(process.env.DISCORD_CLIENT_TOKEN);
 
         case 34:
-          _context3.next = 36;
+          console.log("Logged in as ".concat(discordClient.user.tag, "!"));
+          discordClient.user.setPresence({
+            activities: [{
+              name: "".concat(_settings["default"].bot.command),
+              type: "PLAYING"
+            }]
+          });
+          (0, _router2.dashboardRouter)(app, io, discordClient);
+          _context3.next = 39;
+          return (0, _initDatabaseRecords.initDatabaseRecords)(discordClient);
+
+        case 39:
+          _context3.next = 41;
           return (0, _deployCommands.deployCommands)(process.env.DISCORD_CLIENT_TOKEN, discordClient.user.id);
 
-        case 36:
-          _context3.next = 38;
+        case 41:
+          _context3.next = 43;
           return (0, _syncRunebase.startRunebaseSync)(discordClient, io, queue);
 
-        case 38:
-          (0, _router.router)(app, discordClient, io, queue);
-          (0, _router2.dashboardRouter)(app, io, discordClient);
-          _context3.next = 42;
+        case 43:
+          _context3.next = 45;
           return (0, _patcher.patchRunebaseDeposits)(discordClient);
 
-        case 42:
+        case 45:
           schedulePatchDeposits = _nodeSchedule["default"].scheduleJob('10 */1 * * *', function () {
             (0, _patcher.patchRunebaseDeposits)(discordClient);
           });
@@ -283,7 +295,7 @@ var conditionalCSRF = function conditionalCSRF(req, res, next) {
           server.listen(port);
           console.log('server listening on:', port);
 
-        case 52:
+        case 55:
         case "end":
           return _context3.stop();
       }

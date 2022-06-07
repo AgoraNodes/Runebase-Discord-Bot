@@ -29,13 +29,27 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 
 var gainExp = /*#__PURE__*/function () {
   var _ref = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(discordClient, userId, amount, gainExpType, t) {
-    var user, updatedUser, setting, discordChannel, currentRank, allRanks, guild, member, _iterator, _step, rank, userRankRecord;
+    var userJoined,
+        user,
+        updatedUser,
+        setting,
+        discordChannel,
+        currentRank,
+        allRanks,
+        guild,
+        member,
+        _iterator,
+        _step,
+        rank,
+        userRankRecord,
+        _args = arguments;
 
     return _regenerator["default"].wrap(function _callee$(_context) {
       while (1) {
         switch (_context.prev = _context.next) {
           case 0:
-            _context.next = 2;
+            userJoined = _args.length > 5 && _args[5] !== undefined ? _args[5] : false;
+            _context.next = 3;
             return _models["default"].user.findOne({
               where: {
                 user_id: userId
@@ -44,9 +58,9 @@ var gainExp = /*#__PURE__*/function () {
               lock: t.LOCK.UPDATE
             });
 
-          case 2:
+          case 3:
             user = _context.sent;
-            _context.next = 5;
+            _context.next = 6;
             return user.update({
               exp: user.exp + amount
             }, {
@@ -54,23 +68,23 @@ var gainExp = /*#__PURE__*/function () {
               lock: t.LOCK.UPDATE
             });
 
-          case 5:
+          case 6:
             updatedUser = _context.sent;
-            _context.next = 8;
+            _context.next = 9;
             return _models["default"].setting.findOne();
 
-          case 8:
+          case 9:
             setting = _context.sent;
-            _context.next = 11;
+            _context.next = 12;
             return discordClient.channels.cache.get(setting.expRewardChannelId);
 
-          case 11:
+          case 12:
             discordChannel = _context.sent;
-            _context.next = 14;
-            return (0, _expierenceMessageHandler.handleExperienceMessage)(discordChannel, updatedUser, amount, gainExpType);
+            _context.next = 15;
+            return (0, _expierenceMessageHandler.handleExperienceMessage)(discordChannel, updatedUser, amount, gainExpType, userJoined);
 
-          case 14:
-            _context.next = 16;
+          case 15:
+            _context.next = 17;
             return _models["default"].rank.findOne({
               where: {
                 expNeeded: (0, _defineProperty2["default"])({}, _sequelize.Op.lte, updatedUser.exp)
@@ -80,98 +94,98 @@ var gainExp = /*#__PURE__*/function () {
               lock: t.LOCK.UPDATE
             });
 
-          case 16:
+          case 17:
             currentRank = _context.sent;
-            _context.next = 19;
+            _context.next = 20;
             return _models["default"].rank.findAll({
               transaction: t,
               lock: t.LOCK.UPDATE
             });
 
-          case 19:
+          case 20:
             allRanks = _context.sent;
 
             if (!currentRank) {
-              _context.next = 62;
+              _context.next = 63;
               break;
             }
 
-            _context.next = 23;
+            _context.next = 24;
             return discordClient.guilds.cache.get(setting.discordHomeServerGuildId);
 
-          case 23:
+          case 24:
             guild = _context.sent;
-            _context.next = 26;
+            _context.next = 27;
             return guild.members.cache.get(updatedUser.user_id);
 
-          case 26:
+          case 27:
             member = _context.sent;
 
             if (member.roles.cache.has(currentRank.discordRankRoleId)) {
-              _context.next = 32;
+              _context.next = 33;
               break;
             }
 
-            _context.next = 30;
+            _context.next = 31;
             return member.roles.add(currentRank.discordRankRoleId);
 
-          case 30:
-            _context.next = 32;
+          case 31:
+            _context.next = 33;
             return discordChannel.send({
               embeds: [(0, _messages.levelUpMessage)(updatedUser.user_id, currentRank)]
             });
 
-          case 32:
+          case 33:
             // eslint-disable-next-line no-restricted-syntax
             _iterator = _createForOfIteratorHelper(allRanks);
-            _context.prev = 33;
+            _context.prev = 34;
 
             _iterator.s();
 
-          case 35:
+          case 36:
             if ((_step = _iterator.n()).done) {
-              _context.next = 43;
+              _context.next = 44;
               break;
             }
 
             rank = _step.value;
 
             if (!(currentRank.id !== rank.id)) {
-              _context.next = 41;
+              _context.next = 42;
               break;
             }
 
             if (!member.roles.cache.has(rank.discordRankRoleId)) {
-              _context.next = 41;
+              _context.next = 42;
               break;
             }
 
-            _context.next = 41;
+            _context.next = 42;
             return member.roles.remove(rank.discordRankRoleId);
 
-          case 41:
-            _context.next = 35;
+          case 42:
+            _context.next = 36;
             break;
 
-          case 43:
-            _context.next = 48;
+          case 44:
+            _context.next = 49;
             break;
 
-          case 45:
-            _context.prev = 45;
-            _context.t0 = _context["catch"](33);
+          case 46:
+            _context.prev = 46;
+            _context.t0 = _context["catch"](34);
 
             _iterator.e(_context.t0);
 
-          case 48:
-            _context.prev = 48;
+          case 49:
+            _context.prev = 49;
 
             _iterator.f();
 
-            return _context.finish(48);
+            return _context.finish(49);
 
-          case 51:
-            _context.next = 53;
+          case 52:
+            _context.next = 54;
             return _models["default"].UserRank.findOne({
               where: {
                 userId: updatedUser.id
@@ -180,15 +194,15 @@ var gainExp = /*#__PURE__*/function () {
               lock: t.LOCK.UPDATE
             });
 
-          case 53:
+          case 54:
             userRankRecord = _context.sent;
 
             if (userRankRecord) {
-              _context.next = 59;
+              _context.next = 60;
               break;
             }
 
-            _context.next = 57;
+            _context.next = 58;
             return _models["default"].UserRank.create({
               userId: updatedUser.id,
               rankId: currentRank.id
@@ -197,17 +211,17 @@ var gainExp = /*#__PURE__*/function () {
               lock: t.LOCK.UPDATE
             });
 
-          case 57:
-            _context.next = 62;
+          case 58:
+            _context.next = 63;
             break;
 
-          case 59:
+          case 60:
             if (!(currentRank.id !== userRankRecord.rankId)) {
-              _context.next = 62;
+              _context.next = 63;
               break;
             }
 
-            _context.next = 62;
+            _context.next = 63;
             return userRankRecord.update({
               rankId: currentRank.id
             }, {
@@ -215,12 +229,12 @@ var gainExp = /*#__PURE__*/function () {
               lock: t.LOCK.UPDATE
             });
 
-          case 62:
+          case 63:
           case "end":
             return _context.stop();
         }
       }
-    }, _callee, null, [[33, 45, 48, 51]]);
+    }, _callee, null, [[34, 46, 49, 52]]);
   }));
 
   return function gainExp(_x, _x2, _x3, _x4, _x5) {
