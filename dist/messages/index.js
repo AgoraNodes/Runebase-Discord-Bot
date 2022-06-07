@@ -5,11 +5,7 @@ var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefau
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.warnDirectMessage = exports.walletNotFoundMessage = exports.userNotFoundMessage = exports.unableToWithdrawToSelfMessage = exports.timeOutMessage = exports.reviewMessage = exports.ranksMessage = exports.priceMessage = exports.minimumMessage = exports.levelUpMessage = exports.invitedNewUserRewardMessage = exports.invalidAmountMessage = exports.invalidAddressMessage = exports.insufficientBalanceMessage = exports.helpMessage = exports.gainVoteTopggExpMessage = exports.gainTestExpMessage = exports.featureDisabledServerMessage = exports.featureDisabledGlobalMessage = exports.featureDisabledChannelMessage = exports.enterWithdrawalAmount = exports.enterWithdrawalAddress = exports.discordWithdrawalConfirmedMessage = exports.discordWithdrawalAcceptedMessage = exports.discordWelcomeMessage = exports.discordUserWithdrawalRejectMessage = exports.discordUserBannedMessage = exports.discordServerBannedMessage = exports.discordLimitSpamMessage = exports.discordIncomingDepositMessage = exports.discordErrorMessage = exports.discordDepositConfirmedMessage = exports.discordChannelBannedMessage = exports.discordBotMaintenanceMessage = exports.discordBotDisabledMessage = exports.depositAddressMessage = exports.coinInfoMessage = exports.cannotSendMessageUser = exports.balanceMessage = exports.alreadyVotedTopGG = exports.NotInDirectMessage = exports.AccountInfoMessage = void 0;
-
-var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
-
-var _asyncToGenerator2 = _interopRequireDefault(require("@babel/runtime/helpers/asyncToGenerator"));
+exports.warnDirectMessage = exports.walletNotFoundMessage = exports.userNotFoundMessage = exports.unableToWithdrawToSelfMessage = exports.timeOutMessage = exports.reviewMessage = exports.priceMessage = exports.minimumMessage = exports.levelUpMessage = exports.invitedNewUserRewardMessage = exports.invalidAmountMessage = exports.invalidAddressMessage = exports.insufficientBalanceMessage = exports.helpMessage = exports.gainVoteTopggExpMessage = exports.gainTestExpMessage = exports.featureDisabledServerMessage = exports.featureDisabledGlobalMessage = exports.featureDisabledChannelMessage = exports.enterWithdrawalAmount = exports.enterWithdrawalAddress = exports.discordWithdrawalConfirmedMessage = exports.discordWithdrawalAcceptedMessage = exports.discordWelcomeMessage = exports.discordUserWithdrawalRejectMessage = exports.discordUserBannedMessage = exports.discordServerBannedMessage = exports.discordLimitSpamMessage = exports.discordIncomingDepositMessage = exports.discordErrorMessage = exports.discordDepositConfirmedMessage = exports.discordChannelBannedMessage = exports.discordBotMaintenanceMessage = exports.discordBotDisabledMessage = exports.depositAddressMessage = exports.coinInfoMessage = exports.cannotSendMessageUser = exports.balanceMessage = exports.alreadyVotedTopGG = exports.NotInDirectMessage = exports.AccountInfoMessage = void 0;
 
 var _discord = require("discord.js");
 
@@ -251,56 +247,6 @@ var discordBotMaintenanceMessage = function discordBotMaintenanceMessage() {
 };
 
 exports.discordBotMaintenanceMessage = discordBotMaintenanceMessage;
-
-var ranksMessage = /*#__PURE__*/function () {
-  var _ref = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(ranks) {
-    var rankIdString, rankNameString, expNeededString, result;
-    return _regenerator["default"].wrap(function _callee$(_context) {
-      while (1) {
-        switch (_context.prev = _context.next) {
-          case 0:
-            rankIdString = ranks.map(function (e) {
-              return e.id;
-            }).join("\n");
-            rankNameString = ranks.map(function (e) {
-              return e.name;
-            }).join("\n");
-            expNeededString = ranks.map(function (e) {
-              return e.expNeeded;
-            }).join("\n");
-            result = new _discord.MessageEmbed().setColor(_settings["default"].bot.color).setTitle('Ranks') // .setDescription(`<@${userId}>, you canceled unlinking your address`)
-            .addFields({
-              name: 'level',
-              value: rankIdString,
-              inline: true
-            }, {
-              name: 'rank',
-              value: rankNameString,
-              inline: true
-            }, {
-              name: 'exp needed',
-              value: expNeededString,
-              inline: true
-            }).setTimestamp().setFooter({
-              text: "".concat(_settings["default"].bot.name, " v").concat(_package["default"].version),
-              iconURL: _settings["default"].bot.logo
-            });
-            return _context.abrupt("return", result);
-
-          case 5:
-          case "end":
-            return _context.stop();
-        }
-      }
-    }, _callee);
-  }));
-
-  return function ranksMessage(_x) {
-    return _ref.apply(this, arguments);
-  };
-}();
-
-exports.ranksMessage = ranksMessage;
 
 var gainTestExpMessage = function gainTestExpMessage(userId, amount) {
   var result = new _discord.MessageEmbed().setColor(_settings["default"].bot.color).setTitle('Gain Exp').setDescription("<@".concat(userId, ">, you have been rewarded ").concat(amount, " test experience")).setTimestamp().setFooter({

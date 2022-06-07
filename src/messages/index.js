@@ -373,29 +373,6 @@ export const discordBotMaintenanceMessage = () => {
   return result;
 };
 
-export const ranksMessage = async (
-  ranks,
-) => {
-  const rankIdString = ranks.map((e) => e.id).join("\n");
-  const rankNameString = ranks.map((e) => e.name).join("\n");
-  const expNeededString = ranks.map((e) => e.expNeeded).join("\n");
-  const result = new MessageEmbed()
-    .setColor(settings.bot.color)
-    .setTitle('Ranks')
-    // .setDescription(`<@${userId}>, you canceled unlinking your address`)
-    .addFields(
-      { name: 'level', value: rankIdString, inline: true },
-      { name: 'rank', value: rankNameString, inline: true },
-      { name: 'exp needed', value: expNeededString, inline: true },
-    )
-    .setTimestamp()
-    .setFooter({
-      text: `${settings.bot.name} v${pjson.version}`,
-      iconURL: settings.bot.logo,
-    });
-  return result;
-};
-
 export const gainTestExpMessage = (
   userId,
   amount,

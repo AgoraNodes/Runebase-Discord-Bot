@@ -15,6 +15,12 @@ var _asyncToGenerator2 = _interopRequireDefault(require("@babel/runtime/helpers/
 
 var _sequelize = require("sequelize");
 
+var _canvas = require("canvas");
+
+var _discord = require("discord.js");
+
+var _path = _interopRequireDefault(require("path"));
+
 var _messages = require("../messages");
 
 var _models = _interopRequireDefault(require("../models"));
@@ -37,7 +43,7 @@ var discordRanks = /*#__PURE__*/function () {
               isolationLevel: _sequelize.Transaction.ISOLATION_LEVELS.SERIALIZABLE
             }, /*#__PURE__*/function () {
               var _ref2 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(t) {
-                var _yield$userWalletExis, _yield$userWalletExis2, user, userActivity, allRanks, discordChannel, preActivity, finalActivity;
+                var _yield$userWalletExis, _yield$userWalletExis2, user, userActivity, allRanks, canvasAddedRanksHeight, canvas, ctx, attachment, discordChannel, preActivity, finalActivity;
 
                 return _regenerator["default"].wrap(function _callee$(_context) {
                   while (1) {
@@ -72,55 +78,107 @@ var discordRanks = /*#__PURE__*/function () {
 
                       case 11:
                         allRanks = _context.sent;
+                        canvasAddedRanksHeight = allRanks.length * 40 + 36.5;
+                        _context.next = 15;
+                        return (0, _canvas.registerFont)(_path["default"].join(__dirname, '../assets/fonts/', 'Heart_warming.otf'), {
+                          family: 'HeartWarming'
+                        });
+
+                      case 15:
+                        canvas = (0, _canvas.createCanvas)(600, canvasAddedRanksHeight);
+                        ctx = canvas.getContext('2d');
+                        ctx.font = 'bold 20px "HeartWarming"';
+                        ctx.fillStyle = "#ccc";
+                        ctx.textAlign = "center";
+                        ctx.strokeStyle = 'black';
+                        ctx.lineWidth = 3; // Headers
+
+                        ctx.strokeText('Level', 100, 25, 200);
+                        ctx.fillText('Level', 100, 25, 200);
+                        ctx.strokeText('Rank', 300, 25, 200);
+                        ctx.fillText('Rank', 300, 25, 200);
+                        ctx.strokeText('Exp needed', 500, 25, 200);
+                        ctx.fillText('Exp needed', 500, 25, 200);
+                        ctx.strokeStyle = '#ccc';
+                        ctx.lineWidth = 1;
+                        allRanks.forEach(function (element) {
+                          ctx.beginPath();
+                          ctx.moveTo(0, element.id * 40 + 35);
+                          ctx.lineTo(600, element.id * 40 + 35);
+                          ctx.stroke();
+                          ctx.strokeText(element.id, 100, element.id * 40 + 25, 200);
+                          ctx.fillText(element.id, 100, element.id * 40 + 25, 200);
+                          ctx.strokeText(element.name, 300, element.id * 40 + 25, 200);
+                          ctx.fillText(element.name, 300, element.id * 40 + 25, 200);
+                          ctx.strokeText(element.expNeeded, 500, element.id * 40 + 25, 200);
+                          ctx.fillText(element.expNeeded, 500, element.id * 40 + 25, 200);
+                        }); // Draw horizontal line
+
+                        ctx.strokeStyle = '#ccc';
+                        ctx.lineWidth = 3;
+                        ctx.beginPath();
+                        ctx.moveTo(0, 1.5);
+                        ctx.lineTo(600, 1.5);
+                        ctx.stroke();
+                        ctx.beginPath();
+                        ctx.moveTo(0, 35);
+                        ctx.lineTo(600, 35);
+                        ctx.stroke();
+                        ctx.beginPath();
+                        ctx.moveTo(0, canvasAddedRanksHeight - 1.5);
+                        ctx.lineTo(600, canvasAddedRanksHeight - 1.5);
+                        ctx.stroke(); // draw vertical lines
+
+                        ctx.beginPath();
+                        ctx.moveTo(1.5, 0);
+                        ctx.lineTo(1.5, canvasAddedRanksHeight);
+                        ctx.stroke();
+                        ctx.beginPath();
+                        ctx.moveTo(200, 0);
+                        ctx.lineTo(200, canvasAddedRanksHeight);
+                        ctx.stroke();
+                        ctx.beginPath();
+                        ctx.moveTo(400, 0);
+                        ctx.lineTo(400, canvasAddedRanksHeight);
+                        ctx.stroke();
+                        ctx.beginPath();
+                        ctx.moveTo(598.5, 0);
+                        ctx.lineTo(598.5, canvasAddedRanksHeight);
+                        ctx.stroke();
+                        attachment = new _discord.MessageAttachment(canvas.toBuffer(), 'ranks.png');
 
                         if (!(message.type && message.type === 'APPLICATION_COMMAND')) {
-                          _context.next = 27;
+                          _context.next = 71;
                           break;
                         }
 
                         if (!message.guildId) {
-                          _context.next = 25;
+                          _context.next = 69;
                           break;
                         }
 
-                        _context.next = 16;
+                        _context.next = 66;
                         return discordClient.channels.cache.get(message.channelId);
 
-                      case 16:
+                      case 66:
                         discordChannel = _context.sent;
-                        _context.t0 = discordChannel;
-                        _context.next = 20;
-                        return (0, _messages.ranksMessage)(allRanks);
+                        _context.next = 69;
+                        return discordChannel.send({
+                          files: [attachment]
+                        });
 
-                      case 20:
-                        _context.t1 = _context.sent;
-                        _context.t2 = [_context.t1];
-                        _context.t3 = {
-                          embeds: _context.t2
-                        };
-                        _context.next = 25;
-                        return _context.t0.send.call(_context.t0, _context.t3);
-
-                      case 25:
-                        _context.next = 35;
+                      case 69:
+                        _context.next = 73;
                         break;
 
-                      case 27:
-                        _context.t4 = message.channel;
-                        _context.next = 30;
-                        return (0, _messages.ranksMessage)(allRanks);
+                      case 71:
+                        _context.next = 73;
+                        return message.channel.send({
+                          files: [attachment]
+                        });
 
-                      case 30:
-                        _context.t5 = _context.sent;
-                        _context.t6 = [_context.t5];
-                        _context.t7 = {
-                          embeds: _context.t6
-                        };
-                        _context.next = 35;
-                        return _context.t4.send.call(_context.t4, _context.t7);
-
-                      case 35:
-                        _context.next = 37;
+                      case 73:
+                        _context.next = 75;
                         return _models["default"].activity.create({
                           type: 'ranks_s',
                           earnerId: user.id
@@ -129,9 +187,9 @@ var discordRanks = /*#__PURE__*/function () {
                           transaction: t
                         });
 
-                      case 37:
+                      case 75:
                         preActivity = _context.sent;
-                        _context.next = 40;
+                        _context.next = 78;
                         return _models["default"].activity.findOne({
                           where: {
                             id: preActivity.id
@@ -144,11 +202,11 @@ var discordRanks = /*#__PURE__*/function () {
                           transaction: t
                         });
 
-                      case 40:
+                      case 78:
                         finalActivity = _context.sent;
                         activity.unshift(finalActivity);
 
-                      case 42:
+                      case 80:
                       case "end":
                         return _context.stop();
                     }

@@ -1,7 +1,12 @@
 /* eslint-disable import/prefer-default-export */
 import { Transaction } from "sequelize";
 import {
-  ranksMessage,
+  createCanvas,
+  registerFont,
+} from 'canvas';
+import { MessageAttachment } from "discord.js";
+import path from 'path';
+import {
   cannotSendMessageUser,
   discordErrorMessage,
 } from '../messages';
@@ -37,24 +42,97 @@ export const discordRanks = async (
         transaction: t,
       },
     );
+    const canvasAddedRanksHeight = (allRanks.length * 40) + 36.5;
+    await registerFont(path.join(__dirname, '../assets/fonts/', 'Heart_warming.otf'), { family: 'HeartWarming' });
+    const canvas = createCanvas(600, canvasAddedRanksHeight);
+    const ctx = canvas.getContext('2d');
+    ctx.font = 'bold 20px "HeartWarming"';
+    ctx.fillStyle = "#ccc";
+    ctx.textAlign = "center";
+    ctx.strokeStyle = 'black';
+    ctx.lineWidth = 3;
+    // Headers
+    ctx.strokeText('Level', 100, 25, 200);
+    ctx.fillText('Level', 100, 25, 200);
+    ctx.strokeText('Rank', 300, 25, 200);
+    ctx.fillText('Rank', 300, 25, 200);
+    ctx.strokeText('Exp needed', 500, 25, 200);
+    ctx.fillText('Exp needed', 500, 25, 200);
+
+    ctx.strokeStyle = '#ccc';
+    ctx.lineWidth = 1;
+
+    allRanks.forEach((element) => {
+      ctx.beginPath();
+      ctx.moveTo(0, (element.id * 40) + 35);
+      ctx.lineTo(600, (element.id * 40) + 35);
+      ctx.stroke();
+
+      ctx.strokeText(element.id, 100, (element.id * 40) + 25, 200);
+      ctx.fillText(element.id, 100, (element.id * 40) + 25, 200);
+
+      ctx.strokeText(element.name, 300, (element.id * 40) + 25, 200);
+      ctx.fillText(element.name, 300, (element.id * 40) + 25, 200);
+
+      ctx.strokeText(element.expNeeded, 500, (element.id * 40) + 25, 200);
+      ctx.fillText(element.expNeeded, 500, (element.id * 40) + 25, 200);
+    });
+
+    // Draw horizontal line
+    ctx.strokeStyle = '#ccc';
+    ctx.lineWidth = 3;
+
+    ctx.beginPath();
+    ctx.moveTo(0, 1.5);
+    ctx.lineTo(600, 1.5);
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.moveTo(0, 35);
+    ctx.lineTo(600, 35);
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.moveTo(0, canvasAddedRanksHeight - 1.5);
+    ctx.lineTo(600, canvasAddedRanksHeight - 1.5);
+    ctx.stroke();
+
+    // draw vertical lines
+    ctx.beginPath();
+    ctx.moveTo(1.5, 0);
+    ctx.lineTo(1.5, canvasAddedRanksHeight);
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.moveTo(200, 0);
+    ctx.lineTo(200, canvasAddedRanksHeight);
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.moveTo(400, 0);
+    ctx.lineTo(400, canvasAddedRanksHeight);
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.moveTo(598.5, 0);
+    ctx.lineTo(598.5, canvasAddedRanksHeight);
+    ctx.stroke();
+
+    const attachment = new MessageAttachment(canvas.toBuffer(), 'ranks.png');
 
     if (message.type && message.type === 'APPLICATION_COMMAND') {
       if (message.guildId) {
         const discordChannel = await discordClient.channels.cache.get(message.channelId);
         await discordChannel.send({
-          embeds: [
-            await ranksMessage(
-              allRanks,
-            ),
+          files: [
+            attachment,
           ],
         });
       }
     } else {
       await message.channel.send({
-        embeds: [
-          await ranksMessage(
-            allRanks,
-          ),
+        files: [
+          attachment,
         ],
       });
     }
