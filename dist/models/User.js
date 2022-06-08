@@ -54,6 +54,7 @@ module.exports = function (sequelize, DataTypes) {
   UserModel.associate = function (model) {
     UserModel.hasMany(model.active);
     UserModel.hasMany(model.topggVote);
+    UserModel.hasMany(model.activeTalker);
     UserModel.hasOne(model.wallet);
     UserModel.hasMany(model.transaction);
     UserModel.belongsToMany(model.rank, {

@@ -23,7 +23,7 @@ var handleExperienceMessage = /*#__PURE__*/function () {
           case 0:
             userJoined = _args.length > 4 && _args[4] !== undefined ? _args[4] : false;
 
-            if (!(gainExpType === 'testExp')) {
+            if (!(gainExpType === 'activeTalker')) {
               _context.next = 4;
               break;
             }
@@ -31,7 +31,7 @@ var handleExperienceMessage = /*#__PURE__*/function () {
             _context.next = 4;
             return discordChannel.send({
               content: "<@".concat(updatedUser.user_id, ">"),
-              embeds: [(0, _messages.gainTestExpMessage)(updatedUser.user_id, amount)]
+              embeds: [(0, _messages.gainActiveTalkerExpMessage)(updatedUser.user_id, amount)]
             });
 
           case 4:
