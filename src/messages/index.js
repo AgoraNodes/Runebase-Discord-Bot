@@ -390,6 +390,24 @@ export const gainTestExpMessage = (
   return result;
 };
 
+export const gainActiveTalkerExpMessage = (
+  userId,
+  amount,
+) => {
+  const result = new MessageEmbed()
+    .setColor(settings.bot.color)
+    .setTitle('Gain Exp')
+    .setDescription(`<@${userId}>, Thank you for being so talkative in our community today!
+you have been rewarded ${amount} experience`)
+    .setTimestamp()
+    .setFooter({
+      text: `${settings.bot.name} v${pjson.version}`,
+      iconURL: settings.bot.logo,
+    });
+
+  return result;
+};
+
 export const alreadyVotedTopGG = (
   userId,
 ) => {

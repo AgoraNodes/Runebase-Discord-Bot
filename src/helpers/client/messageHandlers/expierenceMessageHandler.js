@@ -1,7 +1,8 @@
 import {
-  gainTestExpMessage,
+  // gainTestExpMessage,
   gainVoteTopggExpMessage,
   invitedNewUserRewardMessage,
+  gainActiveTalkerExpMessage,
 } from '../../../messages';
 
 export const handleExperienceMessage = async (
@@ -11,11 +12,22 @@ export const handleExperienceMessage = async (
   gainExpType,
   userJoined = false,
 ) => {
-  if (gainExpType === 'testExp') {
+  // if (gainExpType === 'testExp') {
+  //   await discordChannel.send({
+  //     content: `<@${updatedUser.user_id}>`,
+  //     embeds: [
+  //       gainTestExpMessage(
+  //         updatedUser.user_id,
+  //         amount,
+  //       ),
+  //     ],
+  //   });
+  // }
+  if (gainExpType === 'activeTalker') {
     await discordChannel.send({
       content: `<@${updatedUser.user_id}>`,
       embeds: [
-        gainTestExpMessage(
+        gainActiveTalkerExpMessage(
           updatedUser.user_id,
           amount,
         ),

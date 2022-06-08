@@ -14,6 +14,8 @@ import { discordPrice } from '../controllers/price';
 import { discordBalance } from '../controllers/balance';
 import { discordWithdraw } from '../controllers/withdraw';
 import { discordUserJoined } from '../controllers/userJoined';
+import { discordActiveTalker } from '../controllers/activeTalker';
+
 import { discordExpTest } from '../controllers/expTest';
 import { myRateLimiter } from '../helpers/rateLimit';
 import { discordFeatureSettings } from '../controllers/featureSetting';
@@ -368,7 +370,6 @@ export const discordRouter = async (
       await queue.add(async () => {
         groupTask = await updateDiscordGroup(discordClient, message);
         channelTask = await updateDiscordChannel(message, groupTask);
-        console.log('before last seen');
         lastSeenDiscordTask = await updateDiscordLastSeen(
           message,
           message.author,
@@ -377,7 +378,25 @@ export const discordRouter = async (
       groupTaskId = groupTask && groupTask.id;
       channelTaskId = channelTask && channelTask.id;
     }
-    console.log('after last seen');
+
+    const messageReplaceBreaksWithSpaces = message.content.replace(/\n/g, " ");
+    const preFilteredMessageDiscord = messageReplaceBreaksWithSpaces.split(' ');
+    const filteredMessageDiscord = preFilteredMessageDiscord.filter((el) => el !== '');
+
+    if (!message.author.bot) {
+      const setting = await db.setting.findOne();
+      await queue.add(async () => {
+        if (message.guildId === setting.discordHomeServerGuildId) {
+          const task = await discordActiveTalker(
+            discordClient,
+            message,
+            filteredMessageDiscord,
+            io,
+          );
+        }
+      });
+    }
+
     if (!message.content.startsWith(settings.bot.command) || message.author.bot) return;
     const maintenance = await isMaintenanceOrDisabled(message, 'discord');
     if (maintenance.maintenance || !maintenance.enabled) return;
@@ -419,10 +438,6 @@ export const discordRouter = async (
       });
       return;
     }
-
-    const messageReplaceBreaksWithSpaces = message.content.replace(/\n/g, " ");
-    const preFilteredMessageDiscord = messageReplaceBreaksWithSpaces.split(' ');
-    const filteredMessageDiscord = preFilteredMessageDiscord.filter((el) => el !== '');
 
     if (filteredMessageDiscord[1] === undefined) {
       const limited = await myRateLimiter(
