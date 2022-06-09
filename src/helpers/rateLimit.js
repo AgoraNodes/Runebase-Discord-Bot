@@ -45,7 +45,7 @@ const rateLimiterWithdraw = new RateLimiterFlexible.default.RateLimiterMemory({
   duration: 30,
 });
 const rateLimiterRollDice = new RateLimiterFlexible.default.RateLimiterMemory({
-  points: 40,
+  points: 2,
   duration: 30,
 });
 
