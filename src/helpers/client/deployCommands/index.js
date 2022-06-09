@@ -13,6 +13,7 @@ const commands = [
   new SlashCommandBuilder().setName('balance').setDescription('Display your balance'),
   new SlashCommandBuilder().setName('deposit').setDescription('Displays your deposit address!'),
   new SlashCommandBuilder().setName('withdraw').setDescription('Starts Withdrawal process'),
+  new SlashCommandBuilder().setName('roll').setDescription('Roll the dice'),
   new SlashCommandBuilder().setName('price').setDescription('Displays Runebase price'),
 ].map((command) => command.toJSON());
 

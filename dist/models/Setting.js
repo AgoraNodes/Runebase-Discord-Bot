@@ -34,6 +34,10 @@ module.exports = function (sequelize, DataTypes) {
     joinedRoleId: {
       type: DataTypes.STRING,
       allowNull: true
+    },
+    roleDiceChannelId: {
+      type: DataTypes.STRING,
+      allowNull: true
     }
   }; // 2: The model options.
 

@@ -38,21 +38,23 @@ var updateBotSettings = /*#__PURE__*/function () {
             throw new Error("Settings doesn't Exists");
 
           case 5:
+            console.log(req.body);
             res.locals.name = "updateBotSettings";
-            _context.next = 8;
+            _context.next = 9;
             return settings.update({
               enabled: req.body.enabled,
               maintenance: req.body.maintenance,
               discordHomeServerGuildId: req.body.guildId,
               expRewardChannelId: req.body.expRewardChannelId,
-              joinedRoleId: req.body.joinedRoleId
+              joinedRoleId: req.body.joinedRoleId,
+              roleDiceChannelId: req.body.roleDiceChannelId
             });
 
-          case 8:
+          case 9:
             res.locals.result = _context.sent;
             next();
 
-          case 10:
+          case 11:
           case "end":
             return _context.stop();
         }

@@ -390,6 +390,51 @@ export const gainTestExpMessage = (
   return result;
 };
 
+export const rolledDiceMessage = (
+  userId,
+  expRewarded,
+  randomNumberOne,
+  randomNumberTwo,
+  rewardAmount,
+) => {
+  const isSnakeEyes = !!((randomNumberOne === 1 && randomNumberTwo === 1));
+  const result = new MessageEmbed()
+    .setColor(settings.bot.color)
+    .setTitle('Roll Dice')
+    .setDescription(`<@${userId}>, You rolled the dice!
+${isSnakeEyes ? '👁 Snake eyes 👁' : `dice: ${randomNumberOne}
+dice: ${randomNumberTwo}`}
+
+you have been rewarded ${rewardAmount / 1e8} RUNES and ${expRewarded} experience`)
+    .setTimestamp()
+    .setFooter({
+      text: `${settings.bot.name} v${pjson.version}`,
+      iconURL: settings.bot.logo,
+    });
+
+  return result;
+};
+
+export const rollDiceTooFastMessage = (
+  userId,
+  distance,
+) => {
+  const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+  const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+  const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+  const result = new MessageEmbed()
+    .setColor(settings.bot.color)
+    .setTitle('Roll Dice')
+    .setDescription(`<@${userId}>, you have to wait ${hours === 1 ? `${hours} hour` : ''}${hours > 1 ? `${hours} hours,` : ''} ${minutes === 1 ? `${minutes} minute` : ''}${minutes > 1 ? `${minutes} minutes and` : ''} ${seconds === 1 ? `${seconds} second` : ''}${seconds > 1 ? `${seconds} seconds` : ''} before you can roll the dice again (you can roll the dice every 3 hours).`)
+    .setTimestamp()
+    .setFooter({
+      text: `${settings.bot.name} v${pjson.version}`,
+      iconURL: settings.bot.logo,
+    });
+
+  return result;
+};
+
 export const gainActiveTalkerExpMessage = (
   userId,
   amount,

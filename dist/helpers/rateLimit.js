@@ -57,6 +57,10 @@ var rateLimiterWithdraw = new RateLimiterFlexible["default"].RateLimiterMemory({
   points: 2,
   duration: 30
 });
+var rateLimiterRollDice = new RateLimiterFlexible["default"].RateLimiterMemory({
+  points: 40,
+  duration: 30
+});
 
 var myRateLimiter = /*#__PURE__*/function () {
   var _ref = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(client, message, title) {
@@ -185,69 +189,81 @@ var myRateLimiter = /*#__PURE__*/function () {
             return _context.abrupt("return", false);
 
           case 40:
-            throw new Error("no Rate limiter could be reached");
-
-          case 43:
-            _context.prev = 43;
-            _context.t0 = _context["catch"](5);
-            console.log(_context.t0);
-            _context.prev = 46;
-            _context.next = 49;
-            return errorConsumer.consume(userId, 1);
-
-          case 49:
-            notError = _context.sent;
-
-            if (!(notError.remainingPoints > 0)) {
-              _context.next = 57;
+            if (!(title.toLowerCase() === 'rolldice')) {
+              _context.next = 44;
               break;
             }
 
+            _context.next = 43;
+            return rateLimiterRollDice.consume(userId, 1);
+
+          case 43:
+            return _context.abrupt("return", false);
+
+          case 44:
+            throw new Error("no Rate limiter could be reached");
+
+          case 47:
+            _context.prev = 47;
+            _context.t0 = _context["catch"](5);
+            console.log(_context.t0);
+            _context.prev = 50;
             _context.next = 53;
-            return client.channels.fetch(discordChannelId)["catch"](function (e) {
-              console.log(e);
-            });
+            return errorConsumer.consume(userId, 1);
 
           case 53:
-            discordChannel = _context.sent;
+            notError = _context.sent;
 
-            if (!discordChannel) {
-              _context.next = 57;
+            if (!(notError.remainingPoints > 0)) {
+              _context.next = 61;
               break;
             }
 
             _context.next = 57;
+            return client.channels.fetch(discordChannelId)["catch"](function (e) {
+              console.log(e);
+            });
+
+          case 57:
+            discordChannel = _context.sent;
+
+            if (!discordChannel) {
+              _context.next = 61;
+              break;
+            }
+
+            _context.next = 61;
             return discordChannel.send({
               embeds: [(0, _messages.discordLimitSpamMessage)(userId, title)]
             })["catch"](function (e) {
               console.log(e);
             });
 
-          case 57:
-            return _context.abrupt("return", true);
-
-          case 60:
-            _context.prev = 60;
-            _context.t1 = _context["catch"](46);
-            console.log(_context.t1);
+          case 61:
             return _context.abrupt("return", true);
 
           case 64:
-            _context.next = 70;
+            _context.prev = 64;
+            _context.t1 = _context["catch"](50);
+            console.log(_context.t1);
+            return _context.abrupt("return", true);
+
+          case 68:
+            _context.next = 74;
             break;
 
-          case 66:
-            _context.prev = 66;
+          case 70:
+            _context.prev = 70;
             _context.t2 = _context["catch"](0);
             console.log(_context.t2);
             return _context.abrupt("return", true);
 
-          case 70:
+          case 74:
           case "end":
             return _context.stop();
         }
       }
-    }, _callee, null, [[0, 66], [5, 43], [46, 60]]);
+    }, _callee, null, [[0, 70], [5, 47], [50, 64]]);
   }));
 
   return function myRateLimiter(_x, _x2, _x3) {

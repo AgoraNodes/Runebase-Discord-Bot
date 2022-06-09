@@ -14,7 +14,7 @@ export const updateBotSettings = async (
   if (!settings) {
     throw new Error("Settings doesn't Exists");
   }
-
+  console.log(req.body);
   res.locals.name = "updateBotSettings";
   res.locals.result = await settings.update({
     enabled: req.body.enabled,
@@ -22,6 +22,7 @@ export const updateBotSettings = async (
     discordHomeServerGuildId: req.body.guildId,
     expRewardChannelId: req.body.expRewardChannelId,
     joinedRoleId: req.body.joinedRoleId,
+    roleDiceChannelId: req.body.roleDiceChannelId,
   });
   next();
 };

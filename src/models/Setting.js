@@ -33,6 +33,10 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: true,
     },
+    roleDiceChannelId: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
   };
 
   // 2: The model options.

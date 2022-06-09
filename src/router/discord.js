@@ -15,6 +15,7 @@ import { discordBalance } from '../controllers/balance';
 import { discordWithdraw } from '../controllers/withdraw';
 import { discordUserJoined } from '../controllers/userJoined';
 import { discordActiveTalker } from '../controllers/activeTalker';
+import { discordRollDice } from '../controllers/rollDice';
 
 import { discordExpTest } from '../controllers/expTest';
 import { myRateLimiter } from '../helpers/rateLimit';
@@ -119,7 +120,7 @@ export const discordRouter = async (
   });
 
   discordClient.on('interactionCreate', async (interaction) => {
-    if (!interaction.isCommand()) return;
+    if (!interaction.isCommand() && !interaction.isButton()) return;
     let groupTask;
     let groupTaskId;
     let channelTask;
@@ -146,210 +147,287 @@ export const discordRouter = async (
         groupTaskId = groupTask && groupTask.id;
         channelTaskId = channelTask && channelTask.id;
       });
-      const { commandName } = interaction;
+      if (interaction.isCommand()) {
+        const { commandName } = interaction;
+        if (commandName === 'help') {
+          await interaction.deferReply().catch((e) => {
+            console.log(e);
+          });
+          const limited = await myRateLimiter(
+            discordClient,
+            interaction,
+            'Help',
+          );
+          if (limited) {
+            await interaction.editReply('rate limited').catch((e) => {
+              console.log(e);
+            });
+            return;
+          }
 
-      if (commandName === 'help') {
-        await interaction.deferReply().catch((e) => {
-          console.log(e);
-        });
-        const limited = await myRateLimiter(
-          discordClient,
-          interaction,
-          'Help',
-        );
-        if (limited) {
-          await interaction.editReply('rate limited').catch((e) => {
-            console.log(e);
-          });
-          return;
-        }
-
-        await queue.add(async () => {
-          console.log(interaction);
-          const task = await discordHelp(
-            discordClient,
-            interaction,
-            io,
-          );
-        });
-        await interaction.editReply('\u200b').catch((e) => {
-          console.log(e);
-        });
-      }
-      if (commandName === 'myrank') {
-        await interaction.deferReply().catch((e) => {
-          console.log(e);
-        });
-        const limited = await myRateLimiter(
-          discordClient,
-          interaction,
-          'Myrank',
-        );
-        if (limited) {
-          await interaction.editReply('rate limited').catch((e) => {
-            console.log(e);
-          });
-          return;
-        }
-
-        await queue.add(async () => {
-          const task = await discordMyRank(
-            discordClient,
-            interaction,
-            io,
-          );
-        });
-        await interaction.editReply('\u200b').catch((e) => {
-          console.log(e);
-        });
-      }
-      if (commandName === 'ranks') {
-        await interaction.deferReply().catch((e) => {
-          console.log(e);
-        });
-        const limited = await myRateLimiter(
-          discordClient,
-          interaction,
-          'Ranks',
-        );
-        if (limited) {
-          await interaction.editReply('rate limited').catch((e) => {
-            console.log(e);
-          });
-          return;
-        }
-        await queue.add(async () => {
-          const task = await discordRanks(
-            discordClient,
-            interaction,
-            io,
-          );
-        });
-        await interaction.editReply('\u200b').catch((e) => {
-          console.log(e);
-        });
-      }
-      if (commandName === 'deposit') {
-        await interaction.deferReply().catch((e) => {
-          console.log(e);
-        });
-        const limited = await myRateLimiter(
-          discordClient,
-          interaction,
-          'Deposit',
-        );
-        if (limited) {
-          await interaction.editReply('rate limited').catch((e) => {
-            console.log(e);
-          });
-          return;
-        }
-        await queue.add(async () => {
-          const task = await discordDeposit(
-            discordClient,
-            interaction,
-            io,
-          );
-        });
-        await interaction.editReply('\u200b').catch((e) => {
-          console.log(e);
-        });
-      }
-      if (commandName === 'price') {
-        await interaction.deferReply().catch((e) => {
-          console.log(e);
-        });
-        const limited = await myRateLimiter(
-          discordClient,
-          interaction,
-          'Price',
-        );
-        if (limited) {
-          await interaction.editReply('rate limited').catch((e) => {
-            console.log(e);
-          });
-          return;
-        }
-        await queue.add(async () => {
-          const task = await discordPrice(
-            discordClient,
-            interaction,
-            io,
-          );
-        });
-        await interaction.editReply('\u200b').catch((e) => {
-          console.log(e);
-        });
-      }
-      if (commandName === 'balance') {
-        await interaction.deferReply().catch((e) => {
-          console.log(e);
-        });
-        const limited = await myRateLimiter(
-          discordClient,
-          interaction,
-          'Balance',
-        );
-        if (limited) {
-          await interaction.editReply('rate limited').catch((e) => {
-            console.log(e);
-          });
-          return;
-        }
-        await queue.add(async () => {
-          const task = await discordBalance(
-            discordClient,
-            interaction,
-            io,
-          );
-        });
-        await interaction.editReply('\u200b').catch((e) => {
-          console.log(e);
-        });
-      }
-      if (commandName === 'withdraw') {
-        await interaction.deferReply().catch((e) => {
-          console.log(e);
-        });
-        const limited = await myRateLimiter(
-          discordClient,
-          interaction,
-          'Withdraw',
-        );
-        if (limited) {
-          await interaction.editReply('rate limited').catch((e) => {
-            console.log(e);
-          });
-          return;
-        }
-        const setting = await discordFeatureSettings(
-          interaction,
-          'withdraw',
-          groupTaskId,
-          channelTaskId,
-        );
-        if (!setting) return;
-        const [
-          success,
-          filteredMessage,
-        ] = await preWithdraw(
-          discordClient,
-          interaction,
-        );
-        if (success) {
           await queue.add(async () => {
-            const task = await discordWithdraw(
+            console.log(interaction);
+            const task = await discordHelp(
               discordClient,
               interaction,
-              filteredMessage,
-              setting,
               io,
             );
           });
+          await interaction.editReply('\u200b').catch((e) => {
+            console.log(e);
+          });
         }
-        await interaction.editReply('\u200b').catch((e) => {
-          console.log(e);
-        });
+        if (commandName === 'myrank') {
+          await interaction.deferReply().catch((e) => {
+            console.log(e);
+          });
+          const limited = await myRateLimiter(
+            discordClient,
+            interaction,
+            'Myrank',
+          );
+          if (limited) {
+            await interaction.editReply('rate limited').catch((e) => {
+              console.log(e);
+            });
+            return;
+          }
+
+          await queue.add(async () => {
+            const task = await discordMyRank(
+              discordClient,
+              interaction,
+              io,
+            );
+          });
+          await interaction.editReply('\u200b').catch((e) => {
+            console.log(e);
+          });
+        }
+        if (commandName === 'ranks') {
+          await interaction.deferReply().catch((e) => {
+            console.log(e);
+          });
+          const limited = await myRateLimiter(
+            discordClient,
+            interaction,
+            'Ranks',
+          );
+          if (limited) {
+            await interaction.editReply('rate limited').catch((e) => {
+              console.log(e);
+            });
+            return;
+          }
+          await queue.add(async () => {
+            const task = await discordRanks(
+              discordClient,
+              interaction,
+              io,
+            );
+          });
+          await interaction.editReply('\u200b').catch((e) => {
+            console.log(e);
+          });
+        }
+        if (commandName === 'deposit') {
+          await interaction.deferReply().catch((e) => {
+            console.log(e);
+          });
+          const limited = await myRateLimiter(
+            discordClient,
+            interaction,
+            'Deposit',
+          );
+          if (limited) {
+            await interaction.editReply('rate limited').catch((e) => {
+              console.log(e);
+            });
+            return;
+          }
+          await queue.add(async () => {
+            const task = await discordDeposit(
+              discordClient,
+              interaction,
+              io,
+            );
+          });
+          await interaction.editReply('\u200b').catch((e) => {
+            console.log(e);
+          });
+        }
+        if (commandName === 'price') {
+          await interaction.deferReply().catch((e) => {
+            console.log(e);
+          });
+          const limited = await myRateLimiter(
+            discordClient,
+            interaction,
+            'Price',
+          );
+          if (limited) {
+            await interaction.editReply('rate limited').catch((e) => {
+              console.log(e);
+            });
+            return;
+          }
+          await queue.add(async () => {
+            const task = await discordPrice(
+              discordClient,
+              interaction,
+              io,
+            );
+          });
+          await interaction.editReply('\u200b').catch((e) => {
+            console.log(e);
+          });
+        }
+        if (commandName === 'balance') {
+          await interaction.deferReply().catch((e) => {
+            console.log(e);
+          });
+          const limited = await myRateLimiter(
+            discordClient,
+            interaction,
+            'Balance',
+          );
+          if (limited) {
+            await interaction.editReply('rate limited').catch((e) => {
+              console.log(e);
+            });
+            return;
+          }
+          await queue.add(async () => {
+            const task = await discordBalance(
+              discordClient,
+              interaction,
+              io,
+            );
+          });
+          await interaction.editReply('\u200b').catch((e) => {
+            console.log(e);
+          });
+        }
+
+        if (commandName === 'roll') {
+          await interaction.deferReply().catch((e) => {
+            console.log(e);
+          });
+          const setting = await db.setting.findOne();
+          if (setting.roleDiceChannelId !== interaction.channelId) {
+            await interaction.editReply(`please use <#${setting.roleDiceChannelId}> for rolling dice`).catch((e) => {
+              console.log(e);
+            });
+          }
+          if (setting.roleDiceChannelId === interaction.channelId) {
+            const limited = await myRateLimiter(
+              discordClient,
+              interaction,
+              'RollDice',
+            );
+            if (limited) {
+              await interaction.editReply('rate limited').catch((e) => {
+                console.log(e);
+              });
+              return;
+            }
+            await queue.add(async () => {
+              const task = await discordRollDice(
+                discordClient,
+                interaction,
+                setting,
+                io,
+              );
+            });
+            await interaction.editReply('\u200b').catch((e) => {
+              console.log(e);
+            });
+          }
+        }
+
+        if (commandName === 'withdraw') {
+          await interaction.deferReply().catch((e) => {
+            console.log(e);
+          });
+          const limited = await myRateLimiter(
+            discordClient,
+            interaction,
+            'Withdraw',
+          );
+          if (limited) {
+            await interaction.editReply('rate limited').catch((e) => {
+              console.log(e);
+            });
+            return;
+          }
+          const setting = await discordFeatureSettings(
+            interaction,
+            'withdraw',
+            groupTaskId,
+            channelTaskId,
+          );
+          if (!setting) return;
+          const [
+            success,
+            filteredMessage,
+          ] = await preWithdraw(
+            discordClient,
+            interaction,
+          );
+          if (success) {
+            await queue.add(async () => {
+              const task = await discordWithdraw(
+                discordClient,
+                interaction,
+                filteredMessage,
+                setting,
+                io,
+              );
+            });
+          }
+          await interaction.editReply('\u200b').catch((e) => {
+            console.log(e);
+          });
+        }
+      }
+      console.log('before if button');
+      if (interaction.isButton()) {
+        console.log('isbutton');
+        if (interaction.customId === 'roll') {
+          console.log('pressed roll');
+          const setting = await db.setting.findOne();
+          console.log(interaction);
+          if (setting.roleDiceChannelId !== interaction.channelId) {
+            const discordChannel = await discordClient.channels.cache.get(setting.roleDiceChannelId);
+            await discordChannel.send(`please use <#${setting.roleDiceChannelId}> for rolling dice`);
+            await interaction.editReply().catch((e) => {
+              console.log(e);
+            });
+          }
+          if (setting.roleDiceChannelId === interaction.channelId) {
+            console.log('found channel');
+            const limited = await myRateLimiter(
+              discordClient,
+              interaction,
+              'RollDice',
+            );
+            if (limited) return;
+
+            await queue.add(async () => {
+              console.log('start_task');
+              const task = await discordRollDice(
+                discordClient,
+                interaction,
+                setting,
+                io,
+              );
+            });
+          }
+
+          await interaction.deferUpdate().catch((e) => {
+            console.log(e);
+          });
+        }
       }
     }
   });
@@ -551,6 +629,32 @@ export const discordRouter = async (
         );
       });
     }
+
+    if (filteredMessageDiscord[1] && filteredMessageDiscord[1].toLowerCase() === 'roll') {
+      const limited = await myRateLimiter(
+        discordClient,
+        message,
+        'RollDice',
+      );
+      if (limited) return;
+      const setting = await db.setting.findOne();
+      if (message.channelId !== setting.roleDiceChannelId) {
+        await message.reply(`please use <#${setting.roleDiceChannelId}> for rolling dice`).catch((e) => {
+          console.log(e);
+        });
+      }
+      if (message.channelId === setting.roleDiceChannelId) {
+        await queue.add(async () => {
+          const task = await discordRollDice(
+            discordClient,
+            message,
+            setting,
+            io,
+          );
+        });
+      }
+    }
+
     if (filteredMessageDiscord[1] && filteredMessageDiscord[1].toLowerCase() === 'withdraw') {
       const limited = await myRateLimiter(
         discordClient,

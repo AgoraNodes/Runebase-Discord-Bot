@@ -44,6 +44,10 @@ const rateLimiterWithdraw = new RateLimiterFlexible.default.RateLimiterMemory({
   points: 2,
   duration: 30,
 });
+const rateLimiterRollDice = new RateLimiterFlexible.default.RateLimiterMemory({
+  points: 40,
+  duration: 30,
+});
 
 export const myRateLimiter = async (
   client,
@@ -96,6 +100,10 @@ export const myRateLimiter = async (
       }
       if (title.toLowerCase() === 'price') {
         await rateLimiterPrice.consume(userId, 1);
+        return false;
+      }
+      if (title.toLowerCase() === 'rolldice') {
+        await rateLimiterRollDice.consume(userId, 1);
         return false;
       }
 

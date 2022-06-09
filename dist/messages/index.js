@@ -5,7 +5,7 @@ var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefau
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.warnDirectMessage = exports.walletNotFoundMessage = exports.userNotFoundMessage = exports.unableToWithdrawToSelfMessage = exports.timeOutMessage = exports.reviewMessage = exports.priceMessage = exports.minimumMessage = exports.levelUpMessage = exports.invitedNewUserRewardMessage = exports.invalidAmountMessage = exports.invalidAddressMessage = exports.insufficientBalanceMessage = exports.helpMessage = exports.gainVoteTopggExpMessage = exports.gainTestExpMessage = exports.gainActiveTalkerExpMessage = exports.featureDisabledServerMessage = exports.featureDisabledGlobalMessage = exports.featureDisabledChannelMessage = exports.enterWithdrawalAmount = exports.enterWithdrawalAddress = exports.discordWithdrawalConfirmedMessage = exports.discordWithdrawalAcceptedMessage = exports.discordWelcomeMessage = exports.discordUserWithdrawalRejectMessage = exports.discordUserBannedMessage = exports.discordServerBannedMessage = exports.discordLimitSpamMessage = exports.discordIncomingDepositMessage = exports.discordErrorMessage = exports.discordDepositConfirmedMessage = exports.discordChannelBannedMessage = exports.discordBotMaintenanceMessage = exports.discordBotDisabledMessage = exports.depositAddressMessage = exports.coinInfoMessage = exports.cannotSendMessageUser = exports.balanceMessage = exports.alreadyVotedTopGG = exports.NotInDirectMessage = exports.AccountInfoMessage = void 0;
+exports.warnDirectMessage = exports.walletNotFoundMessage = exports.userNotFoundMessage = exports.unableToWithdrawToSelfMessage = exports.timeOutMessage = exports.rolledDiceMessage = exports.rollDiceTooFastMessage = exports.reviewMessage = exports.priceMessage = exports.minimumMessage = exports.levelUpMessage = exports.invitedNewUserRewardMessage = exports.invalidAmountMessage = exports.invalidAddressMessage = exports.insufficientBalanceMessage = exports.helpMessage = exports.gainVoteTopggExpMessage = exports.gainTestExpMessage = exports.gainActiveTalkerExpMessage = exports.featureDisabledServerMessage = exports.featureDisabledGlobalMessage = exports.featureDisabledChannelMessage = exports.enterWithdrawalAmount = exports.enterWithdrawalAddress = exports.discordWithdrawalConfirmedMessage = exports.discordWithdrawalAcceptedMessage = exports.discordWelcomeMessage = exports.discordUserWithdrawalRejectMessage = exports.discordUserBannedMessage = exports.discordServerBannedMessage = exports.discordLimitSpamMessage = exports.discordIncomingDepositMessage = exports.discordErrorMessage = exports.discordDepositConfirmedMessage = exports.discordChannelBannedMessage = exports.discordBotMaintenanceMessage = exports.discordBotDisabledMessage = exports.depositAddressMessage = exports.coinInfoMessage = exports.cannotSendMessageUser = exports.balanceMessage = exports.alreadyVotedTopGG = exports.NotInDirectMessage = exports.AccountInfoMessage = void 0;
 
 var _discord = require("discord.js");
 
@@ -257,6 +257,30 @@ var gainTestExpMessage = function gainTestExpMessage(userId, amount) {
 };
 
 exports.gainTestExpMessage = gainTestExpMessage;
+
+var rolledDiceMessage = function rolledDiceMessage(userId, expRewarded, randomNumberOne, randomNumberTwo, rewardAmount) {
+  var isSnakeEyes = !!(randomNumberOne === 1 && randomNumberTwo === 1);
+  var result = new _discord.MessageEmbed().setColor(_settings["default"].bot.color).setTitle('Roll Dice').setDescription("<@".concat(userId, ">, You rolled the dice!\n").concat(isSnakeEyes ? '👁 Snake eyes 👁' : "dice: ".concat(randomNumberOne, "\ndice: ").concat(randomNumberTwo), "\n\nyou have been rewarded ").concat(rewardAmount / 1e8, " RUNES and ").concat(expRewarded, " experience")).setTimestamp().setFooter({
+    text: "".concat(_settings["default"].bot.name, " v").concat(_package["default"].version),
+    iconURL: _settings["default"].bot.logo
+  });
+  return result;
+};
+
+exports.rolledDiceMessage = rolledDiceMessage;
+
+var rollDiceTooFastMessage = function rollDiceTooFastMessage(userId, distance) {
+  var hours = Math.floor(distance % (1000 * 60 * 60 * 24) / (1000 * 60 * 60));
+  var minutes = Math.floor(distance % (1000 * 60 * 60) / (1000 * 60));
+  var seconds = Math.floor(distance % (1000 * 60) / 1000);
+  var result = new _discord.MessageEmbed().setColor(_settings["default"].bot.color).setTitle('Roll Dice').setDescription("<@".concat(userId, ">, you have to wait ").concat(hours === 1 ? "".concat(hours, " hour") : '').concat(hours > 1 ? "".concat(hours, " hours,") : '', " ").concat(minutes === 1 ? "".concat(minutes, " minute") : '').concat(minutes > 1 ? "".concat(minutes, " minutes and") : '', " ").concat(seconds === 1 ? "".concat(seconds, " second") : '').concat(seconds > 1 ? "".concat(seconds, " seconds") : '', " before you can roll the dice again (you can roll the dice every 3 hours).")).setTimestamp().setFooter({
+    text: "".concat(_settings["default"].bot.name, " v").concat(_package["default"].version),
+    iconURL: _settings["default"].bot.logo
+  });
+  return result;
+};
+
+exports.rollDiceTooFastMessage = rollDiceTooFastMessage;
 
 var gainActiveTalkerExpMessage = function gainActiveTalkerExpMessage(userId, amount) {
   var result = new _discord.MessageEmbed().setColor(_settings["default"].bot.color).setTitle('Gain Exp').setDescription("<@".concat(userId, ">, Thank you for being so talkative in our community today!\nyou have been rewarded ").concat(amount, " experience")).setTimestamp().setFooter({
