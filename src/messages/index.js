@@ -402,7 +402,7 @@ export const rolledDiceMessage = (
     .setColor(settings.bot.color)
     .setTitle('Roll Dice')
     .setDescription(`<@${userId}>, You rolled the dice!
-${isSnakeEyes ? '👁 Snake eyes 👁' : `dice: ${randomNumberOne}
+${isSnakeEyes ? `👁 Snake eyes 👁` : `dice: ${randomNumberOne}
 dice: ${randomNumberTwo}`}
 
 you have been rewarded ${rewardAmount / 1e8} RUNES and ${expRewarded} experience`)

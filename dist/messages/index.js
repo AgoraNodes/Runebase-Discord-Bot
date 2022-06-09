@@ -260,7 +260,7 @@ exports.gainTestExpMessage = gainTestExpMessage;
 
 var rolledDiceMessage = function rolledDiceMessage(userId, expRewarded, randomNumberOne, randomNumberTwo, rewardAmount) {
   var isSnakeEyes = !!(randomNumberOne === 1 && randomNumberTwo === 1);
-  var result = new _discord.MessageEmbed().setColor(_settings["default"].bot.color).setTitle('Roll Dice').setDescription("<@".concat(userId, ">, You rolled the dice!\n").concat(isSnakeEyes ? '👁 Snake eyes 👁' : "dice: ".concat(randomNumberOne, "\ndice: ").concat(randomNumberTwo), "\n\nyou have been rewarded ").concat(rewardAmount / 1e8, " RUNES and ").concat(expRewarded, " experience")).setTimestamp().setFooter({
+  var result = new _discord.MessageEmbed().setColor(_settings["default"].bot.color).setTitle('Roll Dice').setDescription("<@".concat(userId, ">, You rolled the dice!\n").concat(isSnakeEyes ? "\uD83D\uDC41 Snake eyes \uD83D\uDC41" : "dice: ".concat(randomNumberOne, "\ndice: ").concat(randomNumberTwo), "\n\nyou have been rewarded ").concat(rewardAmount / 1e8, " RUNES and ").concat(expRewarded, " experience")).setTimestamp().setFooter({
     text: "".concat(_settings["default"].bot.name, " v").concat(_package["default"].version),
     iconURL: _settings["default"].bot.logo
   });
