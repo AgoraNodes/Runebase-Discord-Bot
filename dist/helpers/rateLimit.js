@@ -61,6 +61,14 @@ var rateLimiterRollDice = new RateLimiterFlexible["default"].RateLimiterMemory({
   points: 2,
   duration: 30
 });
+var rateLimiterLeaderboard = new RateLimiterFlexible["default"].RateLimiterMemory({
+  points: 2,
+  duration: 30
+});
+var rateLimiterMostActive = new RateLimiterFlexible["default"].RateLimiterMemory({
+  points: 2,
+  duration: 30
+});
 
 var myRateLimiter = /*#__PURE__*/function () {
   var _ref = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(client, message, title) {
@@ -141,129 +149,153 @@ var myRateLimiter = /*#__PURE__*/function () {
             return _context.abrupt("return", false);
 
           case 24:
-            if (!(title.toLowerCase() === 'deposit')) {
+            if (!(title.toLowerCase() === 'mostactive')) {
               _context.next = 28;
               break;
             }
 
             _context.next = 27;
-            return rateLimiterDeposit.consume(userId, 1);
+            return rateLimiterMostActive.consume(userId, 1);
 
           case 27:
             return _context.abrupt("return", false);
 
           case 28:
-            if (!(title.toLowerCase() === 'withdraw')) {
+            if (!(title.toLowerCase() === 'leaderboard')) {
               _context.next = 32;
               break;
             }
 
             _context.next = 31;
-            return rateLimiterWithdraw.consume(userId, 1);
+            return rateLimiterLeaderboard.consume(userId, 1);
 
           case 31:
             return _context.abrupt("return", false);
 
           case 32:
-            if (!(title.toLowerCase() === 'balance')) {
+            if (!(title.toLowerCase() === 'deposit')) {
               _context.next = 36;
               break;
             }
 
             _context.next = 35;
-            return rateLimiterBalance.consume(userId, 1);
+            return rateLimiterDeposit.consume(userId, 1);
 
           case 35:
             return _context.abrupt("return", false);
 
           case 36:
-            if (!(title.toLowerCase() === 'price')) {
+            if (!(title.toLowerCase() === 'withdraw')) {
               _context.next = 40;
               break;
             }
 
             _context.next = 39;
-            return rateLimiterPrice.consume(userId, 1);
+            return rateLimiterWithdraw.consume(userId, 1);
 
           case 39:
             return _context.abrupt("return", false);
 
           case 40:
-            if (!(title.toLowerCase() === 'rolldice')) {
+            if (!(title.toLowerCase() === 'balance')) {
               _context.next = 44;
               break;
             }
 
             _context.next = 43;
-            return rateLimiterRollDice.consume(userId, 1);
+            return rateLimiterBalance.consume(userId, 1);
 
           case 43:
             return _context.abrupt("return", false);
 
           case 44:
-            throw new Error("no Rate limiter could be reached");
-
-          case 47:
-            _context.prev = 47;
-            _context.t0 = _context["catch"](5);
-            console.log(_context.t0);
-            _context.prev = 50;
-            _context.next = 53;
-            return errorConsumer.consume(userId, 1);
-
-          case 53:
-            notError = _context.sent;
-
-            if (!(notError.remainingPoints > 0)) {
-              _context.next = 61;
+            if (!(title.toLowerCase() === 'price')) {
+              _context.next = 48;
               break;
             }
 
-            _context.next = 57;
+            _context.next = 47;
+            return rateLimiterPrice.consume(userId, 1);
+
+          case 47:
+            return _context.abrupt("return", false);
+
+          case 48:
+            if (!(title.toLowerCase() === 'rolldice')) {
+              _context.next = 52;
+              break;
+            }
+
+            _context.next = 51;
+            return rateLimiterRollDice.consume(userId, 1);
+
+          case 51:
+            return _context.abrupt("return", false);
+
+          case 52:
+            throw new Error("no Rate limiter could be reached");
+
+          case 55:
+            _context.prev = 55;
+            _context.t0 = _context["catch"](5);
+            console.log(_context.t0);
+            _context.prev = 58;
+            _context.next = 61;
+            return errorConsumer.consume(userId, 1);
+
+          case 61:
+            notError = _context.sent;
+
+            if (!(notError.remainingPoints > 0)) {
+              _context.next = 69;
+              break;
+            }
+
+            _context.next = 65;
             return client.channels.fetch(discordChannelId)["catch"](function (e) {
               console.log(e);
             });
 
-          case 57:
+          case 65:
             discordChannel = _context.sent;
 
             if (!discordChannel) {
-              _context.next = 61;
+              _context.next = 69;
               break;
             }
 
-            _context.next = 61;
+            _context.next = 69;
             return discordChannel.send({
               embeds: [(0, _messages.discordLimitSpamMessage)(userId, title)]
             })["catch"](function (e) {
               console.log(e);
             });
 
-          case 61:
+          case 69:
             return _context.abrupt("return", true);
 
-          case 64:
-            _context.prev = 64;
-            _context.t1 = _context["catch"](50);
+          case 72:
+            _context.prev = 72;
+            _context.t1 = _context["catch"](58);
             console.log(_context.t1);
             return _context.abrupt("return", true);
 
-          case 68:
-            _context.next = 74;
+          case 76:
+            _context.next = 82;
             break;
 
-          case 70:
-            _context.prev = 70;
+          case 78:
+            _context.prev = 78;
             _context.t2 = _context["catch"](0);
             console.log(_context.t2);
             return _context.abrupt("return", true);
 
-          case 74:
+          case 82:
           case "end":
             return _context.stop();
         }
       }
-    }, _callee, null, [[0, 70], [5, 47], [50, 64]]);
+    }, _callee, null, [[0, 78], [5, 55], [58, 72]]);
   }));
 
   return function myRateLimiter(_x, _x2, _x3) {

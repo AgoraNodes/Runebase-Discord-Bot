@@ -19,10 +19,10 @@ var _rest = require("@discordjs/rest");
 
 var _v = require("discord-api-types/v9");
 
-var _models = _interopRequireDefault(require("../../../models"));
+var _models = _interopRequireDefault(require("../../models"));
 
 (0, _dotenv.config)();
-var commands = [new _builders.SlashCommandBuilder().setName('help').setDescription('DM\'s you with a help message'), new _builders.SlashCommandBuilder().setName('myrank').setDescription('Displays the user\'s rank'), new _builders.SlashCommandBuilder().setName('ranks').setDescription('Displays all the ranks'), new _builders.SlashCommandBuilder().setName('balance').setDescription('Display your balance'), new _builders.SlashCommandBuilder().setName('deposit').setDescription('Displays your deposit address!'), new _builders.SlashCommandBuilder().setName('withdraw').setDescription('Starts Withdrawal process'), new _builders.SlashCommandBuilder().setName('roll').setDescription('Roll the dice'), new _builders.SlashCommandBuilder().setName('price').setDescription('Displays Runebase price')].map(function (command) {
+var commands = [new _builders.SlashCommandBuilder().setName('help').setDescription('DM\'s you with a help message'), new _builders.SlashCommandBuilder().setName('myrank').setDescription('Displays the user\'s rank'), new _builders.SlashCommandBuilder().setName('ranks').setDescription('Displays all the ranks'), new _builders.SlashCommandBuilder().setName('leaderboard').setDescription('Displays the top ten leaderboard'), new _builders.SlashCommandBuilder().setName('mostactive').setDescription('Displays the top ten most active users (chatting)'), new _builders.SlashCommandBuilder().setName('balance').setDescription('Display your balance'), new _builders.SlashCommandBuilder().setName('deposit').setDescription('Displays your deposit address!'), new _builders.SlashCommandBuilder().setName('withdraw').setDescription('Starts Withdrawal process'), new _builders.SlashCommandBuilder().setName('roll').setDescription('Roll the dice'), new _builders.SlashCommandBuilder().setName('price').setDescription('Displays Runebase price')].map(function (command) {
   return command.toJSON();
 });
 
@@ -45,9 +45,7 @@ var deployCommands = /*#__PURE__*/function () {
               body: commands
             }).then(function () {
               return console.log('Successfully registered application commands.');
-            })["catch"](console.error); // rest.put(Routes.applicationGuildCommands(clientId, setting.discordHomeServerGuildId), { body: commands })
-            //  .then(() => console.log('Successfully registered application commands.'))
-            //  .catch(console.error);
+            })["catch"](console.error);
 
           case 5:
           case "end":
