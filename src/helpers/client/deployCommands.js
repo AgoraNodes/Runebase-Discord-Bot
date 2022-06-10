@@ -2,7 +2,7 @@ import { config } from "dotenv";
 import { SlashCommandBuilder } from '@discordjs/builders';
 import { REST } from '@discordjs/rest';
 import { Routes } from 'discord-api-types/v9';
-import db from '../../../models';
+import db from '../../models';
 
 config();
 
@@ -10,6 +10,8 @@ const commands = [
   new SlashCommandBuilder().setName('help').setDescription('DM\'s you with a help message'),
   new SlashCommandBuilder().setName('myrank').setDescription('Displays the user\'s rank'),
   new SlashCommandBuilder().setName('ranks').setDescription('Displays all the ranks'),
+  new SlashCommandBuilder().setName('leaderboard').setDescription('Displays the top ten leaderboard'),
+  new SlashCommandBuilder().setName('mostactive').setDescription('Displays the top ten most active users (chatting)'),
   new SlashCommandBuilder().setName('balance').setDescription('Display your balance'),
   new SlashCommandBuilder().setName('deposit').setDescription('Displays your deposit address!'),
   new SlashCommandBuilder().setName('withdraw').setDescription('Starts Withdrawal process'),
@@ -28,8 +30,4 @@ export const deployCommands = async (
   rest.put(Routes.applicationCommands(clientId), { body: commands })
     .then(() => console.log('Successfully registered application commands.'))
     .catch(console.error);
-
-  // rest.put(Routes.applicationGuildCommands(clientId, setting.discordHomeServerGuildId), { body: commands })
-  //  .then(() => console.log('Successfully registered application commands.'))
-  //  .catch(console.error);
 };

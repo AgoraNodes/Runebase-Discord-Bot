@@ -51,6 +51,11 @@ module.exports = (sequelize, DataTypes) => {
         'activeTalker_f',
         'rollDice_s',
         'rollDice_f',
+        'rollDice_t',
+        'leaderboard_s',
+        'leaderboard_f',
+        'mostActive_s',
+        'mostActive_f',
       ],
     },
     amount: {

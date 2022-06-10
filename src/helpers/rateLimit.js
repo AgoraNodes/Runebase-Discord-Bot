@@ -49,6 +49,16 @@ const rateLimiterRollDice = new RateLimiterFlexible.default.RateLimiterMemory({
   duration: 30,
 });
 
+const rateLimiterLeaderboard = new RateLimiterFlexible.default.RateLimiterMemory({
+  points: 2,
+  duration: 30,
+});
+
+const rateLimiterMostActive = new RateLimiterFlexible.default.RateLimiterMemory({
+  points: 2,
+  duration: 30,
+});
+
 export const myRateLimiter = async (
   client,
   message,
@@ -84,6 +94,14 @@ export const myRateLimiter = async (
       }
       if (title.toLowerCase() === 'myrank') {
         await rateLimiterMyrank.consume(userId, 1);
+        return false;
+      }
+      if (title.toLowerCase() === 'mostactive') {
+        await rateLimiterMostActive.consume(userId, 1);
+        return false;
+      }
+      if (title.toLowerCase() === 'leaderboard') {
+        await rateLimiterLeaderboard.consume(userId, 1);
         return false;
       }
       if (title.toLowerCase() === 'deposit') {

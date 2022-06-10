@@ -16,6 +16,8 @@ import { discordWithdraw } from '../controllers/withdraw';
 import { discordUserJoined } from '../controllers/userJoined';
 import { discordActiveTalker } from '../controllers/activeTalker';
 import { discordRollDice } from '../controllers/rollDice';
+import { discordLeaderboard } from '../controllers/leaderboard';
+import { discordMostActive } from "../controllers/mostActive";
 
 import { discordExpTest } from '../controllers/expTest';
 import { myRateLimiter } from '../helpers/rateLimit';
@@ -309,6 +311,64 @@ export const discordRouter = async (
           });
         }
 
+        if (commandName === 'leaderboard') {
+          await interaction.deferReply().catch((e) => {
+            console.log(e);
+          });
+          const limited = await myRateLimiter(
+            discordClient,
+            interaction,
+            'Leaderboard',
+          );
+          if (limited) {
+            await interaction.editReply('rate limited').catch((e) => {
+              console.log(e);
+            });
+            return;
+          }
+          const setting = await db.setting.findOne();
+          await queue.add(async () => {
+            const task = await discordLeaderboard(
+              discordClient,
+              interaction,
+              setting,
+              io,
+            );
+          });
+          await interaction.editReply('\u200b').catch((e) => {
+            console.log(e);
+          });
+        }
+
+        if (commandName === 'mostactive') {
+          await interaction.deferReply().catch((e) => {
+            console.log(e);
+          });
+          const limited = await myRateLimiter(
+            discordClient,
+            interaction,
+            'MostActive',
+          );
+          if (limited) {
+            await interaction.editReply('rate limited').catch((e) => {
+              console.log(e);
+            });
+            return;
+          }
+          const setting = await db.setting.findOne();
+          await queue.add(async () => {
+            const task = await discordMostActive(
+              discordClient,
+              interaction,
+              setting,
+              io,
+            );
+          });
+          await interaction.editReply('\u200b').catch((e) => {
+            console.log(e);
+          });
+        }
+
         if (commandName === 'roll') {
           await interaction.deferReply().catch((e) => {
             console.log(e);
@@ -392,11 +452,8 @@ export const discordRouter = async (
       }
       console.log('before if button');
       if (interaction.isButton()) {
-        console.log('isbutton');
         if (interaction.customId === 'roll') {
-          console.log('pressed roll');
           const setting = await db.setting.findOne();
-          console.log(interaction);
           if (setting.roleDiceChannelId !== interaction.channelId) {
             const discordChannel = await discordClient.channels.cache.get(setting.roleDiceChannelId);
             await discordChannel.send(`please use <#${setting.roleDiceChannelId}> for rolling dice`);
@@ -653,6 +710,42 @@ export const discordRouter = async (
           );
         });
       }
+    }
+
+    if (filteredMessageDiscord[1] && filteredMessageDiscord[1].toLowerCase() === 'leaderboard') {
+      const limited = await myRateLimiter(
+        discordClient,
+        message,
+        'Leaderboard',
+      );
+      if (limited) return;
+      const setting = await db.setting.findOne();
+      await queue.add(async () => {
+        const task = await discordLeaderboard(
+          discordClient,
+          message,
+          setting,
+          io,
+        );
+      });
+    }
+
+    if (filteredMessageDiscord[1] && filteredMessageDiscord[1].toLowerCase() === 'mostactive') {
+      const limited = await myRateLimiter(
+        discordClient,
+        message,
+        'MostActive',
+      );
+      if (limited) return;
+      const setting = await db.setting.findOne();
+      await queue.add(async () => {
+        const task = await discordMostActive(
+          discordClient,
+          message,
+          setting,
+          io,
+        );
+      });
     }
 
     if (filteredMessageDiscord[1] && filteredMessageDiscord[1].toLowerCase() === 'withdraw') {

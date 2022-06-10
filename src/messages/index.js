@@ -745,21 +745,35 @@ export const helpMessage = (withdraw) => {
     .setDescription(`\`${settings.bot.command}\`
 Displays this message
 
+\`/help\`
 \`${settings.bot.command} help\`
 Displays this message
 
+\`/myrank\`
 \`${settings.bot.command} myrank\`
 Displays your account information
 
+\`/ranks\`
 \`${settings.bot.command} ranks\`
 Displays all the ranks
 
+\`/leaderboard\`
+\`${settings.bot.command} leaderboard\`
+Displays top 10 exped users 
+
+\`/mostactive\`
+\`${settings.bot.command} mostActive\`
+Displays top 10 most active chatters last month
+
+\`/balance\`
 \`${settings.bot.command} balance\`
 Displays your balance
 
+\`/deposit\`
 \`${settings.bot.command} deposit\`
 Displays your deposit address
 
+\`/withdraw\`
 \`${settings.bot.command} withdraw\`
 starts withdrawal process`)
     .setTimestamp()
