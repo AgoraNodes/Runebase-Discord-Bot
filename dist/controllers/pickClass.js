@@ -213,8 +213,8 @@ var discordPickClass = /*#__PURE__*/function () {
                         ctx.strokeText(current[0].name, 250, 880, 500);
                         ctx.fillText(current[0].name, 250, 880, 500); // print default stats
 
-                        ctx.strokeText("Default Stats", 1200, 50, 200);
-                        ctx.fillText("Default stats", 1200, 50, 200);
+                        ctx.strokeText("Base Stats", 1200, 50, 200);
+                        ctx.fillText("Base stats", 1200, 50, 200);
                         ctx.font = 'bold 35px "HeartWarming"'; // Strength
 
                         ctx.strokeText("Strength: ".concat(current[0].strength), 1200, 150, 200);
