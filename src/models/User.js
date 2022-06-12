@@ -56,7 +56,9 @@ module.exports = (sequelize, DataTypes) => {
     UserModel.hasMany(model.topggVote);
     UserModel.hasMany(model.activeTalker);
     UserModel.hasOne(model.wallet);
-    UserModel.hasOne(model.stats);
+    UserModel.belongsTo(model.class, {
+      as: 'currentClass',
+    });
     UserModel.hasMany(model.transaction);
     UserModel.belongsToMany(
       model.rank,
@@ -66,6 +68,7 @@ module.exports = (sequelize, DataTypes) => {
       model.class,
       { through: 'UserClass' },
     );
+    UserModel.hasOne(model.UserClass);
   };
 
   return UserModel;

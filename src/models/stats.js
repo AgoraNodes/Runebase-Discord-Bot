@@ -53,7 +53,10 @@ module.exports = (sequelize, DataTypes) => {
   const StatsModel = sequelize.define('stats', modelDefinition, modelOptions);
 
   StatsModel.associate = (model) => {
-    StatsModel.belongsTo(model.user);
+    StatsModel.hasOne(model.UserClass, {
+      as: 'stats',
+      foreignKey: 'statsId',
+    });
   };
 
   return StatsModel;

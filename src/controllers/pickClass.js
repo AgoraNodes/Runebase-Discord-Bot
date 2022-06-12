@@ -196,7 +196,8 @@ export const discordPickClass = async (
     const ctx = canvas.getContext('2d');
 
     console.log(current);
-    console.log(current.classDescription);
+    console.log(current[0].classDescription);
+    console.log('picked!');
     ctx.font = 'bold 30px "HeartWarming"';
     ctx.fillStyle = "#ccc";
     ctx.strokeStyle = 'black';
@@ -205,9 +206,6 @@ export const discordPickClass = async (
 
     ctx.strokeText(`${user.username} picked ${current[0].name}!`, 250, 40, 500);
     ctx.fillText(`${user.username} picked ${current[0].name}!`, 250, 40, 500);
-
-    ctx.strokeText(`${user.username}'s stats have been reset`, 250, 80, 500);
-    ctx.fillText(`${user.username}'s stats have been reset`, 250, 80, 500);
 
     return new MessageAttachment(canvas.toBuffer(), 'picked.png');
   };
@@ -276,35 +274,35 @@ export const discordPickClass = async (
         await db.sequelize.transaction({
           isolationLevel: Transaction.ISOLATION_LEVELS.SERIALIZABLE,
         }, async (t) => {
-          const stats = await db.stats.findOne({
+          const findCurrentUser = await db.user.findOne({
             where: {
-              userId: user.id,
+              id: user.id,
             },
+            transaction: t,
+            lock: t.LOCK.UPDATE,
           });
-          if (!stats) {
-            await db.stats.create({
-              userId: user.id,
-            });
-          } else {
-            await stats.update({
-              strength: 0,
-              dexterity: 0,
-              vitality: 0,
-              energy: 0,
-              life: 0,
-              mana: 0,
-              stamina: 0,
-            });
-          }
+          await findCurrentUser.update({
+            currentClassId: CurrentClassSelectionId,
+          }, {
+            transaction: t,
+            lock: t.LOCK.UPDATE,
+          });
           const userClass = await db.UserClass.findOne({
             where: {
               userId: user.id,
+              classId: CurrentClassSelectionId,
             },
           });
           if (!userClass) {
+            const newStats = await db.stats.create({
+            }, {
+              transaction: t,
+              lock: t.LOCK.UPDATE,
+            });
             await db.UserClass.create({
               userId: user.id,
               classId: CurrentClassSelectionId,
+              statsId: newStats.id,
             }, {
               transaction: t,
               lock: t.LOCK.UPDATE,
@@ -312,6 +310,9 @@ export const discordPickClass = async (
           } else {
             userClass.update({
               classId: CurrentClassSelectionId,
+            }, {
+              transaction: t,
+              lock: t.LOCK.UPDATE,
             });
           }
 

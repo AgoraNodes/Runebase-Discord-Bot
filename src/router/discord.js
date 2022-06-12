@@ -19,6 +19,7 @@ import { discordRollDice } from '../controllers/rollDice';
 import { discordLeaderboard } from '../controllers/leaderboard';
 import { discordMostActive } from "../controllers/mostActive";
 import { discordPickClass } from '../controllers/pickClass';
+import { discordStats } from '../controllers/stats';
 
 import { discordExpTest } from '../controllers/expTest';
 import { myRateLimiter } from '../helpers/rateLimit';
@@ -795,6 +796,23 @@ export const discordRouter = async (
       );
     }
 
+    if (filteredMessageDiscord[1] && filteredMessageDiscord[1].toLowerCase() === 'stats') {
+      const limited = await myRateLimiter(
+        discordClient,
+        message,
+        'Stats',
+      );
+      if (limited) return;
+      const setting = await db.setting.findOne();
+      const task = await discordStats(
+        discordClient,
+        message,
+        setting,
+        io,
+        queue,
+      );
+    }
+
     if (filteredMessageDiscord[1] && filteredMessageDiscord[1].toLowerCase() === 'withdraw') {
       const limited = await myRateLimiter(
         discordClient,
@@ -843,14 +861,14 @@ export const discordRouter = async (
     //   });
     // }
 
-    // if (filteredMessageDiscord[1] && filteredMessageDiscord[1].toLowerCase() === 'exptest') {
-    //  await queue.add(async () => {
-    //    const task = await discordExpTest(
-    //      discordClient,
-    //      message,
-    //      io,
-    //    );
-    //  });
-    // }
+    if (filteredMessageDiscord[1] && filteredMessageDiscord[1].toLowerCase() === 'exptest') {
+      await queue.add(async () => {
+        const task = await discordExpTest(
+          discordClient,
+          message,
+          io,
+        );
+      });
+    }
   });
 };

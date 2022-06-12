@@ -50,6 +50,9 @@ module.exports = (sequelize, DataTypes) => {
   const ClassModel = sequelize.define('class', modelDefinition, modelOptions);
 
   ClassModel.associate = (model) => {
+    ClassModel.hasOne(model.user, {
+      foreignKey: "currentClassId",
+    });
     ClassModel.belongsTo(model.classDescription);
     ClassModel.belongsToMany(
       model.user,

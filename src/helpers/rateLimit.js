@@ -64,6 +64,11 @@ const rateLimiterPickCLass = new RateLimiterFlexible.default.RateLimiterMemory({
   duration: 30,
 });
 
+const rateLimiterStats = new RateLimiterFlexible.default.RateLimiterMemory({
+  points: 2,
+  duration: 30,
+});
+
 export const myRateLimiter = async (
   client,
   message,
@@ -131,6 +136,10 @@ export const myRateLimiter = async (
       }
       if (title.toLowerCase() === 'pickclass') {
         await rateLimiterPickCLass.consume(userId, 1);
+        return false;
+      }
+      if (title.toLowerCase() === 'stats') {
+        await rateLimiterStats.consume(userId, 1);
         return false;
       }
 

@@ -17,6 +17,13 @@ module.exports = (sequelize, DataTypes) => {
   const UserClassModel = sequelize.define('UserClass', modelDefinition, modelOptions);
 
   UserClassModel.associate = (model) => {
+    UserClassModel.belongsTo(model.stats, {
+      as: 'stats',
+      foreignKey: 'statsId',
+    });
+    UserClassModel.belongsTo(model.user, {
+      foreignKey: 'userId',
+    });
   };
 
   return UserClassModel;
