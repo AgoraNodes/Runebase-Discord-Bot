@@ -122,7 +122,7 @@ export const discordPickClass = async (
 
   const generateClassImage = async (start) => {
     const current = classes.slice(start, start + 1);
-    const canvas = createCanvas(1400, 1000);
+    const canvas = createCanvas(1400, 1050);
     const ctx = canvas.getContext('2d');
 
     ctx.font = 'bold 30px "HeartWarming"';
@@ -180,6 +180,12 @@ export const discordPickClass = async (
     // Stamina
     ctx.strokeText(`Stamina: ${current[0].stamina}`, 1200, 750, 200);
     ctx.fillText(`Stamina: ${current[0].stamina}`, 1200, 750, 200);
+
+    // Picking a class
+    ctx.fillStyle = "#fe5701";
+    ctx.font = 'bold 70px "HeartWarming"';
+    ctx.strokeText(`${user.username} is picking a class`, 700, 1000, 1400);
+    ctx.fillText(`${user.username} is picking a class`, 700, 1000, 1400);
 
     return new MessageAttachment(canvas.toBuffer(), 'class.png');
   };

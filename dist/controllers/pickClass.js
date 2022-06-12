@@ -194,7 +194,7 @@ var discordPickClass = /*#__PURE__*/function () {
                     switch (_context.prev = _context.next) {
                       case 0:
                         current = classes.slice(start, start + 1);
-                        canvas = (0, _canvas.createCanvas)(1400, 1000);
+                        canvas = (0, _canvas.createCanvas)(1400, 1050);
                         ctx = canvas.getContext('2d');
                         ctx.font = 'bold 30px "HeartWarming"';
                         ctx.fillStyle = "#ccc"; // ctx.textAlign = "center";
@@ -236,10 +236,15 @@ var discordPickClass = /*#__PURE__*/function () {
                         ctx.fillText("Mana: ".concat(current[0].mana), 1200, 650, 200); // Stamina
 
                         ctx.strokeText("Stamina: ".concat(current[0].stamina), 1200, 750, 200);
-                        ctx.fillText("Stamina: ".concat(current[0].stamina), 1200, 750, 200);
+                        ctx.fillText("Stamina: ".concat(current[0].stamina), 1200, 750, 200); // Picking a class
+
+                        ctx.fillStyle = "#fe5701";
+                        ctx.font = 'bold 70px "HeartWarming"';
+                        ctx.strokeText("".concat(user.username, " is picking a class"), 700, 1000, 1400);
+                        ctx.fillText("".concat(user.username, " is picking a class"), 700, 1000, 1400);
                         return _context.abrupt("return", new _discord.MessageAttachment(canvas.toBuffer(), 'class.png'));
 
-                      case 34:
+                      case 38:
                       case "end":
                         return _context.stop();
                     }
