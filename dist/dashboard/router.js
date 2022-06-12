@@ -65,6 +65,10 @@ var _user = require("./controllers/user");
 
 var _rank = require("./controllers/rank");
 
+var _classDescription = require("./controllers/classDescription");
+
+var _class = require("./controllers/class");
+
 var _priceCurrencies = require("./controllers/priceCurrencies");
 
 // import storeIp from './helpers/storeIp';
@@ -161,11 +165,23 @@ var dashboardRouter = function dashboardRouter(app, io, discordClient, telegramC
   app.post('/api/management/feature/add', IsAuthenticated, _admin.isAdmin, _auth.isDashboardUserBanned, _ip.insertIp, _tfa.ensuretfa, use(_features.addFeature), respondResult);
   app.post('/api/management/features', IsAuthenticated, _admin.isAdmin, _auth.isDashboardUserBanned, _ip.insertIp, _tfa.ensuretfa, use(_features.fetchFeatures), respondCountAndResult);
   app.post('/api/management/bot/settings/update', IsAuthenticated, _admin.isAdmin, _auth.isDashboardUserBanned, _ip.insertIp, _tfa.ensuretfa, use(_bots.updateBotSettings), respondResult);
-  app.post('/api/management/bot/settings', IsAuthenticated, _admin.isAdmin, _auth.isDashboardUserBanned, _ip.insertIp, _tfa.ensuretfa, use(_bots.fetchBotSettings), respondCountAndResult);
+  app.post('/api/management/bot/settings', IsAuthenticated, _admin.isAdmin, _auth.isDashboardUserBanned, _ip.insertIp, _tfa.ensuretfa, use(_bots.fetchBotSettings), respondCountAndResult); // Ranks
+
   app.post('/api/management/ranks', use(IsAuthenticated), use(_admin.isAdmin), use(_auth.isDashboardUserBanned), use(_ip.insertIp), use(_tfa.ensuretfa), use(_rank.fetchRanks), respondCountAndResult);
   app.post('/api/management/rank/add', use(IsAuthenticated), use(_admin.isAdmin), use(_auth.isDashboardUserBanned), use(_ip.insertIp), use(_tfa.ensuretfa), use(_rank.addRank), respondResult);
   app.post('/api/management/rank/remove', use(IsAuthenticated), use(_admin.isAdmin), use(_auth.isDashboardUserBanned), use(_ip.insertIp), use(_tfa.ensuretfa), use(_rank.removeRank), respondResult);
-  app.post('/api/management/rank/update', use(IsAuthenticated), use(_admin.isAdmin), use(_auth.isDashboardUserBanned), use(_ip.insertIp), use(_tfa.ensuretfa), use(_rank.updateRank), respondResult);
+  app.post('/api/management/rank/update', use(IsAuthenticated), use(_admin.isAdmin), use(_auth.isDashboardUserBanned), use(_ip.insertIp), use(_tfa.ensuretfa), use(_rank.updateRank), respondResult); // Class Descriptions
+
+  app.post('/api/management/class/descriptions', use(IsAuthenticated), use(_admin.isAdmin), use(_auth.isDashboardUserBanned), use(_ip.insertIp), use(_tfa.ensuretfa), use(_classDescription.fetchClassDescriptions), respondCountAndResult);
+  app.post('/api/management/class/description/add', use(IsAuthenticated), use(_admin.isAdmin), use(_auth.isDashboardUserBanned), use(_ip.insertIp), use(_tfa.ensuretfa), use(_classDescription.addClassDescription), respondResult);
+  app.post('/api/management/class/description/remove', use(IsAuthenticated), use(_admin.isAdmin), use(_auth.isDashboardUserBanned), use(_ip.insertIp), use(_tfa.ensuretfa), use(_classDescription.removeClassDescription), respondResult);
+  app.post('/api/management/class/description/update', use(IsAuthenticated), use(_admin.isAdmin), use(_auth.isDashboardUserBanned), use(_ip.insertIp), use(_tfa.ensuretfa), use(_classDescription.updateClassDescription), respondResult); // CLASS
+
+  app.post('/api/management/classes', use(IsAuthenticated), use(_admin.isAdmin), use(_auth.isDashboardUserBanned), use(_ip.insertIp), use(_tfa.ensuretfa), use(_class.fetchClasses), respondCountAndResult);
+  app.post('/api/management/class/add', use(IsAuthenticated), use(_admin.isAdmin), use(_auth.isDashboardUserBanned), use(_ip.insertIp), use(_tfa.ensuretfa), use(_class.addClass), respondResult);
+  app.post('/api/management/class/remove', use(IsAuthenticated), use(_admin.isAdmin), use(_auth.isDashboardUserBanned), use(_ip.insertIp), use(_tfa.ensuretfa), use(_class.removeClass), respondResult);
+  app.post('/api/management/class/update', use(IsAuthenticated), use(_admin.isAdmin), use(_auth.isDashboardUserBanned), use(_ip.insertIp), use(_tfa.ensuretfa), use(_class.updateClass), respondResult); // Price Currencies
+
   app.post('/api/management/pricecurrencies', use(IsAuthenticated), use(_admin.isAdmin), use(_auth.isDashboardUserBanned), use(_ip.insertIp), use(_tfa.ensuretfa), use(_priceCurrencies.fetchPriceCurrencies), respondCountAndResult);
   app.post('/api/management/pricecurrencies/remove', use(IsAuthenticated), use(_admin.isAdmin), use(_auth.isDashboardUserBanned), use(_ip.insertIp), use(_tfa.ensuretfa), use(_priceCurrencies.removePriceCurrency), respondResult);
   app.post('/api/management/pricecurrencies/update', use(IsAuthenticated), use(_admin.isAdmin), use(_auth.isDashboardUserBanned), use(_ip.insertIp), use(_tfa.ensuretfa), use(_priceCurrencies.updatePriceCurrency), respondResult);
