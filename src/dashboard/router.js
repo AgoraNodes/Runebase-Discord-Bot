@@ -104,6 +104,20 @@ import {
 } from './controllers/rank';
 
 import {
+  fetchClassDescriptions,
+  addClassDescription,
+  removeClassDescription,
+  updateClassDescription,
+} from './controllers/classDescription';
+
+import {
+  fetchClasses,
+  addClass,
+  removeClass,
+  updateClass,
+} from './controllers/class';
+
+import {
   fetchPriceCurrencies,
   addPriceCurrency,
   removePriceCurrency,
@@ -352,6 +366,8 @@ export const dashboardRouter = (
     respondCountAndResult,
   );
 
+  // Ranks
+
   app.post(
     '/api/management/ranks',
     use(IsAuthenticated),
@@ -394,6 +410,98 @@ export const dashboardRouter = (
     use(updateRank),
     respondResult,
   );
+
+  // Class Descriptions
+
+  app.post(
+    '/api/management/class/descriptions',
+    use(IsAuthenticated),
+    use(isAdmin),
+    use(isDashboardUserBanned),
+    use(insertIp),
+    use(ensuretfa),
+    use(fetchClassDescriptions),
+    respondCountAndResult,
+  );
+  app.post(
+    '/api/management/class/description/add',
+    use(IsAuthenticated),
+    use(isAdmin),
+    use(isDashboardUserBanned),
+    use(insertIp),
+    use(ensuretfa),
+    use(addClassDescription),
+    respondResult,
+  );
+
+  app.post(
+    '/api/management/class/description/remove',
+    use(IsAuthenticated),
+    use(isAdmin),
+    use(isDashboardUserBanned),
+    use(insertIp),
+    use(ensuretfa),
+    use(removeClassDescription),
+    respondResult,
+  );
+
+  app.post(
+    '/api/management/class/description/update',
+    use(IsAuthenticated),
+    use(isAdmin),
+    use(isDashboardUserBanned),
+    use(insertIp),
+    use(ensuretfa),
+    use(updateClassDescription),
+    respondResult,
+  );
+
+  // CLASS
+
+  app.post(
+    '/api/management/classes',
+    use(IsAuthenticated),
+    use(isAdmin),
+    use(isDashboardUserBanned),
+    use(insertIp),
+    use(ensuretfa),
+    use(fetchClasses),
+    respondCountAndResult,
+  );
+  app.post(
+    '/api/management/class/add',
+    use(IsAuthenticated),
+    use(isAdmin),
+    use(isDashboardUserBanned),
+    use(insertIp),
+    use(ensuretfa),
+    use(addClass),
+    respondResult,
+  );
+
+  app.post(
+    '/api/management/class/remove',
+    use(IsAuthenticated),
+    use(isAdmin),
+    use(isDashboardUserBanned),
+    use(insertIp),
+    use(ensuretfa),
+    use(removeClass),
+    respondResult,
+  );
+
+  app.post(
+    '/api/management/class/update',
+    use(IsAuthenticated),
+    use(isAdmin),
+    use(isDashboardUserBanned),
+    use(insertIp),
+    use(ensuretfa),
+    use(updateClass),
+    respondResult,
+  );
+
+  // Price Currencies
 
   app.post(
     '/api/management/pricecurrencies',
