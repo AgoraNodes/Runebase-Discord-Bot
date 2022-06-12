@@ -18,6 +18,7 @@ import { discordActiveTalker } from '../controllers/activeTalker';
 import { discordRollDice } from '../controllers/rollDice';
 import { discordLeaderboard } from '../controllers/leaderboard';
 import { discordMostActive } from "../controllers/mostActive";
+import { discordPickClass } from '../controllers/pickClass';
 
 import { discordExpTest } from '../controllers/expTest';
 import { myRateLimiter } from '../helpers/rateLimit';
@@ -335,6 +336,35 @@ export const discordRouter = async (
               io,
             );
           });
+          await interaction.editReply('\u200b').catch((e) => {
+            console.log(e);
+          });
+        }
+
+        if (commandName === 'pickclass') {
+          await interaction.deferReply().catch((e) => {
+            console.log(e);
+          });
+          const limited = await myRateLimiter(
+            discordClient,
+            interaction,
+            'PickClass',
+          );
+          if (limited) {
+            await interaction.editReply('rate limited').catch((e) => {
+              console.log(e);
+            });
+            return;
+          }
+          const setting = await db.setting.findOne();
+
+          const task = await discordPickClass(
+            discordClient,
+            interaction,
+            setting,
+            io,
+            queue,
+          );
           await interaction.editReply('\u200b').catch((e) => {
             console.log(e);
           });
@@ -746,6 +776,23 @@ export const discordRouter = async (
           io,
         );
       });
+    }
+
+    if (filteredMessageDiscord[1] && filteredMessageDiscord[1].toLowerCase() === 'pickclass') {
+      const limited = await myRateLimiter(
+        discordClient,
+        message,
+        'PickClass',
+      );
+      if (limited) return;
+      const setting = await db.setting.findOne();
+      const task = await discordPickClass(
+        discordClient,
+        message,
+        setting,
+        io,
+        queue,
+      );
     }
 
     if (filteredMessageDiscord[1] && filteredMessageDiscord[1].toLowerCase() === 'withdraw') {

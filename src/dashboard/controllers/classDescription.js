@@ -5,6 +5,7 @@ export const updateClassDescription = async (
   res,
   next,
 ) => {
+  console.log(req.body);
   if (!req.body.name) {
     throw new Error("Name is required");
   }

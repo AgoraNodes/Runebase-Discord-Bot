@@ -749,6 +749,10 @@ Displays this message
 \`${settings.bot.command} help\`
 Displays this message
 
+\`/pickclass\`
+\`${settings.bot.command} pickclass\`
+Select a new class
+
 \`/myrank\`
 \`${settings.bot.command} myrank\`
 Displays your account information

@@ -56,6 +56,8 @@ module.exports = (sequelize, DataTypes) => {
         'leaderboard_f',
         'mostActive_s',
         'mostActive_f',
+        'pickClass_s',
+        'pickClass_f',
       ],
     },
     amount: {

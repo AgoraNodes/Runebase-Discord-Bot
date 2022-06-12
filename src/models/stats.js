@@ -7,37 +7,40 @@ module.exports = (sequelize, DataTypes) => {
       primaryKey: true,
       autoIncrement: true,
     },
-    name: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
     strength: {
       type: DataTypes.SMALLINT,
       allowNull: false,
+      defaultValue: 0,
     },
     dexterity: {
       type: DataTypes.SMALLINT,
       allowNull: false,
+      defaultValue: 0,
     },
     vitality: {
       type: DataTypes.SMALLINT,
       allowNull: false,
+      defaultValue: 0,
     },
     energy: {
       type: DataTypes.SMALLINT,
       allowNull: false,
+      defaultValue: 0,
     },
     life: {
       type: DataTypes.SMALLINT,
       allowNull: false,
+      defaultValue: 0,
     },
     mana: {
       type: DataTypes.SMALLINT,
       allowNull: false,
+      defaultValue: 0,
     },
     stamina: {
       type: DataTypes.SMALLINT,
       allowNull: false,
+      defaultValue: 0,
     },
   };
 
@@ -47,15 +50,11 @@ module.exports = (sequelize, DataTypes) => {
   };
 
   // 3: Define the Wallet model.
-  const ClassModel = sequelize.define('class', modelDefinition, modelOptions);
+  const StatsModel = sequelize.define('stats', modelDefinition, modelOptions);
 
-  ClassModel.associate = (model) => {
-    ClassModel.belongsTo(model.classDescription);
-    ClassModel.belongsToMany(
-      model.user,
-      { through: 'UserClass' },
-    );
+  StatsModel.associate = (model) => {
+    StatsModel.belongsTo(model.user);
   };
 
-  return ClassModel;
+  return StatsModel;
 };
