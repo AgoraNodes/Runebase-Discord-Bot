@@ -33,7 +33,6 @@ module.exports = (sequelize, DataTypes) => {
     ConditionModel.hasOne(model.UserClass, {
       as: 'condition',
       foreignKey: 'conditionId',
-      e,
     });
   };
 
