@@ -400,6 +400,36 @@ export const discordRouter = async (
           });
         }
 
+        if (commandName === 'stats') {
+          await interaction.deferReply().catch((e) => {
+            console.log(e);
+          });
+          const limited = await myRateLimiter(
+            discordClient,
+            interaction,
+            'Stats',
+          );
+          if (limited) {
+            await interaction.editReply('rate limited').catch((e) => {
+              console.log(e);
+            });
+            return;
+          }
+          const setting = await db.setting.findOne();
+          await queue.add(async () => {
+            const task = await discordStats(
+              discordClient,
+              interaction,
+              setting,
+              io,
+              queue,
+            );
+          });
+          await interaction.editReply('\u200b').catch((e) => {
+            console.log(e);
+          });
+        }
+
         if (commandName === 'roll') {
           await interaction.deferReply().catch((e) => {
             console.log(e);
@@ -481,7 +511,6 @@ export const discordRouter = async (
           });
         }
       }
-      console.log('before if button');
       if (interaction.isButton()) {
         if (interaction.customId === 'roll') {
           const setting = await db.setting.findOne();

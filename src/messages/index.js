@@ -753,6 +753,10 @@ Displays this message
 \`${settings.bot.command} pickclass\`
 Select a new class
 
+\`/stats\`
+\`${settings.bot.command} stats\`
+Select stats (attributes) for your class
+
 \`/myrank\`
 \`${settings.bot.command} myrank\`
 Displays your account information

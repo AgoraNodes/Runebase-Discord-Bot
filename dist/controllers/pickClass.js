@@ -268,7 +268,8 @@ var discordPickClass = /*#__PURE__*/function () {
                         canvas = (0, _canvas.createCanvas)(500, 100);
                         ctx = canvas.getContext('2d');
                         console.log(current);
-                        console.log(current.classDescription);
+                        console.log(current[0].classDescription);
+                        console.log('picked!');
                         ctx.font = 'bold 30px "HeartWarming"';
                         ctx.fillStyle = "#ccc";
                         ctx.strokeStyle = 'black';
@@ -276,11 +277,9 @@ var discordPickClass = /*#__PURE__*/function () {
                         ctx.textAlign = "center";
                         ctx.strokeText("".concat(user.username, " picked ").concat(current[0].name, "!"), 250, 40, 500);
                         ctx.fillText("".concat(user.username, " picked ").concat(current[0].name, "!"), 250, 40, 500);
-                        ctx.strokeText("".concat(user.username, "'s stats have been reset"), 250, 80, 500);
-                        ctx.fillText("".concat(user.username, "'s stats have been reset"), 250, 80, 500);
                         return _context2.abrupt("return", new _discord.MessageAttachment(canvas.toBuffer(), 'picked.png'));
 
-                      case 15:
+                      case 14:
                       case "end":
                         return _context2.stop();
                     }
@@ -460,83 +459,151 @@ var discordPickClass = /*#__PURE__*/function () {
                                     isolationLevel: _sequelize.Transaction.ISOLATION_LEVELS.SERIALIZABLE
                                   }, /*#__PURE__*/function () {
                                     var _ref10 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee6(t) {
-                                      var stats, userClass, preActivity, finalActivity;
+                                      var findCurrentUser, selectedClass, userClass, newStats, newCondition, _newCondition, _newStats, preActivity, finalActivity;
+
                                       return _regenerator["default"].wrap(function _callee6$(_context6) {
                                         while (1) {
                                           switch (_context6.prev = _context6.next) {
                                             case 0:
                                               _context6.next = 2;
-                                              return _models["default"].stats.findOne({
+                                              return _models["default"].user.findOne({
                                                 where: {
-                                                  userId: user.id
-                                                }
+                                                  id: user.id
+                                                },
+                                                transaction: t,
+                                                lock: t.LOCK.UPDATE
                                               });
 
                                             case 2:
-                                              stats = _context6.sent;
-
-                                              if (stats) {
-                                                _context6.next = 8;
-                                                break;
-                                              }
-
-                                              _context6.next = 6;
-                                              return _models["default"].stats.create({
-                                                userId: user.id
+                                              findCurrentUser = _context6.sent;
+                                              _context6.next = 5;
+                                              return _models["default"]["class"].findOne({
+                                                where: {
+                                                  id: CurrentClassSelectionId
+                                                },
+                                                transaction: t,
+                                                lock: t.LOCK.UPDATE
                                               });
 
-                                            case 6:
-                                              _context6.next = 10;
-                                              break;
+                                            case 5:
+                                              selectedClass = _context6.sent;
+                                              _context6.next = 8;
+                                              return findCurrentUser.update({
+                                                currentClassId: CurrentClassSelectionId
+                                              }, {
+                                                transaction: t,
+                                                lock: t.LOCK.UPDATE
+                                              });
 
                                             case 8:
                                               _context6.next = 10;
-                                              return stats.update({
-                                                strength: 0,
-                                                dexterity: 0,
-                                                vitality: 0,
-                                                energy: 0,
-                                                life: 0,
-                                                mana: 0,
-                                                stamina: 0
-                                              });
-
-                                            case 10:
-                                              _context6.next = 12;
                                               return _models["default"].UserClass.findOne({
                                                 where: {
-                                                  userId: user.id
+                                                  userId: findCurrentUser.id,
+                                                  classId: CurrentClassSelectionId
                                                 }
                                               });
 
-                                            case 12:
+                                            case 10:
                                               userClass = _context6.sent;
 
                                               if (userClass) {
-                                                _context6.next = 18;
+                                                _context6.next = 23;
                                                 break;
                                               }
 
-                                              _context6.next = 16;
+                                              _context6.next = 14;
+                                              return _models["default"].stats.create({}, {
+                                                transaction: t,
+                                                lock: t.LOCK.UPDATE
+                                              });
+
+                                            case 14:
+                                              newStats = _context6.sent;
+                                              _context6.next = 17;
+                                              return _models["default"].condition.create({
+                                                life: selectedClass.life,
+                                                mana: selectedClass.mana,
+                                                stamina: selectedClass.stamina
+                                              }, {
+                                                transaction: t,
+                                                lock: t.LOCK.UPDATE
+                                              });
+
+                                            case 17:
+                                              newCondition = _context6.sent;
+                                              _context6.next = 20;
                                               return _models["default"].UserClass.create({
                                                 userId: user.id,
+                                                classId: CurrentClassSelectionId,
+                                                statsId: newStats.id,
+                                                conditionId: newCondition.id
+                                              }, {
+                                                transaction: t,
+                                                lock: t.LOCK.UPDATE
+                                              });
+
+                                            case 20:
+                                              userClass = _context6.sent;
+                                              _context6.next = 24;
+                                              break;
+
+                                            case 23:
+                                              userClass.update({
                                                 classId: CurrentClassSelectionId
                                               }, {
                                                 transaction: t,
                                                 lock: t.LOCK.UPDATE
                                               });
 
-                                            case 16:
-                                              _context6.next = 19;
-                                              break;
+                                            case 24:
+                                              if (userClass.conditionId) {
+                                                _context6.next = 29;
+                                                break;
+                                              }
 
-                                            case 18:
-                                              userClass.update({
-                                                classId: CurrentClassSelectionId
+                                              _context6.next = 27;
+                                              return _models["default"].condition.create({
+                                                life: selectedClass.life,
+                                                mana: selectedClass.mana,
+                                                stamina: selectedClass.stamina
+                                              }, {
+                                                transaction: t,
+                                                lock: t.LOCK.UPDATE
                                               });
 
-                                            case 19:
-                                              _context6.next = 21;
+                                            case 27:
+                                              _newCondition = _context6.sent;
+                                              userClass.update({
+                                                conditionId: _newCondition.id
+                                              }, {
+                                                transaction: t,
+                                                lock: t.LOCK.UPDATE
+                                              });
+
+                                            case 29:
+                                              if (userClass.statsId) {
+                                                _context6.next = 34;
+                                                break;
+                                              }
+
+                                              _context6.next = 32;
+                                              return _models["default"].stats.create({}, {
+                                                transaction: t,
+                                                lock: t.LOCK.UPDATE
+                                              });
+
+                                            case 32:
+                                              _newStats = _context6.sent;
+                                              userClass.update({
+                                                statsId: _newStats.id
+                                              }, {
+                                                transaction: t,
+                                                lock: t.LOCK.UPDATE
+                                              });
+
+                                            case 34:
+                                              _context6.next = 36;
                                               return _models["default"].activity.create({
                                                 type: 'pickClass_s',
                                                 earnerId: user.id
@@ -545,9 +612,9 @@ var discordPickClass = /*#__PURE__*/function () {
                                                 transaction: t
                                               });
 
-                                            case 21:
+                                            case 36:
                                               preActivity = _context6.sent;
-                                              _context6.next = 24;
+                                              _context6.next = 39;
                                               return _models["default"].activity.findOne({
                                                 where: {
                                                   id: preActivity.id
@@ -560,11 +627,11 @@ var discordPickClass = /*#__PURE__*/function () {
                                                 transaction: t
                                               });
 
-                                            case 24:
+                                            case 39:
                                               finalActivity = _context6.sent;
                                               activity.unshift(finalActivity);
 
-                                            case 26:
+                                            case 41:
                                             case "end":
                                               return _context6.stop();
                                           }

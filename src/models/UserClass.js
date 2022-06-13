@@ -21,6 +21,10 @@ module.exports = (sequelize, DataTypes) => {
       as: 'stats',
       foreignKey: 'statsId',
     });
+    UserClassModel.belongsTo(model.condition, {
+      as: 'condition',
+      foreignKey: 'conditionId',
+    });
     UserClassModel.belongsTo(model.user, {
       foreignKey: 'userId',
     });

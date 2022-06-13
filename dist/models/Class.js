@@ -40,6 +40,16 @@ module.exports = function (sequelize, DataTypes) {
     stamina: {
       type: DataTypes.SMALLINT,
       allowNull: false
+    },
+    attackRating: {
+      type: DataTypes.SMALLINT,
+      allowNull: false,
+      defaultValue: 50
+    },
+    defense: {
+      type: DataTypes.SMALLINT,
+      allowNull: false,
+      defaultValue: 50
     }
   }; // 2: The model options.
 
@@ -50,6 +60,9 @@ module.exports = function (sequelize, DataTypes) {
   var ClassModel = sequelize.define('class', modelDefinition, modelOptions);
 
   ClassModel.associate = function (model) {
+    ClassModel.hasOne(model.user, {
+      foreignKey: "currentClassId"
+    });
     ClassModel.belongsTo(model.classDescription);
     ClassModel.belongsToMany(model.user, {
       through: 'UserClass'

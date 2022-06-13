@@ -39,6 +39,16 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.SMALLINT,
       allowNull: false,
     },
+    attackRating: {
+      type: DataTypes.SMALLINT,
+      allowNull: false,
+      defaultValue: 50,
+    },
+    defense: {
+      type: DataTypes.SMALLINT,
+      allowNull: false,
+      defaultValue: 50,
+    },
   };
 
   // 2: The model options.

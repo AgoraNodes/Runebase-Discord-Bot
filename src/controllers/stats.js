@@ -23,32 +23,10 @@ import {
 import db from '../models';
 import logger from "../helpers/logger";
 import { userWalletExist } from "../helpers/client/userWalletExist";
-
-function printAtWordWrap(context, text, x, y, lineHeight, fitWidth) {
-  fitWidth = fitWidth || 0;
-
-  if (fitWidth <= 0) {
-    context.fillText(text, x, y);
-    return;
-  }
-  let words = text.split(' ');
-  let currentLine = 0;
-  let idx = 1;
-  while (words.length > 0 && idx <= words.length) {
-    const str = words.slice(0, idx).join(' ');
-    const w = context.measureText(str).width;
-    if (w > fitWidth) {
-      if (idx == 1) {
-        idx = 2;
-      }
-      context.fillText(words.slice(0, idx - 1).join(' '), x, y + (lineHeight * currentLine));
-      currentLine++;
-      words = words.splice(idx - 1);
-      idx = 1;
-    } else { idx++; }
-  }
-  if (idx > 0) { context.fillText(words.join(' '), x, y + (lineHeight * currentLine)); }
-}
+import { addStrength } from "../helpers/stats/addStrength";
+import { addDexterity } from "../helpers/stats/addDexterity";
+import { addVitality } from "../helpers/stats/addVitality";
+import { addEnergy } from "../helpers/stats/addEnergy";
 
 export const discordStats = async (
   discordClient,
@@ -73,9 +51,6 @@ export const discordStats = async (
       {
         model: db.class,
         as: 'currentClass',
-        attributes: [
-          'name',
-        ],
       },
       {
         model: db.rank,
@@ -94,12 +69,33 @@ export const discordStats = async (
             model: db.stats,
             as: 'stats',
           },
+          {
+            model: db.condition,
+            as: 'condition',
+          },
         ],
       },
     ],
   });
 
   if (!user) return;
+  if (!user.UserClass) {
+    console.log('user has not selected a class yet'); // Add notice message here to warn user to select a class
+    return;
+  }
+
+  const nextRank = await db.rank.findOne({
+    where: {
+      expNeeded: {
+        [Op.gt]: user.exp,
+      },
+    },
+    order: [
+      ['id', 'ASC'],
+    ],
+  });
+
+  const nextRankExp = nextRank && nextRank.expNeeded ? nextRank.expNeeded : user.ranks[0].expNeeded;
 
   console.log(user);
   console.log(user.ranks[0]);
@@ -108,16 +104,12 @@ export const discordStats = async (
 
   const activity = [];
   let CurrentClassSelectionId;
-  const classes = await db.class.findAll({
-    include: [
-      {
-        model: db.classDescription,
-        as: 'classDescription',
-      },
-    ],
-  });
-
   let discordChannel;
+  const strengthButtonId = 'strength';
+  const dexterityButtonId = 'dexterity';
+  const vitalityButtonId = 'vitality';
+  const energyButtonId = 'energy';
+  const cancelStatsPickId = 'cancelStatsPick';
 
   if (message.type && message.type === 'APPLICATION_COMMAND') {
     if (message.guildId) {
@@ -134,11 +126,6 @@ export const discordStats = async (
     }
   }
 
-  const strengthButtonId = 'strength';
-  const dexterityButtonId = 'dexterity';
-  const vitalityButtonId = 'vitality';
-  const energyButtonId = 'energy';
-  const cancelStatsPickId = 'cancelStatsPick';
   const strengthButton = new MessageButton({
     style: 'SECONDARY',
     label: 'Strength ➕',
@@ -173,133 +160,169 @@ export const discordStats = async (
   await registerFont(path.join(__dirname, '../assets/fonts/', 'Heart_warming.otf'), { family: 'HeartWarming' });
 
   const generateStatsImage = async (
-    currentClass,
     currentUser,
+    nextRankExp,
+    cannotSpendWarning,
   ) => {
+    const countedSpendAttributes = currentUser.UserClass.stats.strength
+      + currentUser.UserClass.stats.dexterity
+      + currentUser.UserClass.stats.vitality
+      + currentUser.UserClass.stats.energy;
+    const canSpendAttributes = countedSpendAttributes < (currentUser.ranks[0].id * 5);
+    const AttributesToSpend = (currentUser.ranks[0].id * 5) - countedSpendAttributes;
+
     const canvas = createCanvas(960, 1400);
     const ctx = canvas.getContext('2d');
     const BackgroundImageStats = await loadImage(path.join(__dirname, '../assets/images', `stats_background.png`));
+    const unspendAttributesBoxImage = await loadImage(path.join(__dirname, '../assets/images', `unspendAttributesBox.png`));
     ctx.drawImage(BackgroundImageStats, 0, 0, 960, 1300);
 
-    ctx.stroke();
-    ctx.closePath();
+    if (canSpendAttributes) {
+      ctx.drawImage(unspendAttributesBoxImage, 10, 1070, 495, 82);
 
-    ctx.font = 'bold 30px "HeartWarming"';
+      ctx.fillStyle = "red";
+      ctx.strokeStyle = 'black';
+      ctx.lineWidth = 3;
+      ctx.textAlign = "center";
+      ctx.font = 'bold 25px "HeartWarming"';
+      ctx.strokeText('Stats Points', 155, 1105, 540);
+      ctx.fillText('Stats Points', 155, 1105, 540);
+      ctx.strokeText('Remaining', 155, 1130, 540);
+      ctx.fillText('Remaining', 155, 1130, 540);
+
+      ctx.fillStyle = "#ccc";
+      ctx.font = 'bold 45px "HeartWarming"';
+      ctx.strokeText(AttributesToSpend, 410, 1125, 540);
+      ctx.fillText(AttributesToSpend, 410, 1125, 540);
+    }
+
     ctx.fillStyle = "#ccc";
-    // ctx.textAlign = "center";
     ctx.strokeStyle = 'black';
     ctx.lineWidth = 3;
-
     ctx.textAlign = "center";
     ctx.font = 'bold 35px "HeartWarming"';
-    // ctx.strokeText(currentClass.name, 250, 880, 500);
-    // ctx.fillText(currentClass.name, 250, 880, 500);
 
     // username
     ctx.strokeText(currentUser.username, 290, 70, 540);
     ctx.fillText(currentUser.username, 290, 70, 540);
 
     // character classname
-    ctx.strokeText(currentClass.name, 760, 70, 240);
-    ctx.fillText(currentClass.name, 760, 70, 240);
+    ctx.strokeText(currentUser.currentClass.name, 760, 70, 240);
+    ctx.fillText(currentUser.currentClass.name, 760, 70, 240);
 
     // level
     ctx.strokeText('Level', 100, 135, 240);
     ctx.fillText('level', 100, 135, 240);
-    ctx.strokeText(user.ranks[0].id, 100, 175, 240);
-    ctx.fillText(user.ranks[0].id, 100, 175, 240);
+    ctx.strokeText(currentUser.ranks[0].id, 100, 175, 240);
+    ctx.fillText(currentUser.ranks[0].id, 100, 175, 240);
 
     // Experience
     ctx.strokeText('Experience', 375, 135, 240);
     ctx.fillText('Experience', 375, 135, 240);
-    ctx.strokeText(user.exp, 375, 175, 240);
-    ctx.fillText(user.exp, 375, 175, 240);
+    ctx.strokeText(currentUser.exp, 375, 175, 240);
+    ctx.fillText(currentUser.exp, 375, 175, 240);
 
     // Next level
     ctx.strokeText('Next level', 760, 135, 240);
     ctx.fillText('Next level', 760, 135, 240);
-    ctx.strokeText(user.exp, 760, 175, 240); // Change this to next level exp
-    ctx.fillText(user.exp, 760, 175, 240);
+    ctx.strokeText(nextRankExp, 760, 175, 240); // Change this to next level exp
+    ctx.fillText(nextRankExp, 760, 175, 240);
 
     ctx.font = 'bold 30px "HeartWarming"';
 
     // Strength
+    const strengthPoints = currentUser.currentClass.strength + currentUser.UserClass.stats.strength;
     ctx.strokeText(`Strength`, 125, 290, 200);
     ctx.fillText(`Strength`, 125, 290, 200);
-    ctx.strokeText(`0`, 288, 290, 200);
-    ctx.fillText(`0`, 288, 290, 200);
+    ctx.strokeText(strengthPoints, 288, 290, 200);
+    ctx.fillText(strengthPoints, 288, 290, 200);
 
     // Dexterity
+    const dexterityPoints = currentUser.currentClass.dexterity + currentUser.UserClass.stats.dexterity;
     ctx.strokeText(`Dexterity`, 125, 475, 200);
     ctx.fillText(`Dexterity`, 125, 475, 200);
-    ctx.strokeText(`0`, 288, 475, 200);
-    ctx.fillText(`0`, 288, 475, 200);
+    ctx.strokeText(dexterityPoints, 288, 475, 200);
+    ctx.fillText(dexterityPoints, 288, 475, 200);
 
     // Vitality
+    const vitalityPoints = currentUser.currentClass.vitality + currentUser.UserClass.stats.vitality;
     ctx.strokeText(`Vitality`, 125, 735, 200);
     ctx.fillText(`Vitality`, 125, 735, 200);
-    ctx.strokeText(`0`, 288, 735, 200);
-    ctx.fillText(`0`, 288, 735, 200);
+    ctx.strokeText(vitalityPoints, 288, 735, 200);
+    ctx.fillText(vitalityPoints, 288, 735, 200);
 
     // Energy
+    const energyPoints = currentUser.currentClass.energy + currentUser.UserClass.stats.energy;
     ctx.strokeText(`Energy`, 125, 920, 200);
     ctx.fillText(`Energy`, 125, 920, 200);
-    ctx.strokeText(`0`, 288, 920, 200);
-    ctx.fillText(`0`, 288, 920, 200);
+    ctx.strokeText(energyPoints, 288, 920, 200);
+    ctx.fillText(energyPoints, 288, 920, 200);
 
     // attack 1
     ctx.strokeText(`Attack Damage`, 635, 290, 200);
     ctx.fillText(`Attack Damage`, 635, 290, 200);
-    ctx.strokeText(`1-10`, 855, 290, 200);
-    ctx.fillText(`1-10`, 855, 290, 200);
+    ctx.strokeText(`1-2`, 855, 290, 200);
+    ctx.fillText(`1-2`, 855, 290, 200);
 
     // attack 2
     ctx.strokeText(`Attack Damage`, 635, 360, 200);
     ctx.fillText(`Attack Damage`, 635, 360, 200);
-    ctx.strokeText(`1-10`, 855, 360, 200);
-    ctx.fillText(`1-10`, 855, 360, 200);
+    ctx.strokeText(`1-2`, 855, 360, 200);
+    ctx.fillText(`1-2`, 855, 360, 200);
 
     // attack rating 1
+    const attackRatingOne = currentUser.currentClass.attackRating + (currentUser.UserClass.stats.dexterity * 5);
     ctx.strokeText(`Attack Rating`, 645, 475, 200);
     ctx.fillText(`Attack Rating`, 645, 475, 200);
-    ctx.strokeText(`0`, 875, 475, 200);
-    ctx.fillText(`0`, 875, 475, 200);
+    ctx.strokeText(attackRatingOne, 875, 475, 200);
+    ctx.fillText(attackRatingOne, 875, 475, 200);
 
     // attack rating 2
+    const attackRatingTwo = currentUser.currentClass.attackRating + (currentUser.UserClass.stats.dexterity * 5);
+    console.log(currentUser.UserClass.stats.dexterity * 5);
+    console.log(attackRatingTwo);
+    console.log('attackRating2');
     ctx.strokeText(`Attack Rating`, 645, 545, 200);
     ctx.fillText(`Attack Rating`, 645, 545, 200);
-    ctx.strokeText(`0`, 875, 545, 200);
-    ctx.fillText(`0`, 875, 545, 200);
+    ctx.strokeText(attackRatingTwo, 875, 545, 200);
+    ctx.fillText(attackRatingTwo, 875, 545, 200);
 
     // Defense
+    const { defense } = currentUser.currentClass;
     ctx.strokeText(`Defense`, 645, 620, 200);
     ctx.fillText(`Defense`, 645, 620, 200);
-    ctx.strokeText(`0`, 875, 620, 200);
-    ctx.fillText(`0`, 875, 620, 200);
+    ctx.strokeText(defense, 875, 620, 200);
+    ctx.fillText(defense, 875, 620, 200);
 
     // Stamina
+    const staminaPoints = currentUser.currentClass.stamina + currentUser.UserClass.stats.stamina;
+    const currentStaminaPoints = currentUser.UserClass.condition.stamina;
     ctx.strokeText(`Stamina`, 585, 735, 200);
     ctx.fillText(`Stamina`, 585, 735, 200);
-    ctx.strokeText(`0`, 755, 735, 200);
-    ctx.fillText(`0`, 755, 735, 200);
-    ctx.strokeText(`0`, 875, 735, 200);
-    ctx.fillText(`0`, 875, 735, 200);
+    ctx.strokeText(currentStaminaPoints, 755, 735, 200);
+    ctx.fillText(currentStaminaPoints, 755, 735, 200);
+    ctx.strokeText(staminaPoints, 875, 735, 200);
+    ctx.fillText(staminaPoints, 875, 735, 200);
 
     // Life
+    const lifePoints = currentUser.currentClass.life + currentUser.UserClass.stats.life;
+    const currentLifePoints = currentUser.UserClass.condition.life;
     ctx.strokeText(`Life`, 585, 805, 200);
     ctx.fillText(`Life`, 585, 805, 200);
-    ctx.strokeText(`0`, 755, 805, 200);
-    ctx.fillText(`0`, 755, 805, 200);
-    ctx.strokeText(`0`, 875, 805, 200);
-    ctx.fillText(`0`, 875, 805, 200);
+    ctx.strokeText(currentLifePoints, 755, 805, 200);
+    ctx.fillText(currentLifePoints, 755, 805, 200);
+    ctx.strokeText(lifePoints, 875, 805, 200);
+    ctx.fillText(lifePoints, 875, 805, 200);
 
     // Mana
+    const manaPoints = currentUser.currentClass.mana + currentUser.UserClass.stats.mana;
+    const currentManaPoints = currentUser.UserClass.condition.mana;
     ctx.strokeText(`Mana`, 585, 920, 200);
     ctx.fillText(`Mana`, 585, 920, 200);
-    ctx.strokeText(`0`, 755, 920, 200);
-    ctx.fillText(`0`, 755, 920, 200);
-    ctx.strokeText(`0`, 875, 920, 200);
-    ctx.fillText(`0`, 875, 920, 200);
+    ctx.strokeText(currentManaPoints, 755, 920, 200);
+    ctx.fillText(currentManaPoints, 755, 920, 200);
+    ctx.strokeText(manaPoints, 875, 920, 200);
+    ctx.fillText(manaPoints, 875, 920, 200);
 
     // Fire resistance
     ctx.strokeText(`Fire resistance`, 665, 1038, 240);
@@ -325,11 +348,19 @@ export const discordStats = async (
     ctx.strokeText(`0`, 875, 1254, 240);
     ctx.fillText(`0`, 875, 1254, 240);
 
+    if (cannotSpendWarning) {
+      ctx.fillStyle = "red";
+      ctx.font = 'bold 35px "HeartWarming"';
+      ctx.strokeText('Warning', 245, 1190, 540);
+      ctx.fillText('Warning', 245, 1190, 540);
+      ctx.strokeText('Unable to spend stats', 245, 1230, 540);
+      ctx.fillText('Unable to spend stats', 245, 1230, 540);
+    }
     // bottom stats message
     ctx.fillStyle = "#fe5701";
     ctx.font = 'bold 70px "HeartWarming"';
-    ctx.strokeText(`${user.username}'s ${currentClass.name} stats`, 480, 1380, 960);
-    ctx.fillText(`${user.username}'s ${currentClass.name} stats`, 480, 1380, 960);
+    ctx.strokeText(`${currentUser.username}'s ${currentUser.currentClass.name} stats`, 480, 1380, 960);
+    ctx.fillText(`${currentUser.username}'s ${currentUser.currentClass.name} stats`, 480, 1380, 960);
 
     return new MessageAttachment(canvas.toBuffer(), 'class.png');
   };
@@ -360,19 +391,24 @@ export const discordStats = async (
   const embedMessage = await discordChannel.send({
     files: [
       await generateStatsImage(
-        user.currentClass,
         user,
+        nextRankExp,
+        false,
       ),
     ],
     components: [
-      calc ? new MessageActionRow({
+      ...(calc ? [new MessageActionRow({
         components: [
           strengthButton,
           dexterityButton,
+        ],
+      })] : []),
+      ...(calc ? [new MessageActionRow({
+        components: [
           vitalityButton,
           energyButton,
         ],
-      }) : [],
+      })] : []),
       new MessageActionRow({
         components: [
           cancelStatsPickButton,
@@ -385,144 +421,94 @@ export const discordStats = async (
     filter: ({ user: discordUser }) => discordUser.id === user.user_id,
   });
 
-  const currentIndex = 0;
   collector.on('collect', async (interaction) => {
+    let updatedUser;
+    let cannotSpend;
+    if (interaction.customId === strengthButtonId) {
+      [
+        updatedUser,
+        cannotSpend,
+      ] = await addStrength(
+        user.id,
+        discordChannel,
+        io,
+        queue,
+      );
+    }
+    if (interaction.customId === dexterityButtonId) {
+      [
+        updatedUser,
+        cannotSpend,
+      ] = await addDexterity(
+        user.id,
+        discordChannel,
+        io,
+        queue,
+      );
+    }
+    if (interaction.customId === vitalityButtonId) {
+      [
+        updatedUser,
+        cannotSpend,
+      ] = await addVitality(
+        user.id,
+        discordChannel,
+        io,
+        queue,
+      );
+    }
+    if (interaction.customId === energyButtonId) {
+      [
+        updatedUser,
+        cannotSpend,
+      ] = await addEnergy(
+        user.id,
+        discordChannel,
+        io,
+        queue,
+      );
+    }
     if (
       interaction.customId === strengthButtonId
       || interaction.customId === dexterityButtonId
       || interaction.customId === vitalityButtonId
       || interaction.customId === energyButtonId
     ) {
-      await queue.add(async () => {
-        await db.sequelize.transaction({
-          isolationLevel: Transaction.ISOLATION_LEVELS.SERIALIZABLE,
-        }, async (t) => {
-          const stats = await db.stats.findOne({
-            where: {
-              userId: user.id,
-            },
-          });
-          if (!stats) {
-            await db.stats.create({
-              userId: user.id,
-            });
-          } else {
-            await stats.update({
-              strength: 0,
-              dexterity: 0,
-              vitality: 0,
-              energy: 0,
-              life: 0,
-              mana: 0,
-              stamina: 0,
-            });
-          }
-          const userClass = await db.UserClass.findOne({
-            where: {
-              userId: user.id,
-            },
-          });
-          if (!userClass) {
-            await db.UserClass.create({
-              userId: user.id,
-              classId: CurrentClassSelectionId,
-            }, {
-              transaction: t,
-              lock: t.LOCK.UPDATE,
-            });
-          } else {
-            userClass.update({
-              classId: CurrentClassSelectionId,
-            });
-          }
+      const newCalc = (
+        updatedUser.UserClass.stats.strength
+        + updatedUser.UserClass.stats.dexterity
+        + updatedUser.UserClass.stats.vitality
+        + updatedUser.UserClass.stats.energy
+      ) < (updatedUser.ranks[0].id * 5);
 
-          const preActivity = await db.activity.create({
-            type: 'pickClass_s',
-            earnerId: user.id,
-          }, {
-            lock: t.LOCK.UPDATE,
-            transaction: t,
-          });
-
-          const finalActivity = await db.activity.findOne({
-            where: {
-              id: preActivity.id,
-            },
-            include: [
-              {
-                model: db.user,
-                as: 'earner',
-              },
+      await interaction.update({
+        files: [
+          await generateStatsImage(
+            updatedUser,
+            nextRankExp,
+            cannotSpend,
+          ),
+        ],
+        components: [
+          ...(newCalc ? [new MessageActionRow({
+            components: [
+              strengthButton,
+              dexterityButton,
             ],
-            lock: t.LOCK.UPDATE,
-            transaction: t,
-          });
-          activity.unshift(finalActivity);
-        }).catch(async (err) => {
-          console.log(err);
-          try {
-            await db.error.create({
-              type: 'ClassSelection',
-              error: `${err}`,
-            });
-          } catch (e) {
-            logger.error(`Error Discord: ${e}`);
-          }
-          if (err.code && err.code === 50007) {
-            if (message.type && message.type === 'APPLICATION_COMMAND') {
-              const discordChannel = await discordClient.channels.cache.get(message.channelId);
-              await discordChannel.send({
-                embeds: [
-                  cannotSendMessageUser(
-                    "ClassSelection",
-                    message,
-                  ),
-                ],
-              }).catch((e) => {
-                console.log(e);
-              });
-            } else {
-              await message.channel.send({
-                embeds: [
-                  cannotSendMessageUser(
-                    "ClassSelection",
-                    message,
-                  ),
-                ],
-              }).catch((e) => {
-                console.log(e);
-              });
-            }
-          } else if (message.type && message.type === 'APPLICATION_COMMAND') {
-            const discordChannel = await discordClient.channels.cache.get(message.channelId);
-            await discordChannel.send({
-              embeds: [
-                discordErrorMessage(
-                  "ClassSelection",
-                ),
-              ],
-            }).catch((e) => {
-              console.log(e);
-            });
-          } else {
-            await message.channel.send({
-              embeds: [
-                discordErrorMessage(
-                  "ClassSelection",
-                ),
-              ],
-            }).catch((e) => {
-              console.log(e);
-            });
-          }
-        });
-        if (activity.length > 0) {
-          io.to('admin').emit('updateActivity', {
-            activity,
-          });
-        }
+          })] : []),
+          ...(newCalc ? [new MessageActionRow({
+            components: [
+              vitalityButton,
+              energyButton,
+            ],
+          })] : []),
+          new MessageActionRow({
+            components: [
+              cancelStatsPickButton,
+            ],
+          }),
+        ],
       });
-      return;
     }
     // Cancel class selection
     if (interaction.customId === cancelStatsPickId) {

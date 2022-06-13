@@ -281,15 +281,22 @@ export const discordPickClass = async (
             transaction: t,
             lock: t.LOCK.UPDATE,
           });
+          const selectedClass = await db.class.findOne({
+            where: {
+              id: CurrentClassSelectionId,
+            },
+            transaction: t,
+            lock: t.LOCK.UPDATE,
+          });
           await findCurrentUser.update({
             currentClassId: CurrentClassSelectionId,
           }, {
             transaction: t,
             lock: t.LOCK.UPDATE,
           });
-          const userClass = await db.UserClass.findOne({
+          let userClass = await db.UserClass.findOne({
             where: {
-              userId: user.id,
+              userId: findCurrentUser.id,
               classId: CurrentClassSelectionId,
             },
           });
@@ -299,10 +306,19 @@ export const discordPickClass = async (
               transaction: t,
               lock: t.LOCK.UPDATE,
             });
-            await db.UserClass.create({
+            const newCondition = await db.condition.create({
+              life: selectedClass.life,
+              mana: selectedClass.mana,
+              stamina: selectedClass.stamina,
+            }, {
+              transaction: t,
+              lock: t.LOCK.UPDATE,
+            });
+            userClass = await db.UserClass.create({
               userId: user.id,
               classId: CurrentClassSelectionId,
               statsId: newStats.id,
+              conditionId: newCondition.id,
             }, {
               transaction: t,
               lock: t.LOCK.UPDATE,
@@ -310,6 +326,35 @@ export const discordPickClass = async (
           } else {
             userClass.update({
               classId: CurrentClassSelectionId,
+            }, {
+              transaction: t,
+              lock: t.LOCK.UPDATE,
+            });
+          }
+          if (!userClass.conditionId) {
+            const newCondition = await db.condition.create({
+              life: selectedClass.life,
+              mana: selectedClass.mana,
+              stamina: selectedClass.stamina,
+            }, {
+              transaction: t,
+              lock: t.LOCK.UPDATE,
+            });
+            userClass.update({
+              conditionId: newCondition.id,
+            }, {
+              transaction: t,
+              lock: t.LOCK.UPDATE,
+            });
+          }
+          if (!userClass.statsId) {
+            const newStats = await db.stats.create({
+            }, {
+              transaction: t,
+              lock: t.LOCK.UPDATE,
+            });
+            userClass.update({
+              statsId: newStats.id,
             }, {
               transaction: t,
               lock: t.LOCK.UPDATE,

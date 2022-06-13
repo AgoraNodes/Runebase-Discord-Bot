@@ -51,6 +51,8 @@ var _mostActive = require("../controllers/mostActive");
 
 var _pickClass = require("../controllers/pickClass");
 
+var _stats = require("../controllers/stats");
+
 var _expTest = require("../controllers/expTest");
 
 var _rateLimit = require("../helpers/rateLimit");
@@ -68,11 +70,11 @@ var _models = _interopRequireDefault(require("../models"));
 (0, _dotenv.config)();
 
 var discordRouter = /*#__PURE__*/function () {
-  var _ref = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee36(discordClient, queue, io) {
+  var _ref = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee38(discordClient, queue, io) {
     var userInvites;
-    return _regenerator["default"].wrap(function _callee36$(_context36) {
+    return _regenerator["default"].wrap(function _callee38$(_context38) {
       while (1) {
-        switch (_context36.prev = _context36.next) {
+        switch (_context38.prev = _context38.next) {
           case 0:
             userInvites = {};
             discordClient.on('ready', /*#__PURE__*/(0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee() {
@@ -319,46 +321,46 @@ var discordRouter = /*#__PURE__*/function () {
               };
             }());
             discordClient.on('interactionCreate', /*#__PURE__*/function () {
-              var _ref10 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee21(interaction) {
-                var groupTask, groupTaskId, channelTask, channelTaskId, lastSeenDiscordTask, maintenance, walletExists, commandName, limited, _limited, _limited2, _limited3, _limited4, _limited5, _limited6, setting, _limited7, _setting, task, _limited8, _setting2, _setting3, _limited9, _limited10, _setting4, _yield$preWithdraw, _yield$preWithdraw2, success, filteredMessage, _setting5, discordChannel, _limited11;
+              var _ref10 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee22(interaction) {
+                var groupTask, groupTaskId, channelTask, channelTaskId, lastSeenDiscordTask, maintenance, walletExists, commandName, limited, _limited, _limited2, _limited3, _limited4, _limited5, _limited6, setting, _limited7, _setting, task, _limited8, _setting2, _limited9, _setting3, _setting4, _limited10, _limited11, _setting5, _yield$preWithdraw, _yield$preWithdraw2, success, filteredMessage, _setting6, discordChannel, _limited12;
 
-                return _regenerator["default"].wrap(function _callee21$(_context21) {
+                return _regenerator["default"].wrap(function _callee22$(_context22) {
                   while (1) {
-                    switch (_context21.prev = _context21.next) {
+                    switch (_context22.prev = _context22.next) {
                       case 0:
                         if (!(!interaction.isCommand() && !interaction.isButton())) {
-                          _context21.next = 2;
+                          _context22.next = 2;
                           break;
                         }
 
-                        return _context21.abrupt("return");
+                        return _context22.abrupt("return");
 
                       case 2:
                         if (interaction.user.bot) {
-                          _context21.next = 223;
+                          _context22.next = 239;
                           break;
                         }
 
-                        _context21.next = 5;
+                        _context22.next = 5;
                         return (0, _isMaintenanceOrDisabled.isMaintenanceOrDisabled)(interaction, 'discord');
 
                       case 5:
-                        maintenance = _context21.sent;
+                        maintenance = _context22.sent;
 
                         if (!(maintenance.maintenance || !maintenance.enabled)) {
-                          _context21.next = 8;
+                          _context22.next = 8;
                           break;
                         }
 
-                        return _context21.abrupt("return");
+                        return _context22.abrupt("return");
 
                       case 8:
-                        _context21.next = 10;
+                        _context22.next = 10;
                         return (0, _user.createUpdateDiscordUser)(discordClient, interaction.user, queue);
 
                       case 10:
-                        walletExists = _context21.sent;
-                        _context21.next = 13;
+                        walletExists = _context22.sent;
+                        _context22.next = 13;
                         return queue.add( /*#__PURE__*/(0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee9() {
                           return _regenerator["default"].wrap(function _callee9$(_context9) {
                             while (1) {
@@ -392,44 +394,44 @@ var discordRouter = /*#__PURE__*/function () {
 
                       case 13:
                         if (!interaction.isCommand()) {
-                          _context21.next = 198;
+                          _context22.next = 215;
                           break;
                         }
 
                         commandName = interaction.commandName;
 
                         if (!(commandName === 'help')) {
-                          _context21.next = 29;
+                          _context22.next = 29;
                           break;
                         }
 
-                        _context21.next = 18;
+                        _context22.next = 18;
                         return interaction.deferReply()["catch"](function (e) {
                           console.log(e);
                         });
 
                       case 18:
-                        _context21.next = 20;
+                        _context22.next = 20;
                         return (0, _rateLimit.myRateLimiter)(discordClient, interaction, 'Help');
 
                       case 20:
-                        limited = _context21.sent;
+                        limited = _context22.sent;
 
                         if (!limited) {
-                          _context21.next = 25;
+                          _context22.next = 25;
                           break;
                         }
 
-                        _context21.next = 24;
+                        _context22.next = 24;
                         return interaction.editReply('rate limited')["catch"](function (e) {
                           console.log(e);
                         });
 
                       case 24:
-                        return _context21.abrupt("return");
+                        return _context22.abrupt("return");
 
                       case 25:
-                        _context21.next = 27;
+                        _context22.next = 27;
                         return queue.add( /*#__PURE__*/(0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee10() {
                           var task;
                           return _regenerator["default"].wrap(function _callee10$(_context10) {
@@ -452,44 +454,44 @@ var discordRouter = /*#__PURE__*/function () {
                         })));
 
                       case 27:
-                        _context21.next = 29;
+                        _context22.next = 29;
                         return interaction.editReply("\u200B")["catch"](function (e) {
                           console.log(e);
                         });
 
                       case 29:
                         if (!(commandName === 'myrank')) {
-                          _context21.next = 43;
+                          _context22.next = 43;
                           break;
                         }
 
-                        _context21.next = 32;
+                        _context22.next = 32;
                         return interaction.deferReply()["catch"](function (e) {
                           console.log(e);
                         });
 
                       case 32:
-                        _context21.next = 34;
+                        _context22.next = 34;
                         return (0, _rateLimit.myRateLimiter)(discordClient, interaction, 'Myrank');
 
                       case 34:
-                        _limited = _context21.sent;
+                        _limited = _context22.sent;
 
                         if (!_limited) {
-                          _context21.next = 39;
+                          _context22.next = 39;
                           break;
                         }
 
-                        _context21.next = 38;
+                        _context22.next = 38;
                         return interaction.editReply('rate limited')["catch"](function (e) {
                           console.log(e);
                         });
 
                       case 38:
-                        return _context21.abrupt("return");
+                        return _context22.abrupt("return");
 
                       case 39:
-                        _context21.next = 41;
+                        _context22.next = 41;
                         return queue.add( /*#__PURE__*/(0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee11() {
                           var task;
                           return _regenerator["default"].wrap(function _callee11$(_context11) {
@@ -511,44 +513,44 @@ var discordRouter = /*#__PURE__*/function () {
                         })));
 
                       case 41:
-                        _context21.next = 43;
+                        _context22.next = 43;
                         return interaction.editReply("\u200B")["catch"](function (e) {
                           console.log(e);
                         });
 
                       case 43:
                         if (!(commandName === 'ranks')) {
-                          _context21.next = 57;
+                          _context22.next = 57;
                           break;
                         }
 
-                        _context21.next = 46;
+                        _context22.next = 46;
                         return interaction.deferReply()["catch"](function (e) {
                           console.log(e);
                         });
 
                       case 46:
-                        _context21.next = 48;
+                        _context22.next = 48;
                         return (0, _rateLimit.myRateLimiter)(discordClient, interaction, 'Ranks');
 
                       case 48:
-                        _limited2 = _context21.sent;
+                        _limited2 = _context22.sent;
 
                         if (!_limited2) {
-                          _context21.next = 53;
+                          _context22.next = 53;
                           break;
                         }
 
-                        _context21.next = 52;
+                        _context22.next = 52;
                         return interaction.editReply('rate limited')["catch"](function (e) {
                           console.log(e);
                         });
 
                       case 52:
-                        return _context21.abrupt("return");
+                        return _context22.abrupt("return");
 
                       case 53:
-                        _context21.next = 55;
+                        _context22.next = 55;
                         return queue.add( /*#__PURE__*/(0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee12() {
                           var task;
                           return _regenerator["default"].wrap(function _callee12$(_context12) {
@@ -570,44 +572,44 @@ var discordRouter = /*#__PURE__*/function () {
                         })));
 
                       case 55:
-                        _context21.next = 57;
+                        _context22.next = 57;
                         return interaction.editReply("\u200B")["catch"](function (e) {
                           console.log(e);
                         });
 
                       case 57:
                         if (!(commandName === 'deposit')) {
-                          _context21.next = 71;
+                          _context22.next = 71;
                           break;
                         }
 
-                        _context21.next = 60;
+                        _context22.next = 60;
                         return interaction.deferReply()["catch"](function (e) {
                           console.log(e);
                         });
 
                       case 60:
-                        _context21.next = 62;
+                        _context22.next = 62;
                         return (0, _rateLimit.myRateLimiter)(discordClient, interaction, 'Deposit');
 
                       case 62:
-                        _limited3 = _context21.sent;
+                        _limited3 = _context22.sent;
 
                         if (!_limited3) {
-                          _context21.next = 67;
+                          _context22.next = 67;
                           break;
                         }
 
-                        _context21.next = 66;
+                        _context22.next = 66;
                         return interaction.editReply('rate limited')["catch"](function (e) {
                           console.log(e);
                         });
 
                       case 66:
-                        return _context21.abrupt("return");
+                        return _context22.abrupt("return");
 
                       case 67:
-                        _context21.next = 69;
+                        _context22.next = 69;
                         return queue.add( /*#__PURE__*/(0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee13() {
                           var task;
                           return _regenerator["default"].wrap(function _callee13$(_context13) {
@@ -629,44 +631,44 @@ var discordRouter = /*#__PURE__*/function () {
                         })));
 
                       case 69:
-                        _context21.next = 71;
+                        _context22.next = 71;
                         return interaction.editReply("\u200B")["catch"](function (e) {
                           console.log(e);
                         });
 
                       case 71:
                         if (!(commandName === 'price')) {
-                          _context21.next = 85;
+                          _context22.next = 85;
                           break;
                         }
 
-                        _context21.next = 74;
+                        _context22.next = 74;
                         return interaction.deferReply()["catch"](function (e) {
                           console.log(e);
                         });
 
                       case 74:
-                        _context21.next = 76;
+                        _context22.next = 76;
                         return (0, _rateLimit.myRateLimiter)(discordClient, interaction, 'Price');
 
                       case 76:
-                        _limited4 = _context21.sent;
+                        _limited4 = _context22.sent;
 
                         if (!_limited4) {
-                          _context21.next = 81;
+                          _context22.next = 81;
                           break;
                         }
 
-                        _context21.next = 80;
+                        _context22.next = 80;
                         return interaction.editReply('rate limited')["catch"](function (e) {
                           console.log(e);
                         });
 
                       case 80:
-                        return _context21.abrupt("return");
+                        return _context22.abrupt("return");
 
                       case 81:
-                        _context21.next = 83;
+                        _context22.next = 83;
                         return queue.add( /*#__PURE__*/(0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee14() {
                           var task;
                           return _regenerator["default"].wrap(function _callee14$(_context14) {
@@ -688,44 +690,44 @@ var discordRouter = /*#__PURE__*/function () {
                         })));
 
                       case 83:
-                        _context21.next = 85;
+                        _context22.next = 85;
                         return interaction.editReply("\u200B")["catch"](function (e) {
                           console.log(e);
                         });
 
                       case 85:
                         if (!(commandName === 'balance')) {
-                          _context21.next = 99;
+                          _context22.next = 99;
                           break;
                         }
 
-                        _context21.next = 88;
+                        _context22.next = 88;
                         return interaction.deferReply()["catch"](function (e) {
                           console.log(e);
                         });
 
                       case 88:
-                        _context21.next = 90;
+                        _context22.next = 90;
                         return (0, _rateLimit.myRateLimiter)(discordClient, interaction, 'Balance');
 
                       case 90:
-                        _limited5 = _context21.sent;
+                        _limited5 = _context22.sent;
 
                         if (!_limited5) {
-                          _context21.next = 95;
+                          _context22.next = 95;
                           break;
                         }
 
-                        _context21.next = 94;
+                        _context22.next = 94;
                         return interaction.editReply('rate limited')["catch"](function (e) {
                           console.log(e);
                         });
 
                       case 94:
-                        return _context21.abrupt("return");
+                        return _context22.abrupt("return");
 
                       case 95:
-                        _context21.next = 97;
+                        _context22.next = 97;
                         return queue.add( /*#__PURE__*/(0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee15() {
                           var task;
                           return _regenerator["default"].wrap(function _callee15$(_context15) {
@@ -747,49 +749,49 @@ var discordRouter = /*#__PURE__*/function () {
                         })));
 
                       case 97:
-                        _context21.next = 99;
+                        _context22.next = 99;
                         return interaction.editReply("\u200B")["catch"](function (e) {
                           console.log(e);
                         });
 
                       case 99:
                         if (!(commandName === 'leaderboard')) {
-                          _context21.next = 116;
+                          _context22.next = 116;
                           break;
                         }
 
-                        _context21.next = 102;
+                        _context22.next = 102;
                         return interaction.deferReply()["catch"](function (e) {
                           console.log(e);
                         });
 
                       case 102:
-                        _context21.next = 104;
+                        _context22.next = 104;
                         return (0, _rateLimit.myRateLimiter)(discordClient, interaction, 'Leaderboard');
 
                       case 104:
-                        _limited6 = _context21.sent;
+                        _limited6 = _context22.sent;
 
                         if (!_limited6) {
-                          _context21.next = 109;
+                          _context22.next = 109;
                           break;
                         }
 
-                        _context21.next = 108;
+                        _context22.next = 108;
                         return interaction.editReply('rate limited')["catch"](function (e) {
                           console.log(e);
                         });
 
                       case 108:
-                        return _context21.abrupt("return");
+                        return _context22.abrupt("return");
 
                       case 109:
-                        _context21.next = 111;
+                        _context22.next = 111;
                         return _models["default"].setting.findOne();
 
                       case 111:
-                        setting = _context21.sent;
-                        _context21.next = 114;
+                        setting = _context22.sent;
+                        _context22.next = 114;
                         return queue.add( /*#__PURE__*/(0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee16() {
                           var task;
                           return _regenerator["default"].wrap(function _callee16$(_context16) {
@@ -811,96 +813,96 @@ var discordRouter = /*#__PURE__*/function () {
                         })));
 
                       case 114:
-                        _context21.next = 116;
+                        _context22.next = 116;
                         return interaction.editReply("\u200B")["catch"](function (e) {
                           console.log(e);
                         });
 
                       case 116:
                         if (!(commandName === 'pickclass')) {
-                          _context21.next = 134;
+                          _context22.next = 134;
                           break;
                         }
 
-                        _context21.next = 119;
+                        _context22.next = 119;
                         return interaction.deferReply()["catch"](function (e) {
                           console.log(e);
                         });
 
                       case 119:
-                        _context21.next = 121;
+                        _context22.next = 121;
                         return (0, _rateLimit.myRateLimiter)(discordClient, interaction, 'PickClass');
 
                       case 121:
-                        _limited7 = _context21.sent;
+                        _limited7 = _context22.sent;
 
                         if (!_limited7) {
-                          _context21.next = 126;
+                          _context22.next = 126;
                           break;
                         }
 
-                        _context21.next = 125;
+                        _context22.next = 125;
                         return interaction.editReply('rate limited')["catch"](function (e) {
                           console.log(e);
                         });
 
                       case 125:
-                        return _context21.abrupt("return");
+                        return _context22.abrupt("return");
 
                       case 126:
-                        _context21.next = 128;
+                        _context22.next = 128;
                         return _models["default"].setting.findOne();
 
                       case 128:
-                        _setting = _context21.sent;
-                        _context21.next = 131;
+                        _setting = _context22.sent;
+                        _context22.next = 131;
                         return (0, _pickClass.discordPickClass)(discordClient, interaction, _setting, io, queue);
 
                       case 131:
-                        task = _context21.sent;
-                        _context21.next = 134;
+                        task = _context22.sent;
+                        _context22.next = 134;
                         return interaction.editReply("\u200B")["catch"](function (e) {
                           console.log(e);
                         });
 
                       case 134:
                         if (!(commandName === 'mostactive')) {
-                          _context21.next = 151;
+                          _context22.next = 151;
                           break;
                         }
 
-                        _context21.next = 137;
+                        _context22.next = 137;
                         return interaction.deferReply()["catch"](function (e) {
                           console.log(e);
                         });
 
                       case 137:
-                        _context21.next = 139;
+                        _context22.next = 139;
                         return (0, _rateLimit.myRateLimiter)(discordClient, interaction, 'MostActive');
 
                       case 139:
-                        _limited8 = _context21.sent;
+                        _limited8 = _context22.sent;
 
                         if (!_limited8) {
-                          _context21.next = 144;
+                          _context22.next = 144;
                           break;
                         }
 
-                        _context21.next = 143;
+                        _context22.next = 143;
                         return interaction.editReply('rate limited')["catch"](function (e) {
                           console.log(e);
                         });
 
                       case 143:
-                        return _context21.abrupt("return");
+                        return _context22.abrupt("return");
 
                       case 144:
-                        _context21.next = 146;
+                        _context22.next = 146;
                         return _models["default"].setting.findOne();
 
                       case 146:
-                        _setting2 = _context21.sent;
-                        _context21.next = 149;
+                        _setting2 = _context22.sent;
+                        _context22.next = 149;
                         return queue.add( /*#__PURE__*/(0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee17() {
                           var task;
                           return _regenerator["default"].wrap(function _callee17$(_context17) {
@@ -922,66 +924,49 @@ var discordRouter = /*#__PURE__*/function () {
                         })));
 
                       case 149:
-                        _context21.next = 151;
+                        _context22.next = 151;
                         return interaction.editReply("\u200B")["catch"](function (e) {
                           console.log(e);
                         });
 
                       case 151:
-                        if (!(commandName === 'roll')) {
-                          _context21.next = 172;
+                        if (!(commandName === 'stats')) {
+                          _context22.next = 168;
                           break;
                         }
 
-                        _context21.next = 154;
+                        _context22.next = 154;
                         return interaction.deferReply()["catch"](function (e) {
                           console.log(e);
                         });
 
                       case 154:
-                        _context21.next = 156;
-                        return _models["default"].setting.findOne();
+                        _context22.next = 156;
+                        return (0, _rateLimit.myRateLimiter)(discordClient, interaction, 'Stats');
 
                       case 156:
-                        _setting3 = _context21.sent;
-
-                        if (!(_setting3.roleDiceChannelId !== interaction.channelId)) {
-                          _context21.next = 160;
-                          break;
-                        }
-
-                        _context21.next = 160;
-                        return interaction.editReply("please use <#".concat(_setting3.roleDiceChannelId, "> for rolling dice"))["catch"](function (e) {
-                          console.log(e);
-                        });
-
-                      case 160:
-                        if (!(_setting3.roleDiceChannelId === interaction.channelId)) {
-                          _context21.next = 172;
-                          break;
-                        }
-
-                        _context21.next = 163;
-                        return (0, _rateLimit.myRateLimiter)(discordClient, interaction, 'RollDice');
-
-                      case 163:
-                        _limited9 = _context21.sent;
+                        _limited9 = _context22.sent;
 
                         if (!_limited9) {
-                          _context21.next = 168;
+                          _context22.next = 161;
                           break;
                         }
 
-                        _context21.next = 167;
+                        _context22.next = 160;
                         return interaction.editReply('rate limited')["catch"](function (e) {
                           console.log(e);
                         });
 
-                      case 167:
-                        return _context21.abrupt("return");
+                      case 160:
+                        return _context22.abrupt("return");
 
-                      case 168:
-                        _context21.next = 170;
+                      case 161:
+                        _context22.next = 163;
+                        return _models["default"].setting.findOne();
+
+                      case 163:
+                        _setting3 = _context22.sent;
+                        _context22.next = 166;
                         return queue.add( /*#__PURE__*/(0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee18() {
                           var task;
                           return _regenerator["default"].wrap(function _callee18$(_context18) {
@@ -989,7 +974,7 @@ var discordRouter = /*#__PURE__*/function () {
                               switch (_context18.prev = _context18.next) {
                                 case 0:
                                   _context18.next = 2;
-                                  return (0, _rollDice.discordRollDice)(discordClient, interaction, _setting3, io);
+                                  return (0, _stats.discordStats)(discordClient, interaction, _setting3, io, queue);
 
                                 case 2:
                                   task = _context18.sent;
@@ -1002,73 +987,67 @@ var discordRouter = /*#__PURE__*/function () {
                           }, _callee18);
                         })));
 
-                      case 170:
-                        _context21.next = 172;
+                      case 166:
+                        _context22.next = 168;
                         return interaction.editReply("\u200B")["catch"](function (e) {
                           console.log(e);
                         });
 
-                      case 172:
-                        if (!(commandName === 'withdraw')) {
-                          _context21.next = 198;
+                      case 168:
+                        if (!(commandName === 'roll')) {
+                          _context22.next = 189;
                           break;
                         }
 
-                        _context21.next = 175;
+                        _context22.next = 171;
                         return interaction.deferReply()["catch"](function (e) {
                           console.log(e);
                         });
 
-                      case 175:
-                        _context21.next = 177;
-                        return (0, _rateLimit.myRateLimiter)(discordClient, interaction, 'Withdraw');
+                      case 171:
+                        _context22.next = 173;
+                        return _models["default"].setting.findOne();
 
-                      case 177:
-                        _limited10 = _context21.sent;
+                      case 173:
+                        _setting4 = _context22.sent;
 
-                        if (!_limited10) {
-                          _context21.next = 182;
+                        if (!(_setting4.roleDiceChannelId !== interaction.channelId)) {
+                          _context22.next = 177;
                           break;
                         }
 
-                        _context21.next = 181;
+                        _context22.next = 177;
+                        return interaction.editReply("please use <#".concat(_setting4.roleDiceChannelId, "> for rolling dice"))["catch"](function (e) {
+                          console.log(e);
+                        });
+
+                      case 177:
+                        if (!(_setting4.roleDiceChannelId === interaction.channelId)) {
+                          _context22.next = 189;
+                          break;
+                        }
+
+                        _context22.next = 180;
+                        return (0, _rateLimit.myRateLimiter)(discordClient, interaction, 'RollDice');
+
+                      case 180:
+                        _limited10 = _context22.sent;
+
+                        if (!_limited10) {
+                          _context22.next = 185;
+                          break;
+                        }
+
+                        _context22.next = 184;
                         return interaction.editReply('rate limited')["catch"](function (e) {
                           console.log(e);
                         });
 
-                      case 181:
-                        return _context21.abrupt("return");
-
-                      case 182:
-                        _context21.next = 184;
-                        return (0, _featureSetting.discordFeatureSettings)(interaction, 'withdraw', groupTaskId, channelTaskId);
-
                       case 184:
-                        _setting4 = _context21.sent;
+                        return _context22.abrupt("return");
 
-                        if (_setting4) {
-                          _context21.next = 187;
-                          break;
-                        }
-
-                        return _context21.abrupt("return");
-
-                      case 187:
-                        _context21.next = 189;
-                        return (0, _preWithdraw.preWithdraw)(discordClient, interaction);
-
-                      case 189:
-                        _yield$preWithdraw = _context21.sent;
-                        _yield$preWithdraw2 = (0, _slicedToArray2["default"])(_yield$preWithdraw, 2);
-                        success = _yield$preWithdraw2[0];
-                        filteredMessage = _yield$preWithdraw2[1];
-
-                        if (!success) {
-                          _context21.next = 196;
-                          break;
-                        }
-
-                        _context21.next = 196;
+                      case 185:
+                        _context22.next = 187;
                         return queue.add( /*#__PURE__*/(0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee19() {
                           var task;
                           return _regenerator["default"].wrap(function _callee19$(_context19) {
@@ -1076,7 +1055,7 @@ var discordRouter = /*#__PURE__*/function () {
                               switch (_context19.prev = _context19.next) {
                                 case 0:
                                   _context19.next = 2;
-                                  return (0, _withdraw.discordWithdraw)(discordClient, interaction, filteredMessage, _setting4, io);
+                                  return (0, _rollDice.discordRollDice)(discordClient, interaction, _setting4, io);
 
                                 case 2:
                                   task = _context19.sent;
@@ -1089,86 +1068,86 @@ var discordRouter = /*#__PURE__*/function () {
                           }, _callee19);
                         })));
 
-                      case 196:
-                        _context21.next = 198;
+                      case 187:
+                        _context22.next = 189;
                         return interaction.editReply("\u200B")["catch"](function (e) {
                           console.log(e);
                         });
 
-                      case 198:
-                        console.log('before if button');
-
-                        if (!interaction.isButton()) {
-                          _context21.next = 223;
+                      case 189:
+                        if (!(commandName === 'withdraw')) {
+                          _context22.next = 215;
                           break;
                         }
 
-                        if (!(interaction.customId === 'roll')) {
-                          _context21.next = 223;
-                          break;
-                        }
-
-                        _context21.next = 203;
-                        return _models["default"].setting.findOne();
-
-                      case 203:
-                        _setting5 = _context21.sent;
-
-                        if (!(_setting5.roleDiceChannelId !== interaction.channelId)) {
-                          _context21.next = 212;
-                          break;
-                        }
-
-                        _context21.next = 207;
-                        return discordClient.channels.cache.get(_setting5.roleDiceChannelId);
-
-                      case 207:
-                        discordChannel = _context21.sent;
-                        _context21.next = 210;
-                        return discordChannel.send("please use <#".concat(_setting5.roleDiceChannelId, "> for rolling dice"));
-
-                      case 210:
-                        _context21.next = 212;
-                        return interaction.editReply()["catch"](function (e) {
+                        _context22.next = 192;
+                        return interaction.deferReply()["catch"](function (e) {
                           console.log(e);
                         });
 
-                      case 212:
-                        if (!(_setting5.roleDiceChannelId === interaction.channelId)) {
-                          _context21.next = 221;
-                          break;
-                        }
+                      case 192:
+                        _context22.next = 194;
+                        return (0, _rateLimit.myRateLimiter)(discordClient, interaction, 'Withdraw');
 
-                        console.log('found channel');
-                        _context21.next = 216;
-                        return (0, _rateLimit.myRateLimiter)(discordClient, interaction, 'RollDice');
-
-                      case 216:
-                        _limited11 = _context21.sent;
+                      case 194:
+                        _limited11 = _context22.sent;
 
                         if (!_limited11) {
-                          _context21.next = 219;
+                          _context22.next = 199;
                           break;
                         }
 
-                        return _context21.abrupt("return");
+                        _context22.next = 198;
+                        return interaction.editReply('rate limited')["catch"](function (e) {
+                          console.log(e);
+                        });
 
-                      case 219:
-                        _context21.next = 221;
+                      case 198:
+                        return _context22.abrupt("return");
+
+                      case 199:
+                        _context22.next = 201;
+                        return (0, _featureSetting.discordFeatureSettings)(interaction, 'withdraw', groupTaskId, channelTaskId);
+
+                      case 201:
+                        _setting5 = _context22.sent;
+
+                        if (_setting5) {
+                          _context22.next = 204;
+                          break;
+                        }
+
+                        return _context22.abrupt("return");
+
+                      case 204:
+                        _context22.next = 206;
+                        return (0, _preWithdraw.preWithdraw)(discordClient, interaction);
+
+                      case 206:
+                        _yield$preWithdraw = _context22.sent;
+                        _yield$preWithdraw2 = (0, _slicedToArray2["default"])(_yield$preWithdraw, 2);
+                        success = _yield$preWithdraw2[0];
+                        filteredMessage = _yield$preWithdraw2[1];
+
+                        if (!success) {
+                          _context22.next = 213;
+                          break;
+                        }
+
+                        _context22.next = 213;
                         return queue.add( /*#__PURE__*/(0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee20() {
                           var task;
                           return _regenerator["default"].wrap(function _callee20$(_context20) {
                             while (1) {
                               switch (_context20.prev = _context20.next) {
                                 case 0:
-                                  console.log('start_task');
-                                  _context20.next = 3;
-                                  return (0, _rollDice.discordRollDice)(discordClient, interaction, _setting5, io);
+                                  _context20.next = 2;
+                                  return (0, _withdraw.discordWithdraw)(discordClient, interaction, filteredMessage, _setting5, io);
 
-                                case 3:
+                                case 2:
                                   task = _context20.sent;
 
-                                case 4:
+                                case 3:
                                 case "end":
                                   return _context20.stop();
                               }
@@ -1176,18 +1155,103 @@ var discordRouter = /*#__PURE__*/function () {
                           }, _callee20);
                         })));
 
-                      case 221:
-                        _context21.next = 223;
+                      case 213:
+                        _context22.next = 215;
+                        return interaction.editReply("\u200B")["catch"](function (e) {
+                          console.log(e);
+                        });
+
+                      case 215:
+                        if (!interaction.isButton()) {
+                          _context22.next = 239;
+                          break;
+                        }
+
+                        if (!(interaction.customId === 'roll')) {
+                          _context22.next = 239;
+                          break;
+                        }
+
+                        _context22.next = 219;
+                        return _models["default"].setting.findOne();
+
+                      case 219:
+                        _setting6 = _context22.sent;
+
+                        if (!(_setting6.roleDiceChannelId !== interaction.channelId)) {
+                          _context22.next = 228;
+                          break;
+                        }
+
+                        _context22.next = 223;
+                        return discordClient.channels.cache.get(_setting6.roleDiceChannelId);
+
+                      case 223:
+                        discordChannel = _context22.sent;
+                        _context22.next = 226;
+                        return discordChannel.send("please use <#".concat(_setting6.roleDiceChannelId, "> for rolling dice"));
+
+                      case 226:
+                        _context22.next = 228;
+                        return interaction.editReply()["catch"](function (e) {
+                          console.log(e);
+                        });
+
+                      case 228:
+                        if (!(_setting6.roleDiceChannelId === interaction.channelId)) {
+                          _context22.next = 237;
+                          break;
+                        }
+
+                        console.log('found channel');
+                        _context22.next = 232;
+                        return (0, _rateLimit.myRateLimiter)(discordClient, interaction, 'RollDice');
+
+                      case 232:
+                        _limited12 = _context22.sent;
+
+                        if (!_limited12) {
+                          _context22.next = 235;
+                          break;
+                        }
+
+                        return _context22.abrupt("return");
+
+                      case 235:
+                        _context22.next = 237;
+                        return queue.add( /*#__PURE__*/(0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee21() {
+                          var task;
+                          return _regenerator["default"].wrap(function _callee21$(_context21) {
+                            while (1) {
+                              switch (_context21.prev = _context21.next) {
+                                case 0:
+                                  console.log('start_task');
+                                  _context21.next = 3;
+                                  return (0, _rollDice.discordRollDice)(discordClient, interaction, _setting6, io);
+
+                                case 3:
+                                  task = _context21.sent;
+
+                                case 4:
+                                case "end":
+                                  return _context21.stop();
+                              }
+                            }
+                          }, _callee21);
+                        })));
+
+                      case 237:
+                        _context22.next = 239;
                         return interaction.deferUpdate()["catch"](function (e) {
                           console.log(e);
                         });
 
-                      case 223:
+                      case 239:
                       case "end":
-                        return _context21.stop();
+                        return _context22.stop();
                     }
                   }
-                }, _callee21);
+                }, _callee22);
               }));
 
               return function (_x10) {
@@ -1195,51 +1259,51 @@ var discordRouter = /*#__PURE__*/function () {
               };
             }());
             discordClient.on("messageCreate", /*#__PURE__*/function () {
-              var _ref23 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee35(message) {
-                var groupTask, groupTaskId, channelTask, channelTaskId, lastSeenDiscordTask, disallow, walletExists, messageReplaceBreaksWithSpaces, preFilteredMessageDiscord, filteredMessageDiscord, setting, maintenance, limited, _limited12, _limited13, _limited14, _limited15, _limited16, _limited17, _limited18, _setting6, _limited19, _setting7, _limited20, _setting8, _limited21, _setting9, task, _limited22, _setting10, _yield$preWithdraw3, _yield$preWithdraw4, success, filteredMessage;
+              var _ref24 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee37(message) {
+                var groupTask, groupTaskId, channelTask, channelTaskId, lastSeenDiscordTask, disallow, walletExists, messageReplaceBreaksWithSpaces, preFilteredMessageDiscord, filteredMessageDiscord, setting, maintenance, limited, _limited13, _limited14, _limited15, _limited16, _limited17, _limited18, _limited19, _setting7, _limited20, _setting8, _limited21, _setting9, _limited22, _setting10, task, _limited23, _setting11, _task, _limited24, _setting12, _yield$preWithdraw3, _yield$preWithdraw4, success, filteredMessage;
 
-                return _regenerator["default"].wrap(function _callee35$(_context35) {
+                return _regenerator["default"].wrap(function _callee37$(_context37) {
                   while (1) {
-                    switch (_context35.prev = _context35.next) {
+                    switch (_context37.prev = _context37.next) {
                       case 0:
                         if (message.author.bot) {
-                          _context35.next = 8;
+                          _context37.next = 8;
                           break;
                         }
 
-                        _context35.next = 3;
+                        _context37.next = 3;
                         return (0, _user.createUpdateDiscordUser)(discordClient, message.author, queue);
 
                       case 3:
-                        walletExists = _context35.sent;
-                        _context35.next = 6;
-                        return queue.add( /*#__PURE__*/(0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee22() {
-                          return _regenerator["default"].wrap(function _callee22$(_context22) {
+                        walletExists = _context37.sent;
+                        _context37.next = 6;
+                        return queue.add( /*#__PURE__*/(0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee23() {
+                          return _regenerator["default"].wrap(function _callee23$(_context23) {
                             while (1) {
-                              switch (_context22.prev = _context22.next) {
+                              switch (_context23.prev = _context23.next) {
                                 case 0:
-                                  _context22.next = 2;
+                                  _context23.next = 2;
                                   return (0, _group.updateDiscordGroup)(discordClient, message);
 
                                 case 2:
-                                  groupTask = _context22.sent;
-                                  _context22.next = 5;
+                                  groupTask = _context23.sent;
+                                  _context23.next = 5;
                                   return (0, _channel.updateDiscordChannel)(message, groupTask);
 
                                 case 5:
-                                  channelTask = _context22.sent;
-                                  _context22.next = 8;
+                                  channelTask = _context23.sent;
+                                  _context23.next = 8;
                                   return (0, _user.updateDiscordLastSeen)(message, message.author);
 
                                 case 8:
-                                  lastSeenDiscordTask = _context22.sent;
+                                  lastSeenDiscordTask = _context23.sent;
 
                                 case 9:
                                 case "end":
-                                  return _context22.stop();
+                                  return _context23.stop();
                               }
                             }
-                          }, _callee22);
+                          }, _callee23);
                         })));
 
                       case 6:
@@ -1254,145 +1318,34 @@ var discordRouter = /*#__PURE__*/function () {
                         });
 
                         if (message.author.bot) {
-                          _context35.next = 17;
+                          _context37.next = 17;
                           break;
                         }
 
-                        _context35.next = 14;
+                        _context37.next = 14;
                         return _models["default"].setting.findOne();
 
                       case 14:
-                        setting = _context35.sent;
-                        _context35.next = 17;
-                        return queue.add( /*#__PURE__*/(0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee23() {
-                          var task;
-                          return _regenerator["default"].wrap(function _callee23$(_context23) {
-                            while (1) {
-                              switch (_context23.prev = _context23.next) {
-                                case 0:
-                                  if (!(message.guildId === setting.discordHomeServerGuildId)) {
-                                    _context23.next = 4;
-                                    break;
-                                  }
-
-                                  _context23.next = 3;
-                                  return (0, _activeTalker.discordActiveTalker)(discordClient, message, filteredMessageDiscord, io);
-
-                                case 3:
-                                  task = _context23.sent;
-
-                                case 4:
-                                case "end":
-                                  return _context23.stop();
-                              }
-                            }
-                          }, _callee23);
-                        })));
-
-                      case 17:
-                        if (!(!message.content.startsWith(_settings["default"].bot.command) || message.author.bot)) {
-                          _context35.next = 19;
-                          break;
-                        }
-
-                        return _context35.abrupt("return");
-
-                      case 19:
-                        _context35.next = 21;
-                        return (0, _isMaintenanceOrDisabled.isMaintenanceOrDisabled)(message, 'discord');
-
-                      case 21:
-                        maintenance = _context35.sent;
-
-                        if (!(maintenance.maintenance || !maintenance.enabled)) {
-                          _context35.next = 24;
-                          break;
-                        }
-
-                        return _context35.abrupt("return");
-
-                      case 24:
-                        if (!(groupTask && groupTask.banned)) {
-                          _context35.next = 28;
-                          break;
-                        }
-
-                        _context35.next = 27;
-                        return message.channel.send({
-                          embeds: [(0, _messages.discordServerBannedMessage)(groupTask)]
-                        })["catch"](function (e) {
-                          console.log(e);
-                        });
-
-                      case 27:
-                        return _context35.abrupt("return");
-
-                      case 28:
-                        if (!(channelTask && channelTask.banned)) {
-                          _context35.next = 32;
-                          break;
-                        }
-
-                        _context35.next = 31;
-                        return message.channel.send({
-                          embeds: [(0, _messages.discordChannelBannedMessage)(channelTask)]
-                        })["catch"](function (e) {
-                          console.log(e);
-                        });
-
-                      case 31:
-                        return _context35.abrupt("return");
-
-                      case 32:
-                        if (!(lastSeenDiscordTask && lastSeenDiscordTask.banned)) {
-                          _context35.next = 36;
-                          break;
-                        }
-
-                        _context35.next = 35;
-                        return message.channel.send({
-                          embeds: [(0, _messages.discordUserBannedMessage)(lastSeenDiscordTask)]
-                        })["catch"](function (e) {
-                          console.log(e);
-                        });
-
-                      case 35:
-                        return _context35.abrupt("return");
-
-                      case 36:
-                        if (!(filteredMessageDiscord[1] === undefined)) {
-                          _context35.next = 44;
-                          break;
-                        }
-
-                        _context35.next = 39;
-                        return (0, _rateLimit.myRateLimiter)(discordClient, message, 'Help');
-
-                      case 39:
-                        limited = _context35.sent;
-
-                        if (!limited) {
-                          _context35.next = 42;
-                          break;
-                        }
-
-                        return _context35.abrupt("return");
-
-                      case 42:
-                        _context35.next = 44;
+                        setting = _context37.sent;
+                        _context37.next = 17;
                         return queue.add( /*#__PURE__*/(0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee24() {
                           var task;
                           return _regenerator["default"].wrap(function _callee24$(_context24) {
                             while (1) {
                               switch (_context24.prev = _context24.next) {
                                 case 0:
-                                  _context24.next = 2;
-                                  return (0, _help.discordHelp)(discordClient, message, io);
+                                  if (!(message.guildId === setting.discordHomeServerGuildId)) {
+                                    _context24.next = 4;
+                                    break;
+                                  }
 
-                                case 2:
-                                  task = _context24.sent;
+                                  _context24.next = 3;
+                                  return (0, _activeTalker.discordActiveTalker)(discordClient, message, filteredMessageDiscord, io);
 
                                 case 3:
+                                  task = _context24.sent;
+
+                                case 4:
                                 case "end":
                                   return _context24.stop();
                               }
@@ -1400,28 +1353,97 @@ var discordRouter = /*#__PURE__*/function () {
                           }, _callee24);
                         })));
 
-                      case 44:
-                        if (!(filteredMessageDiscord[1] && filteredMessageDiscord[1].toLowerCase() === 'help')) {
-                          _context35.next = 53;
+                      case 17:
+                        if (!(!message.content.startsWith(_settings["default"].bot.command) || message.author.bot)) {
+                          _context37.next = 19;
                           break;
                         }
 
-                        console.log('used help');
-                        _context35.next = 48;
+                        return _context37.abrupt("return");
+
+                      case 19:
+                        _context37.next = 21;
+                        return (0, _isMaintenanceOrDisabled.isMaintenanceOrDisabled)(message, 'discord');
+
+                      case 21:
+                        maintenance = _context37.sent;
+
+                        if (!(maintenance.maintenance || !maintenance.enabled)) {
+                          _context37.next = 24;
+                          break;
+                        }
+
+                        return _context37.abrupt("return");
+
+                      case 24:
+                        if (!(groupTask && groupTask.banned)) {
+                          _context37.next = 28;
+                          break;
+                        }
+
+                        _context37.next = 27;
+                        return message.channel.send({
+                          embeds: [(0, _messages.discordServerBannedMessage)(groupTask)]
+                        })["catch"](function (e) {
+                          console.log(e);
+                        });
+
+                      case 27:
+                        return _context37.abrupt("return");
+
+                      case 28:
+                        if (!(channelTask && channelTask.banned)) {
+                          _context37.next = 32;
+                          break;
+                        }
+
+                        _context37.next = 31;
+                        return message.channel.send({
+                          embeds: [(0, _messages.discordChannelBannedMessage)(channelTask)]
+                        })["catch"](function (e) {
+                          console.log(e);
+                        });
+
+                      case 31:
+                        return _context37.abrupt("return");
+
+                      case 32:
+                        if (!(lastSeenDiscordTask && lastSeenDiscordTask.banned)) {
+                          _context37.next = 36;
+                          break;
+                        }
+
+                        _context37.next = 35;
+                        return message.channel.send({
+                          embeds: [(0, _messages.discordUserBannedMessage)(lastSeenDiscordTask)]
+                        })["catch"](function (e) {
+                          console.log(e);
+                        });
+
+                      case 35:
+                        return _context37.abrupt("return");
+
+                      case 36:
+                        if (!(filteredMessageDiscord[1] === undefined)) {
+                          _context37.next = 44;
+                          break;
+                        }
+
+                        _context37.next = 39;
                         return (0, _rateLimit.myRateLimiter)(discordClient, message, 'Help');
 
-                      case 48:
-                        _limited12 = _context35.sent;
+                      case 39:
+                        limited = _context37.sent;
 
-                        if (!_limited12) {
-                          _context35.next = 51;
+                        if (!limited) {
+                          _context37.next = 42;
                           break;
                         }
 
-                        return _context35.abrupt("return");
+                        return _context37.abrupt("return");
 
-                      case 51:
-                        _context35.next = 53;
+                      case 42:
+                        _context37.next = 44;
                         return queue.add( /*#__PURE__*/(0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee25() {
                           var task;
                           return _regenerator["default"].wrap(function _callee25$(_context25) {
@@ -1442,27 +1464,28 @@ var discordRouter = /*#__PURE__*/function () {
                           }, _callee25);
                         })));
 
-                      case 53:
-                        if (!(filteredMessageDiscord[1] && filteredMessageDiscord[1].toLowerCase() === 'myrank')) {
-                          _context35.next = 61;
+                      case 44:
+                        if (!(filteredMessageDiscord[1] && filteredMessageDiscord[1].toLowerCase() === 'help')) {
+                          _context37.next = 53;
                           break;
                         }
 
-                        _context35.next = 56;
-                        return (0, _rateLimit.myRateLimiter)(discordClient, message, 'Myrank');
+                        console.log('used help');
+                        _context37.next = 48;
+                        return (0, _rateLimit.myRateLimiter)(discordClient, message, 'Help');
 
-                      case 56:
-                        _limited13 = _context35.sent;
+                      case 48:
+                        _limited13 = _context37.sent;
 
                         if (!_limited13) {
-                          _context35.next = 59;
+                          _context37.next = 51;
                           break;
                         }
 
-                        return _context35.abrupt("return");
+                        return _context37.abrupt("return");
 
-                      case 59:
-                        _context35.next = 61;
+                      case 51:
+                        _context37.next = 53;
                         return queue.add( /*#__PURE__*/(0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee26() {
                           var task;
                           return _regenerator["default"].wrap(function _callee26$(_context26) {
@@ -1470,7 +1493,7 @@ var discordRouter = /*#__PURE__*/function () {
                               switch (_context26.prev = _context26.next) {
                                 case 0:
                                   _context26.next = 2;
-                                  return (0, _myrank.discordMyRank)(discordClient, message, io);
+                                  return (0, _help.discordHelp)(discordClient, message, io);
 
                                 case 2:
                                   task = _context26.sent;
@@ -1483,27 +1506,27 @@ var discordRouter = /*#__PURE__*/function () {
                           }, _callee26);
                         })));
 
-                      case 61:
-                        if (!(filteredMessageDiscord[1] && filteredMessageDiscord[1].toLowerCase() === 'ranks')) {
-                          _context35.next = 69;
+                      case 53:
+                        if (!(filteredMessageDiscord[1] && filteredMessageDiscord[1].toLowerCase() === 'myrank')) {
+                          _context37.next = 61;
                           break;
                         }
 
-                        _context35.next = 64;
-                        return (0, _rateLimit.myRateLimiter)(discordClient, message, 'Ranks');
+                        _context37.next = 56;
+                        return (0, _rateLimit.myRateLimiter)(discordClient, message, 'Myrank');
 
-                      case 64:
-                        _limited14 = _context35.sent;
+                      case 56:
+                        _limited14 = _context37.sent;
 
                         if (!_limited14) {
-                          _context35.next = 67;
+                          _context37.next = 59;
                           break;
                         }
 
-                        return _context35.abrupt("return");
+                        return _context37.abrupt("return");
 
-                      case 67:
-                        _context35.next = 69;
+                      case 59:
+                        _context37.next = 61;
                         return queue.add( /*#__PURE__*/(0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee27() {
                           var task;
                           return _regenerator["default"].wrap(function _callee27$(_context27) {
@@ -1511,7 +1534,7 @@ var discordRouter = /*#__PURE__*/function () {
                               switch (_context27.prev = _context27.next) {
                                 case 0:
                                   _context27.next = 2;
-                                  return (0, _ranks.discordRanks)(discordClient, message, io);
+                                  return (0, _myrank.discordMyRank)(discordClient, message, io);
 
                                 case 2:
                                   task = _context27.sent;
@@ -1524,27 +1547,27 @@ var discordRouter = /*#__PURE__*/function () {
                           }, _callee27);
                         })));
 
-                      case 69:
-                        if (!(filteredMessageDiscord[1] && filteredMessageDiscord[1].toLowerCase() === 'deposit')) {
-                          _context35.next = 77;
+                      case 61:
+                        if (!(filteredMessageDiscord[1] && filteredMessageDiscord[1].toLowerCase() === 'ranks')) {
+                          _context37.next = 69;
                           break;
                         }
 
-                        _context35.next = 72;
-                        return (0, _rateLimit.myRateLimiter)(discordClient, message, 'Deposit');
+                        _context37.next = 64;
+                        return (0, _rateLimit.myRateLimiter)(discordClient, message, 'Ranks');
 
-                      case 72:
-                        _limited15 = _context35.sent;
+                      case 64:
+                        _limited15 = _context37.sent;
 
                         if (!_limited15) {
-                          _context35.next = 75;
+                          _context37.next = 67;
                           break;
                         }
 
-                        return _context35.abrupt("return");
+                        return _context37.abrupt("return");
 
-                      case 75:
-                        _context35.next = 77;
+                      case 67:
+                        _context37.next = 69;
                         return queue.add( /*#__PURE__*/(0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee28() {
                           var task;
                           return _regenerator["default"].wrap(function _callee28$(_context28) {
@@ -1552,7 +1575,7 @@ var discordRouter = /*#__PURE__*/function () {
                               switch (_context28.prev = _context28.next) {
                                 case 0:
                                   _context28.next = 2;
-                                  return (0, _deposit.discordDeposit)(discordClient, message, io);
+                                  return (0, _ranks.discordRanks)(discordClient, message, io);
 
                                 case 2:
                                   task = _context28.sent;
@@ -1565,27 +1588,27 @@ var discordRouter = /*#__PURE__*/function () {
                           }, _callee28);
                         })));
 
-                      case 77:
-                        if (!(filteredMessageDiscord[1] && filteredMessageDiscord[1].toLowerCase() === 'price')) {
-                          _context35.next = 85;
+                      case 69:
+                        if (!(filteredMessageDiscord[1] && filteredMessageDiscord[1].toLowerCase() === 'deposit')) {
+                          _context37.next = 77;
                           break;
                         }
 
-                        _context35.next = 80;
-                        return (0, _rateLimit.myRateLimiter)(discordClient, message, 'Price');
+                        _context37.next = 72;
+                        return (0, _rateLimit.myRateLimiter)(discordClient, message, 'Deposit');
 
-                      case 80:
-                        _limited16 = _context35.sent;
+                      case 72:
+                        _limited16 = _context37.sent;
 
                         if (!_limited16) {
-                          _context35.next = 83;
+                          _context37.next = 75;
                           break;
                         }
 
-                        return _context35.abrupt("return");
+                        return _context37.abrupt("return");
 
-                      case 83:
-                        _context35.next = 85;
+                      case 75:
+                        _context37.next = 77;
                         return queue.add( /*#__PURE__*/(0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee29() {
                           var task;
                           return _regenerator["default"].wrap(function _callee29$(_context29) {
@@ -1593,7 +1616,7 @@ var discordRouter = /*#__PURE__*/function () {
                               switch (_context29.prev = _context29.next) {
                                 case 0:
                                   _context29.next = 2;
-                                  return (0, _price.discordPrice)(discordClient, message, io);
+                                  return (0, _deposit.discordDeposit)(discordClient, message, io);
 
                                 case 2:
                                   task = _context29.sent;
@@ -1606,27 +1629,27 @@ var discordRouter = /*#__PURE__*/function () {
                           }, _callee29);
                         })));
 
-                      case 85:
-                        if (!(filteredMessageDiscord[1] && filteredMessageDiscord[1].toLowerCase() === 'balance')) {
-                          _context35.next = 93;
+                      case 77:
+                        if (!(filteredMessageDiscord[1] && filteredMessageDiscord[1].toLowerCase() === 'price')) {
+                          _context37.next = 85;
                           break;
                         }
 
-                        _context35.next = 88;
-                        return (0, _rateLimit.myRateLimiter)(discordClient, message, 'Balance');
+                        _context37.next = 80;
+                        return (0, _rateLimit.myRateLimiter)(discordClient, message, 'Price');
 
-                      case 88:
-                        _limited17 = _context35.sent;
+                      case 80:
+                        _limited17 = _context37.sent;
 
                         if (!_limited17) {
-                          _context35.next = 91;
+                          _context37.next = 83;
                           break;
                         }
 
-                        return _context35.abrupt("return");
+                        return _context37.abrupt("return");
 
-                      case 91:
-                        _context35.next = 93;
+                      case 83:
+                        _context37.next = 85;
                         return queue.add( /*#__PURE__*/(0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee30() {
                           var task;
                           return _regenerator["default"].wrap(function _callee30$(_context30) {
@@ -1634,7 +1657,7 @@ var discordRouter = /*#__PURE__*/function () {
                               switch (_context30.prev = _context30.next) {
                                 case 0:
                                   _context30.next = 2;
-                                  return (0, _balance.discordBalance)(discordClient, message, io);
+                                  return (0, _price.discordPrice)(discordClient, message, io);
 
                                 case 2:
                                   task = _context30.sent;
@@ -1647,49 +1670,27 @@ var discordRouter = /*#__PURE__*/function () {
                           }, _callee30);
                         })));
 
-                      case 93:
-                        if (!(filteredMessageDiscord[1] && filteredMessageDiscord[1].toLowerCase() === 'roll')) {
-                          _context35.next = 108;
+                      case 85:
+                        if (!(filteredMessageDiscord[1] && filteredMessageDiscord[1].toLowerCase() === 'balance')) {
+                          _context37.next = 93;
                           break;
                         }
 
-                        _context35.next = 96;
-                        return (0, _rateLimit.myRateLimiter)(discordClient, message, 'RollDice');
+                        _context37.next = 88;
+                        return (0, _rateLimit.myRateLimiter)(discordClient, message, 'Balance');
 
-                      case 96:
-                        _limited18 = _context35.sent;
+                      case 88:
+                        _limited18 = _context37.sent;
 
                         if (!_limited18) {
-                          _context35.next = 99;
+                          _context37.next = 91;
                           break;
                         }
 
-                        return _context35.abrupt("return");
+                        return _context37.abrupt("return");
 
-                      case 99:
-                        _context35.next = 101;
-                        return _models["default"].setting.findOne();
-
-                      case 101:
-                        _setting6 = _context35.sent;
-
-                        if (!(message.channelId !== _setting6.roleDiceChannelId)) {
-                          _context35.next = 105;
-                          break;
-                        }
-
-                        _context35.next = 105;
-                        return message.reply("please use <#".concat(_setting6.roleDiceChannelId, "> for rolling dice"))["catch"](function (e) {
-                          console.log(e);
-                        });
-
-                      case 105:
-                        if (!(message.channelId === _setting6.roleDiceChannelId)) {
-                          _context35.next = 108;
-                          break;
-                        }
-
-                        _context35.next = 108;
+                      case 91:
+                        _context37.next = 93;
                         return queue.add( /*#__PURE__*/(0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee31() {
                           var task;
                           return _regenerator["default"].wrap(function _callee31$(_context31) {
@@ -1697,7 +1698,7 @@ var discordRouter = /*#__PURE__*/function () {
                               switch (_context31.prev = _context31.next) {
                                 case 0:
                                   _context31.next = 2;
-                                  return (0, _rollDice.discordRollDice)(discordClient, message, _setting6, io);
+                                  return (0, _balance.discordBalance)(discordClient, message, io);
 
                                 case 2:
                                   task = _context31.sent;
@@ -1710,32 +1711,49 @@ var discordRouter = /*#__PURE__*/function () {
                           }, _callee31);
                         })));
 
-                      case 108:
-                        if (!(filteredMessageDiscord[1] && filteredMessageDiscord[1].toLowerCase() === 'leaderboard')) {
-                          _context35.next = 119;
+                      case 93:
+                        if (!(filteredMessageDiscord[1] && filteredMessageDiscord[1].toLowerCase() === 'roll')) {
+                          _context37.next = 108;
                           break;
                         }
 
-                        _context35.next = 111;
-                        return (0, _rateLimit.myRateLimiter)(discordClient, message, 'Leaderboard');
+                        _context37.next = 96;
+                        return (0, _rateLimit.myRateLimiter)(discordClient, message, 'RollDice');
 
-                      case 111:
-                        _limited19 = _context35.sent;
+                      case 96:
+                        _limited19 = _context37.sent;
 
                         if (!_limited19) {
-                          _context35.next = 114;
+                          _context37.next = 99;
                           break;
                         }
 
-                        return _context35.abrupt("return");
+                        return _context37.abrupt("return");
 
-                      case 114:
-                        _context35.next = 116;
+                      case 99:
+                        _context37.next = 101;
                         return _models["default"].setting.findOne();
 
-                      case 116:
-                        _setting7 = _context35.sent;
-                        _context35.next = 119;
+                      case 101:
+                        _setting7 = _context37.sent;
+
+                        if (!(message.channelId !== _setting7.roleDiceChannelId)) {
+                          _context37.next = 105;
+                          break;
+                        }
+
+                        _context37.next = 105;
+                        return message.reply("please use <#".concat(_setting7.roleDiceChannelId, "> for rolling dice"))["catch"](function (e) {
+                          console.log(e);
+                        });
+
+                      case 105:
+                        if (!(message.channelId === _setting7.roleDiceChannelId)) {
+                          _context37.next = 108;
+                          break;
+                        }
+
+                        _context37.next = 108;
                         return queue.add( /*#__PURE__*/(0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee32() {
                           var task;
                           return _regenerator["default"].wrap(function _callee32$(_context32) {
@@ -1743,7 +1761,7 @@ var discordRouter = /*#__PURE__*/function () {
                               switch (_context32.prev = _context32.next) {
                                 case 0:
                                   _context32.next = 2;
-                                  return (0, _leaderboard.discordLeaderboard)(discordClient, message, _setting7, io);
+                                  return (0, _rollDice.discordRollDice)(discordClient, message, _setting7, io);
 
                                 case 2:
                                   task = _context32.sent;
@@ -1756,32 +1774,32 @@ var discordRouter = /*#__PURE__*/function () {
                           }, _callee32);
                         })));
 
-                      case 119:
-                        if (!(filteredMessageDiscord[1] && filteredMessageDiscord[1].toLowerCase() === 'mostactive')) {
-                          _context35.next = 130;
+                      case 108:
+                        if (!(filteredMessageDiscord[1] && filteredMessageDiscord[1].toLowerCase() === 'leaderboard')) {
+                          _context37.next = 119;
                           break;
                         }
 
-                        _context35.next = 122;
-                        return (0, _rateLimit.myRateLimiter)(discordClient, message, 'MostActive');
+                        _context37.next = 111;
+                        return (0, _rateLimit.myRateLimiter)(discordClient, message, 'Leaderboard');
 
-                      case 122:
-                        _limited20 = _context35.sent;
+                      case 111:
+                        _limited20 = _context37.sent;
 
                         if (!_limited20) {
-                          _context35.next = 125;
+                          _context37.next = 114;
                           break;
                         }
 
-                        return _context35.abrupt("return");
+                        return _context37.abrupt("return");
 
-                      case 125:
-                        _context35.next = 127;
+                      case 114:
+                        _context37.next = 116;
                         return _models["default"].setting.findOne();
 
-                      case 127:
-                        _setting8 = _context35.sent;
-                        _context35.next = 130;
+                      case 116:
+                        _setting8 = _context37.sent;
+                        _context37.next = 119;
                         return queue.add( /*#__PURE__*/(0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee33() {
                           var task;
                           return _regenerator["default"].wrap(function _callee33$(_context33) {
@@ -1789,7 +1807,7 @@ var discordRouter = /*#__PURE__*/function () {
                               switch (_context33.prev = _context33.next) {
                                 case 0:
                                   _context33.next = 2;
-                                  return (0, _mostActive.discordMostActive)(discordClient, message, _setting8, io);
+                                  return (0, _leaderboard.discordLeaderboard)(discordClient, message, _setting8, io);
 
                                 case 2:
                                   task = _context33.sent;
@@ -1802,77 +1820,32 @@ var discordRouter = /*#__PURE__*/function () {
                           }, _callee33);
                         })));
 
-                      case 130:
-                        if (!(filteredMessageDiscord[1] && filteredMessageDiscord[1].toLowerCase() === 'pickclass')) {
-                          _context35.next = 142;
+                      case 119:
+                        if (!(filteredMessageDiscord[1] && filteredMessageDiscord[1].toLowerCase() === 'mostactive')) {
+                          _context37.next = 130;
                           break;
                         }
 
-                        _context35.next = 133;
-                        return (0, _rateLimit.myRateLimiter)(discordClient, message, 'PickClass');
+                        _context37.next = 122;
+                        return (0, _rateLimit.myRateLimiter)(discordClient, message, 'MostActive');
 
-                      case 133:
-                        _limited21 = _context35.sent;
+                      case 122:
+                        _limited21 = _context37.sent;
 
                         if (!_limited21) {
-                          _context35.next = 136;
+                          _context37.next = 125;
                           break;
                         }
 
-                        return _context35.abrupt("return");
+                        return _context37.abrupt("return");
 
-                      case 136:
-                        _context35.next = 138;
+                      case 125:
+                        _context37.next = 127;
                         return _models["default"].setting.findOne();
 
-                      case 138:
-                        _setting9 = _context35.sent;
-                        _context35.next = 141;
-                        return (0, _pickClass.discordPickClass)(discordClient, message, _setting9, io, queue);
-
-                      case 141:
-                        task = _context35.sent;
-
-                      case 142:
-                        if (!(filteredMessageDiscord[1] && filteredMessageDiscord[1].toLowerCase() === 'withdraw')) {
-                          _context35.next = 160;
-                          break;
-                        }
-
-                        _context35.next = 145;
-                        return (0, _rateLimit.myRateLimiter)(discordClient, message, 'Withdraw');
-
-                      case 145:
-                        _limited22 = _context35.sent;
-
-                        if (!_limited22) {
-                          _context35.next = 148;
-                          break;
-                        }
-
-                        return _context35.abrupt("return");
-
-                      case 148:
-                        _context35.next = 150;
-                        return (0, _featureSetting.discordFeatureSettings)(message, 'withdraw', groupTaskId, channelTaskId);
-
-                      case 150:
-                        _setting10 = _context35.sent;
-                        _context35.next = 153;
-                        return (0, _preWithdraw.preWithdraw)(discordClient, message);
-
-                      case 153:
-                        _yield$preWithdraw3 = _context35.sent;
-                        _yield$preWithdraw4 = (0, _slicedToArray2["default"])(_yield$preWithdraw3, 2);
-                        success = _yield$preWithdraw4[0];
-                        filteredMessage = _yield$preWithdraw4[1];
-
-                        if (!success) {
-                          _context35.next = 160;
-                          break;
-                        }
-
-                        _context35.next = 160;
+                      case 127:
+                        _setting9 = _context37.sent;
+                        _context37.next = 130;
                         return queue.add( /*#__PURE__*/(0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee34() {
                           var task;
                           return _regenerator["default"].wrap(function _callee34$(_context34) {
@@ -1880,7 +1853,7 @@ var discordRouter = /*#__PURE__*/function () {
                               switch (_context34.prev = _context34.next) {
                                 case 0:
                                   _context34.next = 2;
-                                  return (0, _withdraw.discordWithdraw)(discordClient, message, filteredMessage, _setting10, io);
+                                  return (0, _mostActive.discordMostActive)(discordClient, message, _setting9, io);
 
                                 case 2:
                                   task = _context34.sent;
@@ -1893,25 +1866,174 @@ var discordRouter = /*#__PURE__*/function () {
                           }, _callee34);
                         })));
 
+                      case 130:
+                        if (!(filteredMessageDiscord[1] && filteredMessageDiscord[1].toLowerCase() === 'pickclass')) {
+                          _context37.next = 142;
+                          break;
+                        }
+
+                        _context37.next = 133;
+                        return (0, _rateLimit.myRateLimiter)(discordClient, message, 'PickClass');
+
+                      case 133:
+                        _limited22 = _context37.sent;
+
+                        if (!_limited22) {
+                          _context37.next = 136;
+                          break;
+                        }
+
+                        return _context37.abrupt("return");
+
+                      case 136:
+                        _context37.next = 138;
+                        return _models["default"].setting.findOne();
+
+                      case 138:
+                        _setting10 = _context37.sent;
+                        _context37.next = 141;
+                        return (0, _pickClass.discordPickClass)(discordClient, message, _setting10, io, queue);
+
+                      case 141:
+                        task = _context37.sent;
+
+                      case 142:
+                        if (!(filteredMessageDiscord[1] && filteredMessageDiscord[1].toLowerCase() === 'stats')) {
+                          _context37.next = 154;
+                          break;
+                        }
+
+                        _context37.next = 145;
+                        return (0, _rateLimit.myRateLimiter)(discordClient, message, 'Stats');
+
+                      case 145:
+                        _limited23 = _context37.sent;
+
+                        if (!_limited23) {
+                          _context37.next = 148;
+                          break;
+                        }
+
+                        return _context37.abrupt("return");
+
+                      case 148:
+                        _context37.next = 150;
+                        return _models["default"].setting.findOne();
+
+                      case 150:
+                        _setting11 = _context37.sent;
+                        _context37.next = 153;
+                        return (0, _stats.discordStats)(discordClient, message, _setting11, io, queue);
+
+                      case 153:
+                        _task = _context37.sent;
+
+                      case 154:
+                        if (!(filteredMessageDiscord[1] && filteredMessageDiscord[1].toLowerCase() === 'withdraw')) {
+                          _context37.next = 172;
+                          break;
+                        }
+
+                        _context37.next = 157;
+                        return (0, _rateLimit.myRateLimiter)(discordClient, message, 'Withdraw');
+
+                      case 157:
+                        _limited24 = _context37.sent;
+
+                        if (!_limited24) {
+                          _context37.next = 160;
+                          break;
+                        }
+
+                        return _context37.abrupt("return");
+
                       case 160:
+                        _context37.next = 162;
+                        return (0, _featureSetting.discordFeatureSettings)(message, 'withdraw', groupTaskId, channelTaskId);
+
+                      case 162:
+                        _setting12 = _context37.sent;
+                        _context37.next = 165;
+                        return (0, _preWithdraw.preWithdraw)(discordClient, message);
+
+                      case 165:
+                        _yield$preWithdraw3 = _context37.sent;
+                        _yield$preWithdraw4 = (0, _slicedToArray2["default"])(_yield$preWithdraw3, 2);
+                        success = _yield$preWithdraw4[0];
+                        filteredMessage = _yield$preWithdraw4[1];
+
+                        if (!success) {
+                          _context37.next = 172;
+                          break;
+                        }
+
+                        _context37.next = 172;
+                        return queue.add( /*#__PURE__*/(0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee35() {
+                          var task;
+                          return _regenerator["default"].wrap(function _callee35$(_context35) {
+                            while (1) {
+                              switch (_context35.prev = _context35.next) {
+                                case 0:
+                                  _context35.next = 2;
+                                  return (0, _withdraw.discordWithdraw)(discordClient, message, filteredMessage, _setting12, io);
+
+                                case 2:
+                                  task = _context35.sent;
+
+                                case 3:
+                                case "end":
+                                  return _context35.stop();
+                              }
+                            }
+                          }, _callee35);
+                        })));
+
+                      case 172:
+                        if (!(filteredMessageDiscord[1] && filteredMessageDiscord[1].toLowerCase() === 'exptest')) {
+                          _context37.next = 175;
+                          break;
+                        }
+
+                        _context37.next = 175;
+                        return queue.add( /*#__PURE__*/(0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee36() {
+                          var task;
+                          return _regenerator["default"].wrap(function _callee36$(_context36) {
+                            while (1) {
+                              switch (_context36.prev = _context36.next) {
+                                case 0:
+                                  _context36.next = 2;
+                                  return (0, _expTest.discordExpTest)(discordClient, message, io);
+
+                                case 2:
+                                  task = _context36.sent;
+
+                                case 3:
+                                case "end":
+                                  return _context36.stop();
+                              }
+                            }
+                          }, _callee36);
+                        })));
+
+                      case 175:
                       case "end":
-                        return _context35.stop();
+                        return _context37.stop();
                     }
                   }
-                }, _callee35);
+                }, _callee37);
               }));
 
               return function (_x11) {
-                return _ref23.apply(this, arguments);
+                return _ref24.apply(this, arguments);
               };
             }());
 
           case 8:
           case "end":
-            return _context36.stop();
+            return _context38.stop();
         }
       }
-    }, _callee36);
+    }, _callee38);
   }));
 
   return function discordRouter(_x, _x2, _x3) {

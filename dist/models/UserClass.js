@@ -16,7 +16,19 @@ module.exports = function (sequelize, DataTypes) {
 
   var UserClassModel = sequelize.define('UserClass', modelDefinition, modelOptions);
 
-  UserClassModel.associate = function (model) {};
+  UserClassModel.associate = function (model) {
+    UserClassModel.belongsTo(model.stats, {
+      as: 'stats',
+      foreignKey: 'statsId'
+    });
+    UserClassModel.belongsTo(model.condition, {
+      as: 'condition',
+      foreignKey: 'conditionId'
+    });
+    UserClassModel.belongsTo(model.user, {
+      foreignKey: 'userId'
+    });
+  };
 
   return UserClassModel;
 };

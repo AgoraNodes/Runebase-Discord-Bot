@@ -51,6 +51,8 @@ export const updateClass = async (
     life: req.body.life,
     mana: req.body.mana,
     stamina: req.body.stamina,
+    attackRating: req.body.attackRating,
+    defense: req.body.defense,
     classDescriptionId: req.body.description,
   });
   res.locals.name = 'updateChar';
@@ -163,6 +165,8 @@ export const addClass = async (
     life: Number(req.body.life),
     mana: Number(req.body.mana),
     stamina: Number(req.body.stamina),
+    attackRating: Number(req.body.attackRating),
+    defense: Number(req.body.defense),
     classDescriptionId: req.body.description,
   });
 
