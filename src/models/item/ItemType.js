@@ -22,6 +22,10 @@ module.exports = (sequelize, DataTypes) => {
 
   ItemTypeModel.associate = (model) => {
     ItemTypeModel.hasOne(model.itemFamily);
+    ItemTypeModel.belongsToMany(
+      model.itemModifier,
+      { through: 'ItemModifierItemType' },
+    );
   };
 
   return ItemTypeModel;

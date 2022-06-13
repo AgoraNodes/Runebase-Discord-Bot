@@ -17,7 +17,8 @@ module.exports = (sequelize, DataTypes) => {
   const ItemModifierModel = sequelize.define('ItemModifierItemType', modelDefinition, modelOptions);
 
   ItemModifierModel.associate = (model) => {
-
+    ItemModifierModel.belongsTo(model.itemType);
+    ItemModifierModel.belongsTo(model.itemModifier);
   };
 
   return ItemModifierModel;

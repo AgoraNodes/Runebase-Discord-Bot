@@ -119,6 +119,13 @@ import {
 } from './controllers/itemModifier';
 
 import {
+  fetchItemModifierLinks,
+  addItemModifierLink,
+  removeItemModifierLink,
+  updateItemModifierLink,
+} from './controllers/linkItemModifier';
+
+import {
   fetchRanks,
   addRank,
   removeRank,
@@ -638,6 +645,52 @@ export const dashboardRouter = (
     use(insertIp),
     use(ensuretfa),
     use(updateItemModifier),
+    respondResult,
+  );
+
+  // Item Modifier Links
+
+  app.post(
+    '/api/management/item/modifier/links',
+    use(IsAuthenticated),
+    use(isAdmin),
+    use(isDashboardUserBanned),
+    use(insertIp),
+    use(ensuretfa),
+    use(fetchItemModifierLinks),
+    respondCountAndResult,
+  );
+
+  app.post(
+    '/api/management/item/modifier/link/add',
+    use(IsAuthenticated),
+    use(isAdmin),
+    use(isDashboardUserBanned),
+    use(insertIp),
+    use(ensuretfa),
+    use(addItemModifierLink),
+    respondResult,
+  );
+
+  app.post(
+    '/api/management/item/modifier/link/remove',
+    use(IsAuthenticated),
+    use(isAdmin),
+    use(isDashboardUserBanned),
+    use(insertIp),
+    use(ensuretfa),
+    use(removeItemModifierLink),
+    respondResult,
+  );
+
+  app.post(
+    '/api/management/item/modifier/link/update',
+    use(IsAuthenticated),
+    use(isAdmin),
+    use(isDashboardUserBanned),
+    use(insertIp),
+    use(ensuretfa),
+    use(updateItemModifierLink),
     respondResult,
   );
 
