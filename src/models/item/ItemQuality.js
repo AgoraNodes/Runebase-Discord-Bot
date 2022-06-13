@@ -25,7 +25,7 @@ module.exports = (sequelize, DataTypes) => {
   const ItemQualityModel = sequelize.define('itemQuality', modelDefinition, modelOptions);
 
   ItemQualityModel.associate = (model) => {
-
+    ItemQualityModel.hasOne(model.itemModifier);
   };
 
   return ItemQualityModel;

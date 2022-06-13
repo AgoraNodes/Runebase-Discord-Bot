@@ -101,11 +101,22 @@ import {
 } from './controllers/itemType';
 
 import {
+  fetchItemQuality,
+} from './controllers/itemQuality';
+
+import {
   fetchItemFamilies,
   addItemFamily,
   removeItemFamily,
   updateItemFamily,
 } from './controllers/itemFamily';
+
+import {
+  fetchItemModifiers,
+  addItemModifier,
+  removeItemModifier,
+  updateItemModifier,
+} from './controllers/itemModifier';
 
 import {
   fetchRanks,
@@ -515,6 +526,19 @@ export const dashboardRouter = (
   // Item Types
 
   app.post(
+    '/api/management/item/quality',
+    use(IsAuthenticated),
+    use(isAdmin),
+    use(isDashboardUserBanned),
+    use(insertIp),
+    use(ensuretfa),
+    use(fetchItemQuality),
+    respondCountAndResult,
+  );
+
+  // Item Types
+
+  app.post(
     '/api/management/item/types',
     use(IsAuthenticated),
     use(isAdmin),
@@ -568,6 +592,52 @@ export const dashboardRouter = (
     use(insertIp),
     use(ensuretfa),
     use(updateItemFamily),
+    respondResult,
+  );
+
+  // Item Modifier
+
+  app.post(
+    '/api/management/item/modifiers',
+    use(IsAuthenticated),
+    use(isAdmin),
+    use(isDashboardUserBanned),
+    use(insertIp),
+    use(ensuretfa),
+    use(fetchItemModifiers),
+    respondCountAndResult,
+  );
+
+  app.post(
+    '/api/management/item/modifier/add',
+    use(IsAuthenticated),
+    use(isAdmin),
+    use(isDashboardUserBanned),
+    use(insertIp),
+    use(ensuretfa),
+    use(addItemModifier),
+    respondResult,
+  );
+
+  app.post(
+    '/api/management/item/modifier/remove',
+    use(IsAuthenticated),
+    use(isAdmin),
+    use(isDashboardUserBanned),
+    use(insertIp),
+    use(ensuretfa),
+    use(removeItemModifier),
+    respondResult,
+  );
+
+  app.post(
+    '/api/management/item/modifier/update',
+    use(IsAuthenticated),
+    use(isAdmin),
+    use(isDashboardUserBanned),
+    use(insertIp),
+    use(ensuretfa),
+    use(updateItemModifier),
     respondResult,
   );
 

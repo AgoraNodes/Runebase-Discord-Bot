@@ -10,10 +10,13 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    lvlReq: {
+    levelReq: {
       type: DataTypes.SMALLINT,
-      allowNull: false,
-      defaultValue: 0,
+      allowNull: true,
+    },
+    levelMonster: {
+      type: DataTypes.SMALLINT,
+      allowNull: true,
     },
   };
 

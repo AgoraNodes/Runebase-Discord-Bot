@@ -6,13 +6,53 @@ module.exports = (sequelize, DataTypes) => {
       primaryKey: true,
       autoIncrement: true,
     },
-    name: {
-      type: DataTypes.STRING,
-      allowNull: false,
+    levelReq: {
+      type: DataTypes.SMALLINT,
+      allowNull: true,
     },
-    color: {
+    levelMonster: {
+      type: DataTypes.SMALLINT,
+      allowNull: true,
+    },
+    prefix: {
       type: DataTypes.STRING,
-      allowNull: false,
+      allowNull: true,
+    },
+    suffix: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    minStrength: {
+      type: DataTypes.SMALLINT,
+      allowNull: true,
+    },
+    maxStrength: {
+      type: DataTypes.SMALLINT,
+      allowNull: true,
+    },
+    minDexterity: {
+      type: DataTypes.SMALLINT,
+      allowNull: true,
+    },
+    maxDexterity: {
+      type: DataTypes.SMALLINT,
+      allowNull: true,
+    },
+    minVitality: {
+      type: DataTypes.SMALLINT,
+      allowNull: true,
+    },
+    maxVitality: {
+      type: DataTypes.SMALLINT,
+      allowNull: true,
+    },
+    minEnergy: {
+      type: DataTypes.SMALLINT,
+      allowNull: true,
+    },
+    maxEnergy: {
+      type: DataTypes.SMALLINT,
+      allowNull: true,
     },
   };
 
@@ -25,7 +65,7 @@ module.exports = (sequelize, DataTypes) => {
   const ItemModifierModel = sequelize.define('itemModifier', modelDefinition, modelOptions);
 
   ItemModifierModel.associate = (model) => {
-
+    ItemModifierModel.belongsTo(model.itemQuality);
   };
 
   return ItemModifierModel;
