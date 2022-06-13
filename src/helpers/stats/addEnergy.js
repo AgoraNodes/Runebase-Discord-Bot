@@ -1,5 +1,4 @@
 import {
-  Sequelize,
   Transaction,
   Op,
 } from "sequelize";

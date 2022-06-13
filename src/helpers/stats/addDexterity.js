@@ -59,9 +59,6 @@ export const addDexterity = async (
         transaction: t,
       });
 
-      console.log(user);
-      console.log('did we find a user');
-
       const calc = (
         user.UserClass.stats.strength
         + user.UserClass.stats.dexterity

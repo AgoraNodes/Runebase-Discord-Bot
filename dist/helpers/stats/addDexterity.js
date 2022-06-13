@@ -76,20 +76,18 @@ var addDexterity = /*#__PURE__*/function () {
 
                                 case 2:
                                   user = _context.sent;
-                                  console.log(user);
-                                  console.log('did we find a user');
                                   calc = user.UserClass.stats.strength + user.UserClass.stats.dexterity + user.UserClass.stats.vitality + user.UserClass.stats.energy < user.ranks[0].id * 5;
 
                                   if (calc) {
-                                    _context.next = 9;
+                                    _context.next = 7;
                                     break;
                                   }
 
                                   cannotSpend = true;
                                   return _context.abrupt("return");
 
-                                case 9:
-                                  _context.next = 11;
+                                case 7:
+                                  _context.next = 9;
                                   return user.UserClass.stats.update({
                                     dexterity: user.UserClass.stats.dexterity + 1
                                   }, {
@@ -97,9 +95,9 @@ var addDexterity = /*#__PURE__*/function () {
                                     transaction: t
                                   });
 
-                                case 11:
+                                case 9:
                                   updateDexterity = _context.sent;
-                                  _context.next = 14;
+                                  _context.next = 12;
                                   return _models["default"].activity.create({
                                     type: 'addDexterity_s',
                                     earnerId: userId
@@ -108,9 +106,9 @@ var addDexterity = /*#__PURE__*/function () {
                                     transaction: t
                                   });
 
-                                case 14:
+                                case 12:
                                   preActivity = _context.sent;
-                                  _context.next = 17;
+                                  _context.next = 15;
                                   return _models["default"].activity.findOne({
                                     where: {
                                       id: preActivity.id
@@ -123,14 +121,14 @@ var addDexterity = /*#__PURE__*/function () {
                                     transaction: t
                                   });
 
-                                case 17:
+                                case 15:
                                   finalActivity = _context.sent;
                                   activity.unshift(finalActivity);
                                   t.afterCommit(function () {
                                     console.log('done updating dex');
                                   });
 
-                                case 20:
+                                case 18:
                                 case "end":
                                   return _context.stop();
                               }
