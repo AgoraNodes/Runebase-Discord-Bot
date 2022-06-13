@@ -97,6 +97,17 @@ import {
 } from './controllers/user';
 
 import {
+  fetchItemTypes,
+} from './controllers/itemType';
+
+import {
+  fetchItemFamilies,
+  addItemFamily,
+  removeItemFamily,
+  updateItemFamily,
+} from './controllers/itemFamily';
+
+import {
   fetchRanks,
   addRank,
   removeRank,
@@ -498,6 +509,65 @@ export const dashboardRouter = (
     use(insertIp),
     use(ensuretfa),
     use(updateClass),
+    respondResult,
+  );
+
+  // Item Types
+
+  app.post(
+    '/api/management/item/types',
+    use(IsAuthenticated),
+    use(isAdmin),
+    use(isDashboardUserBanned),
+    use(insertIp),
+    use(ensuretfa),
+    use(fetchItemTypes),
+    respondCountAndResult,
+  );
+
+  // Item Family
+
+  app.post(
+    '/api/management/item/families',
+    use(IsAuthenticated),
+    use(isAdmin),
+    use(isDashboardUserBanned),
+    use(insertIp),
+    use(ensuretfa),
+    use(fetchItemFamilies),
+    respondCountAndResult,
+  );
+
+  app.post(
+    '/api/management/item/family/add',
+    use(IsAuthenticated),
+    use(isAdmin),
+    use(isDashboardUserBanned),
+    use(insertIp),
+    use(ensuretfa),
+    use(addItemFamily),
+    respondResult,
+  );
+
+  app.post(
+    '/api/management/item/family/remove',
+    use(IsAuthenticated),
+    use(isAdmin),
+    use(isDashboardUserBanned),
+    use(insertIp),
+    use(ensuretfa),
+    use(removeItemFamily),
+    respondResult,
+  );
+
+  app.post(
+    '/api/management/item/family/update',
+    use(IsAuthenticated),
+    use(isAdmin),
+    use(isDashboardUserBanned),
+    use(insertIp),
+    use(ensuretfa),
+    use(updateItemFamily),
     respondResult,
   );
 

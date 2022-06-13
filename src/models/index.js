@@ -31,11 +31,43 @@ const sequelize = new Sequelize(
   },
 );
 
-fs
-  .readdirSync(__dirname)
-  .filter((file) => (file.indexOf('.') !== 0) && (file !== basename) && (file.slice(-3) === '.js'))
+// fs
+//   .readdirSync(__dirname)
+//   .filter((file) => (file.indexOf('.') !== 0) && (file !== basename) && (file.slice(-3) === '.js'))
+//   .forEach((file) => {
+//     const model = require(path.join(__dirname, file))(sequelize, Sequelize.DataTypes);
+//     db[model.name] = model;
+//   });
+
+const files = [];
+const sortDir = (maniDir) => {
+  const folders = [];
+  const CheckFile = (filePath) => (fs.statSync(filePath).isFile());
+  const sortPath = (dir) => {
+    fs
+      .readdirSync(dir)
+      .filter((file) => (file.indexOf(".") !== 0) && (file !== "index.js"))
+      .forEach((res) => {
+        const filePath = path.join(dir, res);
+        if (CheckFile(filePath)) {
+          files.push(filePath);
+        } else {
+          folders.push(filePath);
+        }
+      });
+  };
+  folders.push(maniDir);
+  let i = 0;
+  do {
+    sortPath(folders[i]);
+    i += 1;
+  } while (i < folders.length);
+};
+sortDir(__dirname);
+
+files
   .forEach((file) => {
-    const model = require(path.join(__dirname, file))(sequelize, Sequelize.DataTypes);
+    const model = require(file)(sequelize, Sequelize.DataTypes);
     db[model.name] = model;
   });
 

@@ -890,14 +890,14 @@ export const discordRouter = async (
     //   });
     // }
 
-    if (filteredMessageDiscord[1] && filteredMessageDiscord[1].toLowerCase() === 'exptest') {
-      await queue.add(async () => {
-        const task = await discordExpTest(
-          discordClient,
-          message,
-          io,
-        );
-      });
-    }
+    // if (filteredMessageDiscord[1] && filteredMessageDiscord[1].toLowerCase() === 'exptest') {
+    //  await queue.add(async () => {
+    //    const task = await discordExpTest(
+    //      discordClient,
+    //      message,
+    //      io,
+    //    );
+    //  });
+    // }
   });
 };
