@@ -53,8 +53,8 @@ export const addItemBase = async (
     throw new Error("Already Exists");
   }
   if (
-    itemBase && itemBase.itemFamilyId === req.body.itemFamily
-    && itemBase && itemBase.itemDifficultyId === req.body.itemDifficulty
+    itemBase && itemBase.itemFamilyId === req.body.itemFamilyId
+    && itemBase && itemBase.itemDifficultyId === req.body.itemDifficultyId
   ) {
     throw new Error("Already Exists");
   }
@@ -64,7 +64,11 @@ export const addItemBase = async (
     itemFamilyId: req.body.itemFamily,
     itemDifficultyId: req.body.itemDifficulty,
     levelReq: Number(req.body.levelReq),
+    strengthReq: Number(req.body.strengthReq),
+    dexterityReq: Number(req.body.dexterityReq),
     levelMonster: Number(req.body.levelMonster),
+    durability: Number(req.body.durability),
+    sockets: Number(req.body.sockets),
     minDefense: Number(req.body.minDefense),
     maxDefense: Number(req.body.maxDefense),
     minDamage: Number(req.body.minDamage),
@@ -118,10 +122,14 @@ export const updateItemBase = async (
   console.log('req.body.sqdsqd');
   const updatedRank = await itemBase.update({
     name: req.body.name,
-    itemFamilyId: req.body.itemFamily,
-    itemDifficultyId: req.body.itemDifficulty,
+    itemFamilyId: req.body.itemFamilyId,
+    itemDifficultyId: req.body.itemDifficultyId,
     levelReq: Number(req.body.levelReq),
+    strengthReq: Number(req.body.strengthReq),
+    dexterityReq: Number(req.body.dexterityReq),
     levelMonster: Number(req.body.levelMonster),
+    durability: Number(req.body.durability),
+    sockets: Number(req.body.sockets),
     minDefense: Number(req.body.minDefense),
     maxDefense: Number(req.body.maxDefense),
     minDamage: Number(req.body.minDamage),

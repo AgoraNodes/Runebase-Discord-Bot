@@ -14,8 +14,23 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.SMALLINT,
       allowNull: true,
     },
-
+    strengthReq: {
+      type: DataTypes.SMALLINT,
+      allowNull: true,
+    },
+    dexterityReq: {
+      type: DataTypes.SMALLINT,
+      allowNull: true,
+    },
     levelMonster: {
+      type: DataTypes.SMALLINT,
+      allowNull: true,
+    },
+    durability: {
+      type: DataTypes.SMALLINT,
+      allowNull: true,
+    },
+    sockets: {
       type: DataTypes.SMALLINT,
       allowNull: true,
     },

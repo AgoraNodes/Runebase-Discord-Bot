@@ -20,6 +20,7 @@ import { discordLeaderboard } from '../controllers/leaderboard';
 import { discordMostActive } from "../controllers/mostActive";
 import { discordPickClass } from '../controllers/pickClass';
 import { discordStats } from '../controllers/stats';
+import { discordShowCaseMagicItem } from '../controllers/showCaseMagicItem';
 
 import { discordExpTest } from '../controllers/expTest';
 import { myRateLimiter } from '../helpers/rateLimit';
@@ -899,5 +900,15 @@ export const discordRouter = async (
     //    );
     //  });
     // }
+
+    if (filteredMessageDiscord[1] && filteredMessageDiscord[1].toLowerCase() === 'showcasemagicitem') {
+      await queue.add(async () => {
+        const task = await discordShowCaseMagicItem(
+          discordClient,
+          message,
+          io,
+        );
+      });
+    }
   });
 };

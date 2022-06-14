@@ -14,6 +14,10 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.SMALLINT,
       allowNull: true,
     },
+    durability: {
+      type: DataTypes.SMALLINT,
+      allowNull: true,
+    },
     defense: {
       type: DataTypes.SMALLINT,
       allowNull: true,
