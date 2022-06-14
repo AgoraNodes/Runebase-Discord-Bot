@@ -14,7 +14,34 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.SMALLINT,
       allowNull: true,
     },
-
+    defense: {
+      type: DataTypes.SMALLINT,
+      allowNull: true,
+    },
+    minDamage: {
+      type: DataTypes.SMALLINT,
+      allowNull: true,
+    },
+    maxDamage: {
+      type: DataTypes.SMALLINT,
+      allowNull: true,
+    },
+    strength: {
+      type: DataTypes.SMALLINT,
+      allowNull: true,
+    },
+    dexterity: {
+      type: DataTypes.SMALLINT,
+      allowNull: true,
+    },
+    vitality: {
+      type: DataTypes.SMALLINT,
+      allowNull: true,
+    },
+    energy: {
+      type: DataTypes.SMALLINT,
+      allowNull: true,
+    },
   };
 
   // 2: The model options.
@@ -23,13 +50,13 @@ module.exports = (sequelize, DataTypes) => {
   };
 
   // 3: Define the Wallet model.
-  const ItemBaseModel = sequelize.define('itemBase', modelDefinition, modelOptions);
+  const itemModel = sequelize.define('item', modelDefinition, modelOptions);
 
-  ItemBaseModel.associate = (model) => {
-    ItemBaseModel.belongsTo(model.itemFamily);
-    // ItemBaseModel.hasOne(model.itemCategory);
-    ItemBaseModel.belongsTo(model.itemDifficulty);
+  itemModel.associate = (model) => {
+    itemModel.belongsTo(model.itemBase);
+    // itemModel.hasOne(model.itemCategory);
+    itemModel.belongsTo(model.itemQuality);
   };
 
-  return ItemBaseModel;
+  return itemModel;
 };

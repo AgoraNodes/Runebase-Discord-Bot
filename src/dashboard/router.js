@@ -105,6 +105,10 @@ import {
 } from './controllers/itemQuality';
 
 import {
+  fetchItemDifficulty,
+} from './controllers/itemDifficulty';
+
+import {
   fetchItemFamilies,
   addItemFamily,
   removeItemFamily,
@@ -124,6 +128,13 @@ import {
   removeItemModifierLink,
   updateItemModifierLink,
 } from './controllers/linkItemModifier';
+
+import {
+  fetchItemBases,
+  addItemBase,
+  removeItemBase,
+  updateItemBase,
+} from './controllers/itemBase';
 
 import {
   fetchRanks,
@@ -530,7 +541,7 @@ export const dashboardRouter = (
     respondResult,
   );
 
-  // Item Types
+  // Item Quality
 
   app.post(
     '/api/management/item/quality',
@@ -540,6 +551,19 @@ export const dashboardRouter = (
     use(insertIp),
     use(ensuretfa),
     use(fetchItemQuality),
+    respondCountAndResult,
+  );
+
+  // Item Quality
+
+  app.post(
+    '/api/management/item/difficulty',
+    use(IsAuthenticated),
+    use(isAdmin),
+    use(isDashboardUserBanned),
+    use(insertIp),
+    use(ensuretfa),
+    use(fetchItemDifficulty),
     respondCountAndResult,
   );
 
@@ -691,6 +715,52 @@ export const dashboardRouter = (
     use(insertIp),
     use(ensuretfa),
     use(updateItemModifierLink),
+    respondResult,
+  );
+
+  // Item Bases
+
+  app.post(
+    '/api/management/item/bases',
+    use(IsAuthenticated),
+    use(isAdmin),
+    use(isDashboardUserBanned),
+    use(insertIp),
+    use(ensuretfa),
+    use(fetchItemBases),
+    respondCountAndResult,
+  );
+
+  app.post(
+    '/api/management/item/base/add',
+    use(IsAuthenticated),
+    use(isAdmin),
+    use(isDashboardUserBanned),
+    use(insertIp),
+    use(ensuretfa),
+    use(addItemBase),
+    respondResult,
+  );
+
+  app.post(
+    '/api/management/item/base/remove',
+    use(IsAuthenticated),
+    use(isAdmin),
+    use(isDashboardUserBanned),
+    use(insertIp),
+    use(ensuretfa),
+    use(removeItemBase),
+    respondResult,
+  );
+
+  app.post(
+    '/api/management/item/base/update',
+    use(IsAuthenticated),
+    use(isAdmin),
+    use(isDashboardUserBanned),
+    use(insertIp),
+    use(ensuretfa),
+    use(updateItemBase),
     respondResult,
   );
 

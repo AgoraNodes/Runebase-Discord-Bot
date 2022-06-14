@@ -9,6 +9,7 @@ module.exports = {
     host: process.env.DB_HOST,
     port: process.env.DB_PORT,
     dialect: 'mysql',
+    seederStorage: 'sequelize',
     dialectOptions: {
       bigNumberStrings: true,
     },
@@ -22,6 +23,7 @@ module.exports = {
     database: process.env.DB_NAME,
     host: process.env.DB_HOST,
     port: process.env.DB_PORT,
+    seederStorage: 'sequelize',
     dialect: 'mysql',
     dialectOptions: {
       bigNumberStrings: true,
@@ -36,6 +38,7 @@ module.exports = {
     database: process.env.DB_NAME,
     host: process.env.DB_HOST,
     port: process.env.DB_PORT,
+    seederStorage: 'sequelize',
     dialect: 'mysql',
     dialectOptions: {
       bigNumberStrings: true,

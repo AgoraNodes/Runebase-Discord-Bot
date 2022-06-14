@@ -14,7 +14,24 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.SMALLINT,
       allowNull: true,
     },
+
     levelMonster: {
+      type: DataTypes.SMALLINT,
+      allowNull: true,
+    },
+    minDefense: {
+      type: DataTypes.SMALLINT,
+      allowNull: true,
+    },
+    maxDefense: {
+      type: DataTypes.SMALLINT,
+      allowNull: true,
+    },
+    minDamage: {
+      type: DataTypes.SMALLINT,
+      allowNull: true,
+    },
+    maxDamage: {
       type: DataTypes.SMALLINT,
       allowNull: true,
     },
