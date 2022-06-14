@@ -53,6 +53,8 @@ var _pickClass = require("../controllers/pickClass");
 
 var _stats = require("../controllers/stats");
 
+var _showCaseMagicItem = require("../controllers/showCaseMagicItem");
+
 var _expTest = require("../controllers/expTest");
 
 var _rateLimit = require("../helpers/rateLimit");
@@ -1989,7 +1991,7 @@ var discordRouter = /*#__PURE__*/function () {
                         })));
 
                       case 172:
-                        if (!(filteredMessageDiscord[1] && filteredMessageDiscord[1].toLowerCase() === 'exptest')) {
+                        if (!(filteredMessageDiscord[1] && filteredMessageDiscord[1].toLowerCase() === 'showcasemagicitem')) {
                           _context37.next = 175;
                           break;
                         }
@@ -2002,7 +2004,7 @@ var discordRouter = /*#__PURE__*/function () {
                               switch (_context36.prev = _context36.next) {
                                 case 0:
                                   _context36.next = 2;
-                                  return (0, _expTest.discordExpTest)(discordClient, message, io);
+                                  return (0, _showCaseMagicItem.discordShowCaseMagicItem)(discordClient, message, io);
 
                                 case 2:
                                   task = _context36.sent;

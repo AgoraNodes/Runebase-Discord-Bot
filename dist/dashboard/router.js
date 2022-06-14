@@ -63,6 +63,20 @@ var _tfa = require("./controllers/tfa");
 
 var _user = require("./controllers/user");
 
+var _itemType = require("./controllers/itemType");
+
+var _itemQuality = require("./controllers/itemQuality");
+
+var _itemDifficulty = require("./controllers/itemDifficulty");
+
+var _itemFamily = require("./controllers/itemFamily");
+
+var _itemModifier = require("./controllers/itemModifier");
+
+var _linkItemModifier = require("./controllers/linkItemModifier");
+
+var _itemBase = require("./controllers/itemBase");
+
 var _rank = require("./controllers/rank");
 
 var _classDescription = require("./controllers/classDescription");
@@ -180,7 +194,33 @@ var dashboardRouter = function dashboardRouter(app, io, discordClient, telegramC
   app.post('/api/management/classes', use(IsAuthenticated), use(_admin.isAdmin), use(_auth.isDashboardUserBanned), use(_ip.insertIp), use(_tfa.ensuretfa), use(_class.fetchClasses), respondCountAndResult);
   app.post('/api/management/class/add', use(IsAuthenticated), use(_admin.isAdmin), use(_auth.isDashboardUserBanned), use(_ip.insertIp), use(_tfa.ensuretfa), use(_class.addClass), respondResult);
   app.post('/api/management/class/remove', use(IsAuthenticated), use(_admin.isAdmin), use(_auth.isDashboardUserBanned), use(_ip.insertIp), use(_tfa.ensuretfa), use(_class.removeClass), respondResult);
-  app.post('/api/management/class/update', use(IsAuthenticated), use(_admin.isAdmin), use(_auth.isDashboardUserBanned), use(_ip.insertIp), use(_tfa.ensuretfa), use(_class.updateClass), respondResult); // Price Currencies
+  app.post('/api/management/class/update', use(IsAuthenticated), use(_admin.isAdmin), use(_auth.isDashboardUserBanned), use(_ip.insertIp), use(_tfa.ensuretfa), use(_class.updateClass), respondResult); // Item Quality
+
+  app.post('/api/management/item/quality', use(IsAuthenticated), use(_admin.isAdmin), use(_auth.isDashboardUserBanned), use(_ip.insertIp), use(_tfa.ensuretfa), use(_itemQuality.fetchItemQuality), respondCountAndResult); // Item Quality
+
+  app.post('/api/management/item/difficulty', use(IsAuthenticated), use(_admin.isAdmin), use(_auth.isDashboardUserBanned), use(_ip.insertIp), use(_tfa.ensuretfa), use(_itemDifficulty.fetchItemDifficulty), respondCountAndResult); // Item Types
+
+  app.post('/api/management/item/types', use(IsAuthenticated), use(_admin.isAdmin), use(_auth.isDashboardUserBanned), use(_ip.insertIp), use(_tfa.ensuretfa), use(_itemType.fetchItemTypes), respondCountAndResult); // Item Family
+
+  app.post('/api/management/item/families', use(IsAuthenticated), use(_admin.isAdmin), use(_auth.isDashboardUserBanned), use(_ip.insertIp), use(_tfa.ensuretfa), use(_itemFamily.fetchItemFamilies), respondCountAndResult);
+  app.post('/api/management/item/family/add', use(IsAuthenticated), use(_admin.isAdmin), use(_auth.isDashboardUserBanned), use(_ip.insertIp), use(_tfa.ensuretfa), use(_itemFamily.addItemFamily), respondResult);
+  app.post('/api/management/item/family/remove', use(IsAuthenticated), use(_admin.isAdmin), use(_auth.isDashboardUserBanned), use(_ip.insertIp), use(_tfa.ensuretfa), use(_itemFamily.removeItemFamily), respondResult);
+  app.post('/api/management/item/family/update', use(IsAuthenticated), use(_admin.isAdmin), use(_auth.isDashboardUserBanned), use(_ip.insertIp), use(_tfa.ensuretfa), use(_itemFamily.updateItemFamily), respondResult); // Item Modifier
+
+  app.post('/api/management/item/modifiers', use(IsAuthenticated), use(_admin.isAdmin), use(_auth.isDashboardUserBanned), use(_ip.insertIp), use(_tfa.ensuretfa), use(_itemModifier.fetchItemModifiers), respondCountAndResult);
+  app.post('/api/management/item/modifier/add', use(IsAuthenticated), use(_admin.isAdmin), use(_auth.isDashboardUserBanned), use(_ip.insertIp), use(_tfa.ensuretfa), use(_itemModifier.addItemModifier), respondResult);
+  app.post('/api/management/item/modifier/remove', use(IsAuthenticated), use(_admin.isAdmin), use(_auth.isDashboardUserBanned), use(_ip.insertIp), use(_tfa.ensuretfa), use(_itemModifier.removeItemModifier), respondResult);
+  app.post('/api/management/item/modifier/update', use(IsAuthenticated), use(_admin.isAdmin), use(_auth.isDashboardUserBanned), use(_ip.insertIp), use(_tfa.ensuretfa), use(_itemModifier.updateItemModifier), respondResult); // Item Modifier Links
+
+  app.post('/api/management/item/modifier/links', use(IsAuthenticated), use(_admin.isAdmin), use(_auth.isDashboardUserBanned), use(_ip.insertIp), use(_tfa.ensuretfa), use(_linkItemModifier.fetchItemModifierLinks), respondCountAndResult);
+  app.post('/api/management/item/modifier/link/add', use(IsAuthenticated), use(_admin.isAdmin), use(_auth.isDashboardUserBanned), use(_ip.insertIp), use(_tfa.ensuretfa), use(_linkItemModifier.addItemModifierLink), respondResult);
+  app.post('/api/management/item/modifier/link/remove', use(IsAuthenticated), use(_admin.isAdmin), use(_auth.isDashboardUserBanned), use(_ip.insertIp), use(_tfa.ensuretfa), use(_linkItemModifier.removeItemModifierLink), respondResult);
+  app.post('/api/management/item/modifier/link/update', use(IsAuthenticated), use(_admin.isAdmin), use(_auth.isDashboardUserBanned), use(_ip.insertIp), use(_tfa.ensuretfa), use(_linkItemModifier.updateItemModifierLink), respondResult); // Item Bases
+
+  app.post('/api/management/item/bases', use(IsAuthenticated), use(_admin.isAdmin), use(_auth.isDashboardUserBanned), use(_ip.insertIp), use(_tfa.ensuretfa), use(_itemBase.fetchItemBases), respondCountAndResult);
+  app.post('/api/management/item/base/add', use(IsAuthenticated), use(_admin.isAdmin), use(_auth.isDashboardUserBanned), use(_ip.insertIp), use(_tfa.ensuretfa), use(_itemBase.addItemBase), respondResult);
+  app.post('/api/management/item/base/remove', use(IsAuthenticated), use(_admin.isAdmin), use(_auth.isDashboardUserBanned), use(_ip.insertIp), use(_tfa.ensuretfa), use(_itemBase.removeItemBase), respondResult);
+  app.post('/api/management/item/base/update', use(IsAuthenticated), use(_admin.isAdmin), use(_auth.isDashboardUserBanned), use(_ip.insertIp), use(_tfa.ensuretfa), use(_itemBase.updateItemBase), respondResult); // Price Currencies
 
   app.post('/api/management/pricecurrencies', use(IsAuthenticated), use(_admin.isAdmin), use(_auth.isDashboardUserBanned), use(_ip.insertIp), use(_tfa.ensuretfa), use(_priceCurrencies.fetchPriceCurrencies), respondCountAndResult);
   app.post('/api/management/pricecurrencies/remove', use(IsAuthenticated), use(_admin.isAdmin), use(_auth.isDashboardUserBanned), use(_ip.insertIp), use(_tfa.ensuretfa), use(_priceCurrencies.removePriceCurrency), respondResult);

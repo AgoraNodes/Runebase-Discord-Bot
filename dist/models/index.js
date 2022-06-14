@@ -34,16 +34,52 @@ var sequelize = new _sequelize["default"](process.env.DB_NAME, process.env.DB_US
     match: [_sequelize["default"].ConnectionError, _sequelize["default"].ConnectionTimedOutError, _sequelize["default"].TimeoutError],
     max: 3
   }
-});
+}); // fs
+//   .readdirSync(__dirname)
+//   .filter((file) => (file.indexOf('.') !== 0) && (file !== basename) && (file.slice(-3) === '.js'))
+//   .forEach((file) => {
+//     const model = require(path.join(__dirname, file))(sequelize, Sequelize.DataTypes);
+//     db[model.name] = model;
+//   });
 
-_fs["default"].readdirSync(__dirname).filter(function (file) {
-  return file.indexOf('.') !== 0 && file !== basename && file.slice(-3) === '.js';
-}).forEach(function (file) {
-  var model = require(_path["default"].join(__dirname, file))(sequelize, _sequelize["default"].DataTypes);
+var files = [];
+
+var sortDir = function sortDir(maniDir) {
+  var folders = [];
+
+  var CheckFile = function CheckFile(filePath) {
+    return _fs["default"].statSync(filePath).isFile();
+  };
+
+  var sortPath = function sortPath(dir) {
+    _fs["default"].readdirSync(dir).filter(function (file) {
+      return file.indexOf(".") !== 0 && file !== "index.js";
+    }).forEach(function (res) {
+      var filePath = _path["default"].join(dir, res);
+
+      if (CheckFile(filePath)) {
+        files.push(filePath);
+      } else {
+        folders.push(filePath);
+      }
+    });
+  };
+
+  folders.push(maniDir);
+  var i = 0;
+
+  do {
+    sortPath(folders[i]);
+    i += 1;
+  } while (i < folders.length);
+};
+
+sortDir(__dirname);
+files.forEach(function (file) {
+  var model = require(file)(sequelize, _sequelize["default"].DataTypes);
 
   db[model.name] = model;
 });
-
 Object.keys(db).forEach(function (modelName) {
   if (db[modelName].associate) {
     db[modelName].associate(db);
