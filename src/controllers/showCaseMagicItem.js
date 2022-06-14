@@ -50,7 +50,7 @@ export const discordShowCaseMagicItem = async (
     const levelReqHeight = newItem.levelReq ? 25 : 0;
 
     await registerFont(path.join(__dirname, '../assets/fonts/', 'Heart_warming.otf'), { family: 'HeartWarming' });
-    const itemImage = await loadImage(path.join(__dirname, `../assets/images/items/${newItem.itemBase.itemFamily.itemType.name}/${newItem.itemBase.itemFamily.name}`, `${newItem.itemBase.name}.png`));
+    const itemImage = await loadImage(path.join(__dirname, `../assets/images/items/${newItem.itemBase.itemFamily.itemType.name}/${newItem.itemBase.itemFamily.name}`, `${newItem.itemBase.name.replaceAll(' ', '-')}.png`));
     const canvas = createCanvas(
       200,
       (itemImage.height) + 95 + (modifierStringArray.length * 25) + levelReqHeight,
