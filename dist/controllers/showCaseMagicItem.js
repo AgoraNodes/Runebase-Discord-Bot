@@ -94,7 +94,7 @@ var discordShowCaseMagicItem = /*#__PURE__*/function () {
 
                       case 12:
                         _context.next = 14;
-                        return (0, _canvas.loadImage)(_path["default"].join(__dirname, "../assets/images/items/".concat(newItem.itemBase.itemFamily.itemType.name, "/").concat(newItem.itemBase.itemFamily.name), "".concat(newItem.itemBase.name.replaceAll(' ', '-'), ".png")));
+                        return (0, _canvas.loadImage)(_path["default"].join(__dirname, "../assets/images/items/".concat(newItem.itemBase.itemFamily.itemType.name, "/").concat(newItem.itemBase.itemFamily.name), "".concat(newItem.itemBase.name, ".png")));
 
                       case 14:
                         itemImage = _context.sent;
