@@ -86,6 +86,7 @@ export const generateRandomMagicItem = async () => {
   let addDexterity = 0;
   let addVitality = 0;
   let addEnergy = 0;
+  let addEd = 0;
 
   // Calculate level requirement
   if (randomBaseItem.levelReq) {
@@ -171,6 +172,22 @@ export const generateRandomMagicItem = async () => {
     addEnergy += rndEnergy;
   }
 
+  // Calculate ED (enhanced damage/defense)
+  if (prefixModifier && prefixModifier.minEd && prefixModifier.maxEd) {
+    const rndEd = randomIntFromInterval(
+      prefixModifier.minEd,
+      prefixModifier.maxEd,
+    );
+    addEd += rndEd;
+  }
+  if (suffixModifier && suffixModifier.minEd && suffixModifier.maxEd) {
+    const rndEd = randomIntFromInterval(
+      suffixModifier.minEd,
+      suffixModifier.maxEd,
+    );
+    addEd += rndEd;
+  }
+
   const itemName = `${(prefixModifier && prefixModifier.prefix ? `${prefixModifier.prefix} ` : '')}${randomBaseItem.name}${(suffixModifier && suffixModifier.suffix ? ` ${suffixModifier.suffix}` : '')}`;
 
   const createNewItem = await db.item.create({
@@ -186,6 +203,11 @@ export const generateRandomMagicItem = async () => {
     ...(
       rndDefense && {
         defense: rndDefense,
+      }
+    ),
+    ...(
+      addEd !== 0 && {
+        ed: addEd,
       }
     ),
     ...(

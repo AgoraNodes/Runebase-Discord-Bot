@@ -54,6 +54,14 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.SMALLINT,
       allowNull: true,
     },
+    minEd: {
+      type: DataTypes.SMALLINT,
+      allowNull: true,
+    },
+    maxEd: {
+      type: DataTypes.SMALLINT,
+      allowNull: true,
+    },
   };
 
   // 2: The model options.

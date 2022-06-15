@@ -48,6 +48,8 @@ export const addItemModifier = async (
     maxVitality: req.body.maxVitality,
     minEnergy: req.body.minEnergy,
     maxEnergy: req.body.maxEnergy,
+    minEd: req.body.minEd,
+    maxEd: req.body.maxEd,
   });
   res.locals.name = 'addItemFamily';
   res.locals.result = await db.itemModifier.findOne({
@@ -71,8 +73,8 @@ export const updateItemModifier = async (
   next,
 ) => {
   console.log(req.body);
-  if (!req.body.itemModifier) {
-    throw new Error("description is required");
+  if (!req.body.itemQuality) {
+    throw new Error("itemQuality is required");
   }
 
   const classDescription = await db.itemModifier.findOne({
@@ -94,6 +96,8 @@ export const updateItemModifier = async (
     maxVitality: req.body.maxVitality,
     minEnergy: req.body.minEnergy,
     maxEnergy: req.body.maxEnergy,
+    minEd: req.body.minEd,
+    maxEd: req.body.maxEd,
   });
   res.locals.name = 'updateClassDescription';
   res.locals.result = await db.itemModifier.findOne({
@@ -102,8 +106,8 @@ export const updateItemModifier = async (
     },
     include: [
       {
-        model: db.itemModifier,
-        as: 'itemModifier',
+        model: db.itemQuality,
+        as: 'itemQuality',
       },
     ],
   });

@@ -901,7 +901,7 @@ export const discordRouter = async (
     //  });
     // }
 
-    if (filteredMessageDiscord[1] && filteredMessageDiscord[1].toLowerCase() === 'showcasemagicitem') {
+    if (filteredMessageDiscord[1] && filteredMessageDiscord[1].toLowerCase() === 'generatemagicitem') {
       await queue.add(async () => {
         const task = await discordShowCaseMagicItem(
           discordClient,
