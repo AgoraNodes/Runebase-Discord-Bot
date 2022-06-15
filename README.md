@@ -85,6 +85,12 @@ generte empty seed file
 npx sequelize-cli seed:generate --name demo-jackpot
 ````
 
+revert seed file
+
+````
+npx sequelize db:seed:undo --seed 20220614202121-item_families_armor.js
+````
+
 ## Runebase Node Config
 ```
 rpcuser=xx
