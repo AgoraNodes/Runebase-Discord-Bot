@@ -50,6 +50,18 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.SMALLINT,
       allowNull: true,
     },
+    block: {
+      type: DataTypes.SMALLINT,
+      allowNull: true,
+    },
+    maxStack: {
+      type: DataTypes.SMALLINT,
+      allowNull: true,
+    },
+    slots: {
+      type: DataTypes.SMALLINT,
+      allowNull: true,
+    },
   };
 
   // 2: The model options.
