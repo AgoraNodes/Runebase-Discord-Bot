@@ -30,6 +30,14 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.SMALLINT,
       allowNull: true,
     },
+    minThrowDamage: {
+      type: DataTypes.SMALLINT,
+      allowNull: true,
+    },
+    maxThrowDamage: {
+      type: DataTypes.SMALLINT,
+      allowNull: true,
+    },
     strength: {
       type: DataTypes.SMALLINT,
       allowNull: true,

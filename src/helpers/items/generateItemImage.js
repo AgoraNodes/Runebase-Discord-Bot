@@ -32,9 +32,11 @@ export const generateItemImage = async (
     || newItem.itemBase.itemFamily.itemType.name === "Polearms"
   ));
   const isShield = newItem.itemBase.itemFamily.itemType.name === "Shields";
+  const isBow = newItem.itemBase.itemFamily.itemType.name === "Bows";
   const extraWeaponsHeight = isWeapon ? 25 : 0;
   const extraShieldBlockHeight = isShield ? 25 : 0;
-  const totalExtraHeight = levelReqHeight + strengthReqHeight + dexterityReqHeight + shieldAndBootsDamageHeight + extraWeaponsHeight + extraShieldBlockHeight;
+  const minusBowHeight = isBow ? -25 : 0;
+  const totalExtraHeight = levelReqHeight + strengthReqHeight + dexterityReqHeight + shieldAndBootsDamageHeight + extraWeaponsHeight + extraShieldBlockHeight + minusBowHeight;
 
   await registerFont(path.join(__dirname, '../../assets/fonts/', 'Heart_warming.otf'), { family: 'HeartWarming' });
   const itemImage = await loadImage(path.join(__dirname, `../../assets/images/items/${newItem.itemBase.itemFamily.itemType.name}/${newItem.itemBase.itemFamily.name}`, `${newItem.itemBase.name}.png`));
@@ -175,31 +177,33 @@ export const generateItemImage = async (
   }
 
   // item durability
-  ctx.strokeText(
-    `Durability: ${newItem.durability} of ${newItem.itemBase.durability}`,
-    100,
-    (itemImage.height) + 70 + shieldAndBootsDamageHeight + extraWeaponsHeight + extraShieldBlockHeight,
-    200,
-  );
-  ctx.fillText(
-    `Durability: ${newItem.durability} of ${newItem.itemBase.durability}`,
-    100,
-    (itemImage.height) + 70 + shieldAndBootsDamageHeight + extraWeaponsHeight + extraShieldBlockHeight,
-    200,
-  );
+  if (!isBow) {
+    ctx.strokeText(
+      `Durability: ${newItem.durability} of ${newItem.itemBase.durability}`,
+      100,
+      (itemImage.height) + 70 + shieldAndBootsDamageHeight + extraWeaponsHeight + extraShieldBlockHeight,
+      200,
+    );
+    ctx.fillText(
+      `Durability: ${newItem.durability} of ${newItem.itemBase.durability}`,
+      100,
+      (itemImage.height) + 70 + shieldAndBootsDamageHeight + extraWeaponsHeight + extraShieldBlockHeight,
+      200,
+    );
+  }
 
   // Level Req
   if (newItem.levelReq) {
     ctx.strokeText(
       `Lvl Requirement: ${newItem.levelReq}`,
       100,
-      (itemImage.height) + 95 + shieldAndBootsDamageHeight + extraWeaponsHeight + extraShieldBlockHeight,
+      (itemImage.height) + 95 + shieldAndBootsDamageHeight + extraWeaponsHeight + extraShieldBlockHeight + minusBowHeight,
       200,
     );
     ctx.fillText(
       `Lvl Requirement: ${newItem.levelReq}`,
       100,
-      (itemImage.height) + 95 + shieldAndBootsDamageHeight + extraWeaponsHeight + extraShieldBlockHeight,
+      (itemImage.height) + 95 + shieldAndBootsDamageHeight + extraWeaponsHeight + extraShieldBlockHeight + minusBowHeight,
       200,
     );
   }
@@ -209,13 +213,13 @@ export const generateItemImage = async (
     ctx.strokeText(
       `Strength Requirement: ${newItem.itemBase.strengthReq}`,
       100,
-      (itemImage.height) + 95 + (levelReqHeight) + shieldAndBootsDamageHeight + extraWeaponsHeight + extraShieldBlockHeight,
+      (itemImage.height) + 95 + (levelReqHeight) + shieldAndBootsDamageHeight + extraWeaponsHeight + extraShieldBlockHeight + minusBowHeight,
       200,
     );
     ctx.fillText(
       `Strength Requirement: ${newItem.itemBase.strengthReq}`,
       100,
-      (itemImage.height) + 95 + (levelReqHeight) + shieldAndBootsDamageHeight + extraWeaponsHeight + extraShieldBlockHeight,
+      (itemImage.height) + 95 + (levelReqHeight) + shieldAndBootsDamageHeight + extraWeaponsHeight + extraShieldBlockHeight + minusBowHeight,
       200,
     );
   }
@@ -225,13 +229,13 @@ export const generateItemImage = async (
     ctx.strokeText(
       `Dexterity Requirement: ${newItem.itemBase.dexterityReq}`,
       100,
-      (itemImage.height) + 95 + (levelReqHeight) + (strengthReqHeight) + shieldAndBootsDamageHeight + extraWeaponsHeight + extraShieldBlockHeight,
+      (itemImage.height) + 95 + (levelReqHeight) + (strengthReqHeight) + shieldAndBootsDamageHeight + extraWeaponsHeight + extraShieldBlockHeight + minusBowHeight,
       200,
     );
     ctx.fillText(
       `Dexterity Requirement: ${newItem.itemBase.dexterityReq}`,
       100,
-      (itemImage.height) + 95 + (levelReqHeight) + (strengthReqHeight) + shieldAndBootsDamageHeight + extraWeaponsHeight + extraShieldBlockHeight,
+      (itemImage.height) + 95 + (levelReqHeight) + (strengthReqHeight) + shieldAndBootsDamageHeight + extraWeaponsHeight + extraShieldBlockHeight + minusBowHeight,
       200,
     );
   }
