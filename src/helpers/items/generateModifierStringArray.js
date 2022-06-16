@@ -14,25 +14,16 @@ export const generateModifierStringArray = (newItem) => {
       modifierStringArray.push(`+${newItem[key]} to ${key}`);
     }
     if (
-      (key === 'ed')
+      (key === 'eDefense')
       && newItem[key] !== null
     ) {
-      if (
-        newItem.itemBase.itemFamily.itemType.name === 'Armors'
-        || newItem.itemBase.itemFamily.itemType.name === 'Helms'
-        || newItem.itemBase.itemFamily.itemType.name === 'Boots'
-        || newItem.itemBase.itemFamily.itemType.name === 'Gloves'
-        || newItem.itemBase.itemFamily.itemType.name === 'Shields'
-        || newItem.itemBase.itemFamily.itemType.name === 'Belts'
-        || newItem.itemBase.itemFamily.itemType.name === 'Barbarian Helms'
-        || newItem.itemBase.itemFamily.itemType.name === 'Druid Pelts'
-        || newItem.itemBase.itemFamily.itemType.name === 'Paladin Shields'
-        || newItem.itemBase.itemFamily.itemType.name === 'Necromancer Shrunken Heads'
-      ) {
-        modifierStringArray.push(`+${newItem[key]}% Enhanced Defense`);
-      } else {
-        modifierStringArray.push(`+${newItem[key]}% Enhanced Damage`);
-      }
+      modifierStringArray.push(`+${newItem[key]}% Enhanced Defense`);
+    }
+    if (
+      (key === 'eDamage')
+      && newItem[key] !== null
+    ) {
+      modifierStringArray.push(`+${newItem[key]}% Enhanced Damage`);
     }
   });
   modifierStringArray.sort((a, b) => (b.endsWith('Defense')) - (a.endsWith('Defense')));

@@ -35,23 +35,25 @@ export const addItemModifier = async (
   }
 
   const newItemModifier = await db.itemModifier.create({
-    itemQualityId: req.body.itemQuality,
-    levelReq: req.body.levelReq,
-    levelMonster: req.body.levelMonster,
+    itemQualityId: Number(req.body.itemQuality),
+    levelReq: Number(req.body.levelReq),
+    levelMonster: Number(req.body.levelMonster),
     prefix: req.body.prefix,
     suffix: req.body.suffix,
-    minStrength: req.body.minStrength,
-    maxStrength: req.body.maxStrength,
-    minDexterity: req.body.minDexterity,
-    maxDexterity: req.body.maxDexterity,
-    minVitality: req.body.minVitality,
-    maxVitality: req.body.maxVitality,
-    minEnergy: req.body.minEnergy,
-    maxEnergy: req.body.maxEnergy,
-    minEd: req.body.minEd,
-    maxEd: req.body.maxEd,
+    minStrength: Number(req.body.minStrength),
+    maxStrength: Number(req.body.maxStrength),
+    minDexterity: Number(req.body.minDexterity),
+    maxDexterity: Number(req.body.maxDexterity),
+    minVitality: Number(req.body.minVitality),
+    maxVitality: Number(req.body.maxVitality),
+    minEnergy: Number(req.body.minEnergy),
+    maxEnergy: Number(req.body.maxEnergy),
+    minEdefense: Number(req.body.minEdefense),
+    maxEdefense: Number(req.body.maxEdefense),
+    minEdamage: Number(req.body.minEdamage),
+    maxEdamage: Number(req.body.maxEdamage),
   });
-  res.locals.name = 'addItemFamily';
+  res.locals.name = 'addItemModifier';
   res.locals.result = await db.itemModifier.findOne({
     where: {
       id: newItemModifier.id,
@@ -77,29 +79,32 @@ export const updateItemModifier = async (
     throw new Error("itemQuality is required");
   }
 
-  const classDescription = await db.itemModifier.findOne({
+  const itemModifier = await db.itemModifier.findOne({
     where: {
       id: req.body.id,
     },
   });
-  const updatedRank = await classDescription.update({
-    itemQualityId: req.body.itemQuality,
-    levelReq: req.body.levelReq,
-    levelMonster: req.body.levelMonster,
+
+  const updatedRank = await itemModifier.update({
+    itemQualityId: Number(req.body.itemQuality),
+    levelReq: Number(req.body.levelReq),
+    levelMonster: Number(req.body.levelMonster),
     prefix: req.body.prefix,
     suffix: req.body.suffix,
-    minStrength: req.body.minStrength,
-    maxStrength: req.body.maxStrength,
-    minDexterity: req.body.minDexterity,
-    maxDexterity: req.body.maxDexterity,
-    minVitality: req.body.minVitality,
-    maxVitality: req.body.maxVitality,
-    minEnergy: req.body.minEnergy,
-    maxEnergy: req.body.maxEnergy,
-    minEd: req.body.minEd,
-    maxEd: req.body.maxEd,
+    minStrength: Number(req.body.minStrength),
+    maxStrength: Number(req.body.maxStrength),
+    minDexterity: Number(req.body.minDexterity),
+    maxDexterity: Number(req.body.maxDexterity),
+    minVitality: Number(req.body.minVitality),
+    maxVitality: Number(req.body.maxVitality),
+    minEnergy: Number(req.body.minEnergy),
+    maxEnergy: Number(req.body.maxEnergy),
+    minEdefense: Number(req.body.minEdefense),
+    maxEdefense: Number(req.body.maxEdefense),
+    minEdamage: Number(req.body.minEdamage),
+    maxEdamage: Number(req.body.maxEdamage),
   });
-  res.locals.name = 'updateClassDescription';
+  res.locals.name = 'updateItemModifier';
   res.locals.result = await db.itemModifier.findOne({
     where: {
       id: updatedRank.id,
@@ -119,13 +124,13 @@ export const removeItemModifier = async (
   res,
   next,
 ) => {
-  const classDescription = await db.itemModifier.findOne({
+  const itemModifier = await db.itemModifier.findOne({
     where: {
       id: req.body.id,
     },
   });
-  res.locals.name = 'removeClassDescription';
-  res.locals.result = classDescription;
-  classDescription.destroy();
+  res.locals.name = 'removeItemModifier';
+  res.locals.result = itemModifier;
+  itemModifier.destroy();
   next();
 };

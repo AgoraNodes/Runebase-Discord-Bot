@@ -2,7 +2,15 @@ module.exports = {
   up: async (queryInterface, DataTypes) => {
     await queryInterface.addColumn(
       'item',
-      'ed',
+      'eDefense',
+      {
+        type: DataTypes.SMALLINT,
+        allowNull: true,
+      },
+    );
+    await queryInterface.addColumn(
+      'item',
+      'eDamage',
       {
         type: DataTypes.SMALLINT,
         allowNull: true,
@@ -10,7 +18,7 @@ module.exports = {
     );
     await queryInterface.addColumn(
       'itemModifier',
-      'minEd',
+      'minEdefense',
       {
         type: DataTypes.SMALLINT,
         allowNull: true,
@@ -18,7 +26,23 @@ module.exports = {
     );
     await queryInterface.addColumn(
       'itemModifier',
-      'maxEd',
+      'maxEdefense',
+      {
+        type: DataTypes.SMALLINT,
+        allowNull: true,
+      },
+    );
+    await queryInterface.addColumn(
+      'itemModifier',
+      'minEdamage',
+      {
+        type: DataTypes.SMALLINT,
+        allowNull: true,
+      },
+    );
+    await queryInterface.addColumn(
+      'itemModifier',
+      'maxEdamage',
       {
         type: DataTypes.SMALLINT,
         allowNull: true,
@@ -28,15 +52,27 @@ module.exports = {
   down: async (queryInterface, DataTypes) => {
     await queryInterface.removeColumn(
       'item',
-      'ed',
+      'eDefense',
+    );
+    await queryInterface.removeColumn(
+      'item',
+      'eDamage',
     );
     await queryInterface.removeColumn(
       'itemModifier',
-      'minEd',
+      'minEdefense',
     );
     await queryInterface.removeColumn(
       'itemModifier',
-      'maxEd',
+      'maxEdefense',
+    );
+    await queryInterface.removeColumn(
+      'itemModifier',
+      'minEdamage',
+    );
+    await queryInterface.removeColumn(
+      'itemModifier',
+      'maxEdamage',
     );
   },
 };

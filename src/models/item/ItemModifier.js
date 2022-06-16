@@ -54,11 +54,19 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.SMALLINT,
       allowNull: true,
     },
-    minEd: {
+    minEdefense: {
       type: DataTypes.SMALLINT,
       allowNull: true,
     },
-    maxEd: {
+    maxEdefense: {
+      type: DataTypes.SMALLINT,
+      allowNull: true,
+    },
+    minEdamage: {
+      type: DataTypes.SMALLINT,
+      allowNull: true,
+    },
+    maxEdamage: {
       type: DataTypes.SMALLINT,
       allowNull: true,
     },

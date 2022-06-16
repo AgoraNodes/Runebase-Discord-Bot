@@ -13,12 +13,34 @@ export const generateItemImage = async (
   console.log('modifierString');
   console.log(modifierStringArray);
   const levelReqHeight = newItem.levelReq ? 25 : 0;
+  const strengthReqHeight = newItem.itemBase.strengthReq ? 25 : 0;
+  const dexterityReqHeight = newItem.itemBase.dexterityReq ? 25 : 0;
+  const shieldAndBootsDamageHeight = (
+    (
+      newItem.itemBase.itemFamily.itemType.name === "Shields"
+      || newItem.itemBase.itemFamily.itemType.name === "Boots"
+    )
+    && newItem.minDamage
+    && newItem.maxDamage) ? 25 : 0;
+  const isWeapon = !!((
+    newItem.itemBase.itemFamily.itemType.name === "Axes"
+    || newItem.itemBase.itemFamily.itemType.name === "Bows"
+    || newItem.itemBase.itemFamily.itemType.name === "Crossbows"
+    || newItem.itemBase.itemFamily.itemType.name === "Daggers"
+    || newItem.itemBase.itemFamily.itemType.name === "Javelins"
+    || newItem.itemBase.itemFamily.itemType.name === "Maces"
+    || newItem.itemBase.itemFamily.itemType.name === "Polearms"
+  ));
+  const isShield = newItem.itemBase.itemFamily.itemType.name === "Shields";
+  const extraWeaponsHeight = isWeapon ? 25 : 0;
+  const extraShieldBlockHeight = isShield ? 25 : 0;
+  const totalExtraHeight = levelReqHeight + strengthReqHeight + dexterityReqHeight + shieldAndBootsDamageHeight + extraWeaponsHeight + extraShieldBlockHeight;
 
   await registerFont(path.join(__dirname, '../../assets/fonts/', 'Heart_warming.otf'), { family: 'HeartWarming' });
   const itemImage = await loadImage(path.join(__dirname, `../../assets/images/items/${newItem.itemBase.itemFamily.itemType.name}/${newItem.itemBase.itemFamily.name}`, `${newItem.itemBase.name}.png`));
   const canvas = createCanvas(
     200,
-    (itemImage.height) + 95 + (modifierStringArray.length * 25) + levelReqHeight,
+    (itemImage.height) + 95 + (modifierStringArray.length * 25) + totalExtraHeight,
   );
   const ctx = canvas.getContext('2d');
 
@@ -58,53 +80,161 @@ export const generateItemImage = async (
   ctx.strokeStyle = 'black';
   ctx.fillStyle = 'white';
   ctx.font = 'bold 15px "HeartWarming"';
-  // Level Req
 
-  if (newItem.levelReq) {
+  // item defense
+  if (newItem.defense) {
+    const realDefenseValue = Math.round((newItem.defense * (1 + (newItem.eDefense ? newItem.eDefense / 100 : 0))));
     ctx.strokeText(
-      `Lvl Requirement: ${newItem.levelReq}`,
+      `Defense: ${realDefenseValue}${newItem.eDefense ? ` (upped from ${newItem.defense})` : ``}`,
+      // `Defense: ${Math.round((newItem.defense * (1 + (newItem.ed / 100))))}`,
       100,
       (itemImage.height) + 45,
       200,
     );
     ctx.fillText(
-      `Lvl Requirement: ${newItem.levelReq}`,
+      `Defense: ${realDefenseValue}${newItem.eDefense ? ` (upped from ${newItem.defense})` : ``}`,
+      // `Defense: ${Math.round((newItem.defense * (1 + (newItem.ed / 100))))}`,
       100,
       (itemImage.height) + 45,
       200,
     );
   }
 
-  // item defense
+  if (isWeapon) {
+    if (newItem.itemBase.itemFamily.twoHanded) {
+      // item durability
+      ctx.strokeText(
+        `Two-Handed`,
+        100,
+        (itemImage.height) + 45,
+        200,
+      );
+      ctx.fillText(
+        `Two-Handed`,
+        100,
+        (itemImage.height) + 45,
+        200,
+      );
+    } else {
+      // item durability
+      ctx.strokeText(
+        `One-Handed`,
+        100,
+        (itemImage.height) + 45,
+        200,
+      );
+      ctx.fillText(
+        `One-Handed`,
+        100,
+        (itemImage.height) + 45,
+        200,
+      );
+    }
+  }
 
-  ctx.strokeText(
-    `Defense: ${Math.round((newItem.defense * (1 + (newItem.ed / 100))))} (upped from ${newItem.defense} / ${newItem.ed}% )`,
-    // `Defense: ${Math.round((newItem.defense * (1 + (newItem.ed / 100))))}`,
-    100,
-    (itemImage.height) + 45 + levelReqHeight,
-    200,
-  );
-  ctx.fillText(
-    `Defense: ${Math.round((newItem.defense * (1 + (newItem.ed / 100))))} (upped from ${newItem.defense} / ${newItem.ed}% )`,
-    // `Defense: ${Math.round((newItem.defense * (1 + (newItem.ed / 100))))}`,
-    100,
-    (itemImage.height) + 45 + levelReqHeight,
-    200,
-  );
+  if (isShield) {
+    ctx.strokeText(
+      `Chance to Block: ${newItem.itemBase.block}%`,
+      100,
+      (itemImage.height) + 70,
+      200,
+    );
+    ctx.fillText(
+      `Chance to Block: ${newItem.itemBase.block}%`,
+      100,
+      (itemImage.height) + 70,
+      200,
+    );
+  }
+
+  // item attack damage
+  if (newItem.minDamage && newItem.maxDamage) {
+    let extraDamageString = '';
+    if (newItem.itemBase.itemFamily.itemType.name === "Shields") {
+      extraDamageString = 'Smite ';
+    }
+    if (newItem.itemBase.itemFamily.itemType.name === "Boots") {
+      extraDamageString = 'Kick ';
+    }
+    const realMinDamageValue = Math.round((newItem.minDamage * (1 + (newItem.eDamage ? newItem.eDamage / 100 : 0))));
+    const realMaxDamageValue = Math.round((newItem.maxDamage * (1 + (newItem.eDamage ? newItem.eDamage / 100 : 0))));
+    ctx.strokeText(
+      `${extraDamageString}Damage: ${realMinDamageValue} - ${realMaxDamageValue}${newItem.eDamage ? ` (upped from ${newItem.minDamage} - ${newItem.maxDamage})` : ``}`,
+      // `Defense: ${Math.round((newItem.defense * (1 + (newItem.ed / 100))))}`,
+      100,
+      (itemImage.height) + 45 + shieldAndBootsDamageHeight + extraWeaponsHeight + extraShieldBlockHeight,
+      200,
+    );
+    ctx.fillText(
+      `${extraDamageString}Damage: ${realMinDamageValue} - ${realMaxDamageValue}${newItem.eDamage ? ` (upped from ${newItem.minDamage} - ${newItem.maxDamage})` : ``}`,
+      // `Defense: ${Math.round((newItem.defense * (1 + (newItem.ed / 100))))}`,
+      100,
+      (itemImage.height) + 45 + shieldAndBootsDamageHeight + extraWeaponsHeight + extraShieldBlockHeight,
+      200,
+    );
+  }
 
   // item durability
   ctx.strokeText(
     `Durability: ${newItem.durability} of ${newItem.itemBase.durability}`,
     100,
-    (itemImage.height) + 70 + levelReqHeight,
+    (itemImage.height) + 70 + shieldAndBootsDamageHeight + extraWeaponsHeight + extraShieldBlockHeight,
     200,
   );
   ctx.fillText(
     `Durability: ${newItem.durability} of ${newItem.itemBase.durability}`,
     100,
-    (itemImage.height) + 70 + levelReqHeight,
+    (itemImage.height) + 70 + shieldAndBootsDamageHeight + extraWeaponsHeight + extraShieldBlockHeight,
     200,
   );
+
+  // Level Req
+  if (newItem.levelReq) {
+    ctx.strokeText(
+      `Lvl Requirement: ${newItem.levelReq}`,
+      100,
+      (itemImage.height) + 95 + shieldAndBootsDamageHeight + extraWeaponsHeight + extraShieldBlockHeight,
+      200,
+    );
+    ctx.fillText(
+      `Lvl Requirement: ${newItem.levelReq}`,
+      100,
+      (itemImage.height) + 95 + shieldAndBootsDamageHeight + extraWeaponsHeight + extraShieldBlockHeight,
+      200,
+    );
+  }
+
+  // Strength Req
+  if (newItem.itemBase.strengthReq) {
+    ctx.strokeText(
+      `Strength Requirement: ${newItem.itemBase.strengthReq}`,
+      100,
+      (itemImage.height) + 95 + (levelReqHeight) + shieldAndBootsDamageHeight + extraWeaponsHeight + extraShieldBlockHeight,
+      200,
+    );
+    ctx.fillText(
+      `Strength Requirement: ${newItem.itemBase.strengthReq}`,
+      100,
+      (itemImage.height) + 95 + (levelReqHeight) + shieldAndBootsDamageHeight + extraWeaponsHeight + extraShieldBlockHeight,
+      200,
+    );
+  }
+
+  // Strength Req
+  if (newItem.itemBase.dexterityReq) {
+    ctx.strokeText(
+      `Dexterity Requirement: ${newItem.itemBase.dexterityReq}`,
+      100,
+      (itemImage.height) + 95 + (levelReqHeight) + (strengthReqHeight) + shieldAndBootsDamageHeight + extraWeaponsHeight + extraShieldBlockHeight,
+      200,
+    );
+    ctx.fillText(
+      `Dexterity Requirement: ${newItem.itemBase.dexterityReq}`,
+      100,
+      (itemImage.height) + 95 + (levelReqHeight) + (strengthReqHeight) + shieldAndBootsDamageHeight + extraWeaponsHeight + extraShieldBlockHeight,
+      200,
+    );
+  }
 
   // item modifiers
   ctx.font = 'bold 15px "HeartWarming"';
@@ -115,13 +245,13 @@ export const generateItemImage = async (
     ctx.strokeText(
       modifierStringArray[i],
       100,
-      (itemImage.height) + 95 + (i * 25) + levelReqHeight,
+      (itemImage.height) + 95 + (i * 25) + totalExtraHeight,
       200,
     );
     ctx.fillText(
       modifierStringArray[i],
       100,
-      (itemImage.height) + 95 + (i * 25) + levelReqHeight,
+      (itemImage.height) + 95 + (i * 25) + totalExtraHeight,
       200,
     );
   }

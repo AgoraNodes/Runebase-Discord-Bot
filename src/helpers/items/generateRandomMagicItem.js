@@ -14,6 +14,8 @@ export const generateRandomMagicItem = async () => {
     order: [
       [Sequelize.literal('RAND()')],
     ],
+    // where: { '$itemFamily.itemType.name$': 'Shields' },
+    // where: { '$itemFamily.name$': 'War Axe' },
     include: [
       {
         model: db.itemFamily,
@@ -27,6 +29,9 @@ export const generateRandomMagicItem = async () => {
       },
     ],
   });
+  console.log('after random Base item');
+
+  console.log(randomBaseItem);
 
   const itemQualityRecord = await db.itemQuality.findOne({
     where: {
@@ -86,7 +91,8 @@ export const generateRandomMagicItem = async () => {
   let addDexterity = 0;
   let addVitality = 0;
   let addEnergy = 0;
-  let addEd = 0;
+  let addEdefense = 0;
+  let addEdamage = 0;
 
   // Calculate level requirement
   if (randomBaseItem.levelReq) {
@@ -173,19 +179,35 @@ export const generateRandomMagicItem = async () => {
   }
 
   // Calculate ED (enhanced damage/defense)
-  if (prefixModifier && prefixModifier.minEd && prefixModifier.maxEd) {
-    const rndEd = randomIntFromInterval(
-      prefixModifier.minEd,
-      prefixModifier.maxEd,
+  if (prefixModifier && prefixModifier.minEdefense && prefixModifier.maxEdefense) {
+    const rndEdefense = randomIntFromInterval(
+      prefixModifier.minEdefense,
+      prefixModifier.maxEdefense,
     );
-    addEd += rndEd;
+    addEdefense += rndEdefense;
   }
-  if (suffixModifier && suffixModifier.minEd && suffixModifier.maxEd) {
-    const rndEd = randomIntFromInterval(
-      suffixModifier.minEd,
-      suffixModifier.maxEd,
+  if (suffixModifier && suffixModifier.minEdefense && suffixModifier.maxEdefense) {
+    const rndEdefense = randomIntFromInterval(
+      suffixModifier.minEdefense,
+      suffixModifier.maxEdefense,
     );
-    addEd += rndEd;
+    addEdefense += rndEdefense;
+  }
+
+  // Calculate ED (enhanced damage/defense)
+  if (prefixModifier && prefixModifier.minEdamage && prefixModifier.maxEdamage) {
+    const rndEdamage = randomIntFromInterval(
+      prefixModifier.minEdamage,
+      prefixModifier.maxEdamage,
+    );
+    addEdamage += rndEdamage;
+  }
+  if (suffixModifier && suffixModifier.minEdamage && suffixModifier.maxEdamage) {
+    const rndEdamage = randomIntFromInterval(
+      suffixModifier.minEdamage,
+      suffixModifier.maxEdamage,
+    );
+    addEdamage += rndEdamage;
   }
 
   const itemName = `${(prefixModifier && prefixModifier.prefix ? `${prefixModifier.prefix} ` : '')}${randomBaseItem.name}${(suffixModifier && suffixModifier.suffix ? ` ${suffixModifier.suffix}` : '')}`;
@@ -206,8 +228,13 @@ export const generateRandomMagicItem = async () => {
       }
     ),
     ...(
-      addEd !== 0 && {
-        ed: addEd,
+      addEdefense !== 0 && {
+        eDefense: addEdefense,
+      }
+    ),
+    ...(
+      addEdamage !== 0 && {
+        eDamage: addEdamage,
       }
     ),
     ...(

@@ -46,7 +46,11 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.SMALLINT,
       allowNull: true,
     },
-    ed: {
+    eDefense: {
+      type: DataTypes.SMALLINT,
+      allowNull: true,
+    },
+    eDamage: {
       type: DataTypes.SMALLINT,
       allowNull: true,
     },
