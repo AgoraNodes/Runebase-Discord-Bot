@@ -1,7 +1,7 @@
 export const generateModifierStringArray = (newItem) => {
-  console.log(newItem);
-  console.log(newItem.itemBase);
-  console.log(newItem.itemBase.itemFamily.itemType);
+  // console.log(newItem);
+  // console.log(newItem.itemBase);
+  // console.log(newItem.itemBase.itemFamily.itemType);
   const modifierStringArray = [];
   Object.keys(newItem).forEach((key) => {
     if (

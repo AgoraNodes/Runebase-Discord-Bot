@@ -22,6 +22,46 @@ module.exports = (sequelize, DataTypes) => {
       as: 'equipment',
       foreignKey: 'equipmentId',
     });
+    EquipmentModel.belongsTo(model.item, {
+      as: 'helm',
+      foreignKey: 'helmId',
+    });
+    EquipmentModel.belongsTo(model.item, {
+      as: 'amulet',
+      foreignKey: 'amuletId',
+    });
+    EquipmentModel.belongsTo(model.item, {
+      as: 'mainHand',
+      foreignKey: 'mainHandId',
+    });
+    EquipmentModel.belongsTo(model.item, {
+      as: 'offHand',
+      foreignKey: 'offHandId',
+    });
+    EquipmentModel.belongsTo(model.item, {
+      as: 'armor',
+      foreignKey: 'armorId',
+    });
+    EquipmentModel.belongsTo(model.item, {
+      as: 'gloves',
+      foreignKey: 'glovesId',
+    });
+    EquipmentModel.belongsTo(model.item, {
+      as: 'belt',
+      foreignKey: 'beltId',
+    });
+    EquipmentModel.belongsTo(model.item, {
+      as: 'boots',
+      foreignKey: 'bootsId',
+    });
+    EquipmentModel.belongsTo(model.item, {
+      as: 'ringSlotOne',
+      foreignKey: 'ringSlotOneId',
+    });
+    EquipmentModel.belongsTo(model.item, {
+      as: 'ringSlotTwo',
+      foreignKey: 'ringSlotTwoId',
+    });
   };
 
   return EquipmentModel;

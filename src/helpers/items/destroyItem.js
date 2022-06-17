@@ -17,12 +17,12 @@ export const destroyItem = async (
   queue,
 ) => {
   const activity = [];
-  let cannotSpend;
+  let findItemToDestroy;
   await queue.add(async () => {
     await db.sequelize.transaction({
       isolationLevel: Transaction.ISOLATION_LEVELS.SERIALIZABLE,
     }, async (t) => {
-      const findItemToDestroy = await db.item.findOne({
+      findItemToDestroy = await db.item.findOne({
         where: {
           id: itemId,
           inventoryId: userCurrentCharacter.inventoryId,
@@ -148,6 +148,6 @@ export const destroyItem = async (
 
   return [
     myUpdatedUser,
-    cannotSpend,
+    findItemToDestroy,
   ];
 };

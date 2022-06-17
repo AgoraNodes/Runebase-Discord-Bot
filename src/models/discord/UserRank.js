@@ -17,6 +17,9 @@ module.exports = (sequelize, DataTypes) => {
   const UserRankModel = sequelize.define('UserRank', modelDefinition, modelOptions);
 
   UserRankModel.associate = (model) => {
+    UserRankModel.belongsTo(model.user, {
+      foreignKey: 'userId',
+    });
   };
 
   return UserRankModel;

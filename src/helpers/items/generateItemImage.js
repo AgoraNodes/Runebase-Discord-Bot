@@ -56,9 +56,9 @@ export const generateItemImage = async (
   );
   const ctx = canvas.getContext('2d');
 
-  console.log(newItem.itemBase.name);
-  console.log(newItem.itemBase.itemFamily.name);
-  console.log(newItem.itemBase.itemFamily.itemType.name);
+  // console.log(newItem.itemBase.name);
+  // console.log(newItem.itemBase.itemFamily.name);
+  // console.log(newItem.itemBase.itemFamily.itemType.name);
 
   ctx.lineWidth = 1;
   ctx.fillStyle = "#3F3F3F";
@@ -374,7 +374,7 @@ export const generateItemImage = async (
       200,
     );
   }
-  console.log('before final Image');
+
   const finalImage = await canvas.toBuffer();
   return finalImage;
 };

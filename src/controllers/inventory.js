@@ -27,6 +27,7 @@ import { generateItemImage } from "../helpers/items/generateItemImage";
 import { generateStatsImage } from "../helpers/stats/generateStatsImage";
 import { generateEquipmentImage } from '../helpers/equipment/generateEquipmentImage';
 import { destroyItem } from '../helpers/items/destroyItem';
+import { equipItem } from '../helpers/equipment/equipItem';
 
 export const discordShowInventory = async (
   discordClient,
@@ -52,7 +53,6 @@ export const discordShowInventory = async (
   if (!user) return;
 
   const activity = [];
-  let CurrentClassSelectionId;
   let userCurrentCharacter = await db.UserClass.findOne({
     where: {
       classId: user.currentClassId,
@@ -123,10 +123,8 @@ export const discordShowInventory = async (
     ],
   });
   if (!userCurrentCharacter) return;
-  console.log(userCurrentCharacter.inventory.items);
 
   let discordChannel;
-
   if (message.type && message.type === 'APPLICATION_COMMAND') {
     if (message.guildId) {
       discordChannel = await discordClient.channels.cache.get(message.channelId);
@@ -233,17 +231,26 @@ export const discordShowInventory = async (
     currentUserCharacter,
     itemDestroyed,
     itemEquiped,
+    cannotEquip,
+    cannotEquipReason,
     start,
   ) => {
     const current = currentUserCharacter.inventory.items.slice(start, start + 1);
 
-    console.log(current);
-    console.log(current[0]);
-    console.log('after current select');
+    // console.log(current);
+    // console.log(current[0]);
+    // console.log('after current select');
+
+    const extraDestroyedHeight = itemDestroyed ? 20 : 0;
+    const extraEquipedHeight = itemEquiped && !cannotEquip ? 20 : 0;
+    const extraCannotEquipedHeight = cannotEquip ? 60 : 0;
 
     const inventoryItemOneBuffer = await generateItemImage(current[0]);
     const inventoryItemOne = await loadImage(inventoryItemOneBuffer);
-    const canvas = createCanvas(inventoryItemOne.width, (inventoryItemOne.height + 20));
+    const canvas = createCanvas(
+      inventoryItemOne.width,
+      inventoryItemOne.height + 20 + extraDestroyedHeight + extraCannotEquipedHeight + extraEquipedHeight,
+    );
     const ctx = canvas.getContext('2d');
 
     // Inventory item one image
@@ -273,6 +280,65 @@ export const discordShowInventory = async (
       inventoryItemOne.height,
       inventoryItemOne.width,
     );
+
+    if (itemDestroyed) {
+      ctx.strokeText(
+        `destroyed ${itemDestroyed.name}`,
+        canvas.width / 2,
+        inventoryItemOne.height + 20,
+        inventoryItemOne.width,
+      );
+      ctx.fillText(
+        `destroyed ${itemDestroyed.name}`,
+        canvas.width / 2,
+        inventoryItemOne.height + 20,
+        inventoryItemOne.width,
+      );
+    }
+
+    if (cannotEquip) {
+      ctx.font = 'bold 15px "HeartWarming"';
+      ctx.fillStyle = "red";
+      ctx.lineWidth = 3;
+      ctx.strokeText(
+        `Unable to Equip`,
+        canvas.width / 2,
+        inventoryItemOne.height + 30,
+        inventoryItemOne.width,
+      );
+      ctx.fillText(
+        `Unable to Equip`,
+        canvas.width / 2,
+        inventoryItemOne.height + 30,
+        inventoryItemOne.width,
+      );
+      ctx.strokeText(
+        `${cannotEquipReason}`,
+        canvas.width / 2,
+        inventoryItemOne.height + 50,
+        inventoryItemOne.width,
+      );
+      ctx.fillText(
+        `${cannotEquipReason}`,
+        canvas.width / 2,
+        inventoryItemOne.height + 50,
+        inventoryItemOne.width,
+      );
+    }
+    if (itemEquiped && !cannotEquip) {
+      ctx.strokeText(
+        `equiped ${itemEquiped.name}`,
+        canvas.width / 2,
+        inventoryItemOne.height + 20,
+        inventoryItemOne.width,
+      );
+      ctx.fillText(
+        `equiped ${itemEquiped.name}`,
+        canvas.width / 2,
+        inventoryItemOne.height + 20,
+        inventoryItemOne.width,
+      );
+    }
 
     return new MessageAttachment(canvas.toBuffer(), 'inventory.png');
   };
@@ -322,7 +388,6 @@ export const discordShowInventory = async (
   ) => {
     const current = userCurrentCharacter.inventory.items.slice(start, start + 1);
     const equipItemId = `Compare:${current[0].id}`;
-    CurrentClassSelectionId = current[0].id;
     return new MessageButton({
       style: 'SECONDARY',
       label: `Compare ${current[0].name}`,
@@ -334,8 +399,6 @@ export const discordShowInventory = async (
   const generateEquipItemButton = async (start) => {
     const current = userCurrentCharacter.inventory.items.slice(start, start + 1);
     const equipItemId = `Equip:${current[0].id}`;
-    CurrentClassSelectionId = current[0].id;
-    console.log(current);
     return new MessageButton({
       style: 'SECONDARY',
       label: `Equip ${current[0].name}`,
@@ -347,8 +410,6 @@ export const discordShowInventory = async (
   const generateDestroyYesButton = async (start) => {
     const current = userCurrentCharacter.inventory.items.slice(start, start + 1);
     const destroyYesButtonId = `ConfirmDestroy:${current[0].id}`;
-    CurrentClassSelectionId = current[0].id;
-    console.log(current);
     return new MessageButton({
       style: 'SECONDARY',
       label: `Yes, destroy ${current[0].name}`,
@@ -358,7 +419,6 @@ export const discordShowInventory = async (
   };
   const generateDestroyNoButton = async (start) => {
     const destroyNoButtonId = `cancelDestroy`;
-    console.log('current cancelDestroy');
     return new MessageButton({
       style: 'SECONDARY',
       label: `No, go back`,
@@ -369,9 +429,7 @@ export const discordShowInventory = async (
 
   const generateDestroyItemButton = async (start) => {
     const current = userCurrentCharacter.inventory.items.slice(start, start + 1);
-    CurrentClassSelectionId = `Destroy:${current[0].id}`;
     const destroyItemId = `Destroy:${current[0].id}`;
-    console.log(current);
     return new MessageButton({
       style: 'SECONDARY',
       label: `Destroy ${current[0].name}`,
@@ -389,6 +447,8 @@ export const discordShowInventory = async (
             userCurrentCharacter,
             false,
             false,
+            false,
+            false,
             0,
           ),
         ] : [
@@ -396,31 +456,41 @@ export const discordShowInventory = async (
         ]
       ),
     ],
-    components: canFitOnOnePage
-      ? []
-      : [
-        ...(
-          userCurrentCharacter.inventory.items.length > 0 && [
-            new MessageActionRow({
-              components: [
-                await generateEquipItemButton(0),
-                await generateDestroyItemButton(0),
-              ],
-            }),
-            new MessageActionRow({
-              components: [
-                await generateEquipmentCompareButton(0),
-              ],
-            }),
-            new MessageActionRow({ components: [forwardButton] }),
-            new MessageActionRow({
-              components: [
-                await generateExitInventoryButton(),
-              ],
-            }),
-          ]
-        ),
-      ],
+    components: [
+      ...(
+        userCurrentCharacter.inventory.items.length > 0 && [
+          new MessageActionRow({
+            components: [
+              await generateEquipmentCompareButton(0),
+            ],
+          }),
+          new MessageActionRow({
+            components: [
+              await generateEquipItemButton(0),
+              await generateDestroyItemButton(0),
+            ],
+          }),
+        ]
+      ),
+      ...(
+        !canFitOnOnePage ? [
+          new MessageActionRow({
+            components: [
+              forwardButton,
+            ],
+          }),
+        ] : []
+      ),
+      ...(
+        userCurrentCharacter.inventory.items.length > 0 && [
+          new MessageActionRow({
+            components: [
+              await generateExitInventoryButton(),
+            ],
+          }),
+        ]
+      ),
+    ],
   });
 
   const collector = embedMessage.createMessageComponentCollector({
@@ -430,15 +500,17 @@ export const discordShowInventory = async (
   let currentIndex = 0;
   collector.on('collect', async (interaction) => {
     await interaction.deferUpdate();
-    let didDestroyItem = false;
-    const didEquipItem = false;
+    let destroyedItem = false;
+    let equipedItem = false;
+    let cannotEquip = false;
+    let cannotEquipReason = '';
     if (interaction.customId.startsWith('Compare:')) {
       let updatedUserCharacter;
       await queue.add(async () => {
         await db.sequelize.transaction({
           isolationLevel: Transaction.ISOLATION_LEVELS.SERIALIZABLE,
         }, async (t) => {
-          console.log('item equiped');
+          console.log('item compare');
         }).catch(async (err) => {
           console.log(err);
         });
@@ -459,28 +531,22 @@ export const discordShowInventory = async (
     }
 
     if (interaction.customId.startsWith('Equip:')) {
-      await queue.add(async () => {
-        await db.sequelize.transaction({
-          isolationLevel: Transaction.ISOLATION_LEVELS.SERIALIZABLE,
-        }, async (t) => {
-          console.log('item equiped');
-        }).catch(async (err) => {
-          console.log(err);
-        });
-        if (activity.length > 0) {
-          io.to('admin').emit('updateActivity', {
-            activity,
-          });
-        }
-      });
-
-      await interaction.update({
-        files: [
-          await generateClassPicked(currentIndex),
-        ],
-        components: [],
-      });
-      return;
+      const itemId = Number(interaction.customId.replace("Equip:", ""));
+      [
+        userCurrentCharacter,
+        equipedItem,
+        cannotEquip,
+        cannotEquipReason,
+      ] = await equipItem(
+        userCurrentCharacter,
+        itemId,
+        discordChannel,
+        io,
+        queue,
+      );
+      if (currentIndex + 1 > userCurrentCharacter.inventory.items.length) {
+        currentIndex -= 1;
+      }
     }
     if (interaction.customId.startsWith('Destroy:')) {
       await interaction.editReply({
@@ -515,6 +581,7 @@ export const discordShowInventory = async (
       const itemId = Number(interaction.customId.replace("ConfirmDestroy:", ""));
       [
         userCurrentCharacter,
+        destroyedItem,
       ] = await destroyItem(
         userCurrentCharacter,
         itemId,
@@ -522,7 +589,6 @@ export const discordShowInventory = async (
         io,
         queue,
       );
-      didDestroyItem = true;
       if (currentIndex + 1 > userCurrentCharacter.inventory.items.length) {
         currentIndex -= 1;
       }
@@ -550,8 +616,10 @@ export const discordShowInventory = async (
           userCurrentCharacter.inventory.items.length > 0 ? [
             await generateInventoryImage(
               userCurrentCharacter,
-              didDestroyItem,
-              didEquipItem,
+              destroyedItem,
+              equipedItem,
+              cannotEquip,
+              cannotEquipReason,
               currentIndex,
             ),
           ] : [
