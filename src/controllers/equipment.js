@@ -51,6 +51,7 @@ export const discordShowEquipment = async (
 
   const activity = [];
   let CurrentClassSelectionId;
+
   const userCurrentCharacter = await db.UserClass.findOne({
     where: {
       classId: user.currentClassId,
@@ -469,8 +470,45 @@ export const discordShowEquipment = async (
   await registerFont(path.join(__dirname, '../assets/fonts/', 'Heart_warming.otf'), { family: 'HeartWarming' });
 
   const generateInventoryImage = async (
-    start,
+    userCurrentCharacter,
   ) => {
+    let helmImage;
+    let amuletImage;
+    let mainHandImage;
+    let offHandImage;
+    let armorImage;
+    let glovesImage;
+    let ringSlotOneImage;
+    let ringSlotTwoImage;
+    let beltImage;
+    let bootsImage;
+    if (userCurrentCharacter.equipment.helm) {
+      helmImage = await loadImage(
+        path.join(
+          __dirname,
+          `../assets/images/items/${userCurrentCharacter.equipment.helm.itemBase.itemFamily.itemType.name}/${userCurrentCharacter.equipment.helm.itemBase.itemFamily.name}`,
+          `${userCurrentCharacter.equipment.helm.itemBase.name}.png`,
+        ),
+      );
+    }
+    if (userCurrentCharacter.equipment.armor) {
+      armorImage = await loadImage(
+        path.join(
+          __dirname,
+          `../assets/images/items/${userCurrentCharacter.equipment.armor.itemBase.itemFamily.itemType.name}/${userCurrentCharacter.equipment.armor.itemBase.itemFamily.name}`,
+          `${userCurrentCharacter.equipment.armor.itemBase.name}.png`,
+        ),
+      );
+    }
+    if (userCurrentCharacter.equipment.offHand) {
+      offHandImage = await loadImage(
+        path.join(
+          __dirname,
+          `../assets/images/items/${userCurrentCharacter.equipment.offHand.itemBase.itemFamily.itemType.name}/${userCurrentCharacter.equipment.offHand.itemBase.itemFamily.name}`,
+          `${userCurrentCharacter.equipment.offHand.itemBase.name}.png`,
+        ),
+      );
+    }
     const statsImageBuffer = await generateStatsImage(
       userCurrentCharacter,
       false,
@@ -503,6 +541,35 @@ export const discordShowEquipment = async (
       1300,
     );
 
+    if (userCurrentCharacter.equipment.helm) {
+      ctx.drawImage(
+        helmImage,
+        1570, // x position
+        15, // y position
+        helmImage.width * 4.5, // width
+        helmImage.height * 4.5, // height
+      );
+    }
+
+    if (userCurrentCharacter.equipment.armor) {
+      ctx.drawImage(
+        armorImage,
+        1590, // x position
+        380, // y position
+        helmImage.width * 4.2, // width
+        helmImage.height * 6, // height
+      );
+    }
+    if (userCurrentCharacter.equipment.offHand) {
+      ctx.drawImage(
+        offHandImage,
+        2110, // x position
+        375, // y position
+        helmImage.width * 4, // width
+        helmImage.height * 4, // height
+      );
+    }
+
     ctx.font = 'bold 30px "HeartWarming"';
     ctx.fillStyle = "#ccc";
     // ctx.textAlign = "center";
@@ -528,30 +595,76 @@ export const discordShowEquipment = async (
     return new MessageAttachment(canvas.toBuffer(), 'cancelSelection.png');
   };
 
+  const isRowOneActive = (
+    userCurrentCharacter.equipment.helm
+    || userCurrentCharacter.equipment.amulet
+    || userCurrentCharacter.equipment.mainHand
+    || userCurrentCharacter.equipment.offHand
+    || userCurrentCharacter.equipment.armor
+  );
+  const isRowTwoActive = (
+    userCurrentCharacter.equipment.gloves
+    || userCurrentCharacter.equipment.ringSlotOne
+    || userCurrentCharacter.equipment.ringSlotTwo
+    || userCurrentCharacter.equipment.belt
+    || userCurrentCharacter.equipment.boots
+  );
   const embedMessage = await discordChannel.send({
     files: [
-      await generateInventoryImage(0),
+      await generateInventoryImage(userCurrentCharacter),
     ],
-    components: [
-      new MessageActionRow({
-        components: [
-          helmButton,
-          amuletutton,
-          weaponSlotOneButton,
-          weaponSlotTwoButton,
-          armorButton,
-        ],
-      }),
-      new MessageActionRow({
-        components: [
-          glovesButton,
-          ringSlotOneButton,
-          ringSlotTwoButton,
-          beltButton,
-          bootsButton,
-        ],
-      }),
-    ],
+    components: isRowOneActive || isRowTwoActive ? [
+      ...(
+        isRowOneActive
+          ? [
+            new MessageActionRow({
+              components: [
+                ...(userCurrentCharacter.equipment.helm
+                  ? [helmButton] : []
+                ),
+                ...(userCurrentCharacter.equipment.amulet
+                  ? [amuletutton] : []
+                ),
+                ...(userCurrentCharacter.equipment.mainHand
+                  ? [weaponSlotOneButton] : []
+                ),
+                ...(userCurrentCharacter.equipment.offHand
+                  ? [weaponSlotTwoButton] : []
+                ),
+                ...(userCurrentCharacter.equipment.armor
+                  ? [armorButton] : []
+                ),
+              ],
+            }),
+          ]
+          : []
+      ),
+      ...(
+        isRowTwoActive
+          ? [
+            new MessageActionRow({
+              components: [
+                ...(userCurrentCharacter.equipment.gloves
+                  ? [glovesButton] : []
+                ),
+                ...(userCurrentCharacter.equipment.ringSlotOne
+                  ? [ringSlotOneButton] : []
+                ),
+                ...(userCurrentCharacter.equipment.ringSlotTwo
+                  ? [ringSlotTwoButton] : []
+                ),
+                ...(userCurrentCharacter.equipment.belt
+                  ? [beltButton] : []
+                ),
+                ...(userCurrentCharacter.equipment.boots
+                  ? [bootsButton] : []
+                ),
+              ],
+            }),
+          ]
+          : []
+      ),
+    ] : [],
   });
 
   const collector = embedMessage.createMessageComponentCollector({

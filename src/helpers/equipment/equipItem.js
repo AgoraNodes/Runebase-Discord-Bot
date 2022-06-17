@@ -7,6 +7,7 @@ import logger from "../logger";
 import { calcStrengthDexforReq } from "./calcStrengthDexforReq";
 import { equipHelm } from "./equip/Helm";
 import { equipArmor } from './equip/Armor';
+import { equipOffHand } from './equip/OffHand';
 
 export const equipItem = async (
   userCurrentCharacter,
@@ -172,6 +173,14 @@ export const equipItem = async (
       }
       if (findItemToEquip.itemBase.itemFamily.itemType.name === 'Armors') {
         await equipArmor(
+          userCurrentCharacter,
+          findUserCharacter.equipment,
+          findItemToEquip,
+          t,
+        );
+      }
+      if (findItemToEquip.itemBase.itemFamily.itemType.name === 'Shields') {
+        await equipOffHand(
           userCurrentCharacter,
           findUserCharacter.equipment,
           findItemToEquip,
