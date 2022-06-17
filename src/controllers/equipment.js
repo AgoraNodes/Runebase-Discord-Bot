@@ -26,7 +26,7 @@ import { generateItemImage } from "../helpers/items/generateItemImage";
 import { generateStatsImage } from "../helpers/stats/generateStatsImage";
 import { generateEquipmentImage } from '../helpers/equipment/generateEquipmentImage';
 
-export const discordShowInventory = async (
+export const discordShowEquipment = async (
   discordClient,
   message,
   setting,
@@ -85,15 +85,244 @@ export const discordShowInventory = async (
       {
         model: db.equipment,
         as: 'equipment',
-      },
-      {
-        model: db.inventory,
-        as: 'inventory',
         include: [
           {
             model: db.item,
-            as: 'items',
-            required: false,
+            as: 'helm',
+            include: [
+              {
+                model: db.itemBase,
+                as: 'itemBase',
+                include: [
+                  {
+                    model: db.itemFamily,
+                    as: 'itemFamily',
+                    include: [
+                      {
+                        model: db.itemType,
+                        as: 'itemType',
+                      },
+                    ],
+                  },
+                ],
+              },
+              {
+                model: db.itemQuality,
+                as: 'itemQuality',
+              },
+            ],
+          },
+          {
+            model: db.item,
+            as: 'armor',
+            include: [
+              {
+                model: db.itemBase,
+                as: 'itemBase',
+                include: [
+                  {
+                    model: db.itemFamily,
+                    as: 'itemFamily',
+                    include: [
+                      {
+                        model: db.itemType,
+                        as: 'itemType',
+                      },
+                    ],
+                  },
+                ],
+              },
+              {
+                model: db.itemQuality,
+                as: 'itemQuality',
+              },
+            ],
+          },
+          {
+            model: db.item,
+            as: 'amulet',
+            include: [
+              {
+                model: db.itemBase,
+                as: 'itemBase',
+                include: [
+                  {
+                    model: db.itemFamily,
+                    as: 'itemFamily',
+                    include: [
+                      {
+                        model: db.itemType,
+                        as: 'itemType',
+                      },
+                    ],
+                  },
+                ],
+              },
+              {
+                model: db.itemQuality,
+                as: 'itemQuality',
+              },
+            ],
+          },
+          {
+            model: db.item,
+            as: 'mainHand',
+            include: [
+              {
+                model: db.itemBase,
+                as: 'itemBase',
+                include: [
+                  {
+                    model: db.itemFamily,
+                    as: 'itemFamily',
+                    include: [
+                      {
+                        model: db.itemType,
+                        as: 'itemType',
+                      },
+                    ],
+                  },
+                ],
+              },
+              {
+                model: db.itemQuality,
+                as: 'itemQuality',
+              },
+            ],
+          },
+          {
+            model: db.item,
+            as: 'offHand',
+            include: [
+              {
+                model: db.itemBase,
+                as: 'itemBase',
+                include: [
+                  {
+                    model: db.itemFamily,
+                    as: 'itemFamily',
+                    include: [
+                      {
+                        model: db.itemType,
+                        as: 'itemType',
+                      },
+                    ],
+                  },
+                ],
+              },
+              {
+                model: db.itemQuality,
+                as: 'itemQuality',
+              },
+            ],
+          },
+          {
+            model: db.item,
+            as: 'gloves',
+            include: [
+              {
+                model: db.itemBase,
+                as: 'itemBase',
+                include: [
+                  {
+                    model: db.itemFamily,
+                    as: 'itemFamily',
+                    include: [
+                      {
+                        model: db.itemType,
+                        as: 'itemType',
+                      },
+                    ],
+                  },
+                ],
+              },
+              {
+                model: db.itemQuality,
+                as: 'itemQuality',
+              },
+            ],
+          },
+          {
+            model: db.item,
+            as: 'belt',
+            include: [
+              {
+                model: db.itemBase,
+                as: 'itemBase',
+                include: [
+                  {
+                    model: db.itemFamily,
+                    as: 'itemFamily',
+                    include: [
+                      {
+                        model: db.itemType,
+                        as: 'itemType',
+                      },
+                    ],
+                  },
+                ],
+              },
+              {
+                model: db.itemQuality,
+                as: 'itemQuality',
+              },
+            ],
+          },
+          {
+            model: db.item,
+            as: 'boots',
+            include: [
+              {
+                model: db.itemBase,
+                as: 'itemBase',
+                include: [
+                  {
+                    model: db.itemFamily,
+                    as: 'itemFamily',
+                    include: [
+                      {
+                        model: db.itemType,
+                        as: 'itemType',
+                      },
+                    ],
+                  },
+                ],
+              },
+              {
+                model: db.itemQuality,
+                as: 'itemQuality',
+              },
+            ],
+          },
+          {
+            model: db.item,
+            as: 'ringSlotOne',
+            include: [
+              {
+                model: db.itemBase,
+                as: 'itemBase',
+                include: [
+                  {
+                    model: db.itemFamily,
+                    as: 'itemFamily',
+                    include: [
+                      {
+                        model: db.itemType,
+                        as: 'itemType',
+                      },
+                    ],
+                  },
+                ],
+              },
+              {
+                model: db.itemQuality,
+                as: 'itemQuality',
+              },
+            ],
+          },
+          {
+            model: db.item,
+            as: 'ringSlotTwo',
             include: [
               {
                 model: db.itemBase,
@@ -122,7 +351,6 @@ export const discordShowInventory = async (
     ],
   });
   if (!userCurrentCharacter) return;
-  console.log(userCurrentCharacter.inventory.items);
 
   let discordChannel;
 
@@ -240,17 +468,9 @@ export const discordShowInventory = async (
 
   await registerFont(path.join(__dirname, '../assets/fonts/', 'Heart_warming.otf'), { family: 'HeartWarming' });
 
-  const generateInventoryImage = async (start) => {
-    const current = userCurrentCharacter.inventory.items.slice(start, start + 2);
-
-    console.log(current);
-    console.log(current[0]);
-    console.log('after current select');
-
-    const inventoryItemOneBuffer = await generateItemImage(current[0]);
-    const inventoryItemOne = await loadImage(inventoryItemOneBuffer);
-    const inventoryItemTwoBuffer = await generateItemImage(current[1]);
-    const inventoryItemTwo = await loadImage(inventoryItemTwoBuffer);
+  const generateInventoryImage = async (
+    start,
+  ) => {
     const statsImageBuffer = await generateStatsImage(
       userCurrentCharacter,
       false,
@@ -261,17 +481,8 @@ export const discordShowInventory = async (
       userCurrentCharacter,
     );
     const equipmentImage = await loadImage(equipmentImageBuffer);
-    const itemOneWidth = inventoryItemOne.width * 4;
-    const itemTwoWidth = inventoryItemTwo.width * 4;
-    let largestItemHeight;
 
-    if (inventoryItemOne.height > inventoryItemTwo.height) {
-      largestItemHeight = inventoryItemOne.height * 4;
-    } else {
-      largestItemHeight = inventoryItemTwo.height * 4;
-    }
-
-    const canvas = createCanvas(2320, 1300 + largestItemHeight);
+    const canvas = createCanvas(2420, 1300);
     const ctx = canvas.getContext('2d');
 
     // Stats image
@@ -288,26 +499,8 @@ export const discordShowInventory = async (
       equipmentImage,
       960,
       0,
-      1360,
+      1460,
       1300,
-    );
-
-    // Inventory item one image
-    ctx.drawImage(
-      inventoryItemOne,
-      (canvas.width / 2) - (itemOneWidth) - 100,
-      1300,
-      itemOneWidth,
-      inventoryItemOne.height * 4,
-    );
-
-    // Inventory item Two image
-    ctx.drawImage(
-      inventoryItemTwo,
-      (canvas.width / 2) + 100,
-      1300,
-      itemTwoWidth,
-      inventoryItemTwo.height * 4,
     );
 
     ctx.font = 'bold 30px "HeartWarming"';
@@ -317,26 +510,6 @@ export const discordShowInventory = async (
     ctx.lineWidth = 3;
 
     return new MessageAttachment(canvas.toBuffer(), 'inventory.png');
-  };
-
-  const generateClassPicked = async (start) => {
-    const current = userCurrentCharacter.inventory.items.slice(start, start + 1);
-    const canvas = createCanvas(500, 100);
-    const ctx = canvas.getContext('2d');
-
-    console.log(current);
-    console.log(current[0].classDescription);
-    console.log('picked!');
-    ctx.font = 'bold 30px "HeartWarming"';
-    ctx.fillStyle = "#ccc";
-    ctx.strokeStyle = 'black';
-    ctx.lineWidth = 3;
-    ctx.textAlign = "center";
-
-    ctx.strokeText(`${user.username} picked ${current[0].name}!`, 250, 40, 500);
-    ctx.fillText(`${user.username} picked ${current[0].name}!`, 250, 40, 500);
-
-    return new MessageAttachment(canvas.toBuffer(), 'picked.png');
   };
 
   const generateCancelClassPicked = async (start) => {
@@ -355,72 +528,30 @@ export const discordShowInventory = async (
     return new MessageAttachment(canvas.toBuffer(), 'cancelSelection.png');
   };
 
-  const generateEquipItemButton = async (start) => {
-    const current = userCurrentCharacter.inventory.items.slice(start, start + 1);
-    const equipItemId = `Equip:${current[0].id}`;
-    CurrentClassSelectionId = current[0].id;
-    console.log(current);
-    return new MessageButton({
-      style: 'SECONDARY',
-      label: `Equip ${current[0].name}`,
-      emoji: '⛏️',
-      customId: equipItemId,
-    });
-  };
-
-  const generateDestroyItemButton = async (start) => {
-    const current = userCurrentCharacter.inventory.items.slice(start, start + 1);
-    CurrentClassSelectionId = `Destroy:${current[0].id}`;
-    const destroyItemId = `Destroy:${current[0].id}`;
-    console.log(current);
-    return new MessageButton({
-      style: 'SECONDARY',
-      label: `Destroy ${current[0].name}`,
-      emoji: '❌',
-      customId: destroyItemId,
-    });
-  };
-
-  const canFitOnOnePage = userCurrentCharacter.inventory.items.length <= 2;
   const embedMessage = await discordChannel.send({
     files: [
       await generateInventoryImage(0),
     ],
-    components: canFitOnOnePage
-      ? []
-      : [
-        new MessageActionRow({
-          components: [
-            helmButton,
-            amuletutton,
-            weaponSlotOneButton,
-            weaponSlotTwoButton,
-            armorButton,
-          ],
-        }),
-        new MessageActionRow({
-          components: [
-            glovesButton,
-            ringSlotOneButton,
-            ringSlotTwoButton,
-            beltButton,
-            bootsButton,
-          ],
-        }),
-        new MessageActionRow({
-          components: [
-            await generateEquipItemButton(0),
-            await generateDestroyItemButton(0),
-          ],
-        }),
-        new MessageActionRow({
-          components: [
-            await generateEquipItemButton(1),
-            await generateDestroyItemButton(1),
-          ],
-        }),
-        new MessageActionRow({ components: [forwardButton] }),
-      ],
+    components: [
+      new MessageActionRow({
+        components: [
+          helmButton,
+          amuletutton,
+          weaponSlotOneButton,
+          weaponSlotTwoButton,
+          armorButton,
+        ],
+      }),
+      new MessageActionRow({
+        components: [
+          glovesButton,
+          ringSlotOneButton,
+          ringSlotTwoButton,
+          beltButton,
+          bootsButton,
+        ],
+      }),
+    ],
   });
 
   const collector = embedMessage.createMessageComponentCollector({
@@ -647,12 +778,6 @@ export const discordShowInventory = async (
         }
       });
 
-      await interaction.update({
-        files: [
-          await generateClassPicked(currentIndex),
-        ],
-        components: [],
-      });
       return;
     }
     // Cancel class selection
@@ -690,26 +815,6 @@ export const discordShowInventory = async (
             ringSlotTwoButton,
             beltButton,
             bootsButton,
-          ],
-        }),
-        new MessageActionRow({
-          components: [
-            await generateEquipItemButton(currentIndex),
-            await generateDestroyItemButton(currentIndex),
-          ],
-        }),
-        new MessageActionRow({
-          components: [
-            await generateEquipItemButton(currentIndex + 1),
-            await generateDestroyItemButton(currentIndex + 1),
-          ],
-        }),
-        new MessageActionRow({
-          components: [
-            // back button if it isn't the start
-            ...(currentIndex ? [backButton] : []),
-            // forward button if it isn't the end
-            ...(currentIndex + 1 < userCurrentCharacter.inventory.items.length ? [forwardButton] : []),
           ],
         }),
       ],

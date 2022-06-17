@@ -69,6 +69,16 @@ const rateLimiterStats = new RateLimiterFlexible.default.RateLimiterMemory({
   duration: 30,
 });
 
+const rateLimiterInventory = new RateLimiterFlexible.default.RateLimiterMemory({
+  points: 2,
+  duration: 30,
+});
+
+const rateLimiterEquipment = new RateLimiterFlexible.default.RateLimiterMemory({
+  points: 2,
+  duration: 30,
+});
+
 export const myRateLimiter = async (
   client,
   message,
@@ -140,6 +150,14 @@ export const myRateLimiter = async (
       }
       if (title.toLowerCase() === 'stats') {
         await rateLimiterStats.consume(userId, 1);
+        return false;
+      }
+      if (title.toLowerCase() === 'inventory') {
+        await rateLimiterInventory.consume(userId, 1);
+        return false;
+      }
+      if (title.toLowerCase() === 'equipment') {
+        await rateLimiterEquipment.consume(userId, 1);
         return false;
       }
 

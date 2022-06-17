@@ -1,6 +1,6 @@
 {
   "name": "runebase-discord-bot",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Bot for Runebase Discord",
   "scripts": {
     "dev": "nodemon --exec babel-node --max-old-space-size=8192 src/index.js",
@@ -11,8 +11,8 @@
   },
   "keywords": [
     "Bot",
-    "Tokel",
-    "Metaverse",
+    "Runebase",
+    "RPG",
     "Discord"
   ],
   "repository": {

@@ -4,11 +4,9 @@ import {
 } from "sequelize";
 import db from '../../models';
 import logger from "../logger";
-import {
-  cannotSendMessageUser,
-  discordErrorMessage,
-} from '../../messages';
+import { calcStrengthDexforReq } from "./calcStrengthDexforReq";
 import { equipHelm } from "./equip/Helm";
+import { equipArmor } from './equip/Armor';
 
 export const equipItem = async (
   userCurrentCharacter,
@@ -51,11 +49,60 @@ export const equipItem = async (
           {
             model: db.equipment,
             as: 'equipment',
+            include: [
+              {
+                model: db.item,
+                as: 'helm',
+              },
+              {
+                model: db.item,
+                as: 'armor',
+              },
+              {
+                model: db.item,
+                as: 'amulet',
+              },
+              {
+                model: db.item,
+                as: 'mainHand',
+              },
+              {
+                model: db.item,
+                as: 'offHand',
+              },
+              {
+                model: db.item,
+                as: 'gloves',
+              },
+              {
+                model: db.item,
+                as: 'belt',
+              },
+              {
+                model: db.item,
+                as: 'boots',
+              },
+              {
+                model: db.item,
+                as: 'ringSlotOne',
+              },
+              {
+                model: db.item,
+                as: 'ringSlotTwo',
+              },
+            ],
           },
         ],
         lock: t.LOCK.UPDATE,
         transaction: t,
       });
+
+      const [
+        userStrength,
+        userDexterity,
+      ] = await calcStrengthDexforReq(
+        findUserCharacter,
+      );
 
       const findItemToEquip = await db.item.findOne({
         where: {
@@ -87,8 +134,25 @@ export const equipItem = async (
         lock: t.LOCK.UPDATE,
         transaction: t,
       });
-      console.log(findUserCharacter.user.UserRank);
-      console.log(findItemToEquip.levelReq);
+
+      if (
+        findItemToEquip.itemBase.strengthReq
+        && userStrength < findItemToEquip.itemBase.strengthReq
+      ) {
+        cannotEquipReason = 'Too low Strength';
+        cannotEquip = true;
+        return;
+      }
+
+      if (
+        findItemToEquip.itemBase.dexterityReq
+        && userDexterity < findItemToEquip.itemBase.dexterityReq
+      ) {
+        cannotEquipReason = 'Too low Dexterity';
+        cannotEquip = true;
+        return;
+      }
+
       if (
         findItemToEquip.levelReq
         && findUserCharacter.user.UserRank.id < findItemToEquip.levelReq
@@ -97,13 +161,17 @@ export const equipItem = async (
         cannotEquip = true;
         return;
       }
-      // TODO: check if user has enough strength and dexterity to equip the item here later
-      // Maybe create an extra helper to do the calculation?
-      cannotEquipReason = 'place holder';
-      console.log(findUserCharacter.equipment);
-      console.log(findItemToEquip);
+
       if (findItemToEquip.itemBase.itemFamily.itemType.name === 'Helms') {
         await equipHelm(
+          userCurrentCharacter,
+          findUserCharacter.equipment,
+          findItemToEquip,
+          t,
+        );
+      }
+      if (findItemToEquip.itemBase.itemFamily.itemType.name === 'Armors') {
+        await equipArmor(
           userCurrentCharacter,
           findUserCharacter.equipment,
           findItemToEquip,
