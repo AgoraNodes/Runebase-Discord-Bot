@@ -14,7 +14,7 @@ export const generateRandomMagicItem = async () => {
     order: [
       [Sequelize.literal('RAND()')],
     ],
-    where: { '$itemFamily.itemType.name$': 'Bows' },
+    where: { '$itemFamily.itemType.name$': 'Barbarian Helms' },
     // where: { '$itemFamily.name$': 'War Axe' },
     include: [
       {

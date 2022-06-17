@@ -31,12 +31,22 @@ export const generateItemImage = async (
     || newItem.itemBase.itemFamily.itemType.name === "Maces"
     || newItem.itemBase.itemFamily.itemType.name === "Polearms"
   ));
+  const isClassSpecific = !!((
+    newItem.itemBase.itemFamily.itemType.name === "Barbarian Helms"
+    || newItem.itemBase.itemFamily.itemType.name === "Druid Pelts"
+    || newItem.itemBase.itemFamily.itemType.name === "Necromancer Shrunken Heads"
+    || newItem.itemBase.itemFamily.itemType.name === "Paladin Shields"
+    || newItem.itemBase.itemFamily.itemType.name === "Amazon Weapons"
+    || newItem.itemBase.itemFamily.itemType.name === "Sorceress Orbs"
+    || newItem.itemBase.itemFamily.itemType.name === "Assassin Katars"
+  ));
   const isShield = newItem.itemBase.itemFamily.itemType.name === "Shields";
   const isBow = newItem.itemBase.itemFamily.itemType.name === "Bows";
   const extraWeaponsHeight = isWeapon ? 25 : 0;
   const extraShieldBlockHeight = isShield ? 25 : 0;
+  const classSpecificHeight = isClassSpecific ? 25 : 0;
   const minusBowHeight = isBow ? -25 : 0;
-  const totalExtraHeight = levelReqHeight + strengthReqHeight + dexterityReqHeight + shieldAndBootsDamageHeight + extraWeaponsHeight + extraShieldBlockHeight + minusBowHeight;
+  const totalExtraHeight = levelReqHeight + strengthReqHeight + dexterityReqHeight + shieldAndBootsDamageHeight + extraWeaponsHeight + extraShieldBlockHeight + minusBowHeight + classSpecificHeight;
 
   await registerFont(path.join(__dirname, '../../assets/fonts/', 'Heart_warming.otf'), { family: 'HeartWarming' });
   const itemImage = await loadImage(path.join(__dirname, `../../assets/images/items/${newItem.itemBase.itemFamily.itemType.name}/${newItem.itemBase.itemFamily.name}`, `${newItem.itemBase.name}.png`));
@@ -192,18 +202,123 @@ export const generateItemImage = async (
     );
   }
 
+  if (newItem.itemBase.itemFamily.itemType.name === "Barbarian Helms") {
+    ctx.strokeText(
+      `(Barbarian Only)`,
+      100,
+      (itemImage.height) + 95 + shieldAndBootsDamageHeight + extraWeaponsHeight + extraShieldBlockHeight,
+      200,
+    );
+    ctx.fillText(
+      `(Barbarian Only)`,
+      100,
+      (itemImage.height) + 95 + shieldAndBootsDamageHeight + extraWeaponsHeight + extraShieldBlockHeight,
+      200,
+    );
+  }
+
+  if (newItem.itemBase.itemFamily.itemType.name === "Druid Pelts") {
+    ctx.strokeText(
+      `(Druid Only)`,
+      100,
+      (itemImage.height) + 95 + shieldAndBootsDamageHeight + extraWeaponsHeight + extraShieldBlockHeight,
+      200,
+    );
+    ctx.fillText(
+      `(Druid Only)`,
+      100,
+      (itemImage.height) + 95 + shieldAndBootsDamageHeight + extraWeaponsHeight + extraShieldBlockHeight,
+      200,
+    );
+  }
+
+  if (newItem.itemBase.itemFamily.itemType.name === "Paladin Shields") {
+    ctx.strokeText(
+      `(Paladin Only)`,
+      100,
+      (itemImage.height) + 95 + shieldAndBootsDamageHeight + extraWeaponsHeight + extraShieldBlockHeight,
+      200,
+    );
+    ctx.fillText(
+      `(Paladin Only)`,
+      100,
+      (itemImage.height) + 95 + shieldAndBootsDamageHeight + extraWeaponsHeight + extraShieldBlockHeight,
+      200,
+    );
+  }
+
+  if (newItem.itemBase.itemFamily.itemType.name === "Necromancer Shrunken Heads") {
+    ctx.strokeText(
+      `(Necromancer Only)`,
+      100,
+      (itemImage.height) + 95 + shieldAndBootsDamageHeight + extraWeaponsHeight + extraShieldBlockHeight,
+      200,
+    );
+    ctx.fillText(
+      `(Necromancer Only)`,
+      100,
+      (itemImage.height) + 95 + shieldAndBootsDamageHeight + extraWeaponsHeight + extraShieldBlockHeight,
+      200,
+    );
+  }
+
+  if (newItem.itemBase.itemFamily.itemType.name === "Necromancer Shrunken Heads") {
+    ctx.strokeText(
+      `(Assasin Only)`,
+      100,
+      (itemImage.height) + 95 + shieldAndBootsDamageHeight + extraWeaponsHeight + extraShieldBlockHeight,
+      200,
+    );
+    ctx.fillText(
+      `(Assasin Only)`,
+      100,
+      (itemImage.height) + 95 + shieldAndBootsDamageHeight + extraWeaponsHeight + extraShieldBlockHeight,
+      200,
+    );
+  }
+
+  if (newItem.itemBase.itemFamily.itemType.name === "Amazon Weapons") {
+    ctx.strokeText(
+      `(Amazon Only)`,
+      100,
+      (itemImage.height) + 95 + shieldAndBootsDamageHeight + extraWeaponsHeight + extraShieldBlockHeight,
+      200,
+    );
+    ctx.fillText(
+      `(Amazon Only)`,
+      100,
+      (itemImage.height) + 95 + shieldAndBootsDamageHeight + extraWeaponsHeight + extraShieldBlockHeight,
+      200,
+    );
+  }
+
+  if (newItem.itemBase.itemFamily.itemType.name === "Sorceress Orbs") {
+    ctx.strokeText(
+      `(Sorceress Only)`,
+      100,
+      (itemImage.height) + 95 + shieldAndBootsDamageHeight + extraWeaponsHeight + extraShieldBlockHeight,
+      200,
+    );
+    ctx.fillText(
+      `(Sorceress Only)`,
+      100,
+      (itemImage.height) + 95 + shieldAndBootsDamageHeight + extraWeaponsHeight + extraShieldBlockHeight,
+      200,
+    );
+  }
+
   // Level Req
   if (newItem.levelReq) {
     ctx.strokeText(
       `Lvl Requirement: ${newItem.levelReq}`,
       100,
-      (itemImage.height) + 95 + shieldAndBootsDamageHeight + extraWeaponsHeight + extraShieldBlockHeight + minusBowHeight,
+      (itemImage.height) + 95 + shieldAndBootsDamageHeight + extraWeaponsHeight + extraShieldBlockHeight + minusBowHeight + classSpecificHeight,
       200,
     );
     ctx.fillText(
       `Lvl Requirement: ${newItem.levelReq}`,
       100,
-      (itemImage.height) + 95 + shieldAndBootsDamageHeight + extraWeaponsHeight + extraShieldBlockHeight + minusBowHeight,
+      (itemImage.height) + 95 + shieldAndBootsDamageHeight + extraWeaponsHeight + extraShieldBlockHeight + minusBowHeight + classSpecificHeight,
       200,
     );
   }
@@ -213,13 +328,13 @@ export const generateItemImage = async (
     ctx.strokeText(
       `Strength Requirement: ${newItem.itemBase.strengthReq}`,
       100,
-      (itemImage.height) + 95 + (levelReqHeight) + shieldAndBootsDamageHeight + extraWeaponsHeight + extraShieldBlockHeight + minusBowHeight,
+      (itemImage.height) + 95 + (levelReqHeight) + shieldAndBootsDamageHeight + extraWeaponsHeight + extraShieldBlockHeight + minusBowHeight + classSpecificHeight,
       200,
     );
     ctx.fillText(
       `Strength Requirement: ${newItem.itemBase.strengthReq}`,
       100,
-      (itemImage.height) + 95 + (levelReqHeight) + shieldAndBootsDamageHeight + extraWeaponsHeight + extraShieldBlockHeight + minusBowHeight,
+      (itemImage.height) + 95 + (levelReqHeight) + shieldAndBootsDamageHeight + extraWeaponsHeight + extraShieldBlockHeight + minusBowHeight + classSpecificHeight,
       200,
     );
   }
@@ -229,13 +344,13 @@ export const generateItemImage = async (
     ctx.strokeText(
       `Dexterity Requirement: ${newItem.itemBase.dexterityReq}`,
       100,
-      (itemImage.height) + 95 + (levelReqHeight) + (strengthReqHeight) + shieldAndBootsDamageHeight + extraWeaponsHeight + extraShieldBlockHeight + minusBowHeight,
+      (itemImage.height) + 95 + (levelReqHeight) + (strengthReqHeight) + shieldAndBootsDamageHeight + extraWeaponsHeight + extraShieldBlockHeight + minusBowHeight + classSpecificHeight,
       200,
     );
     ctx.fillText(
       `Dexterity Requirement: ${newItem.itemBase.dexterityReq}`,
       100,
-      (itemImage.height) + 95 + (levelReqHeight) + (strengthReqHeight) + shieldAndBootsDamageHeight + extraWeaponsHeight + extraShieldBlockHeight + minusBowHeight,
+      (itemImage.height) + 95 + (levelReqHeight) + (strengthReqHeight) + shieldAndBootsDamageHeight + extraWeaponsHeight + extraShieldBlockHeight + minusBowHeight + classSpecificHeight,
       200,
     );
   }
@@ -259,6 +374,7 @@ export const generateItemImage = async (
       200,
     );
   }
+  console.log('before final Image');
   const finalImage = await canvas.toBuffer();
   return finalImage;
 };

@@ -22,35 +22,11 @@ import {
 } from '../messages';
 import db from '../models';
 import logger from "../helpers/logger";
-import { userWalletExist } from "../helpers/client/userWalletExist";
+import { generateItemImage } from "../helpers/items/generateItemImage";
+import { generateStatsImage } from "../helpers/stats/generateStatsImage";
+import { generateEquipmentImage } from '../helpers/equipment/generateEquipmentImage';
 
-function printAtWordWrap(context, text, x, y, lineHeight, fitWidth) {
-  fitWidth = fitWidth || 0;
-
-  if (fitWidth <= 0) {
-    context.fillText(text, x, y);
-    return;
-  }
-  let words = text.split(' ');
-  let currentLine = 0;
-  let idx = 1;
-  while (words.length > 0 && idx <= words.length) {
-    const str = words.slice(0, idx).join(' ');
-    const w = context.measureText(str).width;
-    if (w > fitWidth) {
-      if (idx == 1) {
-        idx = 2;
-      }
-      context.fillText(words.slice(0, idx - 1).join(' '), x, y + (lineHeight * currentLine));
-      currentLine++;
-      words = words.splice(idx - 1);
-      idx = 1;
-    } else { idx++; }
-  }
-  if (idx > 0) { context.fillText(words.join(' '), x, y + (lineHeight * currentLine)); }
-}
-
-export const discordPickClass = async (
+export const discordShowInventory = async (
   discordClient,
   message,
   setting,
@@ -75,14 +51,78 @@ export const discordPickClass = async (
 
   const activity = [];
   let CurrentClassSelectionId;
-  const classes = await db.class.findAll({
+  const userCurrentCharacter = await db.UserClass.findOne({
+    where: {
+      classId: user.currentClassId,
+      userId: user.id,
+    },
     include: [
       {
-        model: db.classDescription,
-        as: 'classDescription',
+        model: db.user,
+        as: 'user',
+        where: {
+          user_id: `${userId}`,
+        },
+        include: [
+          {
+            model: db.class,
+            as: 'currentClass',
+          },
+          {
+            model: db.rank,
+            as: 'ranks',
+          },
+        ],
+      },
+      {
+        model: db.stats,
+        as: 'stats',
+      },
+      {
+        model: db.condition,
+        as: 'condition',
+      },
+      {
+        model: db.equipment,
+        as: 'equipment',
+      },
+      {
+        model: db.inventory,
+        as: 'inventory',
+        include: [
+          {
+            model: db.item,
+            as: 'items',
+            required: false,
+            include: [
+              {
+                model: db.itemBase,
+                as: 'itemBase',
+                include: [
+                  {
+                    model: db.itemFamily,
+                    as: 'itemFamily',
+                    include: [
+                      {
+                        model: db.itemType,
+                        as: 'itemType',
+                      },
+                    ],
+                  },
+                ],
+              },
+              {
+                model: db.itemQuality,
+                as: 'itemQuality',
+              },
+            ],
+          },
+        ],
       },
     ],
   });
+  if (!userCurrentCharacter) return;
+  console.log(userCurrentCharacter.inventory.items);
 
   let discordChannel;
 
@@ -101,97 +141,186 @@ export const discordPickClass = async (
     }
   }
 
-  const backId = 'back';
-  const forwardId = 'forward';
   const pickClassId = 'pickClass';
   const cancelPickClassId = 'cancelClass';
+
+  // Buttons
+  const backId = 'back';
+  const forwardId = 'forward';
+
+  const helmId = 'helm';
+  const amuletId = 'amulet';
+  const weaponSlotOneId = 'weaponSlotOne';
+  const weaponSlotTwoId = 'weaponSlotTwo';
+  const armorId = 'armor';
+  const glovesId = 'gloves';
+  const beltId = 'belt';
+  const bootsId = 'boots';
+  const ringSlotOneId = 'ringSlotOne';
+  const ringSlotTwoId = 'ringSlotTwo';
+
+  const ringSlotOneButton = new MessageButton({
+    style: 'SECONDARY',
+    label: 'Show Equiped RingSlot One',
+    emoji: '💍',
+    customId: ringSlotOneId,
+  });
+
+  const ringSlotTwoButton = new MessageButton({
+    style: 'SECONDARY',
+    label: 'Show Equiped RingSlot Two',
+    emoji: '💍',
+    customId: ringSlotTwoId,
+  });
+
+  const bootsButton = new MessageButton({
+    style: 'SECONDARY',
+    label: 'Show Equiped Boots',
+    emoji: '🥾',
+    customId: bootsId,
+  });
+
+  const helmButton = new MessageButton({
+    style: 'SECONDARY',
+    label: 'Show Equiped Helm',
+    emoji: '🪖',
+    customId: helmId,
+  });
+  const amuletutton = new MessageButton({
+    style: 'SECONDARY',
+    label: 'Show Equiped Amulet',
+    emoji: '🧿',
+    customId: amuletId,
+  });
+  const weaponSlotOneButton = new MessageButton({
+    style: 'SECONDARY',
+    label: 'Show Equiped Main Hand',
+    emoji: '🗡️',
+    customId: weaponSlotOneId,
+  });
+
+  const weaponSlotTwoButton = new MessageButton({
+    style: 'SECONDARY',
+    label: 'Show Equiped Off Hand',
+    emoji: '🛡️',
+    customId: weaponSlotTwoId,
+  });
+
+  const armorButton = new MessageButton({
+    style: 'SECONDARY',
+    label: 'Show Equiped Armor',
+    emoji: '🦺',
+    customId: armorId,
+  });
+  const glovesButton = new MessageButton({
+    style: 'SECONDARY',
+    label: 'Show Equiped Gloves',
+    emoji: '🧤',
+    customId: glovesId,
+  });
+  const beltButton = new MessageButton({
+    style: 'SECONDARY',
+    label: 'Show Equiped Belt',
+    emoji: '〰️',
+    customId: beltId,
+  });
+
   const backButton = new MessageButton({
     style: 'SECONDARY',
-    label: 'Back',
+    label: 'Back Inventory',
     emoji: '⬅️',
     customId: backId,
   });
   const forwardButton = new MessageButton({
     style: 'SECONDARY',
-    label: 'Forward',
+    label: 'Forward Inventory',
     emoji: '➡️',
     customId: forwardId,
   });
 
   await registerFont(path.join(__dirname, '../assets/fonts/', 'Heart_warming.otf'), { family: 'HeartWarming' });
 
-  const generateClassImage = async (start) => {
-    const current = classes.slice(start, start + 1);
-    const canvas = createCanvas(1400, 1050);
+  const generateInventoryImage = async (start) => {
+    const current = userCurrentCharacter.inventory.items.slice(start, start + 2);
+
+    console.log(current);
+    console.log(current[0]);
+    console.log('after current select');
+
+    const inventoryItemOneBuffer = await generateItemImage(current[0]);
+    const inventoryItemOne = await loadImage(inventoryItemOneBuffer);
+    const inventoryItemTwoBuffer = await generateItemImage(current[1]);
+    const inventoryItemTwo = await loadImage(inventoryItemTwoBuffer);
+    const statsImageBuffer = await generateStatsImage(
+      userCurrentCharacter,
+      false,
+    );
+    const statsImage = await loadImage(statsImageBuffer);
+
+    const equipmentImageBuffer = await generateEquipmentImage(
+      userCurrentCharacter,
+    );
+    const equipmentImage = await loadImage(equipmentImageBuffer);
+    const itemOneWidth = inventoryItemOne.width * 4;
+    const itemTwoWidth = inventoryItemTwo.width * 4;
+    let largestItemHeight;
+
+    if (inventoryItemOne.height > inventoryItemTwo.height) {
+      largestItemHeight = inventoryItemOne.height * 4;
+    } else {
+      largestItemHeight = inventoryItemTwo.height * 4;
+    }
+
+    const canvas = createCanvas(2320, 1300 + largestItemHeight);
     const ctx = canvas.getContext('2d');
+
+    // Stats image
+    ctx.drawImage(
+      statsImage,
+      0, // x position
+      0, // y position
+      960, // width
+      1300, // height
+    );
+
+    // Equipment Image
+    ctx.drawImage(
+      equipmentImage,
+      960,
+      0,
+      1360,
+      1300,
+    );
+
+    // Inventory item one image
+    ctx.drawImage(
+      inventoryItemOne,
+      (canvas.width / 2) - (itemOneWidth) - 100,
+      1300,
+      itemOneWidth,
+      inventoryItemOne.height * 4,
+    );
+
+    // Inventory item Two image
+    ctx.drawImage(
+      inventoryItemTwo,
+      (canvas.width / 2) + 100,
+      1300,
+      itemTwoWidth,
+      inventoryItemTwo.height * 4,
+    );
 
     ctx.font = 'bold 30px "HeartWarming"';
     ctx.fillStyle = "#ccc";
     // ctx.textAlign = "center";
     ctx.strokeStyle = 'black';
     ctx.lineWidth = 3;
-    const newClassImage = await loadImage(path.join(__dirname, '../assets/images/classes', `${current[0].classDescription.image}.png`));
-    ctx.drawImage(newClassImage, 0, 0, 500, 800);
-    printAtWordWrap(
-      ctx,
-      current[0].classDescription.description,
-      500,
-      100,
-      35,
-      500,
-    );
 
-    ctx.textAlign = "center";
-    ctx.font = 'bold 50px "HeartWarming"';
-    ctx.strokeText(current[0].name, 250, 880, 500);
-    ctx.fillText(current[0].name, 250, 880, 500);
-
-    // print default stats
-
-    ctx.strokeText("Base Stats", 1200, 50, 200);
-    ctx.fillText("Base stats", 1200, 50, 200);
-
-    ctx.font = 'bold 35px "HeartWarming"';
-
-    // Strength
-    ctx.strokeText(`Strength: ${current[0].strength}`, 1200, 150, 200);
-    ctx.fillText(`Strength: ${current[0].strength}`, 1200, 150, 200);
-
-    // Dexterity
-    ctx.strokeText(`Dexterity: ${current[0].dexterity}`, 1200, 250, 200);
-    ctx.fillText(`Dexterity: ${current[0].dexterity}`, 1200, 250, 200);
-
-    // Vitality
-    ctx.strokeText(`Vitality: ${current[0].vitality}`, 1200, 350, 200);
-    ctx.fillText(`Vitality: ${current[0].vitality}`, 1200, 350, 200);
-
-    // Energy
-    ctx.strokeText(`Energy: ${current[0].energy}`, 1200, 450, 200);
-    ctx.fillText(`Energy: ${current[0].energy}`, 1200, 450, 200);
-
-    // Life
-    ctx.strokeText(`Life: ${current[0].life}`, 1200, 550, 200);
-    ctx.fillText(`Life: ${current[0].life}`, 1200, 550, 200);
-
-    // Mana
-    ctx.strokeText(`Mana: ${current[0].mana}`, 1200, 650, 200);
-    ctx.fillText(`Mana: ${current[0].mana}`, 1200, 650, 200);
-
-    // Stamina
-    ctx.strokeText(`Stamina: ${current[0].stamina}`, 1200, 750, 200);
-    ctx.fillText(`Stamina: ${current[0].stamina}`, 1200, 750, 200);
-
-    // Picking a class
-    ctx.fillStyle = "#fe5701";
-    ctx.font = 'bold 70px "HeartWarming"';
-    ctx.strokeText(`${user.username} is picking a class`, 700, 1000, 1400);
-    ctx.fillText(`${user.username} is picking a class`, 700, 1000, 1400);
-
-    return new MessageAttachment(canvas.toBuffer(), 'class.png');
+    return new MessageAttachment(canvas.toBuffer(), 'inventory.png');
   };
 
   const generateClassPicked = async (start) => {
-    const current = classes.slice(start, start + 1);
+    const current = userCurrentCharacter.inventory.items.slice(start, start + 1);
     const canvas = createCanvas(500, 100);
     const ctx = canvas.getContext('2d');
 
@@ -226,37 +355,68 @@ export const discordPickClass = async (
     return new MessageAttachment(canvas.toBuffer(), 'cancelSelection.png');
   };
 
-  const generatePickClassButton = async (start) => {
-    const current = classes.slice(start, start + 1);
+  const generateEquipItemButton = async (start) => {
+    const current = userCurrentCharacter.inventory.items.slice(start, start + 1);
+    const equipItemId = `Equip:${current[0].id}`;
     CurrentClassSelectionId = current[0].id;
     console.log(current);
     return new MessageButton({
       style: 'SECONDARY',
-      label: `Pick ${current[0].name}`,
+      label: `Equip ${current[0].name}`,
       emoji: '⛏️',
-      customId: pickClassId,
+      customId: equipItemId,
     });
   };
 
-  const generateCancelPickClassButton = async () => new MessageButton({
-    style: 'SECONDARY',
-    label: `Cancel class selection`,
-    emoji: '❌',
-    customId: cancelPickClassId,
-  });
+  const generateDestroyItemButton = async (start) => {
+    const current = userCurrentCharacter.inventory.items.slice(start, start + 1);
+    CurrentClassSelectionId = `Destroy:${current[0].id}`;
+    const destroyItemId = `Destroy:${current[0].id}`;
+    console.log(current);
+    return new MessageButton({
+      style: 'SECONDARY',
+      label: `Destroy ${current[0].name}`,
+      emoji: '❌',
+      customId: destroyItemId,
+    });
+  };
 
-  const canFitOnOnePage = classes.length <= 1;
+  const canFitOnOnePage = userCurrentCharacter.inventory.items.length <= 2;
   const embedMessage = await discordChannel.send({
     files: [
-      await generateClassImage(0),
+      await generateInventoryImage(0),
     ],
     components: canFitOnOnePage
       ? []
       : [
         new MessageActionRow({
           components: [
-            await generatePickClassButton(0),
-            await generateCancelPickClassButton(),
+            helmButton,
+            amuletutton,
+            weaponSlotOneButton,
+            weaponSlotTwoButton,
+            armorButton,
+          ],
+        }),
+        new MessageActionRow({
+          components: [
+            glovesButton,
+            ringSlotOneButton,
+            ringSlotTwoButton,
+            beltButton,
+            bootsButton,
+          ],
+        }),
+        new MessageActionRow({
+          components: [
+            await generateEquipItemButton(0),
+            await generateDestroyItemButton(0),
+          ],
+        }),
+        new MessageActionRow({
+          components: [
+            await generateEquipItemButton(1),
+            await generateDestroyItemButton(1),
           ],
         }),
         new MessageActionRow({ components: [forwardButton] }),
@@ -269,6 +429,7 @@ export const discordPickClass = async (
 
   let currentIndex = 0;
   collector.on('collect', async (interaction) => {
+    await interaction.deferUpdate();
     if (interaction.customId === pickClassId) {
       await queue.add(async () => {
         await db.sequelize.transaction({
@@ -508,15 +669,39 @@ export const discordPickClass = async (
     interaction.customId === backId ? (currentIndex -= 1) : (currentIndex += 1);
 
     // Load another character
-    await interaction.update({
+    await interaction.editReply({
       files: [
-        await generateClassImage(currentIndex),
+        await generateInventoryImage(currentIndex),
       ],
       components: [
         new MessageActionRow({
           components: [
-            await generatePickClassButton(currentIndex),
-            await generateCancelPickClassButton(),
+            helmButton,
+            amuletutton,
+            weaponSlotOneButton,
+            weaponSlotTwoButton,
+            armorButton,
+          ],
+        }),
+        new MessageActionRow({
+          components: [
+            glovesButton,
+            ringSlotOneButton,
+            ringSlotTwoButton,
+            beltButton,
+            bootsButton,
+          ],
+        }),
+        new MessageActionRow({
+          components: [
+            await generateEquipItemButton(currentIndex),
+            await generateDestroyItemButton(currentIndex),
+          ],
+        }),
+        new MessageActionRow({
+          components: [
+            await generateEquipItemButton(currentIndex + 1),
+            await generateDestroyItemButton(currentIndex + 1),
           ],
         }),
         new MessageActionRow({
@@ -524,7 +709,7 @@ export const discordPickClass = async (
             // back button if it isn't the start
             ...(currentIndex ? [backButton] : []),
             // forward button if it isn't the end
-            ...(currentIndex + 1 < classes.length ? [forwardButton] : []),
+            ...(currentIndex + 1 < userCurrentCharacter.inventory.items.length ? [forwardButton] : []),
           ],
         }),
       ],

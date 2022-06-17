@@ -9,8 +9,9 @@ import {
   discordErrorMessage,
 } from '../../messages';
 
-export const addStrength = async (
-  userId,
+export const destroyItem = async (
+  userCurrentCharacter,
+  itemId,
   discordChannel,
   io,
   queue,
@@ -21,65 +22,23 @@ export const addStrength = async (
     await db.sequelize.transaction({
       isolationLevel: Transaction.ISOLATION_LEVELS.SERIALIZABLE,
     }, async (t) => {
-      const user = await db.user.findOne({
+      const findItemToDestroy = await db.item.findOne({
         where: {
-          id: userId,
+          id: itemId,
+          inventoryId: userCurrentCharacter.inventoryId,
         },
-        include: [
-          {
-            model: db.class,
-            as: 'currentClass',
-          },
-          {
-            model: db.rank,
-            as: 'ranks',
-          },
-          {
-            model: db.UserClass,
-            as: 'UserClass',
-            where: {
-              classId: {
-                [Op.col]: 'user.currentClassId',
-              },
-            },
-            include: [
-              {
-                model: db.stats,
-                as: 'stats',
-              },
-              {
-                model: db.condition,
-                as: 'condition',
-              },
-            ],
-          },
-        ],
         lock: t.LOCK.UPDATE,
         transaction: t,
       });
-
-      const calc = (
-        user.UserClass.stats.strength
-        + user.UserClass.stats.dexterity
-        + user.UserClass.stats.vitality
-        + user.UserClass.stats.energy
-      ) < (user.ranks[0].id * 5);
-
-      if (!calc) {
-        cannotSpend = true;
-        return;
-      }
-
-      const updateStrength = await user.UserClass.stats.update({
-        strength: user.UserClass.stats.strength + 1,
+      const unlinkItemFromUser = findItemToDestroy.update({
+        inventoryId: null,
       }, {
         lock: t.LOCK.UPDATE,
         transaction: t,
       });
-
       const preActivity = await db.activity.create({
-        type: 'addStrength_s',
-        earnerId: userId,
+        type: 'destroyItem_s',
+        earnerId: userCurrentCharacter.user.id,
       }, {
         lock: t.LOCK.UPDATE,
         transaction: t,
@@ -103,33 +62,11 @@ export const addStrength = async (
       console.log(err);
       try {
         await db.error.create({
-          type: 'addStrength',
+          type: 'destroyItem',
           error: `${err}`,
         });
       } catch (e) {
         logger.error(`Error Discord: ${e}`);
-      }
-      if (err.code && err.code === 50007) {
-        await discordChannel.send({
-          embeds: [
-            cannotSendMessageUser(
-              "addStrength",
-              message,
-            ),
-          ],
-        }).catch((e) => {
-          console.log(e);
-        });
-      } else {
-        await discordChannel.send({
-          embeds: [
-            discordErrorMessage(
-              "addStrength",
-            ),
-          ],
-        }).catch((e) => {
-          console.log(e);
-        });
       }
     });
     if (activity.length > 0) {
@@ -141,16 +78,14 @@ export const addStrength = async (
 
   const myUpdatedUser = await db.UserClass.findOne({
     where: {
-      classId: {
-        [Op.col]: 'user.currentClassId',
-      },
+      classId: userCurrentCharacter.user.currentClassId,
     },
     include: [
       {
         model: db.user,
         as: 'user',
         where: {
-          id: userId,
+          id: `${userCurrentCharacter.user.id}`,
         },
         include: [
           {
@@ -174,6 +109,39 @@ export const addStrength = async (
       {
         model: db.equipment,
         as: 'equipment',
+      },
+      {
+        model: db.inventory,
+        as: 'inventory',
+        include: [
+          {
+            model: db.item,
+            as: 'items',
+            required: false,
+            include: [
+              {
+                model: db.itemBase,
+                as: 'itemBase',
+                include: [
+                  {
+                    model: db.itemFamily,
+                    as: 'itemFamily',
+                    include: [
+                      {
+                        model: db.itemType,
+                        as: 'itemType',
+                      },
+                    ],
+                  },
+                ],
+              },
+              {
+                model: db.itemQuality,
+                as: 'itemQuality',
+              },
+            ],
+          },
+        ],
       },
     ],
   });

@@ -175,37 +175,41 @@ export const addVitality = async (
     }
   });
 
-  const myUpdatedUser = await db.user.findOne({
+  const myUpdatedUser = await db.UserClass.findOne({
     where: {
-      id: userId,
+      classId: {
+        [Op.col]: 'user.currentClassId',
+      },
     },
     include: [
       {
-        model: db.class,
-        as: 'currentClass',
-      },
-      {
-        model: db.rank,
-        as: 'ranks',
-      },
-      {
-        model: db.UserClass,
-        as: 'UserClass',
+        model: db.user,
+        as: 'user',
         where: {
-          classId: {
-            [Op.col]: 'user.currentClassId',
-          },
+          id: userId,
         },
         include: [
           {
-            model: db.stats,
-            as: 'stats',
+            model: db.class,
+            as: 'currentClass',
           },
           {
-            model: db.condition,
-            as: 'condition',
+            model: db.rank,
+            as: 'ranks',
           },
         ],
+      },
+      {
+        model: db.stats,
+        as: 'stats',
+      },
+      {
+        model: db.condition,
+        as: 'condition',
+      },
+      {
+        model: db.equipment,
+        as: 'equipment',
       },
     ],
   });

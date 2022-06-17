@@ -74,8 +74,8 @@ module.exports = (sequelize, DataTypes) => {
 
   itemModel.associate = (model) => {
     itemModel.belongsTo(model.itemBase);
-    // itemModel.hasOne(model.itemCategory);
     itemModel.belongsTo(model.itemQuality);
+    itemModel.belongsTo(model.inventory);
   };
 
   return itemModel;

@@ -21,6 +21,7 @@ import { discordMostActive } from "../controllers/mostActive";
 import { discordPickClass } from '../controllers/pickClass';
 import { discordStats } from '../controllers/stats';
 import { discordShowCaseMagicItem } from '../controllers/showCaseMagicItem';
+import { discordShowInventory } from '../controllers/inventory';
 
 import { discordExpTest } from '../controllers/expTest';
 import { myRateLimiter } from '../helpers/rateLimit';
@@ -818,6 +819,23 @@ export const discordRouter = async (
       if (limited) return;
       const setting = await db.setting.findOne();
       const task = await discordPickClass(
+        discordClient,
+        message,
+        setting,
+        io,
+        queue,
+      );
+    }
+
+    if (filteredMessageDiscord[1] && filteredMessageDiscord[1].toLowerCase() === 'inventory') {
+      const limited = await myRateLimiter(
+        discordClient,
+        message,
+        'PickClass',
+      );
+      if (limited) return;
+      const setting = await db.setting.findOne();
+      const task = await discordShowInventory(
         discordClient,
         message,
         setting,

@@ -66,6 +66,10 @@ module.exports = (sequelize, DataTypes) => {
         'addVitality_f',
         'addEnergy_s',
         'addEnergy_f',
+        'destroyItem_s',
+        'destroyItem_f',
+        'equipItem_s',
+        'equipItem_f',
       ],
     },
     amount: {

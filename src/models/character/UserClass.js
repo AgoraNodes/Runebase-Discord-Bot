@@ -25,6 +25,14 @@ module.exports = (sequelize, DataTypes) => {
       as: 'condition',
       foreignKey: 'conditionId',
     });
+    UserClassModel.belongsTo(model.inventory, {
+      as: 'inventory',
+      foreignKey: 'inventoryId',
+    });
+    UserClassModel.belongsTo(model.equipment, {
+      as: 'equipment',
+      foreignKey: 'equipmentId',
+    });
     UserClassModel.belongsTo(model.user, {
       foreignKey: 'userId',
     });
