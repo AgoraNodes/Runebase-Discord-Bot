@@ -39,9 +39,8 @@ export const generateRandomMagicItem = async (level) => {
       },
     ],
   });
-  console.log('after random Base item');
-
-  console.log(randomBaseItem);
+  // console.log('after random Base item');
+  // console.log(randomBaseItem);
 
   const itemQualityRecord = await db.itemQuality.findOne({
     where: {
@@ -91,8 +90,8 @@ export const generateRandomMagicItem = async (level) => {
       suffixModifier = modifier;
     }
   });
-  console.log(prefixModifier);
-  console.log(suffixModifier);
+  // console.log(prefixModifier);
+  // console.log(suffixModifier);
   let levelReq;
   let rndDefense;
   let minDamage;

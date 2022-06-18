@@ -10,8 +10,8 @@ export const generateItemImage = async (
   newItem,
 ) => {
   const modifierStringArray = await generateModifierStringArray(newItem.dataValues);
-  console.log('modifierString');
-  console.log(modifierStringArray);
+  // console.log('modifierString');
+  // console.log(modifierStringArray);
   const levelReqHeight = newItem.levelReq ? 25 : 0;
   const strengthReqHeight = newItem.itemBase.strengthReq ? 25 : 0;
   const dexterityReqHeight = newItem.itemBase.dexterityReq ? 25 : 0;

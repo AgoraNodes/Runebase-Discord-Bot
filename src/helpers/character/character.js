@@ -4,14 +4,13 @@ import {
 import db from '../../models';
 
 // ARGUMENTS //
-// user: userRecord,
+// userId: discord user id,
 // needInventory: true || false
 export const fetchUserCurrentCharacter = async (
   userId,
   needInventory,
   t = false,
 ) => {
-  console.log(userId);
   const userCurrentCharacter = await db.UserClass.findOne({
     where: {
       classId: { [Op.col]: 'user.currentClassId' },
