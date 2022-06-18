@@ -13,7 +13,8 @@ import { equipBelt } from './equip/Belt';
 import { equipBoots } from './equip/Boots';
 import { equipGloves } from './equip/Gloves';
 import { equipAmulet } from './equip/Amulet';
-import { equipMainHand } from './equip/mainHand';
+import { equipMainHand } from './equip/MainHand';
+import { equipRing } from './equip/Rings';
 
 export const equipItem = async (
   userCurrentCharacter,
@@ -168,10 +169,68 @@ export const equipItem = async (
         cannotEquip = true;
         return;
       }
+      console.log(userCurrentCharacter.user.currentClass.name);
+      console.log(userCurrentCharacter.user.currentClass.name);
+      console.log(userCurrentCharacter.user.currentClass.name);
+      console.log(userCurrentCharacter.user.currentClass.name);
+      console.log(userCurrentCharacter.user.currentClass.name);
+      console.log(userCurrentCharacter.user.currentClass.name);
+      console.log(userCurrentCharacter.user.currentClass.name);
+      console.log(userCurrentCharacter.user.currentClass.name);
+      console.log(userCurrentCharacter.user.currentClass.name);
+      console.log(userCurrentCharacter.user.currentClass.name);
+      console.log(userCurrentCharacter.user.currentClass.name);
+      console.log(userCurrentCharacter.user.currentClass.name);
+      console.log(userCurrentCharacter.user.currentClass.name);
+      console.log(userCurrentCharacter.user.currentClass.name);
+      console.log(userCurrentCharacter.user.currentClass.name);
+      console.log(userCurrentCharacter.user.currentClass.name);
+      console.log(userCurrentCharacter.user.currentClass.name);
+      console.log(userCurrentCharacter.user.currentClass.name);
+      console.log(userCurrentCharacter.user.currentClass.name);
+      console.log(userCurrentCharacter.user.currentClass.name);
+      console.log('userCurrentCharacter.user.currentClass.name');
+
+      if (
+        (
+          findItemToEquip.itemBase.itemFamily.itemType.name === 'Sorceress Orbs'
+          && userCurrentCharacter.user.currentClass.name !== 'Sorceress'
+        )
+        || (
+          findItemToEquip.itemBase.itemFamily.itemType.name === 'Paladin Shields'
+          && userCurrentCharacter.user.currentClass.name !== 'Paladin'
+        )
+        || (
+          findItemToEquip.itemBase.itemFamily.itemType.name === 'Necromancer Shrunken Heads'
+          && userCurrentCharacter.user.currentClass.name !== 'Necromancer'
+        )
+        || (
+          findItemToEquip.itemBase.itemFamily.itemType.name === 'Amazon Weapons'
+          && userCurrentCharacter.user.currentClass.name !== 'Amazon'
+        )
+        || (
+          findItemToEquip.itemBase.itemFamily.itemType.name === 'Assasin Katars'
+          && userCurrentCharacter.user.currentClass.name !== 'Assasin'
+        )
+        || (
+          findItemToEquip.itemBase.itemFamily.itemType.name === 'Druid Pelts'
+          && userCurrentCharacter.user.currentClass.name !== 'Druid'
+        )
+        || (
+          findItemToEquip.itemBase.itemFamily.itemType.name === 'Barbarian Helms'
+          && userCurrentCharacter.user.currentClass.name !== 'Barbarian'
+        )
+      ) {
+        cannotEquipReason = 'Cannot Equip with this class';
+        cannotEquip = true;
+        return;
+      }
 
       if (
         findItemToEquip.itemBase.itemFamily.itemType.name === 'Helms'
         || findItemToEquip.itemBase.itemFamily.itemType.name === 'Circlets'
+        || findItemToEquip.itemBase.itemFamily.itemType.name === 'Druid Pelts'
+        || findItemToEquip.itemBase.itemFamily.itemType.name === 'Barbarian Helms'
       ) {
         await equipHelm(
           userCurrentCharacter,
@@ -196,20 +255,6 @@ export const equipItem = async (
           t,
         );
       }
-      console.log(findItemToEquip.itemBase.itemFamily.itemType.name);
-      console.log(findItemToEquip.itemBase.itemFamily.itemType.name);
-      console.log(findItemToEquip.itemBase.itemFamily.itemType.name);
-      console.log(findItemToEquip.itemBase.itemFamily.itemType.name);
-      console.log(findItemToEquip.itemBase.itemFamily.itemType.name);
-      console.log(findItemToEquip.itemBase.itemFamily.itemType.name);
-      console.log(findItemToEquip.itemBase.itemFamily.itemType.name);
-      console.log(findItemToEquip.itemBase.itemFamily.itemType.name);
-      console.log(findItemToEquip.itemBase.itemFamily.itemType.name);
-      console.log(findItemToEquip.itemBase.itemFamily.itemType.name);
-      console.log(findItemToEquip.itemBase.itemFamily.itemType.name);
-      console.log(findItemToEquip.itemBase.itemFamily.itemType.name);
-      console.log(findItemToEquip.itemBase.itemFamily.itemType.name);
-      console.log(findItemToEquip.itemBase.itemFamily.itemType.name);
 
       if (findItemToEquip.itemBase.itemFamily.itemType.name === 'Boots') {
         await equipBoots(
@@ -220,7 +265,12 @@ export const equipItem = async (
         );
       }
       if (findItemToEquip.itemBase.itemFamily.itemType.name === 'Rings') {
-
+        await equipRing(
+          userCurrentCharacter,
+          findUserCharacter.equipment,
+          findItemToEquip,
+          t,
+        );
       }
       if (findItemToEquip.itemBase.itemFamily.itemType.name === 'Amulets') {
         await equipAmulet(

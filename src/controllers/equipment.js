@@ -558,6 +558,26 @@ export const discordShowEquipment = async (
       );
     }
 
+    if (userCurrentCharacter.equipment.ringSlotOne) {
+      ringSlotOneImage = await loadImage(
+        path.join(
+          __dirname,
+          `../assets/images/items/${userCurrentCharacter.equipment.ringSlotOne.itemBase.itemFamily.itemType.name}/${userCurrentCharacter.equipment.ringSlotOne.itemBase.itemFamily.name}`,
+          `${userCurrentCharacter.equipment.ringSlotOne.itemBase.name}.png`,
+        ),
+      );
+    }
+
+    if (userCurrentCharacter.equipment.ringSlotTwo) {
+      ringSlotTwoImage = await loadImage(
+        path.join(
+          __dirname,
+          `../assets/images/items/${userCurrentCharacter.equipment.ringSlotTwo.itemBase.itemFamily.itemType.name}/${userCurrentCharacter.equipment.ringSlotTwo.itemBase.itemFamily.name}`,
+          `${userCurrentCharacter.equipment.ringSlotTwo.itemBase.name}.png`,
+        ),
+      );
+    }
+
     const statsImageBuffer = await generateStatsImage(
       userCurrentCharacter,
       false,
@@ -678,6 +698,26 @@ export const discordShowEquipment = async (
         amuletImage,
         1912, // x position
         164, // y position
+        helmImage.width * 1.8, // width
+        helmImage.height * 1.8, // height
+      );
+    }
+
+    if (userCurrentCharacter.equipment.ringSlotOne) {
+      ctx.drawImage(
+        ringSlotOneImage,
+        1398, // x position
+        840, // y position
+        helmImage.width * 1.8, // width
+        helmImage.height * 1.8, // height
+      );
+    }
+
+    if (userCurrentCharacter.equipment.ringSlotTwo) {
+      ctx.drawImage(
+        ringSlotTwoImage,
+        1912, // x position
+        840, // y position
         helmImage.width * 1.8, // width
         helmImage.height * 1.8, // height
       );

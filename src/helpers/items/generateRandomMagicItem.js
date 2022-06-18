@@ -15,7 +15,7 @@ export const generateRandomMagicItem = async (level) => {
       [Sequelize.literal('RAND()')],
     ],
     where: {
-      '$itemFamily.itemType.name$': 'Swords',
+      '$itemFamily.itemType.name$': 'Rings',
       levelReq: {
         [Op.or]: [
           {
@@ -220,7 +220,15 @@ export const generateRandomMagicItem = async (level) => {
     addEdamage += rndEdamage;
   }
 
-  const itemName = `${(prefixModifier && prefixModifier.prefix ? `${prefixModifier.prefix} ` : '')}${randomBaseItem.name}${(suffixModifier && suffixModifier.suffix ? ` ${suffixModifier.suffix}` : '')}`;
+  let baseItemName;
+  if (randomBaseItem.itemFamily.name === 'Rings') {
+    baseItemName = 'ring';
+  } else if (randomBaseItem.itemFamily.name === 'Amulets') {
+    baseItemName = 'amulet';
+  } else {
+    baseItemName = randomBaseItem.name;
+  }
+  const itemName = `${(prefixModifier && prefixModifier.prefix ? `${prefixModifier.prefix} ` : '')}${baseItemName}${(suffixModifier && suffixModifier.suffix ? ` ${suffixModifier.suffix}` : '')}`;
 
   const createNewItem = await db.item.create({
     name: itemName,
