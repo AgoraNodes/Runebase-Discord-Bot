@@ -62,6 +62,10 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.SMALLINT,
       allowNull: true,
     },
+    stack: {
+      type: DataTypes.SMALLINT,
+      allowNull: true,
+    },
   };
 
   // 2: The model options.

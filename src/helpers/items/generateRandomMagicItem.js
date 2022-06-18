@@ -15,7 +15,7 @@ export const generateRandomMagicItem = async (level) => {
       [Sequelize.literal('RAND()')],
     ],
     where: {
-      '$itemFamily.itemType.name$': 'Rings',
+      // '$itemFamily.itemType.name$': 'Throwing',
       levelReq: {
         [Op.or]: [
           {
@@ -56,6 +56,16 @@ export const generateRandomMagicItem = async (level) => {
     order: [
       [Sequelize.literal('RAND()')],
     ],
+    where: {
+      levelReq: {
+        [Op.or]: [
+          {
+            [Op.lte]: level,
+          },
+          null,
+        ],
+      },
+    },
     limit: 2,
     include: [
       {
@@ -96,6 +106,8 @@ export const generateRandomMagicItem = async (level) => {
   let rndDefense;
   let minDamage;
   let maxDamage;
+  let minThrowDamage;
+  let maxThrowDamage;
   let addStrength = 0;
   let addDexterity = 0;
   let addVitality = 0;
@@ -121,6 +133,11 @@ export const generateRandomMagicItem = async (level) => {
   if (randomBaseItem.minDamage && randomBaseItem.maxDamage) {
     minDamage = randomBaseItem.minDamage;
     maxDamage = randomBaseItem.maxDamage;
+  }
+
+  if (randomBaseItem.minThrowDamage && randomBaseItem.maxThrowDamage) {
+    minThrowDamage = randomBaseItem.minThrowDamage;
+    maxThrowDamage = randomBaseItem.maxThrowDamage;
   }
 
   // Calculate Strength
@@ -234,6 +251,7 @@ export const generateRandomMagicItem = async (level) => {
     itemBaseId: randomBaseItem.id,
     itemQualityId: itemQualityRecord.id,
     durability: randomBaseItem.durability,
+    stack: randomBaseItem.maxStack,
     ...(
       levelReq && {
         levelReq,
@@ -262,6 +280,16 @@ export const generateRandomMagicItem = async (level) => {
     ...(
       maxDamage && {
         maxDamage,
+      }
+    ),
+    ...(
+      minThrowDamage && {
+        minThrowDamage,
+      }
+    ),
+    ...(
+      maxThrowDamage && {
+        maxThrowDamage,
       }
     ),
     ...(

@@ -5,39 +5,6 @@ export const unEquipRing = async (
   itemToUnequip,
   t,
 ) => {
-  console.log('unequip ring');
-  console.log('unequip ring');
-  console.log('unequip ring');
-  console.log('unequip ring');
-  console.log('unequip ring');
-  console.log('unequip ring');
-  console.log('unequip ring');
-  console.log('unequip ring');
-  console.log('unequip ring');
-  console.log('unequip ring');
-  console.log('unequip ring');
-  console.log('unequip ring');
-  console.log('unequip ring');
-  console.log('unequip ring');
-  console.log('unequip ring');
-  console.log('unequip ring');
-  console.log('unequip ring');
-  console.log('unequip ring');
-  console.log('unequip ring');
-  console.log('unequip ring');
-  console.log('unequip ring');
-  console.log('unequip ring');
-  console.log('unequip ring');
-  console.log('unequip ring');
-  console.log('unequip ring');
-  console.log('unequip ring');
-  console.log('unequip ring');
-  console.log('unequip ring');
-  console.log('unequip ring');
-  console.log('unequip ring');
-  console.log('unequip ring');
-  console.log('unequip ring');
-
   if (userCurrentCharacter.equipment.ringSlotOneId || userCurrentCharacter.equipment.ringSlotTwoId) {
     const unEquipRing = await db.item.findOne({
       where: {

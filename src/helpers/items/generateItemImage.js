@@ -44,12 +44,15 @@ export const generateItemImage = async (
   const isBow = newItem.itemBase.itemFamily.itemType.name === "Bows";
   const isRing = newItem.itemBase.itemFamily.itemType.name === "Rings";
   const isAmulet = newItem.itemBase.itemFamily.itemType.name === "Amulets";
+  const isJavelin = newItem.itemBase.itemFamily.itemType.name === "Javelins";
+  const isThrowing = newItem.itemBase.itemFamily.itemType.name === "Throwing";
   const extraWeaponsHeight = isWeapon ? 25 : 0;
   const extraShieldBlockHeight = isShield ? 25 : 0;
   const classSpecificHeight = isClassSpecific ? 25 : 0;
   const minusBowHeight = isBow ? -25 : 0;
-  const minusRingwHeight = isBow ? -25 : 0;
-  const minusAmuletHeight = isBow ? -25 : 0;
+  const minusRingwHeight = isRing ? -25 : 0;
+  const minusAmuletHeight = isAmulet ? -25 : 0;
+  const extraThrowingJavelinHeight = (isThrowing || isJavelin) ? 25 : 0;
   const totalExtraHeight = levelReqHeight
     + strengthReqHeight
     + dexterityReqHeight
@@ -59,7 +62,8 @@ export const generateItemImage = async (
     + minusBowHeight
     + minusRingwHeight
     + minusAmuletHeight
-    + classSpecificHeight;
+    + classSpecificHeight
+    + extraThrowingJavelinHeight;
 
   await registerFont(path.join(__dirname, '../../assets/fonts/', 'Heart_warming.otf'), { family: 'HeartWarming' });
   const itemImage = await loadImage(path.join(__dirname, `../../assets/images/items/${newItem.itemBase.itemFamily.itemType.name}/${newItem.itemBase.itemFamily.name}`, `${newItem.itemBase.name}.png`));
@@ -198,9 +202,27 @@ export const generateItemImage = async (
       200,
     );
   }
+  if (isJavelin || isThrowing) {
+    const realMinThrowingDamageValue = Math.round((newItem.minThrowDamage * (1 + (newItem.eDamage ? newItem.eDamage / 100 : 0))));
+    const realMaxThrowingDamageValue = Math.round((newItem.maxThrowDamage * (1 + (newItem.eDamage ? newItem.eDamage / 100 : 0))));
+    ctx.strokeText(
+      `Throwing Damage: ${realMinThrowingDamageValue} - ${realMaxThrowingDamageValue}${newItem.eDamage ? ` (upped from ${newItem.minThrowDamage} - ${newItem.maxThrowDamage})` : ``}`,
+      // `Defense: ${Math.round((newItem.defense * (1 + (newItem.ed / 100))))}`,
+      100,
+      (itemImage.height) + 70 + shieldAndBootsDamageHeight + extraWeaponsHeight + extraShieldBlockHeight,
+      200,
+    );
+    ctx.fillText(
+      `Throwing Damage: ${realMinThrowingDamageValue} - ${realMaxThrowingDamageValue}${newItem.eDamage ? ` (upped from ${newItem.minThrowDamage} - ${newItem.maxThrowDamage})` : ``}`,
+      // `Defense: ${Math.round((newItem.defense * (1 + (newItem.ed / 100))))}`,
+      100,
+      (itemImage.height) + 70 + shieldAndBootsDamageHeight + extraWeaponsHeight + extraShieldBlockHeight,
+      200,
+    );
+  }
 
   // item durability
-  if (!isBow && !isRing && !isAmulet) {
+  if (!isBow && !isRing && !isAmulet && !isJavelin && !isThrowing) {
     ctx.strokeText(
       `Durability: ${newItem.durability} of ${newItem.itemBase.durability}`,
       100,
@@ -211,6 +233,20 @@ export const generateItemImage = async (
       `Durability: ${newItem.durability} of ${newItem.itemBase.durability}`,
       100,
       (itemImage.height) + 70 + shieldAndBootsDamageHeight + extraWeaponsHeight + extraShieldBlockHeight,
+      200,
+    );
+  }
+  if (isJavelin || isThrowing) {
+    ctx.strokeText(
+      `Stack: ${newItem.stack} of ${newItem.itemBase.maxStack}`,
+      100,
+      (itemImage.height) + 70 + shieldAndBootsDamageHeight + extraWeaponsHeight + extraShieldBlockHeight + extraThrowingJavelinHeight,
+      200,
+    );
+    ctx.fillText(
+      `Stack: ${newItem.stack} of ${newItem.itemBase.maxStack}`,
+      100,
+      (itemImage.height) + 70 + shieldAndBootsDamageHeight + extraWeaponsHeight + extraShieldBlockHeight + extraThrowingJavelinHeight,
       200,
     );
   }
@@ -219,13 +255,13 @@ export const generateItemImage = async (
     ctx.strokeText(
       `(Barbarian Only)`,
       100,
-      (itemImage.height) + 95 + shieldAndBootsDamageHeight + extraWeaponsHeight + extraShieldBlockHeight,
+      (itemImage.height) + 95 + shieldAndBootsDamageHeight + extraWeaponsHeight + extraShieldBlockHeight + extraThrowingJavelinHeight,
       200,
     );
     ctx.fillText(
       `(Barbarian Only)`,
       100,
-      (itemImage.height) + 95 + shieldAndBootsDamageHeight + extraWeaponsHeight + extraShieldBlockHeight,
+      (itemImage.height) + 95 + shieldAndBootsDamageHeight + extraWeaponsHeight + extraShieldBlockHeight + extraThrowingJavelinHeight,
       200,
     );
   }
@@ -234,13 +270,13 @@ export const generateItemImage = async (
     ctx.strokeText(
       `(Druid Only)`,
       100,
-      (itemImage.height) + 95 + shieldAndBootsDamageHeight + extraWeaponsHeight + extraShieldBlockHeight,
+      (itemImage.height) + 95 + shieldAndBootsDamageHeight + extraWeaponsHeight + extraShieldBlockHeight + extraThrowingJavelinHeight,
       200,
     );
     ctx.fillText(
       `(Druid Only)`,
       100,
-      (itemImage.height) + 95 + shieldAndBootsDamageHeight + extraWeaponsHeight + extraShieldBlockHeight,
+      (itemImage.height) + 95 + shieldAndBootsDamageHeight + extraWeaponsHeight + extraShieldBlockHeight + extraThrowingJavelinHeight,
       200,
     );
   }
@@ -249,13 +285,13 @@ export const generateItemImage = async (
     ctx.strokeText(
       `(Paladin Only)`,
       100,
-      (itemImage.height) + 95 + shieldAndBootsDamageHeight + extraWeaponsHeight + extraShieldBlockHeight,
+      (itemImage.height) + 95 + shieldAndBootsDamageHeight + extraWeaponsHeight + extraShieldBlockHeight + extraThrowingJavelinHeight,
       200,
     );
     ctx.fillText(
       `(Paladin Only)`,
       100,
-      (itemImage.height) + 95 + shieldAndBootsDamageHeight + extraWeaponsHeight + extraShieldBlockHeight,
+      (itemImage.height) + 95 + shieldAndBootsDamageHeight + extraWeaponsHeight + extraShieldBlockHeight + extraThrowingJavelinHeight,
       200,
     );
   }
@@ -264,13 +300,13 @@ export const generateItemImage = async (
     ctx.strokeText(
       `(Necromancer Only)`,
       100,
-      (itemImage.height) + 95 + shieldAndBootsDamageHeight + extraWeaponsHeight + extraShieldBlockHeight,
+      (itemImage.height) + 95 + shieldAndBootsDamageHeight + extraWeaponsHeight + extraShieldBlockHeight + extraThrowingJavelinHeight,
       200,
     );
     ctx.fillText(
       `(Necromancer Only)`,
       100,
-      (itemImage.height) + 95 + shieldAndBootsDamageHeight + extraWeaponsHeight + extraShieldBlockHeight,
+      (itemImage.height) + 95 + shieldAndBootsDamageHeight + extraWeaponsHeight + extraShieldBlockHeight + extraThrowingJavelinHeight,
       200,
     );
   }
@@ -279,13 +315,13 @@ export const generateItemImage = async (
     ctx.strokeText(
       `(Assasin Only)`,
       100,
-      (itemImage.height) + 95 + shieldAndBootsDamageHeight + extraWeaponsHeight + extraShieldBlockHeight,
+      (itemImage.height) + 95 + shieldAndBootsDamageHeight + extraWeaponsHeight + extraShieldBlockHeight + extraThrowingJavelinHeight,
       200,
     );
     ctx.fillText(
       `(Assasin Only)`,
       100,
-      (itemImage.height) + 95 + shieldAndBootsDamageHeight + extraWeaponsHeight + extraShieldBlockHeight,
+      (itemImage.height) + 95 + shieldAndBootsDamageHeight + extraWeaponsHeight + extraShieldBlockHeight + extraThrowingJavelinHeight,
       200,
     );
   }
@@ -294,13 +330,13 @@ export const generateItemImage = async (
     ctx.strokeText(
       `(Amazon Only)`,
       100,
-      (itemImage.height) + 95 + shieldAndBootsDamageHeight + extraWeaponsHeight + extraShieldBlockHeight,
+      (itemImage.height) + 95 + shieldAndBootsDamageHeight + extraWeaponsHeight + extraShieldBlockHeight + extraThrowingJavelinHeight,
       200,
     );
     ctx.fillText(
       `(Amazon Only)`,
       100,
-      (itemImage.height) + 95 + shieldAndBootsDamageHeight + extraWeaponsHeight + extraShieldBlockHeight,
+      (itemImage.height) + 95 + shieldAndBootsDamageHeight + extraWeaponsHeight + extraShieldBlockHeight + extraThrowingJavelinHeight,
       200,
     );
   }
@@ -309,13 +345,13 @@ export const generateItemImage = async (
     ctx.strokeText(
       `(Sorceress Only)`,
       100,
-      (itemImage.height) + 95 + shieldAndBootsDamageHeight + extraWeaponsHeight + extraShieldBlockHeight,
+      (itemImage.height) + 95 + shieldAndBootsDamageHeight + extraWeaponsHeight + extraShieldBlockHeight + extraThrowingJavelinHeight,
       200,
     );
     ctx.fillText(
       `(Sorceress Only)`,
       100,
-      (itemImage.height) + 95 + shieldAndBootsDamageHeight + extraWeaponsHeight + extraShieldBlockHeight,
+      (itemImage.height) + 95 + shieldAndBootsDamageHeight + extraWeaponsHeight + extraShieldBlockHeight + extraThrowingJavelinHeight,
       200,
     );
   }
@@ -325,13 +361,13 @@ export const generateItemImage = async (
     ctx.strokeText(
       `Lvl Requirement: ${newItem.levelReq}`,
       100,
-      (itemImage.height) + 95 + shieldAndBootsDamageHeight + extraWeaponsHeight + extraShieldBlockHeight + minusBowHeight + classSpecificHeight + minusRingwHeight + minusAmuletHeight,
+      (itemImage.height) + 95 + shieldAndBootsDamageHeight + extraWeaponsHeight + extraShieldBlockHeight + minusBowHeight + classSpecificHeight + minusRingwHeight + minusAmuletHeight + extraThrowingJavelinHeight,
       200,
     );
     ctx.fillText(
       `Lvl Requirement: ${newItem.levelReq}`,
       100,
-      (itemImage.height) + 95 + shieldAndBootsDamageHeight + extraWeaponsHeight + extraShieldBlockHeight + minusBowHeight + classSpecificHeight + minusRingwHeight + minusAmuletHeight,
+      (itemImage.height) + 95 + shieldAndBootsDamageHeight + extraWeaponsHeight + extraShieldBlockHeight + minusBowHeight + classSpecificHeight + minusRingwHeight + minusAmuletHeight + extraThrowingJavelinHeight,
       200,
     );
   }
@@ -341,13 +377,13 @@ export const generateItemImage = async (
     ctx.strokeText(
       `Strength Requirement: ${newItem.itemBase.strengthReq}`,
       100,
-      (itemImage.height) + 95 + (levelReqHeight) + shieldAndBootsDamageHeight + extraWeaponsHeight + extraShieldBlockHeight + minusBowHeight + classSpecificHeight + minusRingwHeight + minusAmuletHeight,
+      (itemImage.height) + 95 + (levelReqHeight) + shieldAndBootsDamageHeight + extraWeaponsHeight + extraShieldBlockHeight + minusBowHeight + classSpecificHeight + minusRingwHeight + minusAmuletHeight + extraThrowingJavelinHeight,
       200,
     );
     ctx.fillText(
       `Strength Requirement: ${newItem.itemBase.strengthReq}`,
       100,
-      (itemImage.height) + 95 + (levelReqHeight) + shieldAndBootsDamageHeight + extraWeaponsHeight + extraShieldBlockHeight + minusBowHeight + classSpecificHeight + minusRingwHeight + minusAmuletHeight,
+      (itemImage.height) + 95 + (levelReqHeight) + shieldAndBootsDamageHeight + extraWeaponsHeight + extraShieldBlockHeight + minusBowHeight + classSpecificHeight + minusRingwHeight + minusAmuletHeight + extraThrowingJavelinHeight,
       200,
     );
   }
@@ -357,13 +393,13 @@ export const generateItemImage = async (
     ctx.strokeText(
       `Dexterity Requirement: ${newItem.itemBase.dexterityReq}`,
       100,
-      (itemImage.height) + 95 + (levelReqHeight) + (strengthReqHeight) + shieldAndBootsDamageHeight + extraWeaponsHeight + extraShieldBlockHeight + minusBowHeight + classSpecificHeight + minusRingwHeight + minusAmuletHeight,
+      (itemImage.height) + 95 + (levelReqHeight) + (strengthReqHeight) + shieldAndBootsDamageHeight + extraWeaponsHeight + extraShieldBlockHeight + minusBowHeight + classSpecificHeight + minusRingwHeight + minusAmuletHeight + extraThrowingJavelinHeight,
       200,
     );
     ctx.fillText(
       `Dexterity Requirement: ${newItem.itemBase.dexterityReq}`,
       100,
-      (itemImage.height) + 95 + (levelReqHeight) + (strengthReqHeight) + shieldAndBootsDamageHeight + extraWeaponsHeight + extraShieldBlockHeight + minusBowHeight + classSpecificHeight + minusRingwHeight + minusAmuletHeight,
+      (itemImage.height) + 95 + (levelReqHeight) + (strengthReqHeight) + shieldAndBootsDamageHeight + extraWeaponsHeight + extraShieldBlockHeight + minusBowHeight + classSpecificHeight + minusRingwHeight + minusAmuletHeight + extraThrowingJavelinHeight,
       200,
     );
   }

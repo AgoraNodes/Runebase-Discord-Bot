@@ -308,7 +308,7 @@ export const discordShowInventory = async (
       label: `Compare ${current[0].name}`,
       emoji: '👀',
       customId: equipItemId,
-    });
+    }).setDisabled(true);
   };
 
   const generateEquipItemButton = async (start) => {
