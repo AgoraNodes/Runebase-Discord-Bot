@@ -9,6 +9,8 @@ import { equipHelm } from "./equip/Helm";
 import { equipArmor } from './equip/Armor';
 import { equipOffHand } from './equip/OffHand';
 
+import { equipBelt } from './equip/Belt';
+
 export const equipItem = async (
   userCurrentCharacter,
   itemId,
@@ -163,13 +165,33 @@ export const equipItem = async (
         return;
       }
 
-      if (findItemToEquip.itemBase.itemFamily.itemType.name === 'Helms') {
+      if (
+        findItemToEquip.itemBase.itemFamily.itemType.name === 'Helms'
+        || findItemToEquip.itemBase.itemFamily.itemType.name === 'Circlets'
+      ) {
         await equipHelm(
           userCurrentCharacter,
           findUserCharacter.equipment,
           findItemToEquip,
           t,
         );
+      }
+      if (findItemToEquip.itemBase.itemFamily.itemType.name === 'Belts') {
+        await equipBelt(
+          userCurrentCharacter,
+          findUserCharacter.equipment,
+          findItemToEquip,
+          t,
+        );
+      }
+      if (findItemToEquip.itemBase.itemFamily.itemType.name === 'Boots') {
+
+      }
+      if (findItemToEquip.itemBase.itemFamily.itemType.name === 'Rings') {
+
+      }
+      if (findItemToEquip.itemBase.itemFamily.itemType.name === 'Amulets') {
+
       }
       if (findItemToEquip.itemBase.itemFamily.itemType.name === 'Armors') {
         await equipArmor(
@@ -179,7 +201,12 @@ export const equipItem = async (
           t,
         );
       }
-      if (findItemToEquip.itemBase.itemFamily.itemType.name === 'Shields') {
+      if (
+        findItemToEquip.itemBase.itemFamily.itemType.name === 'Shields'
+        || findItemToEquip.itemBase.itemFamily.itemType.name === 'Sorceress Orbs'
+        || findItemToEquip.itemBase.itemFamily.itemType.name === 'Paladin Shields'
+        || findItemToEquip.itemBase.itemFamily.itemType.name === 'Necromancer Shrunken Heads'
+      ) {
         await equipOffHand(
           userCurrentCharacter,
           findUserCharacter.equipment,
@@ -187,6 +214,32 @@ export const equipItem = async (
           t,
         );
       }
+
+      if (
+        findItemToEquip.itemBase.itemFamily.itemType.name === 'Axes'
+        || findItemToEquip.itemBase.itemFamily.itemType.name === 'Bows'
+        || findItemToEquip.itemBase.itemFamily.itemType.name === 'Crossbows'
+        || findItemToEquip.itemBase.itemFamily.itemType.name === 'Daggers'
+        || findItemToEquip.itemBase.itemFamily.itemType.name === 'Javelins'
+        || findItemToEquip.itemBase.itemFamily.itemType.name === 'Maces'
+        || findItemToEquip.itemBase.itemFamily.itemType.name === 'Polearms'
+        || findItemToEquip.itemBase.itemFamily.itemType.name === 'Scepters'
+        || findItemToEquip.itemBase.itemFamily.itemType.name === 'Spears'
+        || findItemToEquip.itemBase.itemFamily.itemType.name === 'Staves'
+        || findItemToEquip.itemBase.itemFamily.itemType.name === 'Swords'
+        || findItemToEquip.itemBase.itemFamily.itemType.name === 'Throwing'
+        || findItemToEquip.itemBase.itemFamily.itemType.name === 'Wands'
+        || findItemToEquip.itemBase.itemFamily.itemType.name === 'Assasin Katars'
+        || findItemToEquip.itemBase.itemFamily.itemType.name === 'Amazon Weapons'
+      ) {
+        await equipOffHand(
+          userCurrentCharacter,
+          findUserCharacter.equipment,
+          findItemToEquip,
+          t,
+        );
+      }
+
       const preActivity = await db.activity.create({
         type: 'equipItem_s',
         earnerId: userCurrentCharacter.user.id,
