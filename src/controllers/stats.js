@@ -28,6 +28,7 @@ import { addDexterity } from "../helpers/stats/addDexterity";
 import { addVitality } from "../helpers/stats/addVitality";
 import { addEnergy } from "../helpers/stats/addEnergy";
 import { generateStatsImage } from '../helpers/stats/generateStatsImage';
+import { fetchUserCurrentCharacter } from "../helpers/character/character";
 
 export const discordStats = async (
   discordClient,
@@ -52,43 +53,11 @@ export const discordStats = async (
 
   if (!user) return;
 
-  const userCurrentCharacter = await db.UserClass.findOne({
-    where: {
-      classId: user.currentClassId,
-      userId: user.id,
-    },
-    include: [
-      {
-        model: db.user,
-        as: 'user',
-        where: {
-          user_id: `${userId}`,
-        },
-        include: [
-          {
-            model: db.class,
-            as: 'currentClass',
-          },
-          {
-            model: db.rank,
-            as: 'ranks',
-          },
-        ],
-      },
-      {
-        model: db.stats,
-        as: 'stats',
-      },
-      {
-        model: db.condition,
-        as: 'condition',
-      },
-      {
-        model: db.equipment,
-        as: 'equipment',
-      },
-    ],
-  });
+  const userCurrentCharacter = await fetchUserCurrentCharacter(
+    user, // user Object
+    false, // Need inventory?
+  );
+
   if (!userCurrentCharacter) {
     console.log('user has not selected a class yet'); // Add notice message here to warn user to select a class
     return;
