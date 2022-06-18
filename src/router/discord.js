@@ -440,7 +440,7 @@ export const discordRouter = async (
           const limited = await myRateLimiter(
             discordClient,
             interaction,
-            'Stats',
+            'Inventory',
           );
           if (limited) {
             await interaction.editReply('rate limited').catch((e) => {
@@ -470,7 +470,7 @@ export const discordRouter = async (
           const limited = await myRateLimiter(
             discordClient,
             interaction,
-            'Stats',
+            'Equipment',
           );
           if (limited) {
             await interaction.editReply('rate limited').catch((e) => {

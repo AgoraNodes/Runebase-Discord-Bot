@@ -1012,7 +1012,7 @@ var discordRouter = /*#__PURE__*/function () {
 
                       case 171:
                         _context24.next = 173;
-                        return (0, _rateLimit.myRateLimiter)(discordClient, interaction, 'Stats');
+                        return (0, _rateLimit.myRateLimiter)(discordClient, interaction, 'Inventory');
 
                       case 173:
                         _limited10 = _context24.sent;
@@ -1076,7 +1076,7 @@ var discordRouter = /*#__PURE__*/function () {
 
                       case 188:
                         _context24.next = 190;
-                        return (0, _rateLimit.myRateLimiter)(discordClient, interaction, 'Stats');
+                        return (0, _rateLimit.myRateLimiter)(discordClient, interaction, 'Equipment');
 
                       case 190:
                         _limited11 = _context24.sent;
