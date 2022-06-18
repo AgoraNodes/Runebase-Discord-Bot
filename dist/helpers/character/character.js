@@ -29,6 +29,7 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 var fetchUserCurrentCharacter = /*#__PURE__*/function () {
   var _ref = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(userId, needInventory) {
     var t,
+        user,
         userCurrentCharacter,
         _args = arguments;
     return _regenerator["default"].wrap(function _callee$(_context) {
@@ -37,9 +38,22 @@ var fetchUserCurrentCharacter = /*#__PURE__*/function () {
           case 0:
             t = _args.length > 2 && _args[2] !== undefined ? _args[2] : false;
             _context.next = 3;
+            return _models["default"].user.findOne(_objectSpread({
+              where: {
+                user_id: userId
+              }
+            }, t && [{
+              lock: t.LOCK.UPDATE,
+              transaction: t
+            }]));
+
+          case 3:
+            user = _context.sent;
+            _context.next = 6;
             return _models["default"].UserClass.findOne(_objectSpread(_objectSpread({
               where: {
-                classId: (0, _defineProperty2["default"])({}, _sequelize.Op.col, 'user.currentClassId')
+                // classId: { [Op.col]: 'user.currentClassId' },
+                classId: user.currentClassId
               }
             }, t && [{
               lock: t.LOCK.UPDATE,
@@ -286,11 +300,11 @@ var fetchUserCurrentCharacter = /*#__PURE__*/function () {
               }] : []))
             }));
 
-          case 3:
+          case 6:
             userCurrentCharacter = _context.sent;
             return _context.abrupt("return", userCurrentCharacter);
 
-          case 5:
+          case 8:
           case "end":
             return _context.stop();
         }

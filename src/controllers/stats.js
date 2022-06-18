@@ -22,13 +22,14 @@ import {
 } from '../messages';
 import db from '../models';
 import logger from "../helpers/logger";
-import { userWalletExist } from "../helpers/client/userWalletExist";
 import { addStrength } from "../helpers/stats/addStrength";
 import { addDexterity } from "../helpers/stats/addDexterity";
 import { addVitality } from "../helpers/stats/addVitality";
 import { addEnergy } from "../helpers/stats/addEnergy";
 import { generateStatsImage } from '../helpers/stats/generateStatsImage';
 import { fetchUserCurrentCharacter } from "../helpers/character/character";
+import { fetchDiscordUserIdFromMessageOrInteraction } from '../helpers/client/fetchDiscordUserIdFromMessageOrInteraction';
+import { fetchDiscordChannel } from '../helpers/client/fetchDiscordChannel';
 
 export const discordStats = async (
   discordClient,
@@ -37,64 +38,34 @@ export const discordStats = async (
   io,
   queue,
 ) => {
-  let userId;
-  if (message.user && message.user.id) {
-    userId = message.user.id;
-  } else if (message.author) {
-    userId = message.author.id;
-  } else {
-    userId = message.user;
-  }
-  const user = await db.user.findOne({
-    where: {
-      user_id: `${userId}`,
-    },
-  });
+  const activity = [];
+  const userId = await fetchDiscordUserIdFromMessageOrInteraction(
+    message,
+  );
 
-  if (!user) return;
+  const discordChannel = await fetchDiscordChannel(
+    discordClient,
+    message,
+  );
 
   const userCurrentCharacter = await fetchUserCurrentCharacter(
-    user, // user Object
-    false, // Need inventory?
+    userId, // user discord id
+    true, // Need inventory?
   );
 
   if (!userCurrentCharacter) {
-    console.log('user has not selected a class yet'); // Add notice message here to warn user to select a class
+    await message.reply({
+      content: 'You have not selected a class yet\n`!runebase pickclass`\n/`pickclass`',
+      ephemeral: true,
+    });
     return;
   }
 
-  console.log('currentUser');
-  console.log(userCurrentCharacter.user);
-  console.log('currentUser2');
-  console.log(userCurrentCharacter.user.ranks[0]);
-  console.log('currentUser3');
-  console.log(userCurrentCharacter);
-  console.log('currentUser4');
-  console.log(userCurrentCharacter.stats);
-
-  const activity = [];
-  let CurrentClassSelectionId;
-  let discordChannel;
   const strengthButtonId = 'strength';
   const dexterityButtonId = 'dexterity';
   const vitalityButtonId = 'vitality';
   const energyButtonId = 'energy';
   const cancelStatsPickId = 'cancelStatsPick';
-
-  if (message.type && message.type === 'APPLICATION_COMMAND') {
-    if (message.guildId) {
-      discordChannel = await discordClient.channels.cache.get(message.channelId);
-    } else {
-      discordChannel = await discordClient.users.cache.get(message.user.id);
-    }
-  } else {
-    if (message.channel.type === 'DM') {
-      discordChannel = await discordClient.channels.cache.get(message.channelId);
-    }
-    if (message.channel.type === 'GUILD_TEXT') {
-      discordChannel = await discordClient.channels.cache.get(message.channelId);
-    }
-  }
 
   const strengthButton = new MessageButton({
     style: 'SECONDARY',

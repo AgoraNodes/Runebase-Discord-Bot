@@ -29,8 +29,6 @@ var _models = _interopRequireDefault(require("../models"));
 
 var _logger = _interopRequireDefault(require("../helpers/logger"));
 
-var _userWalletExist = require("../helpers/client/userWalletExist");
-
 var _addStrength = require("../helpers/stats/addStrength");
 
 var _addDexterity = require("../helpers/stats/addDexterity");
@@ -43,127 +41,57 @@ var _generateStatsImage = require("../helpers/stats/generateStatsImage");
 
 var _character = require("../helpers/character/character");
 
+var _fetchDiscordUserIdFromMessageOrInteraction = require("../helpers/client/fetchDiscordUserIdFromMessageOrInteraction");
+
+var _fetchDiscordChannel = require("../helpers/client/fetchDiscordChannel");
+
 /* eslint-disable import/prefer-default-export */
 var discordStats = /*#__PURE__*/function () {
   var _ref = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee3(discordClient, message, setting, io, queue) {
-    var userId, user, userCurrentCharacter, activity, CurrentClassSelectionId, discordChannel, strengthButtonId, dexterityButtonId, vitalityButtonId, energyButtonId, cancelStatsPickId, strengthButton, dexterityButton, vitalityButton, energyButton, cancelStatsPickButton, generateCancelClassPicked, calc, embedMessage, collector;
+    var activity, userId, discordChannel, userCurrentCharacter, strengthButtonId, dexterityButtonId, vitalityButtonId, energyButtonId, cancelStatsPickId, strengthButton, dexterityButton, vitalityButton, energyButton, cancelStatsPickButton, generateCancelClassPicked, calc, embedMessage, collector;
     return _regenerator["default"].wrap(function _callee3$(_context3) {
       while (1) {
         switch (_context3.prev = _context3.next) {
           case 0:
-            if (message.user && message.user.id) {
-              userId = message.user.id;
-            } else if (message.author) {
-              userId = message.author.id;
-            } else {
-              userId = message.user;
-            }
-
+            activity = [];
             _context3.next = 3;
-            return _models["default"].user.findOne({
-              where: {
-                user_id: "".concat(userId)
-              }
-            });
+            return (0, _fetchDiscordUserIdFromMessageOrInteraction.fetchDiscordUserIdFromMessageOrInteraction)(message);
 
           case 3:
-            user = _context3.sent;
-
-            if (user) {
-              _context3.next = 6;
-              break;
-            }
-
-            return _context3.abrupt("return");
+            userId = _context3.sent;
+            _context3.next = 6;
+            return (0, _fetchDiscordChannel.fetchDiscordChannel)(discordClient, message);
 
           case 6:
-            _context3.next = 8;
-            return (0, _character.fetchUserCurrentCharacter)(user, // user Object
-            false // Need inventory?
+            discordChannel = _context3.sent;
+            _context3.next = 9;
+            return (0, _character.fetchUserCurrentCharacter)(userId, // user discord id
+            true // Need inventory?
             );
 
-          case 8:
+          case 9:
             userCurrentCharacter = _context3.sent;
 
             if (userCurrentCharacter) {
-              _context3.next = 12;
+              _context3.next = 14;
               break;
             }
 
-            console.log('user has not selected a class yet'); // Add notice message here to warn user to select a class
+            _context3.next = 13;
+            return message.reply({
+              content: 'You have not selected a class yet\n`!runebase pickclass`\n/`pickclass`',
+              ephemeral: true
+            });
 
+          case 13:
             return _context3.abrupt("return");
 
-          case 12:
-            console.log('currentUser');
-            console.log(userCurrentCharacter.user);
-            console.log('currentUser2');
-            console.log(userCurrentCharacter.user.ranks[0]);
-            console.log('currentUser3');
-            console.log(userCurrentCharacter);
-            console.log('currentUser4');
-            console.log(userCurrentCharacter.stats);
-            activity = [];
+          case 14:
             strengthButtonId = 'strength';
             dexterityButtonId = 'dexterity';
             vitalityButtonId = 'vitality';
             energyButtonId = 'energy';
             cancelStatsPickId = 'cancelStatsPick';
-
-            if (!(message.type && message.type === 'APPLICATION_COMMAND')) {
-              _context3.next = 38;
-              break;
-            }
-
-            if (!message.guildId) {
-              _context3.next = 33;
-              break;
-            }
-
-            _context3.next = 30;
-            return discordClient.channels.cache.get(message.channelId);
-
-          case 30:
-            discordChannel = _context3.sent;
-            _context3.next = 36;
-            break;
-
-          case 33:
-            _context3.next = 35;
-            return discordClient.users.cache.get(message.user.id);
-
-          case 35:
-            discordChannel = _context3.sent;
-
-          case 36:
-            _context3.next = 46;
-            break;
-
-          case 38:
-            if (!(message.channel.type === 'DM')) {
-              _context3.next = 42;
-              break;
-            }
-
-            _context3.next = 41;
-            return discordClient.channels.cache.get(message.channelId);
-
-          case 41:
-            discordChannel = _context3.sent;
-
-          case 42:
-            if (!(message.channel.type === 'GUILD_TEXT')) {
-              _context3.next = 46;
-              break;
-            }
-
-            _context3.next = 45;
-            return discordClient.channels.cache.get(message.channelId);
-
-          case 45:
-            discordChannel = _context3.sent;
-
-          case 46:
             strengthButton = new _discord.MessageButton({
               style: 'SECONDARY',
               label: 'Strength ➕',
@@ -229,10 +157,10 @@ var discordStats = /*#__PURE__*/function () {
             calc = userCurrentCharacter.stats.strength + userCurrentCharacter.stats.dexterity + userCurrentCharacter.stats.vitality + userCurrentCharacter.stats.energy < userCurrentCharacter.user.ranks[0].id * 5;
             _context3.t0 = discordChannel;
             _context3.t1 = _discord.MessageAttachment;
-            _context3.next = 57;
+            _context3.next = 30;
             return (0, _generateStatsImage.generateStatsImage)(userCurrentCharacter, false);
 
-          case 57:
+          case 30:
             _context3.t2 = _context3.sent;
             _context3.t3 = new _context3.t1(_context3.t2, 'class.png');
             _context3.t4 = [_context3.t3];
@@ -247,10 +175,10 @@ var discordStats = /*#__PURE__*/function () {
               files: _context3.t4,
               components: _context3.t5
             };
-            _context3.next = 64;
+            _context3.next = 37;
             return _context3.t0.send.call(_context3.t0, _context3.t6);
 
-          case 64:
+          case 37:
             embedMessage = _context3.sent;
             collector = embedMessage.createMessageComponentCollector({
               filter: function filter(_ref3) {
@@ -389,7 +317,7 @@ var discordStats = /*#__PURE__*/function () {
               };
             }());
 
-          case 67:
+          case 40:
           case "end":
             return _context3.stop();
         }

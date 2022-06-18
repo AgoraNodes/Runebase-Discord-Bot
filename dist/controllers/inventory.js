@@ -44,7 +44,7 @@ var _fetchDiscordChannel = require("../helpers/client/fetchDiscordChannel");
 /* eslint-disable import/prefer-default-export */
 var discordShowInventory = /*#__PURE__*/function () {
   var _ref = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee16(discordClient, message, setting, io, queue) {
-    var activity, userId, discordChannel, userCurrentCharacter, exitInventoryId, backId, forwardId, backButton, forwardButton, generateExitInventoryButton, generateConfirmDestroyItemImage, generateInventoryImage, generateClassPicked, generateExitInventoryImage, generateEmptyInventoryImage, generateEquipmentCompareButton, generateEquipItemButton, generateDestroyYesButton, generateDestroyNoButton, generateDestroyItemButton, canFitOnOnePage, embedMessage, collector, currentIndex;
+    var activity, userId, discordChannel, userCurrentCharacter, exitInventoryId, backId, forwardId, backButton, forwardButton, generateExitInventoryButton, generateConfirmDestroyItemImage, generateInventoryImage, generateClassPicked, generateExitInventoryImage, generateEmptyInventoryImage, generateEquipmentCompareButton, generateEquipItemButton, generateDestroyYesButton, generateDestroyNoButton, generateDestroyItemButton, row, canFitOnOnePage, embedMessage, collector, currentIndex;
     return _regenerator["default"].wrap(function _callee16$(_context16) {
       while (1) {
         switch (_context16.prev = _context16.next) {
@@ -491,112 +491,151 @@ var discordShowInventory = /*#__PURE__*/function () {
               };
             }();
 
-            canFitOnOnePage = userCurrentCharacter.inventory.items.length <= 1;
-            _context16.t0 = discordChannel;
-            _context16.t1 = _toConsumableArray2["default"];
+            console.log(userCurrentCharacter.inventory.items.length);
+            console.log('123');
+            console.log('123');
+            console.log('123');
+            console.log('123');
+            console.log('123');
+            console.log('123');
+            console.log('123');
+            console.log('123');
+            console.log('123');
+            console.log('123');
+            console.log('123');
+            console.log('123');
+            console.log('123');
+            row = new _discord.MessageActionRow();
 
-            if (!(userCurrentCharacter.inventory.items.length > 0)) {
-              _context16.next = 42;
+            if (!(userCurrentCharacter.inventory && userCurrentCharacter.inventory.items && userCurrentCharacter.inventory.items.length > 0)) {
+              _context16.next = 53;
               break;
             }
 
-            _context16.next = 38;
-            return generateInventoryImage(userCurrentCharacter, false, false, false, false, 0);
-
-          case 38:
-            _context16.t3 = _context16.sent;
-            _context16.t2 = [_context16.t3];
-            _context16.next = 46;
-            break;
-
-          case 42:
-            _context16.next = 44;
-            return generateEmptyInventoryImage();
-
-          case 44:
-            _context16.t4 = _context16.sent;
-            _context16.t2 = [_context16.t4];
-
-          case 46:
-            _context16.t5 = _context16.t2;
-            _context16.t6 = (0, _context16.t1)(_context16.t5);
-            _context16.t7 = [];
-            _context16.t8 = _toConsumableArray2["default"];
-            _context16.t9 = userCurrentCharacter.inventory.items.length > 0;
-
-            if (!_context16.t9) {
-              _context16.next = 70;
-              break;
-            }
-
-            _context16.t10 = _discord.MessageActionRow;
-            _context16.next = 55;
+            _context16.t0 = row;
+            _context16.next = 51;
             return generateEquipmentCompareButton(0);
 
-          case 55:
-            _context16.t11 = _context16.sent;
-            _context16.t12 = [_context16.t11];
-            _context16.t13 = {
-              components: _context16.t12
-            };
-            _context16.t14 = new _context16.t10(_context16.t13);
-            _context16.t15 = _discord.MessageActionRow;
-            _context16.next = 62;
-            return generateEquipItemButton(0);
+          case 51:
+            _context16.t1 = _context16.sent;
 
-          case 62:
-            _context16.t16 = _context16.sent;
-            _context16.next = 65;
-            return generateDestroyItemButton(0);
+            _context16.t0.addComponents.call(_context16.t0, _context16.t1);
 
-          case 65:
-            _context16.t17 = _context16.sent;
-            _context16.t18 = [_context16.t16, _context16.t17];
-            _context16.t19 = {
-              components: _context16.t18
-            };
-            _context16.t20 = new _context16.t15(_context16.t19);
-            _context16.t9 = [_context16.t14, _context16.t20];
+          case 53:
+            canFitOnOnePage = userCurrentCharacter.inventory.items.length <= 1;
+            _context16.t2 = discordChannel;
+            _context16.t3 = _toConsumableArray2["default"];
 
-          case 70:
-            _context16.t21 = _context16.t9;
-            _context16.t22 = (0, _context16.t8)(_context16.t21);
-            _context16.t23 = (0, _toConsumableArray2["default"])(!canFitOnOnePage ? [new _discord.MessageActionRow({
-              components: [forwardButton]
-            })] : []);
-            _context16.t24 = _toConsumableArray2["default"];
-            _context16.t25 = userCurrentCharacter.inventory.items.length > 0;
-
-            if (!_context16.t25) {
-              _context16.next = 84;
+            if (!(userCurrentCharacter.inventory.items.length > 0)) {
+              _context16.next = 63;
               break;
             }
 
-            _context16.t26 = _discord.MessageActionRow;
-            _context16.next = 79;
+            _context16.next = 59;
+            return generateInventoryImage(userCurrentCharacter, false, false, false, false, 0);
+
+          case 59:
+            _context16.t5 = _context16.sent;
+            _context16.t4 = [_context16.t5];
+            _context16.next = 67;
+            break;
+
+          case 63:
+            _context16.next = 65;
+            return generateEmptyInventoryImage();
+
+          case 65:
+            _context16.t6 = _context16.sent;
+            _context16.t4 = [_context16.t6];
+
+          case 67:
+            _context16.t7 = _context16.t4;
+            _context16.t8 = (0, _context16.t3)(_context16.t7);
+            _context16.t9 = [];
+            _context16.t10 = _toConsumableArray2["default"];
+
+            if (!(userCurrentCharacter.inventory && userCurrentCharacter.inventory.items && userCurrentCharacter.inventory.items.length > 0)) {
+              _context16.next = 92;
+              break;
+            }
+
+            _context16.t12 = _discord.MessageActionRow;
+            _context16.next = 75;
+            return generateEquipmentCompareButton(0);
+
+          case 75:
+            _context16.t13 = _context16.sent;
+            _context16.t14 = [_context16.t13];
+            _context16.t15 = {
+              components: _context16.t14
+            };
+            _context16.t16 = new _context16.t12(_context16.t15);
+            _context16.t17 = _discord.MessageActionRow;
+            _context16.next = 82;
+            return generateEquipItemButton(0);
+
+          case 82:
+            _context16.t18 = _context16.sent;
+            _context16.next = 85;
+            return generateDestroyItemButton(0);
+
+          case 85:
+            _context16.t19 = _context16.sent;
+            _context16.t20 = [_context16.t18, _context16.t19];
+            _context16.t21 = {
+              components: _context16.t20
+            };
+            _context16.t22 = new _context16.t17(_context16.t21);
+            _context16.t11 = [_context16.t16, _context16.t22];
+            _context16.next = 93;
+            break;
+
+          case 92:
+            _context16.t11 = [];
+
+          case 93:
+            _context16.t23 = _context16.t11;
+            _context16.t24 = (0, _context16.t10)(_context16.t23);
+            _context16.t25 = (0, _toConsumableArray2["default"])(!canFitOnOnePage ? [new _discord.MessageActionRow({
+              components: [forwardButton]
+            })] : []);
+            _context16.t26 = _toConsumableArray2["default"];
+
+            if (!(userCurrentCharacter.inventory.items.length > 0)) {
+              _context16.next = 108;
+              break;
+            }
+
+            _context16.t28 = _discord.MessageActionRow;
+            _context16.next = 101;
             return generateExitInventoryButton();
 
-          case 79:
-            _context16.t27 = _context16.sent;
-            _context16.t28 = [_context16.t27];
-            _context16.t29 = {
-              components: _context16.t28
+          case 101:
+            _context16.t29 = _context16.sent;
+            _context16.t30 = [_context16.t29];
+            _context16.t31 = {
+              components: _context16.t30
             };
-            _context16.t30 = new _context16.t26(_context16.t29);
-            _context16.t25 = [_context16.t30];
+            _context16.t32 = new _context16.t28(_context16.t31);
+            _context16.t27 = [_context16.t32];
+            _context16.next = 109;
+            break;
 
-          case 84:
-            _context16.t31 = _context16.t25;
-            _context16.t32 = (0, _context16.t24)(_context16.t31);
-            _context16.t33 = _context16.t7.concat.call(_context16.t7, _context16.t22, _context16.t23, _context16.t32);
-            _context16.t34 = {
-              files: _context16.t6,
-              components: _context16.t33
+          case 108:
+            _context16.t27 = [];
+
+          case 109:
+            _context16.t33 = _context16.t27;
+            _context16.t34 = (0, _context16.t26)(_context16.t33);
+            _context16.t35 = _context16.t9.concat.call(_context16.t9, _context16.t24, _context16.t25, _context16.t34);
+            _context16.t36 = {
+              files: _context16.t8,
+              components: _context16.t35
             };
-            _context16.next = 90;
-            return _context16.t0.send.call(_context16.t0, _context16.t34);
+            _context16.next = 115;
+            return _context16.t2.send.call(_context16.t2, _context16.t36);
 
-          case 90:
+          case 115:
             embedMessage = _context16.sent;
             collector = embedMessage.createMessageComponentCollector({
               filter: function filter(_ref13) {
@@ -876,56 +915,92 @@ var discordShowInventory = /*#__PURE__*/function () {
                       case 99:
                         _context15.t34 = _context15.t31;
                         _context15.t35 = (0, _context15.t30)(_context15.t34);
-                        _context15.t36 = _discord.MessageActionRow;
-                        _context15.next = 104;
+                        _context15.t36 = [];
+                        _context15.t37 = _toConsumableArray2["default"];
+
+                        if (!(userCurrentCharacter.inventory.items.length > 0)) {
+                          _context15.next = 114;
+                          break;
+                        }
+
+                        _context15.t39 = _discord.MessageActionRow;
+                        _context15.next = 107;
                         return generateEquipmentCompareButton(currentIndex);
 
-                      case 104:
-                        _context15.t37 = _context15.sent;
-                        _context15.t38 = [_context15.t37];
-                        _context15.t39 = {
-                          components: _context15.t38
+                      case 107:
+                        _context15.t40 = _context15.sent;
+                        _context15.t41 = [_context15.t40];
+                        _context15.t42 = {
+                          components: _context15.t41
                         };
-                        _context15.t40 = new _context15.t36(_context15.t39);
-                        _context15.t41 = _discord.MessageActionRow;
-                        _context15.next = 111;
-                        return generateEquipItemButton(currentIndex);
-
-                      case 111:
-                        _context15.t42 = _context15.sent;
-                        _context15.next = 114;
-                        return generateDestroyItemButton(currentIndex);
+                        _context15.t43 = new _context15.t39(_context15.t42);
+                        _context15.t38 = [_context15.t43];
+                        _context15.next = 115;
+                        break;
 
                       case 114:
-                        _context15.t43 = _context15.sent;
-                        _context15.t44 = [_context15.t42, _context15.t43];
-                        _context15.t45 = {
-                          components: _context15.t44
-                        };
-                        _context15.t46 = new _context15.t41(_context15.t45);
-                        _context15.t47 = new _discord.MessageActionRow({
-                          components: [].concat((0, _toConsumableArray2["default"])(currentIndex ? [backButton] : []), (0, _toConsumableArray2["default"])(currentIndex + 1 < userCurrentCharacter.inventory.items.length ? [forwardButton] : []))
-                        });
+                        _context15.t38 = [];
+
+                      case 115:
+                        _context15.t44 = _context15.t38;
+                        _context15.t45 = (0, _context15.t37)(_context15.t44);
+                        _context15.t46 = _toConsumableArray2["default"];
+
+                        if (!(userCurrentCharacter.inventory.items.length > 0)) {
+                          _context15.next = 132;
+                          break;
+                        }
+
                         _context15.t48 = _discord.MessageActionRow;
                         _context15.next = 122;
-                        return generateExitInventoryButton();
+                        return generateEquipItemButton(currentIndex);
 
                       case 122:
                         _context15.t49 = _context15.sent;
-                        _context15.t50 = [_context15.t49];
-                        _context15.t51 = {
-                          components: _context15.t50
-                        };
-                        _context15.t52 = new _context15.t48(_context15.t51);
-                        _context15.t53 = [_context15.t40, _context15.t46, _context15.t47, _context15.t52];
-                        _context15.t54 = {
-                          files: _context15.t35,
-                          components: _context15.t53
-                        };
-                        _context15.next = 130;
-                        return _context15.t29.editReply.call(_context15.t29, _context15.t54);
+                        _context15.next = 125;
+                        return generateDestroyItemButton(currentIndex);
 
-                      case 130:
+                      case 125:
+                        _context15.t50 = _context15.sent;
+                        _context15.t51 = [_context15.t49, _context15.t50];
+                        _context15.t52 = {
+                          components: _context15.t51
+                        };
+                        _context15.t53 = new _context15.t48(_context15.t52);
+                        _context15.t47 = [_context15.t53];
+                        _context15.next = 133;
+                        break;
+
+                      case 132:
+                        _context15.t47 = [];
+
+                      case 133:
+                        _context15.t54 = _context15.t47;
+                        _context15.t55 = (0, _context15.t46)(_context15.t54);
+                        _context15.t56 = new _discord.MessageActionRow({
+                          components: [].concat((0, _toConsumableArray2["default"])(currentIndex ? [backButton] : []), (0, _toConsumableArray2["default"])(currentIndex + 1 < userCurrentCharacter.inventory.items.length ? [forwardButton] : []))
+                        });
+                        _context15.t57 = _discord.MessageActionRow;
+                        _context15.next = 139;
+                        return generateExitInventoryButton();
+
+                      case 139:
+                        _context15.t58 = _context15.sent;
+                        _context15.t59 = [_context15.t58];
+                        _context15.t60 = {
+                          components: _context15.t59
+                        };
+                        _context15.t61 = new _context15.t57(_context15.t60);
+                        _context15.t62 = [_context15.t56, _context15.t61];
+                        _context15.t63 = _context15.t36.concat.call(_context15.t36, _context15.t45, _context15.t55, _context15.t62);
+                        _context15.t64 = {
+                          files: _context15.t35,
+                          components: _context15.t63
+                        };
+                        _context15.next = 148;
+                        return _context15.t29.editReply.call(_context15.t29, _context15.t64);
+
+                      case 148:
                       case "end":
                         return _context15.stop();
                     }
@@ -938,7 +1013,7 @@ var discordShowInventory = /*#__PURE__*/function () {
               };
             }());
 
-          case 94:
+          case 119:
           case "end":
             return _context16.stop();
         }

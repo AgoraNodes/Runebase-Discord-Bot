@@ -332,6 +332,7 @@ export const discordShowInventory = async (
       customId: destroyYesButtonId,
     });
   };
+
   const generateDestroyNoButton = async (start) => {
     const destroyNoButtonId = `cancelDestroy`;
     return new MessageButton({
@@ -353,6 +354,32 @@ export const discordShowInventory = async (
     });
   };
 
+  console.log(userCurrentCharacter.inventory.items.length);
+  console.log('123');
+  console.log('123');
+  console.log('123');
+  console.log('123');
+  console.log('123');
+  console.log('123');
+  console.log('123');
+  console.log('123');
+  console.log('123');
+  console.log('123');
+  console.log('123');
+  console.log('123');
+  console.log('123');
+  const row = new MessageActionRow();
+
+  if (
+    userCurrentCharacter.inventory
+    && userCurrentCharacter.inventory.items
+    && userCurrentCharacter.inventory.items.length > 0
+  ) {
+    row.addComponents(
+      await generateEquipmentCompareButton(0),
+    );
+  }
+
   const canFitOnOnePage = userCurrentCharacter.inventory.items.length <= 1;
   const embedMessage = await discordChannel.send({
     files: [
@@ -373,19 +400,22 @@ export const discordShowInventory = async (
     ],
     components: [
       ...(
-        userCurrentCharacter.inventory.items.length > 0 && [
-          new MessageActionRow({
-            components: [
-              await generateEquipmentCompareButton(0),
-            ],
-          }),
-          new MessageActionRow({
-            components: [
-              await generateEquipItemButton(0),
-              await generateDestroyItemButton(0),
-            ],
-          }),
-        ]
+        userCurrentCharacter.inventory
+          && userCurrentCharacter.inventory.items
+          && userCurrentCharacter.inventory.items.length > 0
+          ? [
+            new MessageActionRow({
+              components: [
+                await generateEquipmentCompareButton(0),
+              ],
+            }),
+            new MessageActionRow({
+              components: [
+                await generateEquipItemButton(0),
+                await generateDestroyItemButton(0),
+              ],
+            }),
+          ] : []
       ),
       ...(
         !canFitOnOnePage ? [
@@ -397,13 +427,13 @@ export const discordShowInventory = async (
         ] : []
       ),
       ...(
-        userCurrentCharacter.inventory.items.length > 0 && [
+        userCurrentCharacter.inventory.items.length > 0 ? [
           new MessageActionRow({
             components: [
               await generateExitInventoryButton(),
             ],
           }),
-        ]
+        ] : []
       ),
     ],
   });
@@ -543,19 +573,27 @@ export const discordShowInventory = async (
         ),
       ],
       components: [
-        new MessageActionRow({
-          components: [
-            await generateEquipmentCompareButton(
-              currentIndex,
-            ),
-          ],
-        }),
-        new MessageActionRow({
-          components: [
-            await generateEquipItemButton(currentIndex),
-            await generateDestroyItemButton(currentIndex),
-          ],
-        }),
+        ...(
+          userCurrentCharacter.inventory.items.length > 0 ? [
+            new MessageActionRow({
+              components: [
+                await generateEquipmentCompareButton(
+                  currentIndex,
+                ),
+              ],
+            }),
+          ] : []
+        ),
+        ...(
+          userCurrentCharacter.inventory.items.length > 0 ? [
+            new MessageActionRow({
+              components: [
+                await generateEquipItemButton(currentIndex),
+                await generateDestroyItemButton(currentIndex),
+              ],
+            }),
+          ] : []
+        ),
         new MessageActionRow({
           components: [
             ...(currentIndex ? [backButton] : []),

@@ -11,9 +11,21 @@ export const fetchUserCurrentCharacter = async (
   needInventory,
   t = false,
 ) => {
+  const user = await db.user.findOne({
+    where: {
+      user_id: userId,
+    },
+    ...(t && [
+      {
+        lock: t.LOCK.UPDATE,
+        transaction: t,
+      }]
+    ),
+  });
   const userCurrentCharacter = await db.UserClass.findOne({
     where: {
-      classId: { [Op.col]: 'user.currentClassId' },
+      // classId: { [Op.col]: 'user.currentClassId' },
+      classId: user.currentClassId,
     },
     ...(t && [
       {
