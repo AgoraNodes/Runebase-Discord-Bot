@@ -19,25 +19,30 @@ export const equipMainHand = async (
       if (unequipOffhand) {
         await unequipOffhand.update({
           inventoryId: userCurrentCharacter.inventoryId,
+        }, {
+          lock: t.LOCK.UPDATE,
+          transaction: t,
         });
         unequipOffHand = true;
       }
     }
-  }
-  if (equipment.offHandId) {
-    const unequipShieldItem = await db.item.findOne({
+    const unequipMainHandItem = await db.item.findOne({
       where: {
-        id: equipment.offHandId,
+        id: equipment.mainHandId,
       },
       lock: t.LOCK.UPDATE,
       transaction: t,
     });
-    if (unequipShieldItem) {
-      await unequipShieldItem.update({
+    if (unequipMainHandItem) {
+      await unequipMainHandItem.update({
         inventoryId: userCurrentCharacter.inventoryId,
+      }, {
+        lock: t.LOCK.UPDATE,
+        transaction: t,
       });
     }
   }
+
   await equipment.update({
     mainHandId: itemToEquip.id,
     ...(

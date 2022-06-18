@@ -912,6 +912,21 @@ export const discordRouter = async (
       }
     }
 
+    if (filteredMessageDiscord[1] && filteredMessageDiscord[1].toLowerCase() === 'generatemagicitem') {
+      console.log(message);
+      if (message && message.author && message.author.id === '217379915803131906') {
+        await queue.add(async () => {
+          const task = await discordShowCaseMagicItem(
+            discordClient,
+            message,
+            Number(filteredMessageDiscord[2]),
+            queue,
+            io,
+          );
+        });
+      }
+    }
+
     // if (filteredMessageDiscord[1] && filteredMessageDiscord[1].toLowerCase() === 'account') {
     //   const limited = await myRateLimiter(
     //     discordClient,
@@ -936,15 +951,5 @@ export const discordRouter = async (
     //    );
     //  });
     // }
-
-    if (filteredMessageDiscord[1] && filteredMessageDiscord[1].toLowerCase() === 'generatemagicitem') {
-      await queue.add(async () => {
-        const task = await discordShowCaseMagicItem(
-          discordClient,
-          message,
-          io,
-        );
-      });
-    }
   });
 };

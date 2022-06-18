@@ -500,6 +500,15 @@ export const discordShowEquipment = async (
         ),
       );
     }
+    if (userCurrentCharacter.equipment.mainHand) {
+      mainHandImage = await loadImage(
+        path.join(
+          __dirname,
+          `../assets/images/items/${userCurrentCharacter.equipment.mainHand.itemBase.itemFamily.itemType.name}/${userCurrentCharacter.equipment.mainHand.itemBase.itemFamily.name}`,
+          `${userCurrentCharacter.equipment.mainHand.itemBase.name}.png`,
+        ),
+      );
+    }
     if (userCurrentCharacter.equipment.offHand) {
       offHandImage = await loadImage(
         path.join(
@@ -509,6 +518,46 @@ export const discordShowEquipment = async (
         ),
       );
     }
+    if (userCurrentCharacter.equipment.boots) {
+      bootsImage = await loadImage(
+        path.join(
+          __dirname,
+          `../assets/images/items/${userCurrentCharacter.equipment.boots.itemBase.itemFamily.itemType.name}/${userCurrentCharacter.equipment.boots.itemBase.itemFamily.name}`,
+          `${userCurrentCharacter.equipment.boots.itemBase.name}.png`,
+        ),
+      );
+    }
+
+    if (userCurrentCharacter.equipment.gloves) {
+      glovesImage = await loadImage(
+        path.join(
+          __dirname,
+          `../assets/images/items/${userCurrentCharacter.equipment.gloves.itemBase.itemFamily.itemType.name}/${userCurrentCharacter.equipment.gloves.itemBase.itemFamily.name}`,
+          `${userCurrentCharacter.equipment.gloves.itemBase.name}.png`,
+        ),
+      );
+    }
+
+    if (userCurrentCharacter.equipment.belt) {
+      beltImage = await loadImage(
+        path.join(
+          __dirname,
+          `../assets/images/items/${userCurrentCharacter.equipment.belt.itemBase.itemFamily.itemType.name}/${userCurrentCharacter.equipment.belt.itemBase.itemFamily.name}`,
+          `${userCurrentCharacter.equipment.belt.itemBase.name}.png`,
+        ),
+      );
+    }
+
+    if (userCurrentCharacter.equipment.amulet) {
+      amuletImage = await loadImage(
+        path.join(
+          __dirname,
+          `../assets/images/items/${userCurrentCharacter.equipment.amulet.itemBase.itemFamily.itemType.name}/${userCurrentCharacter.equipment.amulet.itemBase.itemFamily.name}`,
+          `${userCurrentCharacter.equipment.amulet.itemBase.name}.png`,
+        ),
+      );
+    }
+
     const statsImageBuffer = await generateStatsImage(
       userCurrentCharacter,
       false,
@@ -522,6 +571,21 @@ export const discordShowEquipment = async (
 
     const canvas = createCanvas(2420, 1300);
     const ctx = canvas.getContext('2d');
+    console.log(userCurrentCharacter.equipment);
+    console.log('equipment');
+    console.log('equipment');
+    console.log('equipment');
+    console.log('equipment');
+    console.log('equipment');
+    console.log('equipment');
+    console.log('equipment');
+    console.log('equipment');
+    console.log('equipment');
+    console.log('equipment');
+    console.log('equipment');
+    console.log('equipment');
+    console.log('equipment');
+    console.log('equipment');
 
     // Stats image
     ctx.drawImage(
@@ -560,6 +624,17 @@ export const discordShowEquipment = async (
         helmImage.height * 6, // height
       );
     }
+
+    if (userCurrentCharacter.equipment.mainHand) {
+      ctx.drawImage(
+        mainHandImage,
+        1055, // x position
+        375, // y position
+        helmImage.width * 4, // width
+        helmImage.height * 4, // height
+      );
+    }
+
     if (userCurrentCharacter.equipment.offHand) {
       ctx.drawImage(
         offHandImage,
@@ -567,6 +642,44 @@ export const discordShowEquipment = async (
         375, // y position
         helmImage.width * 4, // width
         helmImage.height * 4, // height
+      );
+    }
+
+    if (userCurrentCharacter.equipment.boots) {
+      ctx.drawImage(
+        bootsImage,
+        2110, // x position
+        865, // y position
+        helmImage.width * 4, // width
+        helmImage.height * 4, // height
+      );
+    }
+    if (userCurrentCharacter.equipment.gloves) {
+      ctx.drawImage(
+        glovesImage,
+        1065, // x position
+        865, // y position
+        helmImage.width * 4, // width
+        helmImage.height * 4, // height
+      );
+    }
+    if (userCurrentCharacter.equipment.belt) {
+      ctx.drawImage(
+        beltImage,
+        1605, // x position
+        815, // y position
+        helmImage.width * 3.7, // width
+        helmImage.height * 2.5, // height
+      );
+    }
+
+    if (userCurrentCharacter.equipment.amulet) {
+      ctx.drawImage(
+        amuletImage,
+        1912, // x position
+        164, // y position
+        helmImage.width * 1.8, // width
+        helmImage.height * 1.8, // height
       );
     }
 

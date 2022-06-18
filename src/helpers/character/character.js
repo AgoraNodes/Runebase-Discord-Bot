@@ -1,22 +1,33 @@
+import {
+  Op,
+} from "sequelize";
 import db from '../../models';
 
 // ARGUMENTS //
 // user: userRecord,
 // needInventory: true || false
 export const fetchUserCurrentCharacter = async (
-  user,
+  userId,
   needInventory,
+  t = false,
 ) => {
+  console.log(userId);
   const userCurrentCharacter = await db.UserClass.findOne({
     where: {
-      classId: user.currentClassId,
-      userId: user.id,
+      classId: { [Op.col]: 'user.currentClassId' },
     },
+    ...(t && [
+      {
+        lock: t.LOCK.UPDATE,
+        transaction: t,
+      }]
+    ),
     include: [
       {
         model: db.user,
         as: 'user',
         where: {
+          user_id: `${userId}`,
         },
         include: [
           {
@@ -321,6 +332,10 @@ export const fetchUserCurrentCharacter = async (
             model: db.item,
             as: 'items',
             required: false,
+            separate: true,
+            order: [
+              ['updatedAt', 'DESC'],
+            ],
             include: [
               {
                 model: db.itemBase,
@@ -348,6 +363,5 @@ export const fetchUserCurrentCharacter = async (
       }] : []),
     ],
   });
-  console.log(userCurrentCharacter);
   return userCurrentCharacter;
 };

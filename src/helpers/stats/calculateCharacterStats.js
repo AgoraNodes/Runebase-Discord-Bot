@@ -81,7 +81,6 @@ export const calculateCharacterStats = async (
       && currentCharacter.equipment[key]
       && currentCharacter.equipment[key].defense
     ) {
-      console.log(key);
       const realDefenseValue = Math.round((currentCharacter.equipment[key].defense * (1 + (currentCharacter.equipment[key].eDefense ? currentCharacter.equipment[key].eDefense / 100 : 0))));
       defense += realDefenseValue;
     }

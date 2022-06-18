@@ -19,6 +19,9 @@ export const equipOffHand = async (
       if (unequipTwoHander) {
         await unequipTwoHander.update({
           inventoryId: userCurrentCharacter.inventoryId,
+        }, {
+          lock: t.LOCK.UPDATE,
+          transaction: t,
         });
         unequipMainHand = true;
       }
@@ -35,6 +38,9 @@ export const equipOffHand = async (
     if (unequipShieldItem) {
       await unequipShieldItem.update({
         inventoryId: userCurrentCharacter.inventoryId,
+      }, {
+        lock: t.LOCK.UPDATE,
+        transaction: t,
       });
     }
   }

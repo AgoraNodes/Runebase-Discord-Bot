@@ -17,17 +17,15 @@ import {
 } from 'discord.js';
 
 import path from 'path';
-import {
-  cannotSendMessageUser,
-  discordErrorMessage,
-} from '../messages';
 import db from '../models';
-import logger from "../helpers/logger";
 import { generateItemImage } from "../helpers/items/generateItemImage";
 import { generateStatsImage } from "../helpers/stats/generateStatsImage";
 import { generateEquipmentImage } from '../helpers/equipment/generateEquipmentImage';
 import { destroyItem } from '../helpers/items/destroyItem';
 import { equipItem } from '../helpers/equipment/equipItem';
+import { fetchUserCurrentCharacter } from "../helpers/character/character";
+import { fetchDiscordUserIdFromMessageOrInteraction } from '../helpers/client/fetchDiscordUserIdFromMessageOrInteraction';
+import { fetchDiscordChannel } from '../helpers/client/fetchDiscordChannel';
 
 export const discordShowInventory = async (
   discordClient,
@@ -36,108 +34,25 @@ export const discordShowInventory = async (
   io,
   queue,
 ) => {
-  let userId;
-  if (message.user && message.user.id) {
-    userId = message.user.id;
-  } else if (message.author) {
-    userId = message.author.id;
-  } else {
-    userId = message.user;
-  }
-  const user = await db.user.findOne({
-    where: {
-      user_id: `${userId}`,
-    },
-  });
-
-  if (!user) return;
-
   const activity = [];
-  let userCurrentCharacter = await db.UserClass.findOne({
-    where: {
-      classId: user.currentClassId,
-    },
-    include: [
-      {
-        model: db.user,
-        as: 'user',
-        where: {
-          user_id: `${userId}`,
-        },
-        include: [
-          {
-            model: db.class,
-            as: 'currentClass',
-          },
-          {
-            model: db.rank,
-            as: 'ranks',
-          },
-        ],
-      },
-      {
-        model: db.stats,
-        as: 'stats',
-      },
-      {
-        model: db.condition,
-        as: 'condition',
-      },
-      {
-        model: db.equipment,
-        as: 'equipment',
-      },
-      {
-        model: db.inventory,
-        as: 'inventory',
-        include: [
-          {
-            model: db.item,
-            as: 'items',
-            required: false,
-            include: [
-              {
-                model: db.itemBase,
-                as: 'itemBase',
-                include: [
-                  {
-                    model: db.itemFamily,
-                    as: 'itemFamily',
-                    include: [
-                      {
-                        model: db.itemType,
-                        as: 'itemType',
-                      },
-                    ],
-                  },
-                ],
-              },
-              {
-                model: db.itemQuality,
-                as: 'itemQuality',
-              },
-            ],
-          },
-        ],
-      },
-    ],
-  });
-  if (!userCurrentCharacter) return;
+  const userId = await fetchDiscordUserIdFromMessageOrInteraction(
+    message,
+  );
+  const discordChannel = await fetchDiscordChannel(
+    discordClient,
+    message,
+  );
 
-  let discordChannel;
-  if (message.type && message.type === 'APPLICATION_COMMAND') {
-    if (message.guildId) {
-      discordChannel = await discordClient.channels.cache.get(message.channelId);
-    } else {
-      discordChannel = await discordClient.users.cache.get(message.user.id);
-    }
-  } else {
-    if (message.channel.type === 'DM') {
-      discordChannel = await discordClient.channels.cache.get(message.channelId);
-    }
-    if (message.channel.type === 'GUILD_TEXT') {
-      discordChannel = await discordClient.channels.cache.get(message.channelId);
-    }
+  let userCurrentCharacter = await fetchUserCurrentCharacter(
+    userId, // user discord id
+    true, // Need inventory?
+  );
+  if (!userCurrentCharacter) {
+    await message.reply({
+      content: 'You have not selected a class yet\n`!runebase pickclass`\n/`pickclass`',
+      ephemeral: true,
+    });
+    return;
   }
 
   const exitInventoryId = 'exitInventory';
@@ -352,8 +267,8 @@ export const discordShowInventory = async (
     ctx.strokeStyle = 'black';
     ctx.lineWidth = 3;
     ctx.textAlign = "center";
-    ctx.strokeText(`${user.username} picked ${current[0].name}!`, 250, 40, 500);
-    ctx.fillText(`${user.username} picked ${current[0].name}!`, 250, 40, 500);
+    ctx.strokeText(`${userCurrentCharacter.user.username} picked ${current[0].name}!`, 250, 40, 500);
+    ctx.fillText(`${userCurrentCharacter.user.username} picked ${current[0].name}!`, 250, 40, 500);
     return new MessageAttachment(canvas.toBuffer(), 'picked.png');
   };
 
@@ -365,8 +280,8 @@ export const discordShowInventory = async (
     ctx.strokeStyle = 'black';
     ctx.lineWidth = 3;
     ctx.textAlign = "center";
-    ctx.strokeText(`${user.username} canceled class selection`, 250, 60, 500);
-    ctx.fillText(`${user.username} canceled class selection`, 250, 60, 500);
+    ctx.strokeText(`${userCurrentCharacter.user.username} canceled class selection`, 250, 60, 500);
+    ctx.fillText(`${userCurrentCharacter.user.username} canceled class selection`, 250, 60, 500);
     return new MessageAttachment(canvas.toBuffer(), 'cancelSelection.png');
   };
 
@@ -378,8 +293,8 @@ export const discordShowInventory = async (
     ctx.strokeStyle = 'black';
     ctx.lineWidth = 3;
     ctx.textAlign = "center";
-    ctx.strokeText(`${user.username} Your inventory is empty`, 250, 60, 500);
-    ctx.fillText(`${user.username} Your inventory is empty`, 250, 60, 500);
+    ctx.strokeText(`${userCurrentCharacter.user.username} Your inventory is empty`, 250, 60, 500);
+    ctx.fillText(`${userCurrentCharacter.user.username} Your inventory is empty`, 250, 60, 500);
     return new MessageAttachment(canvas.toBuffer(), 'emptyInventory.png');
   };
 
@@ -494,7 +409,7 @@ export const discordShowInventory = async (
   });
 
   const collector = embedMessage.createMessageComponentCollector({
-    filter: ({ user: discordUser }) => discordUser.id === user.user_id,
+    filter: ({ user: discordUser }) => discordUser.id === userCurrentCharacter.user.user_id,
   });
 
   let currentIndex = 0;

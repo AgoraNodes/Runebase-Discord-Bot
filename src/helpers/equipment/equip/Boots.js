@@ -6,6 +6,7 @@ export const equipBoots = async (
   itemToEquip,
   t,
 ) => {
+  console.log(equipment);
   if (equipment.bootsId) {
     const unequipBoots = await db.item.findOne({
       where: {
@@ -17,6 +18,9 @@ export const equipBoots = async (
     if (unequipBoots) {
       await unequipBoots.update({
         inventoryId: userCurrentCharacter.inventoryId,
+      }, {
+        lock: t.LOCK.UPDATE,
+        transaction: t,
       });
     }
   }

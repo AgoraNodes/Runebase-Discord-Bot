@@ -262,7 +262,7 @@ export const generateItemImage = async (
     );
   }
 
-  if (newItem.itemBase.itemFamily.itemType.name === "Necromancer Shrunken Heads") {
+  if (newItem.itemBase.itemFamily.itemType.name === "Assassin Katars") {
     ctx.strokeText(
       `(Assasin Only)`,
       100,

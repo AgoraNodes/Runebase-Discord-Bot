@@ -20,7 +20,7 @@ module.exports = (sequelize, DataTypes) => {
   InventoryModel.associate = (model) => {
     InventoryModel.hasMany(model.item);
     InventoryModel.hasOne(model.UserClass, {
-      as: 'inventory',
+      as: 'UserClass',
       foreignKey: 'inventoryId',
     });
   };

@@ -17,6 +17,9 @@ export const equipAmulet = async (
     if (unequipAmulet) {
       await unequipAmulet.update({
         inventoryId: userCurrentCharacter.inventoryId,
+      }, {
+        lock: t.LOCK.UPDATE,
+        transaction: t,
       });
     }
   }

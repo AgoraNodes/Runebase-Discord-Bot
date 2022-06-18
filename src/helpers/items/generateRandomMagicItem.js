@@ -9,12 +9,22 @@ function randomIntFromInterval(min, max) {
   return Math.floor(Math.random() * (max - min + 1) + min);
 }
 
-export const generateRandomMagicItem = async () => {
+export const generateRandomMagicItem = async (level) => {
   const randomBaseItem = await db.itemBase.findOne({
     order: [
       [Sequelize.literal('RAND()')],
     ],
-    where: { '$itemFamily.itemType.name$': 'Barbarian Helms' },
+    where: {
+      '$itemFamily.itemType.name$': 'Swords',
+      levelReq: {
+        [Op.or]: [
+          {
+            [Op.lte]: level,
+          },
+          null,
+        ],
+      },
+    },
     // where: { '$itemFamily.name$': 'War Axe' },
     include: [
       {
