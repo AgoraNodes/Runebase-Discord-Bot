@@ -67,6 +67,7 @@ module.exports = function (sequelize, DataTypes) {
       through: 'UserClass'
     });
     UserModel.hasOne(model.UserClass);
+    UserModel.hasOne(model.UserRank);
   };
 
   return UserModel;

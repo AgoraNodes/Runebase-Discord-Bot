@@ -77,6 +77,14 @@ var rateLimiterStats = new RateLimiterFlexible["default"].RateLimiterMemory({
   points: 2,
   duration: 30
 });
+var rateLimiterInventory = new RateLimiterFlexible["default"].RateLimiterMemory({
+  points: 2,
+  duration: 30
+});
+var rateLimiterEquipment = new RateLimiterFlexible["default"].RateLimiterMemory({
+  points: 2,
+  duration: 30
+});
 
 var myRateLimiter = /*#__PURE__*/function () {
   var _ref = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(client, message, title) {
@@ -265,69 +273,93 @@ var myRateLimiter = /*#__PURE__*/function () {
             return _context.abrupt("return", false);
 
           case 60:
-            throw new Error("no Rate limiter could be reached");
-
-          case 63:
-            _context.prev = 63;
-            _context.t0 = _context["catch"](5);
-            console.log(_context.t0);
-            _context.prev = 66;
-            _context.next = 69;
-            return errorConsumer.consume(userId, 1);
-
-          case 69:
-            notError = _context.sent;
-
-            if (!(notError.remainingPoints > 0)) {
-              _context.next = 77;
+            if (!(title.toLowerCase() === 'inventory')) {
+              _context.next = 64;
               break;
             }
 
-            _context.next = 73;
+            _context.next = 63;
+            return rateLimiterInventory.consume(userId, 1);
+
+          case 63:
+            return _context.abrupt("return", false);
+
+          case 64:
+            if (!(title.toLowerCase() === 'equipment')) {
+              _context.next = 68;
+              break;
+            }
+
+            _context.next = 67;
+            return rateLimiterEquipment.consume(userId, 1);
+
+          case 67:
+            return _context.abrupt("return", false);
+
+          case 68:
+            throw new Error("no Rate limiter could be reached");
+
+          case 71:
+            _context.prev = 71;
+            _context.t0 = _context["catch"](5);
+            console.log(_context.t0);
+            _context.prev = 74;
+            _context.next = 77;
+            return errorConsumer.consume(userId, 1);
+
+          case 77:
+            notError = _context.sent;
+
+            if (!(notError.remainingPoints > 0)) {
+              _context.next = 85;
+              break;
+            }
+
+            _context.next = 81;
             return client.channels.fetch(discordChannelId)["catch"](function (e) {
               console.log(e);
             });
 
-          case 73:
+          case 81:
             discordChannel = _context.sent;
 
             if (!discordChannel) {
-              _context.next = 77;
+              _context.next = 85;
               break;
             }
 
-            _context.next = 77;
+            _context.next = 85;
             return discordChannel.send({
               embeds: [(0, _messages.discordLimitSpamMessage)(userId, title)]
             })["catch"](function (e) {
               console.log(e);
             });
 
-          case 77:
+          case 85:
             return _context.abrupt("return", true);
 
-          case 80:
-            _context.prev = 80;
-            _context.t1 = _context["catch"](66);
+          case 88:
+            _context.prev = 88;
+            _context.t1 = _context["catch"](74);
             console.log(_context.t1);
             return _context.abrupt("return", true);
 
-          case 84:
-            _context.next = 90;
+          case 92:
+            _context.next = 98;
             break;
 
-          case 86:
-            _context.prev = 86;
+          case 94:
+            _context.prev = 94;
             _context.t2 = _context["catch"](0);
             console.log(_context.t2);
             return _context.abrupt("return", true);
 
-          case 90:
+          case 98:
           case "end":
             return _context.stop();
         }
       }
-    }, _callee, null, [[0, 86], [5, 63], [66, 80]]);
+    }, _callee, null, [[0, 94], [5, 71], [74, 88]]);
   }));
 
   return function myRateLimiter(_x, _x2, _x3) {

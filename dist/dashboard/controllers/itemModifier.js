@@ -75,24 +75,28 @@ var addItemModifier = /*#__PURE__*/function () {
           case 3:
             _context2.next = 5;
             return _models["default"].itemModifier.create({
-              itemQualityId: req.body.itemQuality,
-              levelReq: req.body.levelReq,
-              levelMonster: req.body.levelMonster,
+              itemQualityId: Number(req.body.itemQuality),
+              levelReq: Number(req.body.levelReq),
+              levelMonster: Number(req.body.levelMonster),
               prefix: req.body.prefix,
               suffix: req.body.suffix,
-              minStrength: req.body.minStrength,
-              maxStrength: req.body.maxStrength,
-              minDexterity: req.body.minDexterity,
-              maxDexterity: req.body.maxDexterity,
-              minVitality: req.body.minVitality,
-              maxVitality: req.body.maxVitality,
-              minEnergy: req.body.minEnergy,
-              maxEnergy: req.body.maxEnergy
+              minStrength: Number(req.body.minStrength),
+              maxStrength: Number(req.body.maxStrength),
+              minDexterity: Number(req.body.minDexterity),
+              maxDexterity: Number(req.body.maxDexterity),
+              minVitality: Number(req.body.minVitality),
+              maxVitality: Number(req.body.maxVitality),
+              minEnergy: Number(req.body.minEnergy),
+              maxEnergy: Number(req.body.maxEnergy),
+              minEdefense: Number(req.body.minEdefense),
+              maxEdefense: Number(req.body.maxEdefense),
+              minEdamage: Number(req.body.minEdamage),
+              maxEdamage: Number(req.body.maxEdamage)
             });
 
           case 5:
             newItemModifier = _context2.sent;
-            res.locals.name = 'addItemFamily';
+            res.locals.name = 'addItemModifier';
             _context2.next = 9;
             return _models["default"].itemModifier.findOne({
               where: {
@@ -125,19 +129,19 @@ exports.addItemModifier = addItemModifier;
 
 var updateItemModifier = /*#__PURE__*/function () {
   var _ref3 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee3(req, res, next) {
-    var classDescription, updatedRank;
+    var itemModifier, updatedRank;
     return _regenerator["default"].wrap(function _callee3$(_context3) {
       while (1) {
         switch (_context3.prev = _context3.next) {
           case 0:
             console.log(req.body);
 
-            if (req.body.itemModifier) {
+            if (req.body.itemQuality) {
               _context3.next = 3;
               break;
             }
 
-            throw new Error("description is required");
+            throw new Error("itemQuality is required");
 
           case 3:
             _context3.next = 5;
@@ -148,35 +152,39 @@ var updateItemModifier = /*#__PURE__*/function () {
             });
 
           case 5:
-            classDescription = _context3.sent;
+            itemModifier = _context3.sent;
             _context3.next = 8;
-            return classDescription.update({
-              itemQualityId: req.body.itemQuality,
-              levelReq: req.body.levelReq,
-              levelMonster: req.body.levelMonster,
+            return itemModifier.update({
+              itemQualityId: Number(req.body.itemQuality),
+              levelReq: Number(req.body.levelReq),
+              levelMonster: Number(req.body.levelMonster),
               prefix: req.body.prefix,
               suffix: req.body.suffix,
-              minStrength: req.body.minStrength,
-              maxStrength: req.body.maxStrength,
-              minDexterity: req.body.minDexterity,
-              maxDexterity: req.body.maxDexterity,
-              minVitality: req.body.minVitality,
-              maxVitality: req.body.maxVitality,
-              minEnergy: req.body.minEnergy,
-              maxEnergy: req.body.maxEnergy
+              minStrength: Number(req.body.minStrength),
+              maxStrength: Number(req.body.maxStrength),
+              minDexterity: Number(req.body.minDexterity),
+              maxDexterity: Number(req.body.maxDexterity),
+              minVitality: Number(req.body.minVitality),
+              maxVitality: Number(req.body.maxVitality),
+              minEnergy: Number(req.body.minEnergy),
+              maxEnergy: Number(req.body.maxEnergy),
+              minEdefense: Number(req.body.minEdefense),
+              maxEdefense: Number(req.body.maxEdefense),
+              minEdamage: Number(req.body.minEdamage),
+              maxEdamage: Number(req.body.maxEdamage)
             });
 
           case 8:
             updatedRank = _context3.sent;
-            res.locals.name = 'updateClassDescription';
+            res.locals.name = 'updateItemModifier';
             _context3.next = 12;
             return _models["default"].itemModifier.findOne({
               where: {
                 id: updatedRank.id
               },
               include: [{
-                model: _models["default"].itemModifier,
-                as: 'itemModifier'
+                model: _models["default"].itemQuality,
+                as: 'itemQuality'
               }]
             });
 
@@ -201,7 +209,7 @@ exports.updateItemModifier = updateItemModifier;
 
 var removeItemModifier = /*#__PURE__*/function () {
   var _ref4 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee4(req, res, next) {
-    var classDescription;
+    var itemModifier;
     return _regenerator["default"].wrap(function _callee4$(_context4) {
       while (1) {
         switch (_context4.prev = _context4.next) {
@@ -214,10 +222,10 @@ var removeItemModifier = /*#__PURE__*/function () {
             });
 
           case 2:
-            classDescription = _context4.sent;
-            res.locals.name = 'removeClassDescription';
-            res.locals.result = classDescription;
-            classDescription.destroy();
+            itemModifier = _context4.sent;
+            res.locals.name = 'removeItemModifier';
+            res.locals.result = itemModifier;
+            itemModifier.destroy();
             next();
 
           case 7:

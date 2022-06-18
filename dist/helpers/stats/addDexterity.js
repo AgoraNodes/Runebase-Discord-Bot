@@ -218,37 +218,76 @@ var addDexterity = /*#__PURE__*/function () {
 
           case 3:
             _context4.next = 5;
-            return _models["default"].user.findOne({
+            return _models["default"].UserClass.findOne({
               where: {
-                id: userId
+                classId: (0, _defineProperty2["default"])({}, _sequelize.Op.col, 'user.currentClassId')
               },
               include: [{
-                model: _models["default"]["class"],
-                as: 'currentClass'
-              }, {
-                model: _models["default"].rank,
-                as: 'ranks'
-              }, {
-                model: _models["default"].UserClass,
-                as: 'UserClass',
+                model: _models["default"].user,
+                as: 'user',
                 where: {
-                  classId: (0, _defineProperty2["default"])({}, _sequelize.Op.col, 'user.currentClassId')
+                  id: userId
                 },
                 include: [{
-                  model: _models["default"].stats,
-                  as: 'stats'
+                  model: _models["default"]["class"],
+                  as: 'currentClass'
                 }, {
-                  model: _models["default"].condition,
-                  as: 'condition'
+                  model: _models["default"].rank,
+                  as: 'ranks'
                 }]
+              }, {
+                model: _models["default"].stats,
+                as: 'stats'
+              }, {
+                model: _models["default"].condition,
+                as: 'condition'
+              }, {
+                model: _models["default"].equipment,
+                as: 'equipment'
               }]
             });
 
           case 5:
             myUpdatedUser = _context4.sent;
+            console.log(myUpdatedUser);
+            console.log('found new userclass'); // const myUpdatedUserOld = await db.user.findOne({
+            //   where: {
+            //     id: userId,
+            //   },
+            //   include: [
+            //     {
+            //       model: db.class,
+            //       as: 'currentClass',
+            //     },
+            //     {
+            //       model: db.rank,
+            //       as: 'ranks',
+            //     },
+            //     {
+            //       model: db.UserClass,
+            //       as: 'UserClass',
+            //       where: {
+            //         classId: {
+            //           [Op.col]: 'user.currentClassId',
+            //         },
+            //       },
+            //       include: [
+            //         {
+            //           model: db.stats,
+            //           as: 'stats',
+            //         },
+            //         {
+            //           model: db.condition,
+            //           as: 'condition',
+            //         },
+            //       ],
+            //     },
+            //   ],
+            // });
+
             return _context4.abrupt("return", [myUpdatedUser, cannotSpend]);
 
-          case 7:
+          case 9:
           case "end":
             return _context4.stop();
         }

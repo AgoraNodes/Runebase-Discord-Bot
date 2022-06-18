@@ -26,8 +26,8 @@ function randomIntFromInterval(min, max) {
 }
 
 var generateRandomMagicItem = /*#__PURE__*/function () {
-  var _ref = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee() {
-    var randomBaseItem, itemQualityRecord, randomItemModifiers, prefixModifier, suffixModifier, levelReq, rndDefense, minDamage, maxDamage, addStrength, addDexterity, addVitality, addEnergy, rndStrength, _rndStrength, rndDexterity, _rndDexterity, rndVitality, _rndVitality, rndEnergy, _rndEnergy, itemName, createNewItem, newItem;
+  var _ref = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(level) {
+    var randomBaseItem, itemQualityRecord, randomItemModifiers, prefixModifier, suffixModifier, levelReq, rndDefense, minDamage, maxDamage, minThrowDamage, maxThrowDamage, addStrength, addDexterity, addVitality, addEnergy, addEdefense, addEdamage, rndStrength, _rndStrength, rndDexterity, _rndDexterity, rndVitality, _rndVitality, rndEnergy, _rndEnergy, rndEdefense, _rndEdefense, rndEdamage, _rndEdamage, baseItemName, itemName, createNewItem, newItem;
 
     return _regenerator["default"].wrap(function _callee$(_context) {
       while (1) {
@@ -36,6 +36,11 @@ var generateRandomMagicItem = /*#__PURE__*/function () {
             _context.next = 2;
             return _models["default"].itemBase.findOne({
               order: [[_sequelize.Sequelize.literal('RAND()')]],
+              where: {
+                // '$itemFamily.itemType.name$': 'Throwing',
+                levelReq: (0, _defineProperty2["default"])({}, _sequelize.Op.or, [(0, _defineProperty2["default"])({}, _sequelize.Op.lte, level), null])
+              },
+              // where: { '$itemFamily.name$': 'War Axe' },
               include: [{
                 model: _models["default"].itemFamily,
                 as: 'itemFamily',
@@ -60,6 +65,9 @@ var generateRandomMagicItem = /*#__PURE__*/function () {
             _context.next = 8;
             return _models["default"].itemModifier.findAll({
               order: [[_sequelize.Sequelize.literal('RAND()')]],
+              where: {
+                levelReq: (0, _defineProperty2["default"])({}, _sequelize.Op.or, [(0, _defineProperty2["default"])({}, _sequelize.Op.lte, level), null])
+              },
               limit: 2,
               include: [{
                 model: _models["default"].itemQuality,
@@ -88,13 +96,15 @@ var generateRandomMagicItem = /*#__PURE__*/function () {
               if (modifier.suffix && !suffixModifier) {
                 suffixModifier = modifier;
               }
-            });
-            console.log(prefixModifier);
-            console.log(suffixModifier);
+            }); // console.log(prefixModifier);
+            // console.log(suffixModifier);
+
             addStrength = 0;
             addDexterity = 0;
             addVitality = 0;
-            addEnergy = 0; // Calculate level requirement
+            addEnergy = 0;
+            addEdefense = 0;
+            addEdamage = 0; // Calculate level requirement
 
             if (randomBaseItem.levelReq) {
               levelReq = randomBaseItem.levelReq;
@@ -110,6 +120,11 @@ var generateRandomMagicItem = /*#__PURE__*/function () {
             if (randomBaseItem.minDamage && randomBaseItem.maxDamage) {
               minDamage = randomBaseItem.minDamage;
               maxDamage = randomBaseItem.maxDamage;
+            }
+
+            if (randomBaseItem.minThrowDamage && randomBaseItem.maxThrowDamage) {
+              minThrowDamage = randomBaseItem.minThrowDamage;
+              maxThrowDamage = randomBaseItem.maxThrowDamage;
             } // Calculate Strength
 
 
@@ -154,23 +169,62 @@ var generateRandomMagicItem = /*#__PURE__*/function () {
             if (suffixModifier && suffixModifier.minEnergy && suffixModifier.maxEnergy) {
               _rndEnergy = randomIntFromInterval(suffixModifier.minEnergy, suffixModifier.maxEnergy);
               addEnergy += _rndEnergy;
+            } // Calculate ED (enhanced damage/defense)
+
+
+            if (prefixModifier && prefixModifier.minEdefense && prefixModifier.maxEdefense) {
+              rndEdefense = randomIntFromInterval(prefixModifier.minEdefense, prefixModifier.maxEdefense);
+              addEdefense += rndEdefense;
             }
 
-            itemName = "".concat(prefixModifier && prefixModifier.prefix ? "".concat(prefixModifier.prefix, " ") : '').concat(randomBaseItem.name).concat(suffixModifier && suffixModifier.suffix ? " ".concat(suffixModifier.suffix) : '');
-            _context.next = 30;
-            return _models["default"].item.create(_objectSpread(_objectSpread(_objectSpread(_objectSpread(_objectSpread(_objectSpread(_objectSpread(_objectSpread({
+            if (suffixModifier && suffixModifier.minEdefense && suffixModifier.maxEdefense) {
+              _rndEdefense = randomIntFromInterval(suffixModifier.minEdefense, suffixModifier.maxEdefense);
+              addEdefense += _rndEdefense;
+            } // Calculate ED (enhanced damage/defense)
+
+
+            if (prefixModifier && prefixModifier.minEdamage && prefixModifier.maxEdamage) {
+              rndEdamage = randomIntFromInterval(prefixModifier.minEdamage, prefixModifier.maxEdamage);
+              addEdamage += rndEdamage;
+            }
+
+            if (suffixModifier && suffixModifier.minEdamage && suffixModifier.maxEdamage) {
+              _rndEdamage = randomIntFromInterval(suffixModifier.minEdamage, suffixModifier.maxEdamage);
+              addEdamage += _rndEdamage;
+            }
+
+            if (randomBaseItem.itemFamily.name === 'Rings') {
+              baseItemName = 'ring';
+            } else if (randomBaseItem.itemFamily.name === 'Amulets') {
+              baseItemName = 'amulet';
+            } else {
+              baseItemName = randomBaseItem.name;
+            }
+
+            itemName = "".concat(prefixModifier && prefixModifier.prefix ? "".concat(prefixModifier.prefix, " ") : '').concat(baseItemName).concat(suffixModifier && suffixModifier.suffix ? " ".concat(suffixModifier.suffix) : '');
+            _context.next = 36;
+            return _models["default"].item.create(_objectSpread(_objectSpread(_objectSpread(_objectSpread(_objectSpread(_objectSpread(_objectSpread(_objectSpread(_objectSpread(_objectSpread(_objectSpread(_objectSpread({
               name: itemName,
               itemBaseId: randomBaseItem.id,
               itemQualityId: itemQualityRecord.id,
-              durability: randomBaseItem.durability
+              durability: randomBaseItem.durability,
+              stack: randomBaseItem.maxStack
             }, levelReq && {
               levelReq: levelReq
             }), rndDefense && {
               defense: rndDefense
+            }), addEdefense !== 0 && {
+              eDefense: addEdefense
+            }), addEdamage !== 0 && {
+              eDamage: addEdamage
             }), minDamage && {
               minDamage: minDamage
             }), maxDamage && {
               maxDamage: maxDamage
+            }), minThrowDamage && {
+              minThrowDamage: minThrowDamage
+            }), maxThrowDamage && {
+              maxThrowDamage: maxThrowDamage
             }), addStrength !== 0 && {
               strength: addStrength
             }), addDexterity !== 0 && {
@@ -181,9 +235,9 @@ var generateRandomMagicItem = /*#__PURE__*/function () {
               energy: addEnergy
             }));
 
-          case 30:
+          case 36:
             createNewItem = _context.sent;
-            _context.next = 33;
+            _context.next = 39;
             return _models["default"].item.findOne({
               where: {
                 id: createNewItem.id
@@ -209,11 +263,11 @@ var generateRandomMagicItem = /*#__PURE__*/function () {
               }]
             });
 
-          case 33:
+          case 39:
             newItem = _context.sent;
             return _context.abrupt("return", newItem);
 
-          case 35:
+          case 41:
           case "end":
             return _context.stop();
         }
@@ -221,7 +275,7 @@ var generateRandomMagicItem = /*#__PURE__*/function () {
     }, _callee);
   }));
 
-  return function generateRandomMagicItem() {
+  return function generateRandomMagicItem(_x) {
     return _ref.apply(this, arguments);
   };
 }();

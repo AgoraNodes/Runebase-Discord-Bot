@@ -55,6 +55,22 @@ module.exports = function (sequelize, DataTypes) {
     maxEnergy: {
       type: DataTypes.SMALLINT,
       allowNull: true
+    },
+    minEdefense: {
+      type: DataTypes.SMALLINT,
+      allowNull: true
+    },
+    maxEdefense: {
+      type: DataTypes.SMALLINT,
+      allowNull: true
+    },
+    minEdamage: {
+      type: DataTypes.SMALLINT,
+      allowNull: true
+    },
+    maxEdamage: {
+      type: DataTypes.SMALLINT,
+      allowNull: true
     }
   }; // 2: The model options.
 

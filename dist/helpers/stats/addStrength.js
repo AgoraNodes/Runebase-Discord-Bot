@@ -215,29 +215,32 @@ var addStrength = /*#__PURE__*/function () {
 
           case 3:
             _context4.next = 5;
-            return _models["default"].user.findOne({
+            return _models["default"].UserClass.findOne({
               where: {
-                id: userId
+                classId: (0, _defineProperty2["default"])({}, _sequelize.Op.col, 'user.currentClassId')
               },
               include: [{
-                model: _models["default"]["class"],
-                as: 'currentClass'
-              }, {
-                model: _models["default"].rank,
-                as: 'ranks'
-              }, {
-                model: _models["default"].UserClass,
-                as: 'UserClass',
+                model: _models["default"].user,
+                as: 'user',
                 where: {
-                  classId: (0, _defineProperty2["default"])({}, _sequelize.Op.col, 'user.currentClassId')
+                  id: userId
                 },
                 include: [{
-                  model: _models["default"].stats,
-                  as: 'stats'
+                  model: _models["default"]["class"],
+                  as: 'currentClass'
                 }, {
-                  model: _models["default"].condition,
-                  as: 'condition'
+                  model: _models["default"].rank,
+                  as: 'ranks'
                 }]
+              }, {
+                model: _models["default"].stats,
+                as: 'stats'
+              }, {
+                model: _models["default"].condition,
+                as: 'condition'
+              }, {
+                model: _models["default"].equipment,
+                as: 'equipment'
               }]
             });
 
