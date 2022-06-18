@@ -757,6 +757,14 @@ Select a new class
 \`${settings.bot.command} stats\`
 Select stats (attributes) for your class
 
+\`/inventory\`
+\`${settings.bot.command} inventory\`
+Iventory management
+
+\`/equipment\`
+\`${settings.bot.command} equipment\`
+Equipment management
+
 \`/myrank\`
 \`${settings.bot.command} myrank\`
 Displays your account information

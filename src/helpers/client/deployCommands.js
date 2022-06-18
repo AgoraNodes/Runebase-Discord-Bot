@@ -10,6 +10,8 @@ const commands = [
   new SlashCommandBuilder().setName('help').setDescription('DM\'s you with a help message'),
   new SlashCommandBuilder().setName('pickclass').setDescription('Select a new class'),
   new SlashCommandBuilder().setName('stats').setDescription('Select stats (attributes) for your class'),
+  new SlashCommandBuilder().setName('inventory').setDescription('Inventory Management'),
+  new SlashCommandBuilder().setName('equipment').setDescription('Equipment Management'),
   new SlashCommandBuilder().setName('myrank').setDescription('Displays the user\'s rank'),
   new SlashCommandBuilder().setName('ranks').setDescription('Displays all the ranks'),
   new SlashCommandBuilder().setName('leaderboard').setDescription('Displays the top ten leaderboard'),
