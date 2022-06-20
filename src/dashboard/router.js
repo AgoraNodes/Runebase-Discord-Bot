@@ -24,6 +24,10 @@ import {
   fetchServers,
   banServer,
 } from './controllers/servers';
+import {
+  fetchSkillTrees,
+  updateSkillTree,
+} from './controllers/skillTree';
 
 import {
   fetchErrors,
@@ -538,6 +542,30 @@ export const dashboardRouter = (
     use(insertIp),
     use(ensuretfa),
     use(updateClass),
+    respondResult,
+  );
+
+  // Skill Tree
+
+  app.post(
+    '/api/management/skilltrees',
+    use(IsAuthenticated),
+    use(isAdmin),
+    use(isDashboardUserBanned),
+    use(insertIp),
+    use(ensuretfa),
+    use(fetchSkillTrees),
+    respondCountAndResult,
+  );
+
+  app.post(
+    '/api/management/skilltree/update',
+    use(IsAuthenticated),
+    use(isAdmin),
+    use(isDashboardUserBanned),
+    use(insertIp),
+    use(ensuretfa),
+    use(updateSkillTree),
     respondResult,
   );
 

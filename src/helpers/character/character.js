@@ -35,6 +35,22 @@ export const fetchUserCurrentCharacter = async (
     ),
     include: [
       {
+        model: db.class,
+        as: 'class',
+        include: [
+          {
+            model: db.skillTree,
+            as: 'skillTrees',
+            include: [
+              {
+                model: db.skill,
+                as: 'skills',
+              },
+            ],
+          },
+        ],
+      },
+      {
         model: db.user,
         as: 'user',
         where: {

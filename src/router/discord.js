@@ -28,6 +28,8 @@ import { discordExpTest } from '../controllers/expTest';
 import { myRateLimiter } from '../helpers/rateLimit';
 import { discordFeatureSettings } from '../controllers/featureSetting';
 import { isMaintenanceOrDisabled } from '../helpers/isMaintenanceOrDisabled';
+import { discordSkills } from '../controllers/skill';
+
 import settings from '../config/settings';
 
 import {
@@ -880,6 +882,23 @@ export const discordRouter = async (
       if (limited) return;
       const setting = await db.setting.findOne();
       const task = await discordPickClass(
+        discordClient,
+        message,
+        setting,
+        io,
+        queue,
+      );
+    }
+
+    if (filteredMessageDiscord[1] && filteredMessageDiscord[1].toLowerCase() === 'skills') {
+      const limited = await myRateLimiter(
+        discordClient,
+        message,
+        'Skills',
+      );
+      if (limited) return;
+      const setting = await db.setting.findOne();
+      const task = await discordSkills(
         discordClient,
         message,
         setting,

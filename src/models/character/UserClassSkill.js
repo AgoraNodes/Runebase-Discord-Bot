@@ -1,0 +1,29 @@
+module.exports = (sequelize, DataTypes) => {
+  const modelDefinition = {
+    id: {
+      type: DataTypes.BIGINT,
+      allowNull: false,
+      primaryKey: true,
+      autoIncrement: true,
+    },
+  };
+
+  // 2: The model options.
+  const modelOptions = {
+    freezeTableName: true,
+  };
+
+  // 3: Define the Wallet model.
+  const UserClassSkillModel = sequelize.define('UserClassSkill', modelDefinition, modelOptions);
+
+  UserClassSkillModel.associate = (model) => {
+    UserClassSkillModel.belongsTo(model.skill, {
+      foreignKey: 'skillId',
+    });
+    UserClassSkillModel.belongsTo(model.UserClass, {
+      foreignKey: 'UserClassId',
+    });
+  };
+
+  return UserClassSkillModel;
+};
