@@ -35,6 +35,7 @@ module.exports = (sequelize, DataTypes) => {
 
   SkillModell.associate = (model) => {
     SkillModell.belongsTo(model.skillTree);
+    // SkillModell.hasMany(model.UserClassSkill);
     SkillModell.belongsToMany(
       model.UserClass,
       {
@@ -46,7 +47,7 @@ module.exports = (sequelize, DataTypes) => {
       {
         through: model.SkillSkill,
         as: 'CurrentSkill',
-        foreignKey: 'currentSkillId',
+        foreignKey: 'previousSkillId',
       },
     );
     SkillModell.belongsToMany(
@@ -54,7 +55,7 @@ module.exports = (sequelize, DataTypes) => {
       {
         through: model.SkillSkill,
         as: 'PreviousSkill',
-        foreignKey: 'previousSkillId',
+        foreignKey: 'currentSkillId',
       },
     );
   };

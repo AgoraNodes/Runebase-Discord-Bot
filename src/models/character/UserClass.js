@@ -40,7 +40,10 @@ module.exports = (sequelize, DataTypes) => {
     UserClassModel.hasMany(model.UserClassSkill);
     UserClassModel.belongsToMany(
       model.skill,
-      { through: 'UserClassSkill' },
+      {
+        as: 'UserSkills',
+        through: 'UserClassSkill',
+      },
     );
   };
 

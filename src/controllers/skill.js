@@ -1,10 +1,5 @@
 /* eslint-disable import/prefer-default-export */
 import {
-  Sequelize,
-  Transaction,
-  Op,
-} from "sequelize";
-import {
   createCanvas,
   loadImage,
   registerFont,
@@ -17,17 +12,13 @@ import {
 } from 'discord.js';
 
 import path from 'path';
-import {
-  cannotSendMessageUser,
-  discordErrorMessage,
-} from '../messages';
-import db from '../models';
-import logger from "../helpers/logger";
-import { userWalletExist } from "../helpers/client/userWalletExist";
 import { fetchUserCurrentCharacter } from "../helpers/character/character";
 import { fetchDiscordUserIdFromMessageOrInteraction } from '../helpers/client/fetchDiscordUserIdFromMessageOrInteraction';
 import { fetchDiscordChannel } from '../helpers/client/fetchDiscordChannel';
-import { renderskillTreeImage } from "../render/skillTree";
+import { addSkillPoint } from '../helpers/skills/addSkillPoint';
+
+import { renderSkillTreeImage } from "../render/skillTree";
+import { renderSkillDescriptionImage } from '../render/skillDescription';
 
 export const discordSkills = async (
   discordClient,
@@ -36,7 +27,7 @@ export const discordSkills = async (
   io,
   queue,
 ) => {
-  const activity = [];
+  // const activity = [];
 
   const userId = await fetchDiscordUserIdFromMessageOrInteraction(
     message,
@@ -47,7 +38,7 @@ export const discordSkills = async (
     message,
   );
 
-  const userCurrentCharacter = await fetchUserCurrentCharacter(
+  let userCurrentCharacter = await fetchUserCurrentCharacter(
     userId, // user discord id
     false, // Need inventory?
   );
@@ -60,22 +51,7 @@ export const discordSkills = async (
     return;
   }
 
-  const backId = 'back';
-  const forwardId = 'forward';
-  const pickClassId = 'pickClass';
-  const cancelPickClassId = 'cancelClass';
-  const backButton = new MessageButton({
-    style: 'SECONDARY',
-    label: 'Back',
-    emoji: '⬅️',
-    customId: backId,
-  });
-  const forwardButton = new MessageButton({
-    style: 'SECONDARY',
-    label: 'Forward',
-    emoji: '➡️',
-    customId: forwardId,
-  });
+  const cancelSkillPickId = 'cancelSkillPick';
 
   await registerFont(path.join(__dirname, '../assets/fonts/', 'Heart_warming.otf'), { family: 'HeartWarming' });
 
@@ -84,19 +60,35 @@ export const discordSkills = async (
     skillTree,
     skillTreeIndex,
     selectedSkill,
+    failReason,
   ) => {
-    const skillTreeImageBuffer = await renderskillTreeImage(
+    const skillTreeImageBuffer = await renderSkillTreeImage(
       userCharacter,
       skillTree,
       skillTreeIndex,
+      selectedSkill,
     );
     const skillTreeImage = await loadImage(skillTreeImageBuffer);
+
+    const skillDescriptionImageBuffer = await renderSkillDescriptionImage(
+      userCharacter,
+      skillTree,
+      skillTreeIndex,
+      selectedSkill,
+    );
+    const skillDescriptionImage = await loadImage(skillDescriptionImageBuffer);
+
+    const failReasonHeight = failReason ? 25 : 0;
+
     const canvas = createCanvas(
-      skillTreeImage.width,
-      skillTreeImage.height,
+      skillTreeImage.width + skillDescriptionImage.width,
+      skillTreeImage.height + failReasonHeight,
     );
     const ctx = canvas.getContext('2d');
 
+    console.log(skillTreeImage.width);
+    console.log(skillTreeImage.height);
+    console.log('---------------------');
     ctx.drawImage(
       skillTreeImage,
       0,
@@ -105,24 +97,40 @@ export const discordSkills = async (
       skillTreeImage.height,
     );
 
+    if (selectedSkill) {
+      ctx.drawImage(
+        skillDescriptionImage,
+        skillTreeImage.width,
+        0,
+        skillDescriptionImage.width,
+        skillDescriptionImage.height,
+      );
+    }
+
+    if (failReason) {
+      ctx.font = 'bold 15px "HeartWarming"';
+      ctx.fillStyle = "red";
+      ctx.strokeStyle = 'black';
+      ctx.lineWidth = 3;
+      ctx.textAlign = "center";
+      ctx.strokeText(
+        failReason,
+        skillTreeImage.width / 2,
+        skillTreeImage.height + 15,
+        skillTreeImage.width,
+      );
+      ctx.fillText(
+        failReason,
+        skillTreeImage.width / 2,
+        skillTreeImage.height + 15,
+        skillTreeImage.width,
+      );
+    }
+
     return new MessageAttachment(canvas.toBuffer(), 'skillTree.png');
   };
 
-  const generateClassPicked = async (start) => {
-    const canvas = createCanvas(500, 100);
-    const ctx = canvas.getContext('2d');
-
-    console.log('picked!');
-    ctx.font = 'bold 30px "HeartWarming"';
-    ctx.fillStyle = "#ccc";
-    ctx.strokeStyle = 'black';
-    ctx.lineWidth = 3;
-    ctx.textAlign = "center";
-
-    return new MessageAttachment(canvas.toBuffer(), 'picked.png');
-  };
-
-  const generateCancelClassPicked = async (start) => {
+  const generatecancelSkillPickPicked = async (start) => {
     const canvas = createCanvas(500, 100);
     const ctx = canvas.getContext('2d');
 
@@ -137,10 +145,20 @@ export const discordSkills = async (
 
   const generateCancelSkill = async () => new MessageButton({
     style: 'SECONDARY',
-    label: `Cancel class selection`,
+    label: `Cancel skill selection`,
     emoji: '❌',
-    customId: cancelPickClassId,
+    customId: cancelSkillPickId,
   });
+
+  const generateAddSkillButton = async (mySelectedSkill) => {
+    const addSkillId = `addSkill:${mySelectedSkill.id}`;
+    return new MessageButton({
+      style: 'SECONDARY',
+      label: `Add Skillpoint to ${mySelectedSkill.name}`,
+      emoji: '➕',
+      customId: addSkillId,
+    });
+  };
 
   const skillTreeMap = userCurrentCharacter.class.skillTrees.map((skilltree, index) => {
     console.log(index);
@@ -151,6 +169,7 @@ export const discordSkills = async (
       default: index === 0,
     };
   });
+
   const skillMap = userCurrentCharacter.class.skillTrees[0].skills.map((
     mySkill,
     index,
@@ -165,8 +184,9 @@ export const discordSkills = async (
       await generateSkillTreeImage(
         userCurrentCharacter,
         userCurrentCharacter.class.skillTrees[0],
-        0,
-        false,
+        0, // skillTreeIndex
+        false, // selected skill
+        false, // add skill failReason String
       ),
     ],
     components:
@@ -202,25 +222,44 @@ export const discordSkills = async (
     filter: ({ user: discordUser }) => discordUser.id === userCurrentCharacter.user.user_id,
   });
 
-  const currentIndex = 0;
   let skillTreeIndex = 0;
   let skillIndex;
   let selectedSkill;
   collector.on('collect', async (interaction) => {
+    let failAddSkillReason;
+    if (interaction.isButton()) {
+      await interaction.deferUpdate();
+      if (interaction.customId.startsWith('addSkill:')) {
+        const skillToAddId = Number(interaction.customId.replace("addSkill:", ""));
+        [
+          userCurrentCharacter,
+          failAddSkillReason,
+        ] = await addSkillPoint(
+          userCurrentCharacter,
+          skillToAddId,
+          io,
+          queue,
+        );
+      }
+      if (interaction.customId === cancelSkillPickId) {
+        await interaction.update({
+          files: [
+            await generatecancelSkillPickPicked(),
+          ],
+          components: [],
+        });
+        return;
+      }
+    }
     if (interaction.isSelectMenu()) {
       if (interaction.customId === 'select-skilltree') {
         await interaction.deferUpdate();
         if (interaction.values[0].startsWith('skilltree-')) {
-          console.log(interaction);
-          console.log('interaction');
-          console.log(interaction.values[0]);
           skillTreeIndex = Number(interaction.values[0].replace('skilltree-', ''));
-          console.log(skillTreeIndex);
-          console.log('skillTreeIndex');
+          selectedSkill = false;
+          skillIndex = false;
         }
       }
-    }
-    if (interaction.isSelectMenu()) {
       if (interaction.customId === 'select-skill') {
         await interaction.deferUpdate();
         if (interaction.values[0].startsWith('skill-')) {
@@ -229,79 +268,16 @@ export const discordSkills = async (
         }
       }
     }
-    if (interaction.customId === pickClassId) {
-      await queue.add(async () => {
-        await db.sequelize.transaction({
-          isolationLevel: Transaction.ISOLATION_LEVELS.SERIALIZABLE,
-        }, async (t) => {
-          const preActivity = await db.activity.create({
-            type: 'pickClass_s',
-            earnerId: userCurrentCharacter.user.id,
-          }, {
-            lock: t.LOCK.UPDATE,
-            transaction: t,
-          });
 
-          const finalActivity = await db.activity.findOne({
-            where: {
-              id: preActivity.id,
-            },
-            include: [
-              {
-                model: db.user,
-                as: 'earner',
-              },
-            ],
-            lock: t.LOCK.UPDATE,
-            transaction: t,
-          });
-          activity.unshift(finalActivity);
-        }).catch(async (err) => {
-          console.log(err);
-          try {
-            await db.error.create({
-              type: 'ClassSelection',
-              error: `${err}`,
-            });
-          } catch (e) {
-            logger.error(`Error Discord: ${e}`);
-          }
-        });
-        if (activity.length > 0) {
-          io.to('admin').emit('updateActivity', {
-            activity,
-          });
-        }
-      });
+    const skillTreeMapEdit = userCurrentCharacter.class.skillTrees.map((
+      skilltree,
+      index,
+    ) => ({
+      label: skilltree.name,
+      value: `skilltree-${index}`,
+      default: index === skillTreeIndex,
+    }));
 
-      await interaction.update({
-        files: [
-          await generateClassPicked(currentIndex),
-        ],
-        components: [],
-      });
-      return;
-    }
-    // Cancel class selection
-    if (interaction.customId === cancelPickClassId) {
-      await interaction.update({
-        files: [
-          await generateCancelClassPicked(),
-        ],
-        components: [],
-      });
-      return;
-    }
-
-    const skillTreeMapEdit = userCurrentCharacter.class.skillTrees.map((skilltree, index) => {
-      console.log(index);
-      console.log('index');
-      return {
-        label: skilltree.name,
-        value: `skilltree-${index}`,
-        default: index === skillTreeIndex,
-      };
-    });
     const skillMapEdit = userCurrentCharacter.class.skillTrees[skillTreeIndex].skills.map((
       mySkill,
       index,
@@ -312,7 +288,6 @@ export const discordSkills = async (
       default: index === skillIndex,
     }));
 
-    // Load another character
     await interaction.editReply({
       files: [
         await generateSkillTreeImage(
@@ -320,9 +295,22 @@ export const discordSkills = async (
           userCurrentCharacter.class.skillTrees[skillTreeIndex],
           skillTreeIndex,
           selectedSkill,
+          failAddSkillReason,
         ),
       ],
       components: [
+        ...(selectedSkill
+          ? [
+            new MessageActionRow({
+              components: [
+                await generateAddSkillButton(
+                  selectedSkill,
+                ),
+              ],
+            }),
+          ]
+          : []
+        ),
         new MessageActionRow({
           components: [
             new MessageSelectMenu({

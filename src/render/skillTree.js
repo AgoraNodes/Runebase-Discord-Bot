@@ -9,6 +9,8 @@ import {
   registerFont,
 } from 'canvas';
 import path from 'path';
+import _ from 'lodash';
+import { renderGrayScaleIcon } from './grayScaleIcon';
 
 function printAtWordWrap(context, text, x, y, lineHeight, fitWidth) {
   fitWidth = fitWidth || 0;
@@ -36,10 +38,11 @@ function printAtWordWrap(context, text, x, y, lineHeight, fitWidth) {
   if (idx > 0) { context.fillText(words.join(' '), x, y + (lineHeight * currentLine)); }
 }
 
-export const renderskillTreeImage = async (
+export const renderSkillTreeImage = async (
   userCharacter,
   skillTree,
   skillTreeIndex,
+  selectedSkill,
 ) => {
   const skillTreeMenuImage = await loadImage(path.join(__dirname, `../assets/images/skilltree/`, `skillTreeMenu.png`));
   const skillTreeImage = await loadImage(path.join(__dirname, `../assets/images/skilltree/`, `skilltree${skillTreeIndex}.png`));
@@ -131,8 +134,139 @@ export const renderskillTreeImage = async (
     skillTreeMenuImage.width - 10,
   );
 
+  ctx.shadowBlur = 30;
+  ctx.shadowColor = "blue";
+  ctx.beginPath();
+  ctx.lineWidth = "3";
+  ctx.strokeStyle = "blue";
+  ctx.rect(
+    selectedSkill.column === 1
+      ? 15 + 25
+      : 15 + 25
+      + ((selectedSkill.column) * (48))
+      + (((48 / 2) - 4) * (selectedSkill.column - 1))
+      - 48,
+    selectedSkill.row === 1
+      ? 15 + 24
+      : 15 + 24
+      + ((selectedSkill.row) * (48))
+      + (((48 / 2) - 4) * (selectedSkill.row - 1))
+      - 48,
+    50,
+    50,
+  );
+  ctx.stroke();
+
+  // Draw Connection
   for (let i = 0; i < skillTree.skills.length; i++) {
-    const skillImage = await loadImage(path.join(__dirname, `../assets/images/skills/${userCharacter.user.currentClass.name}/${skillTree.name}`, `${skillTree.skills[i].name}.png`));
+    for (let y = 0; y < skillTree.skills[i].PreviousSkill.length; y++) {
+      if (skillTree.skills[i].PreviousSkill[y]) {
+        const userHasPreviousSkill = userCharacter.UserClassSkills.find((o) => o.skillId === skillTree.skills[i].PreviousSkill[y].id);
+        const userHasCurrentSkill = userCharacter.UserClassSkills.find((o) => o.skillId === skillTree.skills[i].id);
+        if (userHasPreviousSkill && userHasCurrentSkill) {
+          ctx.shadowBlur = 30;
+          ctx.shadowColor = "#FFD700";
+          ctx.beginPath();
+          ctx.lineWidth = "3";
+          ctx.strokeStyle = "#FFD700";
+        } else {
+          ctx.shadowBlur = 0;
+          ctx.shadowColor = "none";
+          ctx.beginPath();
+          ctx.lineWidth = "3";
+          ctx.strokeStyle = "gray";
+        }
+
+        if (
+          skillTree.skills[i].row - skillTree.skills[i].PreviousSkill[y].row === 1
+          || skillTree.skills[i].column === skillTree.skills[i].PreviousSkill[y].column
+        ) {
+          ctx.moveTo(
+            skillTree.skills[i].column === 1
+              ? 15 + 27 + (48 / 2)
+              : 15 + 27 + (48 / 2)
+              + ((skillTree.skills[i].column) * (48))
+              + (((48 / 2) - 4) * (skillTree.skills[i].column - 1))
+              - 48,
+            skillTree.skills[i].row === 1
+              ? 15 + 27 + (48 / 2)
+              : 15 + 27 + (48 / 2) - 6
+              + ((skillTree.skills[i].row) * (48))
+              + (((48 / 2) - 4) * (skillTree.skills[i].row - 1))
+              - 48,
+          );
+        } else {
+          ctx.moveTo(
+            skillTree.skills[i].column === 1
+              ? 15 + 27 + (48 / 2)
+              : 15 + 27 + (48 / 2)
+              + ((skillTree.skills[i].column) * (48))
+              + (((48 / 2) - 4) * (skillTree.skills[i].column - 1))
+              - 48,
+            skillTree.skills[i].row === 1
+              ? 15 + 27 + (48 / 2)
+              : 15 + 27 + (48 / 2) - 6
+              + ((skillTree.skills[i].row - 1) * (48))
+              + (((48 / 2) - 4) * (skillTree.skills[i].row - 1))
+              - 48,
+          );
+        }
+
+        ctx.lineTo(
+          skillTree.skills[i].PreviousSkill[y].column === 1
+            ? 15 + 27 + (48 / 2)
+            : 15 + 27 + (48 / 2)
+            + ((skillTree.skills[i].PreviousSkill[y].column) * (48))
+            + (((48 / 2) - 4) * (skillTree.skills[i].PreviousSkill[y].column - 1))
+            - 48,
+          skillTree.skills[i].PreviousSkill[y].row === 1
+            ? 15 + 27 + (48 / 2)
+            : 15 + 27 + (48 / 2)
+            + ((skillTree.skills[i].PreviousSkill[y].row) * (48))
+            + (((48 / 2) - 4) * (skillTree.skills[i].PreviousSkill[y].row - 1))
+            - 48,
+        );
+        ctx.stroke();
+      }
+    }
+  }
+
+  ctx.shadowBlur = 0;
+  ctx.shadowColor = "none";
+  ctx.lineWidth = "3";
+  ctx.strokeStyle = "black";
+
+  for (let i = 0; i < skillTree.skills.length; i++) {
+    const skillIcon = await loadImage(path.join(__dirname, `../assets/images/skills/${userCharacter.user.currentClass.name}/${skillTree.name}`, `${skillTree.skills[i].name}.png`));
+    let skillImage;
+    const userHasSkill = userCharacter.UserClassSkills.find((o) => o.skillId === skillTree.skills[i].id);
+    let userHasPreviousSkills = true;
+
+    // check if user has the previous skills
+    if (skillTree.skills[i].PreviousSkill.length === 1) {
+      const userHasSkillOne = userCharacter.UserClassSkills.find((o) => o.skillId === skillTree.skills[i].PreviousSkill[0].id);
+      if (!userHasSkillOne) {
+        userHasPreviousSkills = false;
+      }
+    }
+    if (skillTree.skills[i].PreviousSkill.length === 2) {
+      const userHasSkillOne = userCharacter.UserClassSkills.find((o) => o.skillId === skillTree.skills[i].PreviousSkill[0].id);
+      const userHasSkillTwo = userCharacter.UserClassSkills.find((o) => o.skillId === skillTree.skills[i].PreviousSkill[1].id);
+      if (!userHasSkillOne || !userHasSkillTwo) {
+        userHasPreviousSkills = false;
+      }
+    }
+
+    // check if we need gray scaled icon
+    if (
+      skillTree.skills[i].level > userCharacter.user.ranks[0].id
+      || !userHasPreviousSkills
+    ) {
+      const grayScaleIconBuffer = await renderGrayScaleIcon(skillIcon);
+      skillImage = await loadImage(grayScaleIconBuffer);
+    } else {
+      skillImage = skillIcon;
+    }
 
     // Skill Amount Boxes
     ctx.beginPath();
@@ -174,6 +308,68 @@ export const renderskillTreeImage = async (
       skillImage.width,
       skillImage.height,
     );
+
+    if (userHasSkill) {
+      ctx.font = 'bold 12px "HeartWarming"';
+      ctx.strokeText(
+        userHasSkill.points,
+        skillTree.skills[i].column === 1
+          ? 15 + 28 + skillImage.width
+          : 15 + 28 + skillImage.width
+          + ((skillTree.skills[i].column) * (skillImage.width))
+          + (((skillImage.width / 2) - 4) * (skillTree.skills[i].column - 1))
+          - skillImage.width,
+        skillTree.skills[i].row === 1
+          ? 15 + 33 + skillImage.height
+          : 15 + 33 + skillImage.height
+          + ((skillTree.skills[i].row) * (skillImage.height))
+          + (((skillImage.height / 2) - 4) * (skillTree.skills[i].row - 1))
+          - skillImage.height,
+        50,
+      );
+      ctx.fillText(
+        userHasSkill.points,
+        skillTree.skills[i].column === 1
+          ? 15 + 28 + skillImage.width
+          : 15 + 28 + skillImage.width
+          + ((skillTree.skills[i].column) * (skillImage.width))
+          + (((skillImage.width / 2) - 4) * (skillTree.skills[i].column - 1))
+          - skillImage.width,
+        skillTree.skills[i].row === 1
+          ? 15 + 33 + skillImage.height
+          : 15 + 33 + skillImage.height
+          + ((skillTree.skills[i].row) * (skillImage.height))
+          + (((skillImage.height / 2) - 4) * (skillTree.skills[i].row - 1))
+          - skillImage.height,
+        50,
+      );
+    }
+  }
+
+  const totalSkillsPointsSpend = _.sumBy(userCharacter.UserClassSkills, 'points');
+  const skillPointsLeftToSpend = userCharacter.user.ranks[0].id && totalSkillsPointsSpend ? (userCharacter.user.ranks[0].id - totalSkillsPointsSpend) : 0;
+
+  // console.log(userCharacter.user.ranks[0].id);
+  // console.log(userCharacter.UserClassSkills);
+  // console.log(totalSkillsPointsSpend);
+  // console.log('UserCLassSkills skillTree');
+
+  if (skillPointsLeftToSpend > 0) {
+    ctx.font = 'bold 18px "HeartWarming"';
+    ctx.shadowBlur = 30;
+    ctx.shadowColor = "red";
+    ctx.beginPath();
+    ctx.lineWidth = "3";
+    ctx.strokeStyle = "red";
+    ctx.strokeText(skillPointsLeftToSpend, 300, 105, 50);
+    ctx.fillText(skillPointsLeftToSpend, 300, 105, 50);
+
+    ctx.shadowBlur = 0;
+    ctx.font = 'bold 15px "HeartWarming"';
+    ctx.strokeText('Remaining', 300, 50, 70);
+    ctx.fillText('Remaining', 300, 50, 70);
+    ctx.strokeText('Skillpoints', 300, 70, 70);
+    ctx.fillText('Skillpoints', 300, 70, 70);
   }
 
   const finalImage = await canvas.toBuffer();

@@ -6,6 +6,10 @@ module.exports = (sequelize, DataTypes) => {
       primaryKey: true,
       autoIncrement: true,
     },
+    points: {
+      type: DataTypes.TINYINT,
+      allowNull: false,
+    },
   };
 
   // 2: The model options.

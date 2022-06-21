@@ -354,20 +354,8 @@ export const discordShowInventory = async (
     });
   };
 
-  console.log(userCurrentCharacter.inventory.items.length);
-  console.log('123');
-  console.log('123');
-  console.log('123');
-  console.log('123');
-  console.log('123');
-  console.log('123');
-  console.log('123');
-  console.log('123');
-  console.log('123');
-  console.log('123');
-  console.log('123');
-  console.log('123');
-  console.log('123');
+  // console.log(userCurrentCharacter.inventory.items.length);
+
   const row = new MessageActionRow();
 
   if (
