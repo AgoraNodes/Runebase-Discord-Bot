@@ -37,7 +37,7 @@ var _addVitality = require("../helpers/stats/addVitality");
 
 var _addEnergy = require("../helpers/stats/addEnergy");
 
-var _generateStatsImage = require("../helpers/stats/generateStatsImage");
+var _stats = require("../render/stats");
 
 var _character = require("../helpers/character/character");
 
@@ -158,7 +158,7 @@ var discordStats = /*#__PURE__*/function () {
             _context3.t0 = discordChannel;
             _context3.t1 = _discord.MessageAttachment;
             _context3.next = 30;
-            return (0, _generateStatsImage.generateStatsImage)(userCurrentCharacter, false);
+            return (0, _stats.renderStatsImage)(userCurrentCharacter, false);
 
           case 30:
             _context3.t2 = _context3.sent;
@@ -263,7 +263,7 @@ var discordStats = /*#__PURE__*/function () {
                         _context2.t0 = interaction;
                         _context2.t1 = _discord.MessageAttachment;
                         _context2.next = 34;
-                        return (0, _generateStatsImage.generateStatsImage)(updatedUser, false);
+                        return (0, _stats.renderStatsImage)(updatedUser, false);
 
                       case 34:
                         _context2.t2 = _context2.sent;

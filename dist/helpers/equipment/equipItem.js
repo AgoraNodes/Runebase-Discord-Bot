@@ -429,6 +429,8 @@ var equipItem = /*#__PURE__*/function () {
                   model: _models["default"].item,
                   as: 'items',
                   required: false,
+                  separate: true,
+                  order: [['updatedAt', 'DESC']],
                   include: [{
                     model: _models["default"].itemBase,
                     as: 'itemBase',

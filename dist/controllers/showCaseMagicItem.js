@@ -31,7 +31,7 @@ var _generateRandomMagicItem = require("../helpers/items/generateRandomMagicItem
 
 var _generateModifierStringArray = require("../helpers/items/generateModifierStringArray");
 
-var _generateItemImage = require("../helpers/items/generateItemImage");
+var _item = require("../render/item");
 
 var _character = require("../helpers/character/character");
 
@@ -75,7 +75,7 @@ var generateLootImage = /*#__PURE__*/function () {
 
           case 8:
             _context.next = 10;
-            return (0, _generateItemImage.generateItemImage)(lootItem);
+            return (0, _item.renderItemImage)(lootItem);
 
           case 10:
             itemImage = _context.sent;
@@ -576,7 +576,7 @@ var discordShowCaseMagicItem = /*#__PURE__*/function () {
                       case 14:
                         newItem = _context13.sent;
 
-                        // const itemImage = await generateItemImage(newItem);
+                        // const itemImage = await renderItemImage(newItem);
                         generateLootButton = /*#__PURE__*/function () {
                           var _ref13 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee11() {
                             return _regenerator["default"].wrap(function _callee11$(_context11) {

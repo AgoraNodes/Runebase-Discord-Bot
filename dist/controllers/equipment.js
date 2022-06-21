@@ -23,15 +23,13 @@ var _discord = require("discord.js");
 
 var _path = _interopRequireDefault(require("path"));
 
-var _messages = require("../messages");
-
 var _models = _interopRequireDefault(require("../models"));
 
 var _logger = _interopRequireDefault(require("../helpers/logger"));
 
-var _generateItemImage = require("../helpers/items/generateItemImage");
+var _item = require("../render/item");
 
-var _generateStatsImage = require("../helpers/stats/generateStatsImage");
+var _stats = require("../render/stats");
 
 var _generateEquipmentImage = require("../helpers/equipment/generateEquipmentImage");
 
@@ -52,7 +50,7 @@ var showEquipmentImage = /*#__PURE__*/function () {
         switch (_context.prev = _context.next) {
           case 0:
             _context.next = 2;
-            return (0, _generateItemImage.generateItemImage)(userCurrentCharacter.equipment.helm);
+            return (0, _item.renderItemImage)(userCurrentCharacter.equipment.helm);
 
           case 2:
             itemImage = _context.sent;
@@ -259,7 +257,7 @@ var discordShowEquipment = /*#__PURE__*/function () {
                     switch (_context4.prev = _context4.next) {
                       case 0:
                         _context4.next = 2;
-                        return (0, _generateStatsImage.generateStatsImage)(userCurrentCharacter, false);
+                        return (0, _stats.renderStatsImage)(userCurrentCharacter, false);
 
                       case 2:
                         statsImageBuffer = _context4.sent;
@@ -458,7 +456,7 @@ var discordShowEquipment = /*#__PURE__*/function () {
                                               }
 
                                               _context6.next = 6;
-                                              return (0, _generateItemImage.generateItemImage)(userCurrentCharacter.equipment.helm);
+                                              return (0, _item.renderItemImage)(userCurrentCharacter.equipment.helm);
 
                                             case 6:
                                               itemImage = _context6.sent;
@@ -471,7 +469,7 @@ var discordShowEquipment = /*#__PURE__*/function () {
                                               }
 
                                               _context6.next = 11;
-                                              return (0, _generateItemImage.generateItemImage)(userCurrentCharacter.equipment.amulet);
+                                              return (0, _item.renderItemImage)(userCurrentCharacter.equipment.amulet);
 
                                             case 11:
                                               itemImage = _context6.sent;
@@ -484,7 +482,7 @@ var discordShowEquipment = /*#__PURE__*/function () {
                                               }
 
                                               _context6.next = 16;
-                                              return (0, _generateItemImage.generateItemImage)(userCurrentCharacter.equipment.mainHand);
+                                              return (0, _item.renderItemImage)(userCurrentCharacter.equipment.mainHand);
 
                                             case 16:
                                               itemImage = _context6.sent;
@@ -497,7 +495,7 @@ var discordShowEquipment = /*#__PURE__*/function () {
                                               }
 
                                               _context6.next = 21;
-                                              return (0, _generateItemImage.generateItemImage)(userCurrentCharacter.equipment.offHand);
+                                              return (0, _item.renderItemImage)(userCurrentCharacter.equipment.offHand);
 
                                             case 21:
                                               itemImage = _context6.sent;
@@ -510,7 +508,7 @@ var discordShowEquipment = /*#__PURE__*/function () {
                                               }
 
                                               _context6.next = 26;
-                                              return (0, _generateItemImage.generateItemImage)(userCurrentCharacter.equipment.armor);
+                                              return (0, _item.renderItemImage)(userCurrentCharacter.equipment.armor);
 
                                             case 26:
                                               itemImage = _context6.sent;
@@ -523,7 +521,7 @@ var discordShowEquipment = /*#__PURE__*/function () {
                                               }
 
                                               _context6.next = 31;
-                                              return (0, _generateItemImage.generateItemImage)(userCurrentCharacter.equipment.gloves);
+                                              return (0, _item.renderItemImage)(userCurrentCharacter.equipment.gloves);
 
                                             case 31:
                                               itemImage = _context6.sent;
@@ -536,7 +534,7 @@ var discordShowEquipment = /*#__PURE__*/function () {
                                               }
 
                                               _context6.next = 36;
-                                              return (0, _generateItemImage.generateItemImage)(userCurrentCharacter.equipment.belt);
+                                              return (0, _item.renderItemImage)(userCurrentCharacter.equipment.belt);
 
                                             case 36:
                                               itemImage = _context6.sent;
@@ -549,7 +547,7 @@ var discordShowEquipment = /*#__PURE__*/function () {
                                               }
 
                                               _context6.next = 41;
-                                              return (0, _generateItemImage.generateItemImage)(userCurrentCharacter.equipment.boots);
+                                              return (0, _item.renderItemImage)(userCurrentCharacter.equipment.boots);
 
                                             case 41:
                                               itemImage = _context6.sent;
@@ -562,7 +560,7 @@ var discordShowEquipment = /*#__PURE__*/function () {
                                               }
 
                                               _context6.next = 46;
-                                              return (0, _generateItemImage.generateItemImage)(userCurrentCharacter.equipment.ringSlotOne);
+                                              return (0, _item.renderItemImage)(userCurrentCharacter.equipment.ringSlotOne);
 
                                             case 46:
                                               itemImage = _context6.sent;
@@ -575,7 +573,7 @@ var discordShowEquipment = /*#__PURE__*/function () {
                                               }
 
                                               _context6.next = 51;
-                                              return (0, _generateItemImage.generateItemImage)(userCurrentCharacter.equipment.ringSlotTwo);
+                                              return (0, _item.renderItemImage)(userCurrentCharacter.equipment.ringSlotTwo);
 
                                             case 51:
                                               itemImage = _context6.sent;

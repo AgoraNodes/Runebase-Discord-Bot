@@ -29,6 +29,8 @@ var _ip = require("./controllers/ip");
 
 var _servers = require("./controllers/servers");
 
+var _skillTree = require("./controllers/skillTree");
+
 var _errors = require("./controllers/errors");
 
 var _status = require("./controllers/status");
@@ -194,7 +196,10 @@ var dashboardRouter = function dashboardRouter(app, io, discordClient, telegramC
   app.post('/api/management/classes', use(IsAuthenticated), use(_admin.isAdmin), use(_auth.isDashboardUserBanned), use(_ip.insertIp), use(_tfa.ensuretfa), use(_class.fetchClasses), respondCountAndResult);
   app.post('/api/management/class/add', use(IsAuthenticated), use(_admin.isAdmin), use(_auth.isDashboardUserBanned), use(_ip.insertIp), use(_tfa.ensuretfa), use(_class.addClass), respondResult);
   app.post('/api/management/class/remove', use(IsAuthenticated), use(_admin.isAdmin), use(_auth.isDashboardUserBanned), use(_ip.insertIp), use(_tfa.ensuretfa), use(_class.removeClass), respondResult);
-  app.post('/api/management/class/update', use(IsAuthenticated), use(_admin.isAdmin), use(_auth.isDashboardUserBanned), use(_ip.insertIp), use(_tfa.ensuretfa), use(_class.updateClass), respondResult); // Item Quality
+  app.post('/api/management/class/update', use(IsAuthenticated), use(_admin.isAdmin), use(_auth.isDashboardUserBanned), use(_ip.insertIp), use(_tfa.ensuretfa), use(_class.updateClass), respondResult); // Skill Tree
+
+  app.post('/api/management/skilltrees', use(IsAuthenticated), use(_admin.isAdmin), use(_auth.isDashboardUserBanned), use(_ip.insertIp), use(_tfa.ensuretfa), use(_skillTree.fetchSkillTrees), respondCountAndResult);
+  app.post('/api/management/skilltree/update', use(IsAuthenticated), use(_admin.isAdmin), use(_auth.isDashboardUserBanned), use(_ip.insertIp), use(_tfa.ensuretfa), use(_skillTree.updateSkillTree), respondResult); // Item Quality
 
   app.post('/api/management/item/quality', use(IsAuthenticated), use(_admin.isAdmin), use(_auth.isDashboardUserBanned), use(_ip.insertIp), use(_tfa.ensuretfa), use(_itemQuality.fetchItemQuality), respondCountAndResult); // Item Quality
 

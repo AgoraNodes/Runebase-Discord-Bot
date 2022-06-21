@@ -5,7 +5,7 @@ var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefau
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.generateItemImage = void 0;
+exports.renderItemImage = void 0;
 
 var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
 
@@ -15,9 +15,9 @@ var _canvas = require("canvas");
 
 var _path = _interopRequireDefault(require("path"));
 
-var _generateModifierStringArray = require("./generateModifierStringArray");
+var _generateModifierStringArray = require("../helpers/items/generateModifierStringArray");
 
-var generateItemImage = /*#__PURE__*/function () {
+var renderItemImage = /*#__PURE__*/function () {
   var _ref = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(newItem) {
     var modifierStringArray, levelReqHeight, strengthReqHeight, dexterityReqHeight, shieldAndBootsDamageHeight, isWeapon, isClassSpecific, isShield, isBow, isRing, isAmulet, isJavelin, isThrowing, extraWeaponsHeight, extraShieldBlockHeight, classSpecificHeight, minusBowHeight, minusRingwHeight, minusAmuletHeight, extraThrowingJavelinHeight, totalExtraHeight, itemImage, canvas, ctx, realDefenseValue, extraDamageString, realMinDamageValue, realMaxDamageValue, realMinThrowingDamageValue, realMaxThrowingDamageValue, i, finalImage;
     return _regenerator["default"].wrap(function _callee$(_context) {
@@ -52,13 +52,13 @@ var generateItemImage = /*#__PURE__*/function () {
             extraThrowingJavelinHeight = isThrowing || isJavelin ? 25 : 0;
             totalExtraHeight = levelReqHeight + strengthReqHeight + dexterityReqHeight + shieldAndBootsDamageHeight + extraWeaponsHeight + extraShieldBlockHeight + minusBowHeight + minusRingwHeight + minusAmuletHeight + classSpecificHeight + extraThrowingJavelinHeight;
             _context.next = 25;
-            return (0, _canvas.registerFont)(_path["default"].join(__dirname, '../../assets/fonts/', 'Heart_warming.otf'), {
+            return (0, _canvas.registerFont)(_path["default"].join(__dirname, '../assets/fonts/', 'Heart_warming.otf'), {
               family: 'HeartWarming'
             });
 
           case 25:
             _context.next = 27;
-            return (0, _canvas.loadImage)(_path["default"].join(__dirname, "../../assets/images/items/".concat(newItem.itemBase.itemFamily.itemType.name, "/").concat(newItem.itemBase.itemFamily.name), "".concat(newItem.itemBase.name, ".png")));
+            return (0, _canvas.loadImage)(_path["default"].join(__dirname, "../assets/images/items/".concat(newItem.itemBase.itemFamily.itemType.name, "/").concat(newItem.itemBase.itemFamily.name), "".concat(newItem.itemBase.name, ".png")));
 
           case 27:
             itemImage = _context.sent;
@@ -225,9 +225,9 @@ var generateItemImage = /*#__PURE__*/function () {
     }, _callee);
   }));
 
-  return function generateItemImage(_x) {
+  return function renderItemImage(_x) {
     return _ref.apply(this, arguments);
   };
 }();
 
-exports.generateItemImage = generateItemImage;
+exports.renderItemImage = renderItemImage;

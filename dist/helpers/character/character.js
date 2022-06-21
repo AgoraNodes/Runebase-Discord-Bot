@@ -60,6 +60,26 @@ var fetchUserCurrentCharacter = /*#__PURE__*/function () {
               transaction: t
             }]), {}, {
               include: [{
+                model: _models["default"].UserClassSkill,
+                as: 'UserClassSkills',
+                separate: true
+              }, {
+                model: _models["default"]["class"],
+                as: 'class',
+                include: [{
+                  model: _models["default"].skillTree,
+                  as: 'skillTrees',
+                  separate: true,
+                  include: [{
+                    model: _models["default"].skill,
+                    as: 'skills',
+                    include: [{
+                      model: _models["default"].skill,
+                      as: 'PreviousSkill'
+                    }]
+                  }]
+                }]
+              }, {
                 model: _models["default"].user,
                 as: 'user',
                 where: {

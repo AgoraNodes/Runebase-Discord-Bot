@@ -36,6 +36,12 @@ module.exports = function (sequelize, DataTypes) {
     UserClassModel.belongsTo(model.user, {
       foreignKey: 'userId'
     });
+    UserClassModel.belongsTo(model["class"]);
+    UserClassModel.hasMany(model.UserClassSkill);
+    UserClassModel.belongsToMany(model.skill, {
+      as: 'UserSkills',
+      through: 'UserClassSkill'
+    });
   };
 
   return UserClassModel;

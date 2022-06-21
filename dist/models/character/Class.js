@@ -67,6 +67,7 @@ module.exports = function (sequelize, DataTypes) {
     ClassModel.belongsToMany(model.user, {
       through: 'UserClass'
     });
+    ClassModel.hasMany(model.skillTree);
   };
 
   return ClassModel;

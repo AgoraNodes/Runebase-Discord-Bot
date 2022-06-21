@@ -5,7 +5,7 @@ var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefau
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.generateStatsImage = void 0;
+exports.renderStatsImage = void 0;
 
 var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
 
@@ -17,11 +17,10 @@ var _canvas = require("canvas");
 
 var _path = _interopRequireDefault(require("path"));
 
-var _models = _interopRequireDefault(require("../../models"));
+var _calculateCharacterStats = require("../helpers/stats/calculateCharacterStats");
 
-var _calculateCharacterStats = require("./calculateCharacterStats");
-
-var generateStatsImage = /*#__PURE__*/function () {
+// import db from '../models';
+var renderStatsImage = /*#__PURE__*/function () {
   var _ref = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(currentUser, cannotSpendWarning) {
     var _yield$calculateChara, unspedAttributes, username, currentClass, lvl, exp, expNext, strength, dexterity, vitality, energy, hp, mp, stamina, ar, attackOne, attackTwo, defense, FR, PR, LR, CR, canvas, ctx, BackgroundImageStats, unspendAttributesBoxImage, finalImage;
 
@@ -56,7 +55,7 @@ var generateStatsImage = /*#__PURE__*/function () {
             LR = _yield$calculateChara.LR;
             CR = _yield$calculateChara.CR;
             _context.next = 26;
-            return (0, _canvas.registerFont)(_path["default"].join(__dirname, '../../assets/fonts/', 'Heart_warming.otf'), {
+            return (0, _canvas.registerFont)(_path["default"].join(__dirname, '../assets/fonts/', 'Heart_warming.otf'), {
               family: 'HeartWarming'
             });
 
@@ -64,12 +63,12 @@ var generateStatsImage = /*#__PURE__*/function () {
             canvas = (0, _canvas.createCanvas)(960, 1400);
             ctx = canvas.getContext('2d');
             _context.next = 30;
-            return (0, _canvas.loadImage)(_path["default"].join(__dirname, '../../assets/images', "stats_background.png"));
+            return (0, _canvas.loadImage)(_path["default"].join(__dirname, '../assets/images', "stats_background.png"));
 
           case 30:
             BackgroundImageStats = _context.sent;
             _context.next = 33;
-            return (0, _canvas.loadImage)(_path["default"].join(__dirname, '../../assets/images', "unspendAttributesBox.png"));
+            return (0, _canvas.loadImage)(_path["default"].join(__dirname, '../assets/images', "unspendAttributesBox.png"));
 
           case 33:
             unspendAttributesBoxImage = _context.sent;
@@ -200,13 +199,13 @@ var generateStatsImage = /*#__PURE__*/function () {
 
             ctx.strokeText("Lightning resistance", 665, 1182, 240);
             ctx.fillText("Lightning resistance", 665, 1182, 240);
-            ctx.strokeText(CR, 875, 1182, 240);
-            ctx.fillText(CR, 875, 1182, 240); // Poision resistance
+            ctx.strokeText(LR, 875, 1182, 240);
+            ctx.fillText(LR, 875, 1182, 240); // Poision resistance
 
             ctx.strokeText("Poision resistance", 665, 1254, 240);
             ctx.fillText("Poision resistance", 665, 1254, 240);
-            ctx.strokeText("0", 875, 1254, 240);
-            ctx.fillText("0", 875, 1254, 240);
+            ctx.strokeText(PR, 875, 1254, 240);
+            ctx.fillText(PR, 875, 1254, 240);
 
             if (cannotSpendWarning) {
               ctx.fillStyle = "red";
@@ -237,9 +236,9 @@ var generateStatsImage = /*#__PURE__*/function () {
     }, _callee);
   }));
 
-  return function generateStatsImage(_x, _x2) {
+  return function renderStatsImage(_x, _x2) {
     return _ref.apply(this, arguments);
   };
 }();
 
-exports.generateStatsImage = generateStatsImage;
+exports.renderStatsImage = renderStatsImage;
