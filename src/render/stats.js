@@ -9,10 +9,10 @@ import {
   registerFont,
 } from 'canvas';
 import path from 'path';
-import db from '../../models';
-import { calculateCharacterStats } from './calculateCharacterStats';
+// import db from '../models';
+import { calculateCharacterStats } from '../helpers/stats/calculateCharacterStats';
 
-export const generateStatsImage = async (
+export const renderStatsImage = async (
   currentUser,
   cannotSpendWarning,
 ) => {
@@ -39,12 +39,12 @@ export const generateStatsImage = async (
     LR,
     CR,
   } = await calculateCharacterStats(currentUser);
-  await registerFont(path.join(__dirname, '../../assets/fonts/', 'Heart_warming.otf'), { family: 'HeartWarming' });
+  await registerFont(path.join(__dirname, '../assets/fonts/', 'Heart_warming.otf'), { family: 'HeartWarming' });
 
   const canvas = createCanvas(960, 1400);
   const ctx = canvas.getContext('2d');
-  const BackgroundImageStats = await loadImage(path.join(__dirname, '../../assets/images', `stats_background.png`));
-  const unspendAttributesBoxImage = await loadImage(path.join(__dirname, '../../assets/images', `unspendAttributesBox.png`));
+  const BackgroundImageStats = await loadImage(path.join(__dirname, '../assets/images', `stats_background.png`));
+  const unspendAttributesBoxImage = await loadImage(path.join(__dirname, '../assets/images', `unspendAttributesBox.png`));
   ctx.drawImage(BackgroundImageStats, 0, 0, 960, 1300);
 
   if (unspedAttributes > 0) {
@@ -203,14 +203,14 @@ export const generateStatsImage = async (
   // Lightning resistance
   ctx.strokeText(`Lightning resistance`, 665, 1182, 240);
   ctx.fillText(`Lightning resistance`, 665, 1182, 240);
-  ctx.strokeText(CR, 875, 1182, 240);
-  ctx.fillText(CR, 875, 1182, 240);
+  ctx.strokeText(LR, 875, 1182, 240);
+  ctx.fillText(LR, 875, 1182, 240);
 
   // Poision resistance
   ctx.strokeText(`Poision resistance`, 665, 1254, 240);
   ctx.fillText(`Poision resistance`, 665, 1254, 240);
-  ctx.strokeText(`0`, 875, 1254, 240);
-  ctx.fillText(`0`, 875, 1254, 240);
+  ctx.strokeText(PR, 875, 1254, 240);
+  ctx.fillText(PR, 875, 1254, 240);
 
   if (cannotSpendWarning) {
     ctx.fillStyle = "red";

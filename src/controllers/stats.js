@@ -26,7 +26,7 @@ import { addStrength } from "../helpers/stats/addStrength";
 import { addDexterity } from "../helpers/stats/addDexterity";
 import { addVitality } from "../helpers/stats/addVitality";
 import { addEnergy } from "../helpers/stats/addEnergy";
-import { generateStatsImage } from '../helpers/stats/generateStatsImage';
+import { renderStatsImage } from '../render/stats';
 import { fetchUserCurrentCharacter } from "../helpers/character/character";
 import { fetchDiscordUserIdFromMessageOrInteraction } from '../helpers/client/fetchDiscordUserIdFromMessageOrInteraction';
 import { fetchDiscordChannel } from '../helpers/client/fetchDiscordChannel';
@@ -124,7 +124,7 @@ export const discordStats = async (
   const embedMessage = await discordChannel.send({
     files: [
       new MessageAttachment(
-        await generateStatsImage(
+        await renderStatsImage(
           userCurrentCharacter,
           false,
         ),
@@ -219,7 +219,7 @@ export const discordStats = async (
       await interaction.update({
         files: [
           new MessageAttachment(
-            await generateStatsImage(
+            await renderStatsImage(
               updatedUser,
               false,
             ),

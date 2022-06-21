@@ -26,7 +26,8 @@ import logger from "../helpers/logger";
 import { userWalletExist } from "../helpers/client/userWalletExist";
 import { generateRandomMagicItem } from "../helpers/items/generateRandomMagicItem";
 import { generateModifierStringArray } from "../helpers/items/generateModifierStringArray";
-import { generateItemImage } from "../helpers/items/generateItemImage";
+import { renderItemImage } from "../render/item";
+
 import { fetchUserCurrentCharacter } from "../helpers/character/character";
 import { fetchDiscordUserIdFromMessageOrInteraction } from '../helpers/client/fetchDiscordUserIdFromMessageOrInteraction';
 import { fetchDiscordChannel } from '../helpers/client/fetchDiscordChannel';
@@ -50,7 +51,7 @@ const generateLootImage = async (
     || trueEnd
   );
   await registerFont(path.join(__dirname, '../assets/fonts/', 'Heart_warming.otf'), { family: 'HeartWarming' });
-  const itemImage = await generateItemImage(lootItem);
+  const itemImage = await renderItemImage(lootItem);
   const backgroundItemImage = await loadImage(itemImage);
   const canvas = createCanvas(backgroundItemImage.width, backgroundItemImage.height + 20);
   const ctx = canvas.getContext('2d');
@@ -370,7 +371,7 @@ export const discordShowCaseMagicItem = async (
     }
 
     const newItem = await generateRandomMagicItem(level);
-    // const itemImage = await generateItemImage(newItem);
+    // const itemImage = await renderItemImage(newItem);
 
     const generateLootButton = async () => new MessageButton({
       style: 'SECONDARY',

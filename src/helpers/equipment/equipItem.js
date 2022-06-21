@@ -409,6 +409,10 @@ export const equipItem = async (
             model: db.item,
             as: 'items',
             required: false,
+            separate: true,
+            order: [
+              ['updatedAt', 'DESC'],
+            ],
             include: [
               {
                 model: db.itemBase,

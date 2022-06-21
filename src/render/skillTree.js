@@ -174,12 +174,16 @@ export const renderSkillTreeImage = async (
           ctx.shadowColor = "none";
           ctx.beginPath();
           ctx.lineWidth = "3";
-          ctx.strokeStyle = "gray";
+          ctx.strokeStyle = "#151515";
         }
 
         if (
           skillTree.skills[i].row - skillTree.skills[i].PreviousSkill[y].row === 1
           || skillTree.skills[i].column === skillTree.skills[i].PreviousSkill[y].column
+          || (
+            skillTree.skills[i].row === skillTree.skills[i].PreviousSkill[y].row
+            && skillTree.skills[i].column - skillTree.skills[i].PreviousSkill[y].column === -1
+          )
         ) {
           ctx.moveTo(
             skillTree.skills[i].column === 1
@@ -347,12 +351,7 @@ export const renderSkillTreeImage = async (
   }
 
   const totalSkillsPointsSpend = _.sumBy(userCharacter.UserClassSkills, 'points');
-  const skillPointsLeftToSpend = userCharacter.user.ranks[0].id && totalSkillsPointsSpend ? (userCharacter.user.ranks[0].id - totalSkillsPointsSpend) : 0;
-
-  // console.log(userCharacter.user.ranks[0].id);
-  // console.log(userCharacter.UserClassSkills);
-  // console.log(totalSkillsPointsSpend);
-  // console.log('UserCLassSkills skillTree');
+  const skillPointsLeftToSpend = userCharacter.user.ranks[0].id ? (userCharacter.user.ranks[0].id - totalSkillsPointsSpend) : 0;
 
   if (skillPointsLeftToSpend > 0) {
     ctx.font = 'bold 18px "HeartWarming"';

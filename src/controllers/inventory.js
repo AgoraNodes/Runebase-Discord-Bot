@@ -18,9 +18,9 @@ import {
 
 import path from 'path';
 import db from '../models';
-import { generateItemImage } from "../helpers/items/generateItemImage";
-import { generateStatsImage } from "../helpers/stats/generateStatsImage";
-import { generateEquipmentImage } from '../helpers/equipment/generateEquipmentImage';
+import { renderItemImage } from "../render/item";
+// import { generateStatsImage } from "../helpers/stats/generateStatsImage";
+// import { generateEquipmentImage } from '../helpers/equipment/generateEquipmentImage';
 import { destroyItem } from '../helpers/items/destroyItem';
 import { equipItem } from '../helpers/equipment/equipItem';
 import { fetchUserCurrentCharacter } from "../helpers/character/character";
@@ -88,7 +88,7 @@ export const discordShowInventory = async (
   ) => {
     const current = currentUserCharacter.inventory.items.slice(start, start + 1);
 
-    const inventoryItemOneBuffer = await generateItemImage(current[0]);
+    const inventoryItemOneBuffer = await renderItemImage(current[0]);
     const inventoryItemOne = await loadImage(inventoryItemOneBuffer);
     const canvas = createCanvas(inventoryItemOne.width, (inventoryItemOne.height + 40));
     const ctx = canvas.getContext('2d');
@@ -160,7 +160,7 @@ export const discordShowInventory = async (
     const extraEquipedHeight = itemEquiped && !cannotEquip ? 20 : 0;
     const extraCannotEquipedHeight = cannotEquip ? 60 : 0;
 
-    const inventoryItemOneBuffer = await generateItemImage(current[0]);
+    const inventoryItemOneBuffer = await renderItemImage(current[0]);
     const inventoryItemOne = await loadImage(inventoryItemOneBuffer);
     const canvas = createCanvas(
       inventoryItemOne.width,

@@ -16,14 +16,10 @@ import {
 } from 'discord.js';
 
 import path from 'path';
-import {
-  cannotSendMessageUser,
-  discordErrorMessage,
-} from '../messages';
 import db from '../models';
 import logger from "../helpers/logger";
-import { generateItemImage } from "../helpers/items/generateItemImage";
-import { generateStatsImage } from "../helpers/stats/generateStatsImage";
+import { renderItemImage } from "../render/item";
+import { renderStatsImage } from "../render/stats";
 import { generateEquipmentImage } from '../helpers/equipment/generateEquipmentImage';
 import { fetchUserCurrentCharacter } from "../helpers/character/character";
 import { fetchDiscordUserIdFromMessageOrInteraction } from '../helpers/client/fetchDiscordUserIdFromMessageOrInteraction';
@@ -33,7 +29,7 @@ import { unEquipItem } from '../helpers/equipment/unEquipItem';
 const showEquipmentImage = async (
   userCurrentCharacter,
 ) => {
-  const itemImage = await generateItemImage(
+  const itemImage = await renderItemImage(
     userCurrentCharacter.equipment.helm,
   );
   console.log(showEquipmentImage);
@@ -177,7 +173,7 @@ export const discordShowEquipment = async (
   const generateCurrentEquipmentImage = async (
     userCurrentCharacter,
   ) => {
-    const statsImageBuffer = await generateStatsImage(
+    const statsImageBuffer = await renderStatsImage(
       userCurrentCharacter,
       false,
     );
@@ -351,61 +347,61 @@ export const discordShowEquipment = async (
           let itemImage;
           let itemToUnEquip;
           if (interaction.customId === helmId) {
-            itemImage = await generateItemImage(
+            itemImage = await renderItemImage(
               userCurrentCharacter.equipment.helm,
             );
             itemToUnEquip = userCurrentCharacter.equipment.helm;
           }
           if (interaction.customId === amuletId) {
-            itemImage = await generateItemImage(
+            itemImage = await renderItemImage(
               userCurrentCharacter.equipment.amulet,
             );
             itemToUnEquip = userCurrentCharacter.equipment.amulet;
           }
           if (interaction.customId === mainHandId) {
-            itemImage = await generateItemImage(
+            itemImage = await renderItemImage(
               userCurrentCharacter.equipment.mainHand,
             );
             itemToUnEquip = userCurrentCharacter.equipment.mainHand;
           }
           if (interaction.customId === offHandId) {
-            itemImage = await generateItemImage(
+            itemImage = await renderItemImage(
               userCurrentCharacter.equipment.offHand,
             );
             itemToUnEquip = userCurrentCharacter.equipment.offHand;
           }
           if (interaction.customId === armorId) {
-            itemImage = await generateItemImage(
+            itemImage = await renderItemImage(
               userCurrentCharacter.equipment.armor,
             );
             itemToUnEquip = userCurrentCharacter.equipment.armor;
           }
           if (interaction.customId === glovesId) {
-            itemImage = await generateItemImage(
+            itemImage = await renderItemImage(
               userCurrentCharacter.equipment.gloves,
             );
             itemToUnEquip = userCurrentCharacter.equipment.gloves;
           }
           if (interaction.customId === beltId) {
-            itemImage = await generateItemImage(
+            itemImage = await renderItemImage(
               userCurrentCharacter.equipment.belt,
             );
             itemToUnEquip = userCurrentCharacter.equipment.belt;
           }
           if (interaction.customId === bootsId) {
-            itemImage = await generateItemImage(
+            itemImage = await renderItemImage(
               userCurrentCharacter.equipment.boots,
             );
             itemToUnEquip = userCurrentCharacter.equipment.boots;
           }
           if (interaction.customId === ringSlotOneId) {
-            itemImage = await generateItemImage(
+            itemImage = await renderItemImage(
               userCurrentCharacter.equipment.ringSlotOne,
             );
             itemToUnEquip = userCurrentCharacter.equipment.ringSlotOne;
           }
           if (interaction.customId === ringSlotTwoId) {
-            itemImage = await generateItemImage(
+            itemImage = await renderItemImage(
               userCurrentCharacter.equipment.ringSlotTwo,
             );
             itemToUnEquip = userCurrentCharacter.equipment.ringSlotTwo;

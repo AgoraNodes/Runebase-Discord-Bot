@@ -95,7 +95,7 @@ module.exports = {
         name: 'Meditation',
         level: 24,
         row: 5,
-        column: 2,
+        column: 1,
         skillTreeId: DefensiveAurasSkills,
         createdAt: new Date(),
         updatedAt: new Date(),
