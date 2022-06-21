@@ -31,7 +31,7 @@ var _item = require("../render/item");
 
 var _stats = require("../render/stats");
 
-var _generateEquipmentImage = require("../helpers/equipment/generateEquipmentImage");
+var _equipment = require("../render/equipment");
 
 var _character = require("../helpers/character/character");
 
@@ -267,7 +267,7 @@ var discordShowEquipment = /*#__PURE__*/function () {
                       case 5:
                         statsImage = _context4.sent;
                         _context4.next = 8;
-                        return (0, _generateEquipmentImage.generateEquipmentImage)(userCurrentCharacter);
+                        return (0, _equipment.renderEquipmentImage)(userCurrentCharacter);
 
                       case 8:
                         equipmentImageBuffer = _context4.sent;

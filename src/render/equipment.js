@@ -5,7 +5,7 @@ import {
 } from 'canvas';
 import path from 'path';
 
-export const generateEquipmentImage = async (
+export const renderEquipmentImage = async (
   userCurrentCharacter,
 ) => {
   await registerFont(path.join(__dirname, '../assets/fonts/', 'Heart_warming.otf'), { family: 'HeartWarming' });

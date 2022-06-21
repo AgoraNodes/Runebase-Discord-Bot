@@ -20,7 +20,7 @@ import db from '../models';
 import logger from "../helpers/logger";
 import { renderItemImage } from "../render/item";
 import { renderStatsImage } from "../render/stats";
-import { generateEquipmentImage } from '../helpers/equipment/generateEquipmentImage';
+import { renderEquipmentImage } from '../render/equipment';
 import { fetchUserCurrentCharacter } from "../helpers/character/character";
 import { fetchDiscordUserIdFromMessageOrInteraction } from '../helpers/client/fetchDiscordUserIdFromMessageOrInteraction';
 import { fetchDiscordChannel } from '../helpers/client/fetchDiscordChannel';
@@ -179,7 +179,7 @@ export const discordShowEquipment = async (
     );
     const statsImage = await loadImage(statsImageBuffer);
 
-    const equipmentImageBuffer = await generateEquipmentImage(
+    const equipmentImageBuffer = await renderEquipmentImage(
       userCurrentCharacter,
     );
     const equipmentImage = await loadImage(equipmentImageBuffer);

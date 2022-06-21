@@ -5,7 +5,7 @@ var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefau
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.generateEquipmentImage = void 0;
+exports.renderEquipmentImage = void 0;
 
 var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
 
@@ -15,7 +15,7 @@ var _canvas = require("canvas");
 
 var _path = _interopRequireDefault(require("path"));
 
-var generateEquipmentImage = /*#__PURE__*/function () {
+var renderEquipmentImage = /*#__PURE__*/function () {
   var _ref = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(userCurrentCharacter) {
     var equipmentBackground, canvas, ctx, helmImage, amuletImage, mainHandImage, offHandImage, armorImage, glovesImage, ringSlotOneImage, ringSlotTwoImage, beltImage, bootsImage, finalImage;
     return _regenerator["default"].wrap(function _callee$(_context) {
@@ -255,9 +255,9 @@ var generateEquipmentImage = /*#__PURE__*/function () {
     }, _callee);
   }));
 
-  return function generateEquipmentImage(_x) {
+  return function renderEquipmentImage(_x) {
     return _ref.apply(this, arguments);
   };
 }();
 
-exports.generateEquipmentImage = generateEquipmentImage;
+exports.renderEquipmentImage = renderEquipmentImage;
