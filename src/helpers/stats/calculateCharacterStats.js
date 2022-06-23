@@ -7,6 +7,7 @@ import db from '../../models';
 
 export const calculateCharacterStats = async (
   currentCharacter,
+  t = false,
 ) => {
   const nextRank = await db.rank.findOne({
     where: {
@@ -17,6 +18,12 @@ export const calculateCharacterStats = async (
     order: [
       ['id', 'ASC'],
     ],
+    ...(t && [
+      {
+        lock: t.LOCK.UPDATE,
+        transaction: t,
+      }]
+    ),
   });
 
   const nextRankExp = nextRank && nextRank.expNeeded ? nextRank.expNeeded : currentCharacter.user.ranks[0].expNeeded;

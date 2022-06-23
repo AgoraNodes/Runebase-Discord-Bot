@@ -184,6 +184,13 @@ export const renderBattleGif = async (
   monsterInfo = false,
   userInfo = false,
 ) => {
+  console.log(previousUserState.condition);
+  console.log('previous user state');
+  console.log(currentUser.condition);
+  console.log('next user state');
+  console.log('renderBattlegif');
+  console.log('123');
+
   await registerFont(path.join(__dirname, '../../assets/fonts/', 'Heart_warming.otf'), { family: 'HeartWarming' });
   const enemyFrame = [];
   const hpOrbBufferPrevious = await renderHpOrb(
@@ -217,14 +224,13 @@ export const renderBattleGif = async (
     `../../assets/images/monsters/Zombie/`,
     `zombie (6).png`,
   ));
-  console.log('renderBattlegif');
 
   const mainSkill = await loadImage(path.join(
     __dirname,
     `../../assets/images/skills/${userCurrentSelectedSkills.selectedMainSkill.skill.skillTree ? `${userCurrentSelectedSkills.selectedMainSkill.skill.skillTree.class.name}/${userCurrentSelectedSkills.selectedMainSkill.skill.skillTree.name}` : ``}`,
     `${userCurrentSelectedSkills.selectedMainSkill.skill.name}.png`,
   ));
-  console.log('123');
+
   const secondarySkill = await loadImage(path.join(
     __dirname,
     `../../assets/images/skills/${userCurrentSelectedSkills.selectedSecondarySkill.skill.skillTree ? `${userCurrentSelectedSkills.selectedSecondarySkill.skill.skillTree.class.name}/${userCurrentSelectedSkills.selectedSecondarySkill.skill.skillTree.name}` : ``}`,

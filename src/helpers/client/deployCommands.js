@@ -12,6 +12,8 @@ const commands = [
   new SlashCommandBuilder().setName('stats').setDescription('Select stats (attributes) for your class'),
   new SlashCommandBuilder().setName('inventory').setDescription('Inventory Management'),
   new SlashCommandBuilder().setName('equipment').setDescription('Equipment Management'),
+  new SlashCommandBuilder().setName('battle').setDescription('Battle a monster'),
+  new SlashCommandBuilder().setName('heal').setDescription('Heal yourself'),
   new SlashCommandBuilder().setName('myrank').setDescription('Displays the user\'s rank'),
   new SlashCommandBuilder().setName('ranks').setDescription('Displays all the ranks'),
   new SlashCommandBuilder().setName('leaderboard').setDescription('Displays the top ten leaderboard'),

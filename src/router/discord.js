@@ -188,6 +188,42 @@ export const discordRouter = async (
             console.log(e);
           });
         }
+
+        if (commandName === 'battle') {
+          await interaction.deferReply().catch((e) => {
+            console.log(e);
+          });
+
+          await queue.add(async () => {
+            const task = await discordBattle(
+              discordClient,
+              interaction,
+              io,
+              queue,
+            );
+          });
+          await interaction.editReply('\u200b').catch((e) => {
+            console.log(e);
+          });
+        }
+
+        if (commandName === 'heal') {
+          await interaction.deferReply().catch((e) => {
+            console.log(e);
+          });
+
+          await queue.add(async () => {
+            const task = await discordHeal(
+              discordClient,
+              interaction,
+              io,
+              queue,
+            );
+          });
+          await interaction.editReply('\u200b').catch((e) => {
+            console.log(e);
+          });
+        }
         if (commandName === 'myrank') {
           await interaction.deferReply().catch((e) => {
             console.log(e);

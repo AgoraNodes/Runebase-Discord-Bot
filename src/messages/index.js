@@ -435,6 +435,24 @@ export const rollDiceTooFastMessage = (
   return result;
 };
 
+export const gainBattleExpExpMessage = (
+  userId,
+  amount,
+) => {
+  const result = new MessageEmbed()
+    .setColor(settings.bot.color)
+    .setTitle('Gain Exp')
+    .setDescription(`<@${userId}>, Congratulations!
+you gained ${amount} experience from your battle!`)
+    .setTimestamp()
+    .setFooter({
+      text: `${settings.bot.name} v${pjson.version}`,
+      iconURL: settings.bot.logo,
+    });
+
+  return result;
+};
+
 export const gainActiveTalkerExpMessage = (
   userId,
   amount,

@@ -14,6 +14,7 @@ import {
   MessageButton,
   MessageAttachment,
   MessageSelectMenu,
+  MessageEmbed,
 } from 'discord.js';
 import db from '../models';
 import { renderBattleGif } from '../render/battle/battle';
@@ -27,6 +28,7 @@ import { fetchDiscordUserIdFromMessageOrInteraction } from '../helpers/client/fe
 import { fetchDiscordChannel } from '../helpers/client/fetchDiscordChannel';
 import { processBattleMove } from '../helpers/battle/processBattleMove';
 import { renderBattleComplete } from '../render/battle/battleComplete';
+import { gainExp } from '../helpers/client/experience';
 
 function randomIntFromInterval(min, max) { // min and max included
   return Math.floor(Math.random() * (max - min + 1) + min);
@@ -68,11 +70,8 @@ export const discordBattle = async (
   if (userCurrentCharacter.condition.stamina < 10) {
     await discordChannel.send({
       files: [
-        new MessageAttachment(
-          await renderOutOfStamina(
-            userCurrentCharacter,
-          ),
-          'stamina.png',
+        await renderOutOfStamina(
+          userCurrentCharacter,
         ),
       ],
       components: [],
@@ -83,11 +82,8 @@ export const discordBattle = async (
   if (userCurrentCharacter.condition.life < 1) {
     await discordChannel.send({
       files: [
-        new MessageAttachment(
-          await renderUserDied(
-            userCurrentCharacter,
-          ),
-          'dead.png',
+        await renderUserDied(
+          userCurrentCharacter,
         ),
       ],
       components: [],
@@ -107,6 +103,9 @@ export const discordBattle = async (
       complete: false,
       UserClassId: userCurrentCharacter.id,
     },
+    order: [
+      [db.battleLog, 'id', 'DESC'],
+    ],
     include: [
       {
         model: db.battleLog,
@@ -140,6 +139,9 @@ export const discordBattle = async (
       where: {
         id: newBattle.id,
       },
+      order: [
+        [db.battleLog, 'id', 'DESC'],
+      ],
       include: [
         {
           model: db.battleLog,
@@ -153,24 +155,19 @@ export const discordBattle = async (
       ],
     });
   }
-  console.log(battle.monsters);
-  console.log(battle.monsters[0].BattleMonster);
-  console.log('monsters');
+  // console.log(battle.monsters);
+  // console.log(battle.monsters[0].BattleMonster);
+  // console.log('monsters');
 
   const mainSkillMap = userCurrentSelectedSkills.UserClassSkills.map((
     mySkill,
     index,
-  ) => {
-    console.log(mySkill.id);
-    console.log(userCurrentSelectedSkills.selectedMainSkillId);
-    console.log('found skill');
-    return {
-      placeholder: 'pick a skill',
-      label: `Main Skill: ${mySkill.skill.name}`,
-      value: `mainSkill:${mySkill.id}`,
-      default: mySkill.id === userCurrentSelectedSkills.selectedMainSkillId,
-    };
-  });
+  ) => ({
+    placeholder: 'pick a skill',
+    label: `Main Skill: ${mySkill.skill.name}`,
+    value: `mainSkill:${mySkill.id}`,
+    default: mySkill.id === userCurrentSelectedSkills.selectedMainSkillId,
+  }));
 
   const secondarySkillMap = userCurrentSelectedSkills.UserClassSkills.map((
     mySkill,
@@ -248,6 +245,10 @@ export const discordBattle = async (
     ],
   });
 
+  const loadingEmbed = new MessageEmbed()
+    .setTitle('Battle')
+    .setDescription(`${userCurrentCharacter.user.username}, Your next move is calculating..`);
+
   const collector = embedMessage.createMessageComponentCollector({
     filter: ({ user: discordUser }) => discordUser.id === userCurrentCharacter.user.user_id,
   });
@@ -256,18 +257,25 @@ export const discordBattle = async (
     let attackId;
     let monsterInfo;
     let userInfo;
-    const previousBattleState = battle;
-    const previousUserState = userCurrentCharacter;
+    let previousBattleState;
+    let previousUserState;
     if (interaction.isButton()) {
       await interaction.deferUpdate();
+      userCurrentCharacter = await fetchUserCurrentCharacter(
+        userId, // user discord id
+        false, // Need inventory?
+      );
+      await interaction.editReply({
+        embeds: [
+          loadingEmbed,
+        ],
+        components: [],
+      });
       if (userCurrentCharacter.condition.life < 1) {
         await interaction.editReply({
           files: [
-            new MessageAttachment(
-              await renderUserDied(
-                userCurrentCharacter,
-              ),
-              'dead.png',
+            await renderUserDied(
+              userCurrentCharacter,
             ),
           ],
           components: [],
@@ -281,19 +289,41 @@ export const discordBattle = async (
       if (interaction.customId.startsWith('secondarySkill:')) {
         attackId = Number(interaction.customId.replace("secondarySkill:", ""));
       }
-      [
-        userCurrentCharacter,
-        battle,
-        userInfo,
-        monsterInfo,
-      ] = await processBattleMove(
-        userCurrentCharacter,
-        battle,
-        attackId,
-        io,
-        queue,
-      );
+      await queue.add(async () => {
+        await db.sequelize.transaction({
+          isolationLevel: Transaction.ISOLATION_LEVELS.SERIALIZABLE,
+        }, async (t) => {
+          [
+            userCurrentCharacter,
+            battle,
+            previousBattleState,
+            previousUserState,
+            userInfo,
+            monsterInfo,
+          ] = await processBattleMove(
+            userCurrentCharacter,
+            battle,
+            attackId,
+            io,
+            queue,
+            t,
+          );
+          if (battle.complete) {
+            const newExp = await gainExp(
+              discordClient,
+              userCurrentCharacter.user.user_id,
+              battle.monsters[0].exp,
+              'battle',
+              t,
+            );
+          }
+        }).catch(async (err) => {
+          console.log(err);
+        });
+      });
+
       await interaction.editReply({
+        embeds: [],
         files: [
           new MessageAttachment(
             await renderBattleGif(
@@ -343,11 +373,8 @@ export const discordBattle = async (
         setTimeout(async () => {
           await interaction.editReply({
             files: [
-              new MessageAttachment(
-                await renderUserDied(
-                  userCurrentCharacter,
-                ),
-                'dead.png',
+              await renderUserDied(
+                userCurrentCharacter,
               ),
             ],
             components: [],
@@ -358,12 +385,9 @@ export const discordBattle = async (
         setTimeout(async () => {
           await interaction.editReply({
             files: [
-              new MessageAttachment(
-                await renderBattleComplete(
-                  userCurrentCharacter,
-                  battle.monsters[0].exp,
-                ),
-                'battleComplete.png',
+              await renderBattleComplete(
+                userCurrentCharacter,
+                battle.monsters[0].exp,
               ),
             ],
             components: [],
@@ -399,7 +423,9 @@ export const discordBattle = async (
           );
         }
       }
+
       await interaction.editReply({
+        embeds: [],
         files: [
           new MessageAttachment(
             await renderInitBattleGif(
