@@ -23,7 +23,7 @@ var handleExperienceMessage = /*#__PURE__*/function () {
           case 0:
             userJoined = _args.length > 4 && _args[4] !== undefined ? _args[4] : false;
 
-            if (!(gainExpType === 'activeTalker')) {
+            if (!(gainExpType === 'battle')) {
               _context.next = 4;
               break;
             }
@@ -31,11 +31,11 @@ var handleExperienceMessage = /*#__PURE__*/function () {
             _context.next = 4;
             return discordChannel.send({
               content: "<@".concat(updatedUser.user_id, ">"),
-              embeds: [(0, _messages.gainActiveTalkerExpMessage)(updatedUser.user_id, amount)]
+              embeds: [(0, _messages.gainBattleExpExpMessage)(updatedUser.user_id, amount)]
             });
 
           case 4:
-            if (!(gainExpType === 'topggVote')) {
+            if (!(gainExpType === 'activeTalker')) {
               _context.next = 7;
               break;
             }
@@ -43,11 +43,11 @@ var handleExperienceMessage = /*#__PURE__*/function () {
             _context.next = 7;
             return discordChannel.send({
               content: "<@".concat(updatedUser.user_id, ">"),
-              embeds: [(0, _messages.gainVoteTopggExpMessage)(updatedUser.user_id, amount)]
+              embeds: [(0, _messages.gainActiveTalkerExpMessage)(updatedUser.user_id, amount)]
             });
 
           case 7:
-            if (!(gainExpType === 'userJoined')) {
+            if (!(gainExpType === 'topggVote')) {
               _context.next = 10;
               break;
             }
@@ -55,10 +55,22 @@ var handleExperienceMessage = /*#__PURE__*/function () {
             _context.next = 10;
             return discordChannel.send({
               content: "<@".concat(updatedUser.user_id, ">"),
-              embeds: [(0, _messages.invitedNewUserRewardMessage)(updatedUser.user_id, userJoined, amount)]
+              embeds: [(0, _messages.gainVoteTopggExpMessage)(updatedUser.user_id, amount)]
             });
 
           case 10:
+            if (!(gainExpType === 'userJoined')) {
+              _context.next = 13;
+              break;
+            }
+
+            _context.next = 13;
+            return discordChannel.send({
+              content: "<@".concat(updatedUser.user_id, ">"),
+              embeds: [(0, _messages.invitedNewUserRewardMessage)(updatedUser.user_id, userJoined, amount)]
+            });
+
+          case 13:
           case "end":
             return _context.stop();
         }
