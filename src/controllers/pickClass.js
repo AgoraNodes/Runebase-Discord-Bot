@@ -14,7 +14,6 @@ import {
   MessageButton,
   MessageAttachment,
 } from 'discord.js';
-
 import path from 'path';
 import {
   cannotSendMessageUser,
@@ -22,6 +21,7 @@ import {
 } from '../messages';
 import db from '../models';
 import logger from "../helpers/logger";
+import { renderPickClassImage } from '../render/pickClass';
 import { userWalletExist } from "../helpers/client/userWalletExist";
 
 function printAtWordWrap(context, text, x, y, lineHeight, fitWidth) {
@@ -120,84 +120,11 @@ export const discordPickClass = async (
 
   await registerFont(path.join(__dirname, '../assets/fonts/', 'Heart_warming.otf'), { family: 'HeartWarming' });
 
-  const generateClassImage = async (start) => {
-    const current = classes.slice(start, start + 1);
-    const canvas = createCanvas(1400, 1050);
-    const ctx = canvas.getContext('2d');
-
-    ctx.font = 'bold 30px "HeartWarming"';
-    ctx.fillStyle = "#ccc";
-    // ctx.textAlign = "center";
-    ctx.strokeStyle = 'black';
-    ctx.lineWidth = 3;
-    const newClassImage = await loadImage(path.join(__dirname, '../assets/images/classes', `${current[0].classDescription.image}.png`));
-    ctx.drawImage(newClassImage, 0, 0, 500, 800);
-    printAtWordWrap(
-      ctx,
-      current[0].classDescription.description,
-      500,
-      100,
-      35,
-      500,
-    );
-
-    ctx.textAlign = "center";
-    ctx.font = 'bold 50px "HeartWarming"';
-    ctx.strokeText(current[0].name, 250, 880, 500);
-    ctx.fillText(current[0].name, 250, 880, 500);
-
-    // print default stats
-
-    ctx.strokeText("Base Stats", 1200, 50, 200);
-    ctx.fillText("Base stats", 1200, 50, 200);
-
-    ctx.font = 'bold 35px "HeartWarming"';
-
-    // Strength
-    ctx.strokeText(`Strength: ${current[0].strength}`, 1200, 150, 200);
-    ctx.fillText(`Strength: ${current[0].strength}`, 1200, 150, 200);
-
-    // Dexterity
-    ctx.strokeText(`Dexterity: ${current[0].dexterity}`, 1200, 250, 200);
-    ctx.fillText(`Dexterity: ${current[0].dexterity}`, 1200, 250, 200);
-
-    // Vitality
-    ctx.strokeText(`Vitality: ${current[0].vitality}`, 1200, 350, 200);
-    ctx.fillText(`Vitality: ${current[0].vitality}`, 1200, 350, 200);
-
-    // Energy
-    ctx.strokeText(`Energy: ${current[0].energy}`, 1200, 450, 200);
-    ctx.fillText(`Energy: ${current[0].energy}`, 1200, 450, 200);
-
-    // Life
-    ctx.strokeText(`Life: ${current[0].life}`, 1200, 550, 200);
-    ctx.fillText(`Life: ${current[0].life}`, 1200, 550, 200);
-
-    // Mana
-    ctx.strokeText(`Mana: ${current[0].mana}`, 1200, 650, 200);
-    ctx.fillText(`Mana: ${current[0].mana}`, 1200, 650, 200);
-
-    // Stamina
-    ctx.strokeText(`Stamina: ${current[0].stamina}`, 1200, 750, 200);
-    ctx.fillText(`Stamina: ${current[0].stamina}`, 1200, 750, 200);
-
-    // Picking a class
-    ctx.fillStyle = "#fe5701";
-    ctx.font = 'bold 70px "HeartWarming"';
-    ctx.strokeText(`${user.username} is picking a class`, 700, 1000, 1400);
-    ctx.fillText(`${user.username} is picking a class`, 700, 1000, 1400);
-
-    return new MessageAttachment(canvas.toBuffer(), 'class.png');
-  };
-
   const generateClassPicked = async (start) => {
     const current = classes.slice(start, start + 1);
     const canvas = createCanvas(500, 100);
     const ctx = canvas.getContext('2d');
 
-    console.log(current);
-    console.log(current[0].classDescription);
-    console.log('picked!');
     ctx.font = 'bold 30px "HeartWarming"';
     ctx.fillStyle = "#ccc";
     ctx.strokeStyle = 'black';
@@ -248,7 +175,11 @@ export const discordPickClass = async (
   const canFitOnOnePage = classes.length <= 1;
   const embedMessage = await discordChannel.send({
     files: [
-      await generateClassImage(0),
+      await renderPickClassImage(
+        0,
+        classes,
+        user,
+      ),
     ],
     components: canFitOnOnePage
       ? []
@@ -398,6 +329,47 @@ export const discordPickClass = async (
               lock: t.LOCK.UPDATE,
             });
           }
+          const findAttackSkill = await db.skill.findOne({
+            where: {
+              name: 'Attack',
+            },
+            transaction: t,
+            lock: t.LOCK.UPDATE,
+          });
+          let userAttackSkill = await db.UserClassSkill.findOne({
+            where: {
+              UserClassId: userClass.id,
+              skillId: findAttackSkill.id,
+            },
+            transaction: t,
+            lock: t.LOCK.UPDATE,
+          });
+          if (!userAttackSkill) {
+            userAttackSkill = await db.UserClassSkill.create({
+              UserClassId: userClass.id,
+              skillId: findAttackSkill.id,
+              points: 1,
+            }, {
+              transaction: t,
+              lock: t.LOCK.UPDATE,
+            });
+          }
+          if (!userClass.selectedMainSkillId) {
+            userClass = await userClass.update({
+              selectedMainSkillId: userAttackSkill.id,
+            }, {
+              transaction: t,
+              lock: t.LOCK.UPDATE,
+            });
+          }
+          if (!userClass.selectedSecondarySkillId) {
+            userClass = await userClass.update({
+              selectedSecondarySkillId: userAttackSkill.id,
+            }, {
+              transaction: t,
+              lock: t.LOCK.UPDATE,
+            });
+          }
 
           const preActivity = await db.activity.create({
             type: 'pickClass_s',
@@ -510,7 +482,11 @@ export const discordPickClass = async (
     // Load another character
     await interaction.update({
       files: [
-        await generateClassImage(currentIndex),
+        await renderPickClassImage(
+          currentIndex,
+          classes,
+          user,
+        ),
       ],
       components: [
         new MessageActionRow({

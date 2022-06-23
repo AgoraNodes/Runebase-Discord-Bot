@@ -62,11 +62,15 @@ module.exports = (sequelize, DataTypes) => {
     UserModel.hasMany(model.transaction);
     UserModel.belongsToMany(
       model.rank,
-      { through: 'UserRank' },
+      {
+        through: 'UserRank',
+      },
     );
     UserModel.belongsToMany(
       model.class,
-      { through: 'UserClass' },
+      {
+        through: 'UserClass',
+      },
     );
     UserModel.hasOne(model.UserClass);
     UserModel.hasOne(model.UserRank);

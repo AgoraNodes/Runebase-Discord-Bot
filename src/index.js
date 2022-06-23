@@ -236,6 +236,34 @@ const conditionalCSRF = function (
     discordClient,
   );
 
+  const replenishEveryonesStamina = schedule.scheduleJob('0 15 0 * * *', async () => {
+    const allUserCharacters = await db.UserClass.findAll({
+      include: [
+        {
+          model: db.class,
+          as: 'class',
+        },
+        {
+          model: db.stats,
+          as: 'stats',
+        },
+        {
+          model: db.condition,
+          as: 'condition',
+        },
+      ],
+    });
+    // eslint-disable-next-line no-restricted-syntax
+    for (const userChar of allUserCharacters) {
+      if ((userChar.class.stamina + userChar.stats.stamina) > userChar.condition.stamina) {
+        // eslint-disable-next-line no-await-in-loop
+        await userChar.condition.update({
+          stamina: userChar.class.stamina + userChar.stats.stamina,
+        });
+      }
+    }
+  });
+
   const schedulePatchDeposits = schedule.scheduleJob('10 */1 * * *', () => {
     patchRunebaseDeposits(
       discordClient,

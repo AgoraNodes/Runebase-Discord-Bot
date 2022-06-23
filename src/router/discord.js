@@ -23,6 +23,8 @@ import { discordStats } from '../controllers/stats';
 import { discordShowCaseMagicItem } from '../controllers/showCaseMagicItem';
 import { discordShowInventory } from '../controllers/inventory';
 import { discordShowEquipment } from '../controllers/equipment';
+import { discordBattle } from '../controllers/battle';
+import { discordHeal } from '../controllers/heal';
 
 import { discordExpTest } from '../controllers/expTest';
 import { myRateLimiter } from '../helpers/rateLimit';
@@ -1004,6 +1006,28 @@ export const discordRouter = async (
           );
         });
       }
+    }
+
+    if (filteredMessageDiscord[1] && filteredMessageDiscord[1].toLowerCase() === 'battle') {
+      await queue.add(async () => {
+        const task = await discordBattle(
+          discordClient,
+          message,
+          io,
+          queue,
+        );
+      });
+    }
+
+    if (filteredMessageDiscord[1] && filteredMessageDiscord[1].toLowerCase() === 'heal') {
+      await queue.add(async () => {
+        const task = await discordHeal(
+          discordClient,
+          message,
+          io,
+          queue,
+        );
+      });
     }
 
     // if (filteredMessageDiscord[1] && filteredMessageDiscord[1].toLowerCase() === 'account') {
