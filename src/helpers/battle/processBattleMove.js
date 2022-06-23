@@ -14,13 +14,6 @@ export const processBattleMove = async (
   queue,
   t,
 ) => {
-  let previousBattleState = battle;
-  previousBattleState = JSON.stringify(previousBattleState);
-  previousBattleState = JSON.parse(previousBattleState);
-  let previousUserState = userCurrentCharacter;
-  previousUserState = JSON.stringify(previousUserState);
-  previousUserState = JSON.parse(previousUserState);
-
   const unitUsedMove = "Attack";
   const userUsedMove = "Attack";
   const {
@@ -122,8 +115,6 @@ export const processBattleMove = async (
   return [
     userCurrentCharacter,
     updatedBattle,
-    previousBattleState,
-    previousUserState,
     userInfo,
     monsterInfo,
   ];

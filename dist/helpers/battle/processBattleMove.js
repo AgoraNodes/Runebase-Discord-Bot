@@ -24,29 +24,23 @@ function randomIntFromInterval(min, max) {
 
 var processBattleMove = /*#__PURE__*/function () {
   var _ref = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(userCurrentCharacter, battle, attackId, io, queue, t) {
-    var previousBattleState, previousUserState, unitUsedMove, userUsedMove, _yield$calculateChara, attackOne, randomAttackDamage, randomMonsterAttackDamage, updatedMonster, createBattleLog, updatedUserCondition, updatedBattle, userInfo, monsterInfo;
+    var unitUsedMove, userUsedMove, _yield$calculateChara, attackOne, randomAttackDamage, randomMonsterAttackDamage, updatedMonster, createBattleLog, updatedUserCondition, updatedBattle, userInfo, monsterInfo;
 
     return _regenerator["default"].wrap(function _callee$(_context) {
       while (1) {
         switch (_context.prev = _context.next) {
           case 0:
-            previousBattleState = battle;
-            previousBattleState = JSON.stringify(previousBattleState);
-            previousBattleState = JSON.parse(previousBattleState);
-            previousUserState = userCurrentCharacter;
-            previousUserState = JSON.stringify(previousUserState);
-            previousUserState = JSON.parse(previousUserState);
             unitUsedMove = "Attack";
             userUsedMove = "Attack";
-            _context.next = 10;
+            _context.next = 4;
             return (0, _calculateCharacterStats.calculateCharacterStats)(userCurrentCharacter);
 
-          case 10:
+          case 4:
             _yield$calculateChara = _context.sent;
             attackOne = _yield$calculateChara.attackOne;
             randomAttackDamage = randomIntFromInterval(attackOne.min, attackOne.max);
             randomMonsterAttackDamage = randomIntFromInterval(battle.monsters[0].minDamage, battle.monsters[0].maxDamage);
-            _context.next = 16;
+            _context.next = 10;
             return battle.monsters[0].BattleMonster.update({
               currentHp: battle.monsters[0].BattleMonster.currentHp - randomAttackDamage
             }, {
@@ -54,9 +48,9 @@ var processBattleMove = /*#__PURE__*/function () {
               transaction: t
             });
 
-          case 16:
+          case 10:
             updatedMonster = _context.sent;
-            _context.next = 19;
+            _context.next = 13;
             return _models["default"].battleLog.create({
               battleId: battle.id,
               log: "".concat(userCurrentCharacter.user.username, " attacked ").concat(battle.monsters[0].name, " for ").concat(randomAttackDamage, " damage")
@@ -65,15 +59,15 @@ var processBattleMove = /*#__PURE__*/function () {
               transaction: t
             });
 
-          case 19:
+          case 13:
             createBattleLog = _context.sent;
 
             if (!(updatedMonster.currentHp < 1)) {
-              _context.next = 25;
+              _context.next = 19;
               break;
             }
 
-            _context.next = 23;
+            _context.next = 17;
             return _models["default"].battleLog.create({
               battleId: battle.id,
               log: "".concat(userCurrentCharacter.user.username, " killed ").concat(battle.monsters[0].name)
@@ -82,8 +76,8 @@ var processBattleMove = /*#__PURE__*/function () {
               transaction: t
             });
 
-          case 23:
-            _context.next = 25;
+          case 17:
+            _context.next = 19;
             return battle.update({
               complete: true
             }, {
@@ -91,13 +85,13 @@ var processBattleMove = /*#__PURE__*/function () {
               transaction: t
             });
 
-          case 25:
+          case 19:
             if (!(updatedMonster.currentHp > 0)) {
-              _context.next = 31;
+              _context.next = 25;
               break;
             }
 
-            _context.next = 28;
+            _context.next = 22;
             return userCurrentCharacter.condition.update({
               life: userCurrentCharacter.condition.life - randomMonsterAttackDamage
             }, {
@@ -105,9 +99,9 @@ var processBattleMove = /*#__PURE__*/function () {
               transaction: t
             });
 
-          case 28:
+          case 22:
             updatedUserCondition = _context.sent;
-            _context.next = 31;
+            _context.next = 25;
             return _models["default"].battleLog.create({
               battleId: battle.id,
               log: "".concat(battle.monsters[0].name, " attacked ").concat(userCurrentCharacter.user.username, " for ").concat(randomMonsterAttackDamage, " damage")
@@ -116,13 +110,13 @@ var processBattleMove = /*#__PURE__*/function () {
               transaction: t
             });
 
-          case 31:
+          case 25:
             if (!(userCurrentCharacter.condition.life < 1)) {
-              _context.next = 34;
+              _context.next = 28;
               break;
             }
 
-            _context.next = 34;
+            _context.next = 28;
             return _models["default"].battleLog.create({
               battleId: battle.id,
               log: "".concat(battle.monsters[0].name, " killed ").concat(userCurrentCharacter.user.username)
@@ -131,8 +125,8 @@ var processBattleMove = /*#__PURE__*/function () {
               transaction: t
             });
 
-          case 34:
-            _context.next = 36;
+          case 28:
+            _context.next = 30;
             return _models["default"].battle.findOne({
               where: {
                 id: battle.id
@@ -150,7 +144,7 @@ var processBattleMove = /*#__PURE__*/function () {
               transaction: t
             });
 
-          case 36:
+          case 30:
             updatedBattle = _context.sent;
             userInfo = {
               alive: updatedUserCondition > 0,
@@ -162,9 +156,9 @@ var processBattleMove = /*#__PURE__*/function () {
               attackDamage: randomMonsterAttackDamage,
               attack: unitUsedMove
             };
-            return _context.abrupt("return", [userCurrentCharacter, updatedBattle, previousBattleState, previousUserState, userInfo, monsterInfo]);
+            return _context.abrupt("return", [userCurrentCharacter, updatedBattle, userInfo, monsterInfo]);
 
-          case 40:
+          case 34:
           case "end":
             return _context.stop();
         }

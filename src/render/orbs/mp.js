@@ -30,6 +30,14 @@ export const renderMpOrb = async (
     100,
     percentage < 100 ? percentage : 100,
   );
+  ctx.font = 'bold 16px "HeartWarming"';
+  ctx.textAlign = "center";
+  ctx.fillStyle = 'white';
+  ctx.translate(50, 50);
+  ctx.rotate(Math.PI);
+  ctx.translate(-50, -50);
+  ctx.strokeText(`${mp.current} / ${mp.max}`, 50, 50, 100);
+  ctx.fillText(`${mp.current} / ${mp.max}`, 50, 50, 100);
   const finalImage = await canvas.toBuffer();
   return finalImage;
 };

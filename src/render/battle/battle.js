@@ -14,6 +14,7 @@ import GIFEncoder from 'gif-encoder-2';
 import { calculateCharacterStats } from '../../helpers/stats/calculateCharacterStats';
 import { renderHpOrb } from '../orbs/hp';
 import { renderMpOrb } from '../orbs/mp';
+import { drawBattleScreenTools } from './tools';
 
 const background = async (
   ctx,
@@ -29,42 +30,6 @@ const background = async (
   );
 };
 
-const drawScreenTools = async (
-  ctx,
-  mainSkill,
-  secondarySkill,
-  hpOrbImage,
-  mpOrbImage,
-) => {
-  ctx.drawImage(
-    mainSkill,
-    60, // x position
-    175, // y position
-    hpOrbImage.width / 4,
-    hpOrbImage.height / 4,
-  );
-  ctx.drawImage(
-    secondarySkill,
-    225, // x position
-    175, // y position
-    hpOrbImage.width / 4,
-    hpOrbImage.height / 4,
-  );
-  ctx.drawImage(
-    hpOrbImage,
-    0, // x position
-    132, // y position
-    hpOrbImage.width / 1.5,
-    hpOrbImage.height / 1.5,
-  );
-  ctx.drawImage(
-    mpOrbImage,
-    250, // x position
-    132, // y position
-    hpOrbImage.width / 1.5,
-    hpOrbImage.height / 1.5,
-  );
-};
 const drawBattleLog = (
   ctx,
   battle,
@@ -184,12 +149,12 @@ export const renderBattleGif = async (
   monsterInfo = false,
   userInfo = false,
 ) => {
-  console.log(previousUserState.condition);
-  console.log('previous user state');
-  console.log(currentUser.condition);
-  console.log('next user state');
-  console.log('renderBattlegif');
-  console.log('123');
+  // console.log(previousUserState.condition);
+  // console.log('previous user state');
+  // console.log(currentUser.condition);
+  // console.log('next user state');
+  // console.log('renderBattlegif');
+  // console.log('123');
 
   await registerFont(path.join(__dirname, '../../assets/fonts/', 'Heart_warming.otf'), { family: 'HeartWarming' });
   const enemyFrame = [];
@@ -261,7 +226,7 @@ export const renderBattleGif = async (
     previousBattleState.monsters[0],
     enemyFrame,
   );
-  drawScreenTools(
+  drawBattleScreenTools(
     ctx,
     mainSkill,
     secondarySkill,
@@ -288,7 +253,7 @@ export const renderBattleGif = async (
     previousBattleState.monsters[0],
     enemyFrame,
   );
-  drawScreenTools(
+  drawBattleScreenTools(
     ctx,
     mainSkill,
     secondarySkill,
@@ -315,7 +280,7 @@ export const renderBattleGif = async (
     previousBattleState.monsters[0],
     enemyFrame,
   );
-  drawScreenTools(
+  drawBattleScreenTools(
     ctx,
     mainSkill,
     secondarySkill,
@@ -342,7 +307,7 @@ export const renderBattleGif = async (
     previousBattleState.monsters[0],
     enemyFrame,
   );
-  drawScreenTools(
+  drawBattleScreenTools(
     ctx,
     mainSkill,
     secondarySkill,
@@ -372,7 +337,7 @@ export const renderBattleGif = async (
     battle.monsters[0],
     enemyFrame,
   );
-  drawScreenTools(
+  drawBattleScreenTools(
     ctx,
     mainSkill,
     secondarySkill,
@@ -402,7 +367,7 @@ export const renderBattleGif = async (
     battle.monsters[0],
     enemyFrame,
   );
-  drawScreenTools(
+  drawBattleScreenTools(
     ctx,
     mainSkill,
     secondarySkill,
@@ -432,7 +397,7 @@ export const renderBattleGif = async (
     battle.monsters[0],
     enemyFrame,
   );
-  drawScreenTools(
+  drawBattleScreenTools(
     ctx,
     mainSkill,
     secondarySkill,
@@ -463,7 +428,7 @@ export const renderBattleGif = async (
       battle.monsters[0],
       enemyFrame,
     );
-    drawScreenTools(
+    drawBattleScreenTools(
       ctx,
       mainSkill,
       secondarySkill,
@@ -490,7 +455,7 @@ export const renderBattleGif = async (
       battle.monsters[0],
       enemyFrame,
     );
-    drawScreenTools(
+    drawBattleScreenTools(
       ctx,
       mainSkill,
       secondarySkill,
@@ -518,7 +483,7 @@ export const renderBattleGif = async (
       enemyFrame,
       true,
     );
-    drawScreenTools(
+    drawBattleScreenTools(
       ctx,
       mainSkill,
       secondarySkill,
@@ -550,7 +515,7 @@ export const renderBattleGif = async (
       true,
       1,
     );
-    drawScreenTools(
+    drawBattleScreenTools(
       ctx,
       mainSkill,
       secondarySkill,
@@ -582,7 +547,7 @@ export const renderBattleGif = async (
       true,
       2,
     );
-    drawScreenTools(
+    drawBattleScreenTools(
       ctx,
       mainSkill,
       secondarySkill,
@@ -612,7 +577,7 @@ export const renderBattleGif = async (
       battle.monsters[0],
       enemyFrame,
     );
-    drawScreenTools(
+    drawBattleScreenTools(
       ctx,
       mainSkill,
       secondarySkill,

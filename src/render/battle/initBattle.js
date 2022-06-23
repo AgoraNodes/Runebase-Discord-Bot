@@ -14,6 +14,7 @@ import GIFEncoder from 'gif-encoder-2';
 import { calculateCharacterStats } from '../../helpers/stats/calculateCharacterStats';
 import { renderHpOrb } from '../orbs/hp';
 import { renderMpOrb } from '../orbs/mp';
+import { drawBattleScreenTools } from './tools';
 
 const background = async (
   ctx,
@@ -29,42 +30,6 @@ const background = async (
   );
 };
 
-const drawScreenTools = async (
-  ctx,
-  mainSkill,
-  secondarySkill,
-  hpOrbImage,
-  mpOrbImage,
-) => {
-  ctx.drawImage(
-    mainSkill,
-    60, // x position
-    175, // y position
-    hpOrbImage.width / 4,
-    hpOrbImage.height / 4,
-  );
-  ctx.drawImage(
-    secondarySkill,
-    225, // x position
-    175, // y position
-    hpOrbImage.width / 4,
-    hpOrbImage.height / 4,
-  );
-  ctx.drawImage(
-    hpOrbImage,
-    0, // x position
-    132, // y position
-    hpOrbImage.width / 1.5,
-    hpOrbImage.height / 1.5,
-  );
-  ctx.drawImage(
-    mpOrbImage,
-    250, // x position
-    132, // y position
-    hpOrbImage.width / 1.5,
-    hpOrbImage.height / 1.5,
-  );
-};
 const drawBattleLog = (
   ctx,
   battle,
@@ -255,7 +220,7 @@ export const renderInitBattleGif = async (
     previousBattleState.monsters[0],
     enemyFrame,
   );
-  drawScreenTools(
+  drawBattleScreenTools(
     ctx,
     mainSkill,
     secondarySkill,

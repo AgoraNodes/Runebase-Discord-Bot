@@ -25,6 +25,8 @@ var _hp = require("../orbs/hp");
 
 var _mp = require("../orbs/mp");
 
+var _tools = require("./tools");
+
 // import db from '../models';
 var background = /*#__PURE__*/function () {
   var _ref = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(ctx, zone) {
@@ -52,38 +54,6 @@ var background = /*#__PURE__*/function () {
 
   return function background(_x, _x2) {
     return _ref.apply(this, arguments);
-  };
-}();
-
-var drawScreenTools = /*#__PURE__*/function () {
-  var _ref2 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee2(ctx, mainSkill, secondarySkill, hpOrbImage, mpOrbImage) {
-    return _regenerator["default"].wrap(function _callee2$(_context2) {
-      while (1) {
-        switch (_context2.prev = _context2.next) {
-          case 0:
-            ctx.drawImage(mainSkill, 60, // x position
-            175, // y position
-            hpOrbImage.width / 4, hpOrbImage.height / 4);
-            ctx.drawImage(secondarySkill, 225, // x position
-            175, // y position
-            hpOrbImage.width / 4, hpOrbImage.height / 4);
-            ctx.drawImage(hpOrbImage, 0, // x position
-            132, // y position
-            hpOrbImage.width / 1.5, hpOrbImage.height / 1.5);
-            ctx.drawImage(mpOrbImage, 250, // x position
-            132, // y position
-            hpOrbImage.width / 1.5, hpOrbImage.height / 1.5);
-
-          case 4:
-          case "end":
-            return _context2.stop();
-        }
-      }
-    }, _callee2);
-  }));
-
-  return function drawScreenTools(_x3, _x4, _x5, _x6, _x7) {
-    return _ref2.apply(this, arguments);
   };
 }();
 
@@ -153,7 +123,7 @@ var drawEnemy = function drawEnemy(ctx, monster, enemyFrame) {
 };
 
 var renderInitBattleGif = /*#__PURE__*/function () {
-  var _ref3 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee3(currentUser, userCurrentSelectedSkills, battle, previousBattleState, previousUserState) {
+  var _ref2 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee2(currentUser, userCurrentSelectedSkills, battle, previousBattleState, previousUserState) {
     var monsterInfo,
         userInfo,
         enemyFrame,
@@ -172,87 +142,87 @@ var renderInitBattleGif = /*#__PURE__*/function () {
         encoder,
         slice,
         finalImage,
-        _args3 = arguments;
-    return _regenerator["default"].wrap(function _callee3$(_context3) {
+        _args2 = arguments;
+    return _regenerator["default"].wrap(function _callee2$(_context2) {
       while (1) {
-        switch (_context3.prev = _context3.next) {
+        switch (_context2.prev = _context2.next) {
           case 0:
-            monsterInfo = _args3.length > 5 && _args3[5] !== undefined ? _args3[5] : false;
-            userInfo = _args3.length > 6 && _args3[6] !== undefined ? _args3[6] : false;
-            _context3.next = 4;
+            monsterInfo = _args2.length > 5 && _args2[5] !== undefined ? _args2[5] : false;
+            userInfo = _args2.length > 6 && _args2[6] !== undefined ? _args2[6] : false;
+            _context2.next = 4;
             return (0, _canvas.registerFont)(_path["default"].join(__dirname, '../../assets/fonts/', 'Heart_warming.otf'), {
               family: 'HeartWarming'
             });
 
           case 4:
             enemyFrame = [];
-            _context3.next = 7;
+            _context2.next = 7;
             return (0, _hp.renderHpOrb)(previousUserState);
 
           case 7:
-            hpOrbBufferPrevious = _context3.sent;
-            _context3.next = 10;
+            hpOrbBufferPrevious = _context2.sent;
+            _context2.next = 10;
             return (0, _mp.renderMpOrb)(previousUserState);
 
           case 10:
-            mpOrbBufferPrevious = _context3.sent;
-            _context3.next = 13;
+            mpOrbBufferPrevious = _context2.sent;
+            _context2.next = 13;
             return (0, _hp.renderHpOrb)(currentUser);
 
           case 13:
-            hpOrbBuffer = _context3.sent;
-            _context3.next = 16;
+            hpOrbBuffer = _context2.sent;
+            _context2.next = 16;
             return (0, _mp.renderMpOrb)(currentUser);
 
           case 16:
-            mpOrbBuffer = _context3.sent;
-            _context3.next = 19;
+            mpOrbBuffer = _context2.sent;
+            _context2.next = 19;
             return (0, _canvas.loadImage)(hpOrbBuffer);
 
           case 19:
-            hpOrbImage = _context3.sent;
-            _context3.next = 22;
+            hpOrbImage = _context2.sent;
+            _context2.next = 22;
             return (0, _canvas.loadImage)(mpOrbBuffer);
 
           case 22:
-            mpOrbImage = _context3.sent;
-            _context3.next = 25;
+            mpOrbImage = _context2.sent;
+            _context2.next = 25;
             return (0, _canvas.loadImage)(hpOrbBufferPrevious);
 
           case 25:
-            hpOrbImagePrevious = _context3.sent;
-            _context3.next = 28;
+            hpOrbImagePrevious = _context2.sent;
+            _context2.next = 28;
             return (0, _canvas.loadImage)(mpOrbBufferPrevious);
 
           case 28:
-            mpOrbImagePrevious = _context3.sent;
-            _context3.next = 31;
+            mpOrbImagePrevious = _context2.sent;
+            _context2.next = 31;
             return (0, _canvas.loadImage)(_path["default"].join(__dirname, "../../assets/images/monsters/Zombie/", "zombie.png"));
 
           case 31:
-            enemyFrame[0] = _context3.sent;
-            _context3.next = 34;
+            enemyFrame[0] = _context2.sent;
+            _context2.next = 34;
             return (0, _canvas.loadImage)(_path["default"].join(__dirname, "../../assets/images/monsters/Zombie/", "zombie (8).png"));
 
           case 34:
-            enemyFrame[1] = _context3.sent;
-            _context3.next = 37;
+            enemyFrame[1] = _context2.sent;
+            _context2.next = 37;
             return (0, _canvas.loadImage)(_path["default"].join(__dirname, "../../assets/images/monsters/Zombie/", "zombie (6).png"));
 
           case 37:
-            enemyFrame[2] = _context3.sent;
+            enemyFrame[2] = _context2.sent;
             console.log('renderBattlegif');
-            _context3.next = 41;
+            _context2.next = 41;
             return (0, _canvas.loadImage)(_path["default"].join(__dirname, "../../assets/images/skills/".concat(userCurrentSelectedSkills.selectedMainSkill.skill.skillTree ? "".concat(userCurrentSelectedSkills.selectedMainSkill.skill.skillTree["class"].name, "/").concat(userCurrentSelectedSkills.selectedMainSkill.skill.skillTree.name) : ""), "".concat(userCurrentSelectedSkills.selectedMainSkill.skill.name, ".png")));
 
           case 41:
-            mainSkill = _context3.sent;
+            mainSkill = _context2.sent;
             console.log('123');
-            _context3.next = 45;
+            _context2.next = 45;
             return (0, _canvas.loadImage)(_path["default"].join(__dirname, "../../assets/images/skills/".concat(userCurrentSelectedSkills.selectedSecondarySkill.skill.skillTree ? "".concat(userCurrentSelectedSkills.selectedSecondarySkill.skill.skillTree["class"].name, "/").concat(userCurrentSelectedSkills.selectedSecondarySkill.skill.skillTree.name) : ""), "".concat(userCurrentSelectedSkills.selectedSecondarySkill.skill.name, ".png")));
 
           case 45:
-            secondarySkill = _context3.sent;
+            secondarySkill = _context2.sent;
             canvas = (0, _canvas.createCanvas)(450, 200);
             ctx = canvas.getContext('2d');
             encoder = new _gifEncoder["default"](450, 200);
@@ -263,33 +233,33 @@ var renderInitBattleGif = /*#__PURE__*/function () {
 
             slice = 200 / 5; // this is the width of each rectangle
 
-            _context3.next = 56;
+            _context2.next = 56;
             return background(ctx, 'den');
 
           case 56:
             drawPlayer(ctx, false);
             drawEnemy(ctx, previousBattleState.monsters[0], enemyFrame);
-            drawScreenTools(ctx, mainSkill, secondarySkill, hpOrbImagePrevious, mpOrbImagePrevious);
+            (0, _tools.drawBattleScreenTools)(ctx, mainSkill, secondarySkill, hpOrbImagePrevious, mpOrbImagePrevious);
             drawBattleLog(ctx, battle);
             encoder.addFrame(ctx);
             encoder.finish();
-            _context3.next = 64;
+            _context2.next = 64;
             return encoder.out.getData();
 
           case 64:
-            finalImage = _context3.sent;
-            return _context3.abrupt("return", finalImage);
+            finalImage = _context2.sent;
+            return _context2.abrupt("return", finalImage);
 
           case 66:
           case "end":
-            return _context3.stop();
+            return _context2.stop();
         }
       }
-    }, _callee3);
+    }, _callee2);
   }));
 
-  return function renderInitBattleGif(_x8, _x9, _x10, _x11, _x12) {
-    return _ref3.apply(this, arguments);
+  return function renderInitBattleGif(_x3, _x4, _x5, _x6, _x7) {
+    return _ref2.apply(this, arguments);
   };
 }();
 

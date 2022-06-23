@@ -46,14 +46,22 @@ var renderHpOrb = /*#__PURE__*/function () {
             ctx.rotate(Math.PI);
             ctx.translate(-50, -50);
             ctx.fillRect(0, 0, 100, percentage < 100 ? percentage : 100);
-            _context.next = 20;
+            ctx.font = 'bold 16px "HeartWarming"';
+            ctx.textAlign = "center";
+            ctx.fillStyle = 'white';
+            ctx.translate(50, 50);
+            ctx.rotate(Math.PI);
+            ctx.translate(-50, -50);
+            ctx.strokeText("".concat(hp.current, " / ").concat(hp.max), 50, 50, 100);
+            ctx.fillText("".concat(hp.current, " / ").concat(hp.max), 50, 50, 100);
+            _context.next = 28;
             return canvas.toBuffer();
 
-          case 20:
+          case 28:
             finalImage = _context.sent;
             return _context.abrupt("return", finalImage);
 
-          case 22:
+          case 30:
           case "end":
             return _context.stop();
         }

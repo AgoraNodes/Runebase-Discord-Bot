@@ -25,6 +25,8 @@ var _hp = require("../orbs/hp");
 
 var _mp = require("../orbs/mp");
 
+var _tools = require("./tools");
+
 // import db from '../models';
 var background = /*#__PURE__*/function () {
   var _ref = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(ctx, zone) {
@@ -52,38 +54,6 @@ var background = /*#__PURE__*/function () {
 
   return function background(_x, _x2) {
     return _ref.apply(this, arguments);
-  };
-}();
-
-var drawScreenTools = /*#__PURE__*/function () {
-  var _ref2 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee2(ctx, mainSkill, secondarySkill, hpOrbImage, mpOrbImage) {
-    return _regenerator["default"].wrap(function _callee2$(_context2) {
-      while (1) {
-        switch (_context2.prev = _context2.next) {
-          case 0:
-            ctx.drawImage(mainSkill, 60, // x position
-            175, // y position
-            hpOrbImage.width / 4, hpOrbImage.height / 4);
-            ctx.drawImage(secondarySkill, 225, // x position
-            175, // y position
-            hpOrbImage.width / 4, hpOrbImage.height / 4);
-            ctx.drawImage(hpOrbImage, 0, // x position
-            132, // y position
-            hpOrbImage.width / 1.5, hpOrbImage.height / 1.5);
-            ctx.drawImage(mpOrbImage, 250, // x position
-            132, // y position
-            hpOrbImage.width / 1.5, hpOrbImage.height / 1.5);
-
-          case 4:
-          case "end":
-            return _context2.stop();
-        }
-      }
-    }, _callee2);
-  }));
-
-  return function drawScreenTools(_x3, _x4, _x5, _x6, _x7) {
-    return _ref2.apply(this, arguments);
   };
 }();
 
@@ -153,7 +123,7 @@ var drawEnemy = function drawEnemy(ctx, monster, enemyFrame) {
 };
 
 var renderBattleGif = /*#__PURE__*/function () {
-  var _ref3 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee3(currentUser, userCurrentSelectedSkills, battle, previousBattleState, previousUserState) {
+  var _ref2 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee2(currentUser, userCurrentSelectedSkills, battle, previousBattleState, previousUserState) {
     var monsterInfo,
         userInfo,
         enemyFrame,
@@ -172,91 +142,85 @@ var renderBattleGif = /*#__PURE__*/function () {
         encoder,
         slice,
         finalImage,
-        _args3 = arguments;
-    return _regenerator["default"].wrap(function _callee3$(_context3) {
+        _args2 = arguments;
+    return _regenerator["default"].wrap(function _callee2$(_context2) {
       while (1) {
-        switch (_context3.prev = _context3.next) {
+        switch (_context2.prev = _context2.next) {
           case 0:
-            monsterInfo = _args3.length > 5 && _args3[5] !== undefined ? _args3[5] : false;
-            userInfo = _args3.length > 6 && _args3[6] !== undefined ? _args3[6] : false;
-            console.log(previousUserState.condition);
-            console.log('previous user state');
-            console.log(currentUser.condition);
-            console.log('next user state');
-            console.log('renderBattlegif');
-            console.log('123');
-            _context3.next = 10;
+            monsterInfo = _args2.length > 5 && _args2[5] !== undefined ? _args2[5] : false;
+            userInfo = _args2.length > 6 && _args2[6] !== undefined ? _args2[6] : false;
+            _context2.next = 4;
             return (0, _canvas.registerFont)(_path["default"].join(__dirname, '../../assets/fonts/', 'Heart_warming.otf'), {
               family: 'HeartWarming'
             });
 
-          case 10:
+          case 4:
             enemyFrame = [];
-            _context3.next = 13;
+            _context2.next = 7;
             return (0, _hp.renderHpOrb)(previousUserState);
 
-          case 13:
-            hpOrbBufferPrevious = _context3.sent;
-            _context3.next = 16;
+          case 7:
+            hpOrbBufferPrevious = _context2.sent;
+            _context2.next = 10;
             return (0, _mp.renderMpOrb)(previousUserState);
 
-          case 16:
-            mpOrbBufferPrevious = _context3.sent;
-            _context3.next = 19;
+          case 10:
+            mpOrbBufferPrevious = _context2.sent;
+            _context2.next = 13;
             return (0, _hp.renderHpOrb)(currentUser);
 
-          case 19:
-            hpOrbBuffer = _context3.sent;
-            _context3.next = 22;
+          case 13:
+            hpOrbBuffer = _context2.sent;
+            _context2.next = 16;
             return (0, _mp.renderMpOrb)(currentUser);
 
-          case 22:
-            mpOrbBuffer = _context3.sent;
-            _context3.next = 25;
+          case 16:
+            mpOrbBuffer = _context2.sent;
+            _context2.next = 19;
             return (0, _canvas.loadImage)(hpOrbBuffer);
 
-          case 25:
-            hpOrbImage = _context3.sent;
-            _context3.next = 28;
+          case 19:
+            hpOrbImage = _context2.sent;
+            _context2.next = 22;
             return (0, _canvas.loadImage)(mpOrbBuffer);
 
-          case 28:
-            mpOrbImage = _context3.sent;
-            _context3.next = 31;
+          case 22:
+            mpOrbImage = _context2.sent;
+            _context2.next = 25;
             return (0, _canvas.loadImage)(hpOrbBufferPrevious);
 
-          case 31:
-            hpOrbImagePrevious = _context3.sent;
-            _context3.next = 34;
+          case 25:
+            hpOrbImagePrevious = _context2.sent;
+            _context2.next = 28;
             return (0, _canvas.loadImage)(mpOrbBufferPrevious);
 
-          case 34:
-            mpOrbImagePrevious = _context3.sent;
-            _context3.next = 37;
+          case 28:
+            mpOrbImagePrevious = _context2.sent;
+            _context2.next = 31;
             return (0, _canvas.loadImage)(_path["default"].join(__dirname, "../../assets/images/monsters/Zombie/", "zombie.png"));
 
-          case 37:
-            enemyFrame[0] = _context3.sent;
-            _context3.next = 40;
+          case 31:
+            enemyFrame[0] = _context2.sent;
+            _context2.next = 34;
             return (0, _canvas.loadImage)(_path["default"].join(__dirname, "../../assets/images/monsters/Zombie/", "zombie (8).png"));
 
-          case 40:
-            enemyFrame[1] = _context3.sent;
-            _context3.next = 43;
+          case 34:
+            enemyFrame[1] = _context2.sent;
+            _context2.next = 37;
             return (0, _canvas.loadImage)(_path["default"].join(__dirname, "../../assets/images/monsters/Zombie/", "zombie (6).png"));
 
-          case 43:
-            enemyFrame[2] = _context3.sent;
-            _context3.next = 46;
+          case 37:
+            enemyFrame[2] = _context2.sent;
+            _context2.next = 40;
             return (0, _canvas.loadImage)(_path["default"].join(__dirname, "../../assets/images/skills/".concat(userCurrentSelectedSkills.selectedMainSkill.skill.skillTree ? "".concat(userCurrentSelectedSkills.selectedMainSkill.skill.skillTree["class"].name, "/").concat(userCurrentSelectedSkills.selectedMainSkill.skill.skillTree.name) : ""), "".concat(userCurrentSelectedSkills.selectedMainSkill.skill.name, ".png")));
 
-          case 46:
-            mainSkill = _context3.sent;
-            _context3.next = 49;
+          case 40:
+            mainSkill = _context2.sent;
+            _context2.next = 43;
             return (0, _canvas.loadImage)(_path["default"].join(__dirname, "../../assets/images/skills/".concat(userCurrentSelectedSkills.selectedSecondarySkill.skill.skillTree ? "".concat(userCurrentSelectedSkills.selectedSecondarySkill.skill.skillTree["class"].name, "/").concat(userCurrentSelectedSkills.selectedSecondarySkill.skill.skillTree.name) : ""), "".concat(userCurrentSelectedSkills.selectedSecondarySkill.skill.name, ".png")));
 
-          case 49:
-            secondarySkill = _context3.sent;
+          case 43:
+            secondarySkill = _context2.sent;
             canvas = (0, _canvas.createCanvas)(450, 200);
             ctx = canvas.getContext('2d');
             encoder = new _gifEncoder["default"](450, 200);
@@ -267,82 +231,82 @@ var renderBattleGif = /*#__PURE__*/function () {
 
             slice = 200 / 5; // this is the width of each rectangle
 
-            _context3.next = 60;
+            _context2.next = 54;
             return background(ctx, 'den');
 
-          case 60:
+          case 54:
             drawPlayer(ctx, false);
             drawEnemy(ctx, previousBattleState.monsters[0], enemyFrame);
-            drawScreenTools(ctx, mainSkill, secondarySkill, hpOrbImagePrevious, mpOrbImagePrevious);
+            (0, _tools.drawBattleScreenTools)(ctx, mainSkill, secondarySkill, hpOrbImagePrevious, mpOrbImagePrevious);
             drawBattleLog(ctx, battle);
             encoder.addFrame(ctx); // frame 2
 
-            _context3.next = 67;
+            _context2.next = 61;
             return background(ctx, 'den');
 
-          case 67:
+          case 61:
             drawPlayer(ctx, false);
             drawEnemy(ctx, previousBattleState.monsters[0], enemyFrame);
-            drawScreenTools(ctx, mainSkill, secondarySkill, hpOrbImagePrevious, mpOrbImagePrevious);
+            (0, _tools.drawBattleScreenTools)(ctx, mainSkill, secondarySkill, hpOrbImagePrevious, mpOrbImagePrevious);
             drawBattleLog(ctx, battle);
             encoder.addFrame(ctx); // frame 3
 
-            _context3.next = 74;
+            _context2.next = 68;
             return background(ctx, 'den');
 
-          case 74:
+          case 68:
             drawPlayer(ctx, false);
             drawEnemy(ctx, previousBattleState.monsters[0], enemyFrame);
-            drawScreenTools(ctx, mainSkill, secondarySkill, hpOrbImagePrevious, mpOrbImagePrevious);
+            (0, _tools.drawBattleScreenTools)(ctx, mainSkill, secondarySkill, hpOrbImagePrevious, mpOrbImagePrevious);
             drawBattleLog(ctx, battle);
             encoder.addFrame(ctx); // frame 4
 
-            _context3.next = 81;
+            _context2.next = 75;
             return background(ctx, 'den');
 
-          case 81:
+          case 75:
             drawPlayer(ctx, true);
             drawEnemy(ctx, previousBattleState.monsters[0], enemyFrame);
-            drawScreenTools(ctx, mainSkill, secondarySkill, hpOrbImagePrevious, mpOrbImagePrevious);
+            (0, _tools.drawBattleScreenTools)(ctx, mainSkill, secondarySkill, hpOrbImagePrevious, mpOrbImagePrevious);
             drawBattleLog(ctx, battle);
             ctx.lineWidth = 1;
             ctx.font = 'bold 13px "HeartWarming"';
             ctx.strokeText(userInfo.attackDamage, 193, 38, 50);
             encoder.addFrame(ctx); // frame 5
 
-            _context3.next = 91;
+            _context2.next = 85;
             return background(ctx, 'den');
 
-          case 91:
+          case 85:
             drawPlayer(ctx, true);
             drawEnemy(ctx, battle.monsters[0], enemyFrame);
-            drawScreenTools(ctx, mainSkill, secondarySkill, hpOrbImagePrevious, mpOrbImage);
+            (0, _tools.drawBattleScreenTools)(ctx, mainSkill, secondarySkill, hpOrbImagePrevious, mpOrbImage);
             drawBattleLog(ctx, battle);
             ctx.lineWidth = 1;
             ctx.font = 'bold 13px "HeartWarming"';
             ctx.strokeText(userInfo.attackDamage, 193, 38, 50);
             encoder.addFrame(ctx); // frame 6
 
-            _context3.next = 101;
+            _context2.next = 95;
             return background(ctx, 'den');
 
-          case 101:
+          case 95:
             drawPlayer(ctx, false);
             drawEnemy(ctx, battle.monsters[0], enemyFrame);
-            drawScreenTools(ctx, mainSkill, secondarySkill, hpOrbImagePrevious, mpOrbImage);
+            (0, _tools.drawBattleScreenTools)(ctx, mainSkill, secondarySkill, hpOrbImagePrevious, mpOrbImage);
             drawBattleLog(ctx, battle);
             ctx.lineWidth = 1;
             ctx.font = 'bold 13px "HeartWarming"';
             ctx.strokeText(userInfo.attackDamage, 193, 38, 50);
             encoder.addFrame(ctx); // frame 7
 
-            _context3.next = 111;
+            _context2.next = 105;
             return background(ctx, 'den');
 
-          case 111:
+          case 105:
             drawPlayer(ctx, false);
             drawEnemy(ctx, battle.monsters[0], enemyFrame);
-            drawScreenTools(ctx, mainSkill, secondarySkill, hpOrbImagePrevious, mpOrbImage);
+            (0, _tools.drawBattleScreenTools)(ctx, mainSkill, secondarySkill, hpOrbImagePrevious, mpOrbImage);
             drawBattleLog(ctx, battle);
             ctx.lineWidth = 1;
             ctx.font = 'bold 13px "HeartWarming"';
@@ -350,98 +314,98 @@ var renderBattleGif = /*#__PURE__*/function () {
             encoder.addFrame(ctx);
 
             if (!monsterInfo.alive) {
-              _context3.next = 171;
+              _context2.next = 165;
               break;
             }
 
-            _context3.next = 122;
+            _context2.next = 116;
             return background(ctx, 'den');
 
-          case 122:
+          case 116:
             drawPlayer(ctx, false);
             drawEnemy(ctx, battle.monsters[0], enemyFrame);
-            drawScreenTools(ctx, mainSkill, secondarySkill, hpOrbImagePrevious, mpOrbImage);
+            (0, _tools.drawBattleScreenTools)(ctx, mainSkill, secondarySkill, hpOrbImagePrevious, mpOrbImage);
             drawBattleLog(ctx, battle);
             encoder.addFrame(ctx); // frame 9
 
-            _context3.next = 129;
+            _context2.next = 123;
             return background(ctx, 'den');
 
-          case 129:
+          case 123:
             drawPlayer(ctx, false);
             drawEnemy(ctx, battle.monsters[0], enemyFrame);
-            drawScreenTools(ctx, mainSkill, secondarySkill, hpOrbImagePrevious, mpOrbImage);
+            (0, _tools.drawBattleScreenTools)(ctx, mainSkill, secondarySkill, hpOrbImagePrevious, mpOrbImage);
             drawBattleLog(ctx, battle);
             encoder.addFrame(ctx); // frame 6
 
-            _context3.next = 136;
+            _context2.next = 130;
             return background(ctx, 'den');
 
-          case 136:
+          case 130:
             drawPlayer(ctx, false);
             drawEnemy(ctx, battle.monsters[0], enemyFrame, true);
-            drawScreenTools(ctx, mainSkill, secondarySkill, hpOrbImagePrevious, mpOrbImage);
+            (0, _tools.drawBattleScreenTools)(ctx, mainSkill, secondarySkill, hpOrbImagePrevious, mpOrbImage);
             drawBattleLog(ctx, battle);
             ctx.lineWidth = 1;
             ctx.font = 'bold 13px "HeartWarming"';
             ctx.strokeText(monsterInfo.attackDamage, 80, 45, 50);
             encoder.addFrame(ctx); // frame 6
 
-            _context3.next = 146;
+            _context2.next = 140;
             return background(ctx, 'den');
 
-          case 146:
+          case 140:
             drawPlayer(ctx, false);
             drawEnemy(ctx, battle.monsters[0], enemyFrame, true, 1);
-            drawScreenTools(ctx, mainSkill, secondarySkill, hpOrbImage, mpOrbImage);
+            (0, _tools.drawBattleScreenTools)(ctx, mainSkill, secondarySkill, hpOrbImage, mpOrbImage);
             drawBattleLog(ctx, battle);
             ctx.lineWidth = 1;
             ctx.font = 'bold 13px "HeartWarming"';
             ctx.strokeText(monsterInfo.attackDamage, 80, 45, 50);
             encoder.addFrame(ctx); // frame 6
 
-            _context3.next = 156;
+            _context2.next = 150;
             return background(ctx, 'den');
 
-          case 156:
+          case 150:
             drawPlayer(ctx, false);
             drawEnemy(ctx, battle.monsters[0], enemyFrame, true, 2);
-            drawScreenTools(ctx, mainSkill, secondarySkill, hpOrbImage, mpOrbImage);
+            (0, _tools.drawBattleScreenTools)(ctx, mainSkill, secondarySkill, hpOrbImage, mpOrbImage);
             drawBattleLog(ctx, battle);
             ctx.lineWidth = 1;
             ctx.font = 'bold 13px "HeartWarming"';
             ctx.strokeText(monsterInfo.attackDamage, 80, 45, 50);
             encoder.addFrame(ctx); // frame 6
 
-            _context3.next = 166;
+            _context2.next = 160;
             return background(ctx, 'den');
 
-          case 166:
+          case 160:
             drawPlayer(ctx, false);
             drawEnemy(ctx, battle.monsters[0], enemyFrame);
-            drawScreenTools(ctx, mainSkill, secondarySkill, hpOrbImage, mpOrbImage);
+            (0, _tools.drawBattleScreenTools)(ctx, mainSkill, secondarySkill, hpOrbImage, mpOrbImage);
             drawBattleLog(ctx, battle);
             encoder.addFrame(ctx);
 
-          case 171:
+          case 165:
             encoder.finish();
-            _context3.next = 174;
+            _context2.next = 168;
             return encoder.out.getData();
 
-          case 174:
-            finalImage = _context3.sent;
-            return _context3.abrupt("return", finalImage);
+          case 168:
+            finalImage = _context2.sent;
+            return _context2.abrupt("return", finalImage);
 
-          case 176:
+          case 170:
           case "end":
-            return _context3.stop();
+            return _context2.stop();
         }
       }
-    }, _callee3);
+    }, _callee2);
   }));
 
-  return function renderBattleGif(_x8, _x9, _x10, _x11, _x12) {
-    return _ref3.apply(this, arguments);
+  return function renderBattleGif(_x3, _x4, _x5, _x6, _x7) {
+    return _ref2.apply(this, arguments);
   };
 }();
 
