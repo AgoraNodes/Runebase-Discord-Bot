@@ -11,11 +11,17 @@ var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"))
 
 var _asyncToGenerator2 = _interopRequireDefault(require("@babel/runtime/helpers/asyncToGenerator"));
 
+var _sequelize = require("sequelize");
+
 var _canvas = require("canvas");
 
 var _path = _interopRequireDefault(require("path"));
 
+var _gifEncoder = _interopRequireDefault(require("gif-encoder-2"));
+
 var _gif = _interopRequireDefault(require("gif.node"));
+
+var _calculateCharacterStats = require("../../helpers/stats/calculateCharacterStats");
 
 var _hp = require("../orbs/hp");
 
@@ -23,7 +29,7 @@ var _mp = require("../orbs/mp");
 
 var _tools = require("./tools");
 
-// import { calculateCharacterStats } from '../../helpers/stats/calculateCharacterStats';
+// import db from '../models';
 var background = /*#__PURE__*/function () {
   var _ref = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(ctx, zone) {
     var mapImage;
@@ -135,7 +141,8 @@ var renderBattleGif = /*#__PURE__*/function () {
         secondarySkill,
         canvas,
         ctx,
-        gif,
+        encoder,
+        slice,
         finalImage,
         _args2 = arguments;
     return _regenerator["default"].wrap(function _callee2$(_context2) {
@@ -218,30 +225,48 @@ var renderBattleGif = /*#__PURE__*/function () {
             secondarySkill = _context2.sent;
             canvas = (0, _canvas.createCanvas)(450, 200);
             ctx = canvas.getContext('2d');
-            gif = new _gif["default"]({
-              worker: 8,
-              quality: 50,
-              debug: false,
-              width: 450,
-              height: 200,
-              repeat: -1
-            });
-            _context2.next = 49;
+            encoder = new _gifEncoder["default"](450, 200, 'neuquant', false, 10);
+            encoder.setDelay(200);
+            encoder.setRepeat(-1);
+            encoder.setQuality(30);
+            encoder.start(); // frame 1
+
+            slice = 200 / 5; // this is the width of each rectangle
+
+            _context2.next = 54;
             return background(ctx, 'den');
 
-          case 49:
+          case 54:
             drawPlayer(ctx, false);
             drawEnemy(ctx, previousBattleState.monsters[0], enemyFrame);
             (0, _tools.drawBattleScreenTools)(ctx, mainSkill, secondarySkill, hpOrbImagePrevious, mpOrbImagePrevious);
             drawBattleLog(ctx, battle);
-            gif.addFrame(ctx.getImageData(0, 0, canvas.width, canvas.height), {
-              delay: 600
-            }); // frame 4
+            encoder.addFrame(ctx); // frame 2
 
-            _context2.next = 56;
+            _context2.next = 61;
             return background(ctx, 'den');
 
-          case 56:
+          case 61:
+            drawPlayer(ctx, false);
+            drawEnemy(ctx, previousBattleState.monsters[0], enemyFrame);
+            (0, _tools.drawBattleScreenTools)(ctx, mainSkill, secondarySkill, hpOrbImagePrevious, mpOrbImagePrevious);
+            drawBattleLog(ctx, battle);
+            encoder.addFrame(ctx); // frame 3
+
+            _context2.next = 68;
+            return background(ctx, 'den');
+
+          case 68:
+            drawPlayer(ctx, false);
+            drawEnemy(ctx, previousBattleState.monsters[0], enemyFrame);
+            (0, _tools.drawBattleScreenTools)(ctx, mainSkill, secondarySkill, hpOrbImagePrevious, mpOrbImagePrevious);
+            drawBattleLog(ctx, battle);
+            encoder.addFrame(ctx); // frame 4
+
+            _context2.next = 75;
+            return background(ctx, 'den');
+
+          case 75:
             drawPlayer(ctx, true);
             drawEnemy(ctx, previousBattleState.monsters[0], enemyFrame);
             (0, _tools.drawBattleScreenTools)(ctx, mainSkill, secondarySkill, hpOrbImagePrevious, mpOrbImagePrevious);
@@ -249,14 +274,12 @@ var renderBattleGif = /*#__PURE__*/function () {
             ctx.lineWidth = 1;
             ctx.font = 'bold 13px "HeartWarming"';
             ctx.strokeText(userInfo.attackDamage, 193, 38, 50);
-            gif.addFrame(ctx.getImageData(0, 0, canvas.width, canvas.height), {
-              delay: 200
-            }); // frame 5
+            encoder.addFrame(ctx); // frame 5
 
-            _context2.next = 66;
+            _context2.next = 85;
             return background(ctx, 'den');
 
-          case 66:
+          case 85:
             drawPlayer(ctx, true);
             drawEnemy(ctx, battle.monsters[0], enemyFrame);
             (0, _tools.drawBattleScreenTools)(ctx, mainSkill, secondarySkill, hpOrbImagePrevious, mpOrbImage);
@@ -264,120 +287,118 @@ var renderBattleGif = /*#__PURE__*/function () {
             ctx.lineWidth = 1;
             ctx.font = 'bold 13px "HeartWarming"';
             ctx.strokeText(userInfo.attackDamage, 193, 38, 50);
-            gif.addFrame(ctx.getImageData(0, 0, canvas.width, canvas.height), {
-              delay: 200
-            }); // frame 7
+            encoder.addFrame(ctx); // frame 6
 
-            _context2.next = 76;
+            _context2.next = 95;
             return background(ctx, 'den');
 
-          case 76:
+          case 95:
             drawPlayer(ctx, false);
             drawEnemy(ctx, battle.monsters[0], enemyFrame);
             (0, _tools.drawBattleScreenTools)(ctx, mainSkill, secondarySkill, hpOrbImagePrevious, mpOrbImage);
             drawBattleLog(ctx, battle);
             ctx.lineWidth = 1;
             ctx.font = 'bold 13px "HeartWarming"';
-            ctx.strokeText(userInfo.attackDamage, 193, 38, 50); // encoder.addFrame(ctx);
+            ctx.strokeText(userInfo.attackDamage, 193, 38, 50);
+            encoder.addFrame(ctx); // frame 7
 
-            gif.addFrame(ctx.getImageData(0, 0, canvas.width, canvas.height), {
-              delay: 400
-            });
+            _context2.next = 105;
+            return background(ctx, 'den');
+
+          case 105:
+            drawPlayer(ctx, false);
+            drawEnemy(ctx, battle.monsters[0], enemyFrame);
+            (0, _tools.drawBattleScreenTools)(ctx, mainSkill, secondarySkill, hpOrbImagePrevious, mpOrbImage);
+            drawBattleLog(ctx, battle);
+            ctx.lineWidth = 1;
+            ctx.font = 'bold 13px "HeartWarming"';
+            ctx.strokeText(userInfo.attackDamage, 193, 38, 50);
+            encoder.addFrame(ctx);
 
             if (!monsterInfo.alive) {
-              _context2.next = 129;
+              _context2.next = 165;
               break;
             }
 
-            _context2.next = 87;
+            _context2.next = 116;
             return background(ctx, 'den');
 
-          case 87:
+          case 116:
             drawPlayer(ctx, false);
             drawEnemy(ctx, battle.monsters[0], enemyFrame);
             (0, _tools.drawBattleScreenTools)(ctx, mainSkill, secondarySkill, hpOrbImagePrevious, mpOrbImage);
-            drawBattleLog(ctx, battle); // encoder.addFrame(ctx);
+            drawBattleLog(ctx, battle);
+            encoder.addFrame(ctx); // frame 9
 
-            gif.addFrame(ctx.getImageData(0, 0, canvas.width, canvas.height), {
-              delay: 400
-            }); // frame 6
-
-            _context2.next = 94;
+            _context2.next = 123;
             return background(ctx, 'den');
 
-          case 94:
+          case 123:
+            drawPlayer(ctx, false);
+            drawEnemy(ctx, battle.monsters[0], enemyFrame);
+            (0, _tools.drawBattleScreenTools)(ctx, mainSkill, secondarySkill, hpOrbImagePrevious, mpOrbImage);
+            drawBattleLog(ctx, battle);
+            encoder.addFrame(ctx); // frame 6
+
+            _context2.next = 130;
+            return background(ctx, 'den');
+
+          case 130:
             drawPlayer(ctx, false);
             drawEnemy(ctx, battle.monsters[0], enemyFrame, true);
             (0, _tools.drawBattleScreenTools)(ctx, mainSkill, secondarySkill, hpOrbImagePrevious, mpOrbImage);
             drawBattleLog(ctx, battle);
             ctx.lineWidth = 1;
             ctx.font = 'bold 13px "HeartWarming"';
-            ctx.strokeText(monsterInfo.attackDamage, 80, 45, 50); // encoder.addFrame(ctx);
+            ctx.strokeText(monsterInfo.attackDamage, 80, 45, 50);
+            encoder.addFrame(ctx); // frame 6
 
-            gif.addFrame(ctx.getImageData(0, 0, canvas.width, canvas.height), {
-              delay: 200
-            }); // frame 6
-
-            _context2.next = 104;
+            _context2.next = 140;
             return background(ctx, 'den');
 
-          case 104:
+          case 140:
             drawPlayer(ctx, false);
             drawEnemy(ctx, battle.monsters[0], enemyFrame, true, 1);
             (0, _tools.drawBattleScreenTools)(ctx, mainSkill, secondarySkill, hpOrbImage, mpOrbImage);
             drawBattleLog(ctx, battle);
             ctx.lineWidth = 1;
             ctx.font = 'bold 13px "HeartWarming"';
-            ctx.strokeText(monsterInfo.attackDamage, 80, 45, 50); // encoder.addFrame(ctx);
+            ctx.strokeText(monsterInfo.attackDamage, 80, 45, 50);
+            encoder.addFrame(ctx); // frame 6
 
-            gif.addFrame(ctx.getImageData(0, 0, canvas.width, canvas.height), {
-              delay: 200
-            }); // frame 6
-
-            _context2.next = 114;
+            _context2.next = 150;
             return background(ctx, 'den');
 
-          case 114:
+          case 150:
             drawPlayer(ctx, false);
             drawEnemy(ctx, battle.monsters[0], enemyFrame, true, 2);
             (0, _tools.drawBattleScreenTools)(ctx, mainSkill, secondarySkill, hpOrbImage, mpOrbImage);
             drawBattleLog(ctx, battle);
             ctx.lineWidth = 1;
             ctx.font = 'bold 13px "HeartWarming"';
-            ctx.strokeText(monsterInfo.attackDamage, 80, 45, 50); // encoder.addFrame(ctx);
+            ctx.strokeText(monsterInfo.attackDamage, 80, 45, 50);
+            encoder.addFrame(ctx); // frame 6
 
-            gif.addFrame(ctx.getImageData(0, 0, canvas.width, canvas.height), {
-              delay: 200
-            }); // frame 6
-
-            _context2.next = 124;
+            _context2.next = 160;
             return background(ctx, 'den');
 
-          case 124:
+          case 160:
             drawPlayer(ctx, false);
             drawEnemy(ctx, battle.monsters[0], enemyFrame);
             (0, _tools.drawBattleScreenTools)(ctx, mainSkill, secondarySkill, hpOrbImage, mpOrbImage);
-            drawBattleLog(ctx, battle); // encoder.addFrame(ctx);
+            drawBattleLog(ctx, battle);
+            encoder.addFrame(ctx);
 
-            gif.addFrame(ctx.getImageData(0, 0, canvas.width, canvas.height), {
-              delay: 200
-            });
+          case 165:
+            encoder.finish();
+            _context2.next = 168;
+            return encoder.out.getData();
 
-          case 129:
-            _context2.next = 131;
-            return gif.render();
-
-          case 131:
-            _context2.next = 133;
-            return new Promise(function (resolve, reject) {
-              gif.on('finished', resolve);
-            });
-
-          case 133:
+          case 168:
             finalImage = _context2.sent;
             return _context2.abrupt("return", finalImage);
 
-          case 135:
+          case 170:
           case "end":
             return _context2.stop();
         }

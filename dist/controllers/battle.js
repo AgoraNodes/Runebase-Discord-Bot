@@ -15,8 +15,6 @@ var _asyncToGenerator2 = _interopRequireDefault(require("@babel/runtime/helpers/
 
 var _sequelize = require("sequelize");
 
-var _canvas = require("canvas");
-
 var _discord = require("discord.js");
 
 var _models = _interopRequireDefault(require("../models"));
@@ -393,7 +391,7 @@ var discordBattle = /*#__PURE__*/function () {
                                               previousUserState = JSON.parse(previousUserState);
 
                                               if (!interaction.isButton()) {
-                                                _context5.next = 82;
+                                                _context5.next = 88;
                                                 break;
                                               }
 
@@ -448,7 +446,7 @@ var discordBattle = /*#__PURE__*/function () {
                                               }
 
                                               if (battle.complete) {
-                                                _context5.next = 40;
+                                                _context5.next = 42;
                                                 break;
                                               }
 
@@ -464,29 +462,34 @@ var discordBattle = /*#__PURE__*/function () {
                                               monsterInfo = _yield$processBattleM2[3];
 
                                               if (!battle.complete) {
-                                                _context5.next = 40;
+                                                _context5.next = 42;
                                                 break;
                                               }
 
-                                              _context5.next = 39;
+                                              console.log('jajaja');
+                                              console.log(battle.monsters[0].exp);
+                                              _context5.next = 41;
                                               return (0, _experience.gainExp)(discordClient, userCurrentCharacter.user.user_id, battle.monsters[0].exp, 'battle', t);
 
-                                            case 39:
+                                            case 41:
                                               newExp = _context5.sent;
 
-                                            case 40:
+                                            case 42:
+                                              console.log('before render gif');
+
                                               if (!battle.complete) {
-                                                _context5.next = 55;
+                                                _context5.next = 60;
                                                 break;
                                               }
 
+                                              console.log('complete battle');
                                               _context5.t5 = interaction;
                                               _context5.t6 = [];
                                               _context5.t7 = _discord.MessageAttachment;
-                                              _context5.next = 46;
-                                              return (0, _battle.renderBattleGif)(userCurrentCharacter, userCurrentSelectedSkills, battle, monsterInfo, userInfo);
+                                              _context5.next = 50;
+                                              return (0, _battle.renderBattleGif)(userCurrentCharacter, userCurrentSelectedSkills, battle, previousBattleState, previousUserState, monsterInfo, userInfo);
 
-                                            case 46:
+                                            case 50:
                                               _context5.t8 = _context5.sent;
                                               _context5.t9 = new _context5.t7(_context5.t8, 'battle.gif');
                                               _context5.t10 = [_context5.t9];
@@ -496,34 +499,36 @@ var discordBattle = /*#__PURE__*/function () {
                                                 files: _context5.t10,
                                                 components: _context5.t11
                                               };
-                                              _context5.next = 53;
+                                              _context5.next = 57;
                                               return _context5.t5.editReply.call(_context5.t5, _context5.t12);
 
-                                            case 53:
-                                              _context5.next = 79;
+                                            case 57:
+                                              console.log('after complete battle');
+                                              _context5.next = 85;
                                               break;
 
-                                            case 55:
+                                            case 60:
+                                              console.log('uncomplete battle');
                                               _context5.t13 = interaction;
                                               _context5.t14 = [];
                                               _context5.t15 = _discord.MessageAttachment;
-                                              _context5.next = 60;
+                                              _context5.next = 66;
                                               return (0, _battle.renderBattleGif)(userCurrentCharacter, userCurrentSelectedSkills, battle, previousBattleState, previousUserState, monsterInfo, userInfo);
 
-                                            case 60:
+                                            case 66:
                                               _context5.t16 = _context5.sent;
                                               _context5.t17 = new _context5.t15(_context5.t16, 'battle.gif');
                                               _context5.t18 = [_context5.t17];
                                               _context5.t19 = _discord.MessageActionRow;
-                                              _context5.next = 66;
+                                              _context5.next = 72;
                                               return generateMainSkillButton(userCurrentSelectedSkills.selectedMainSkill);
 
-                                            case 66:
+                                            case 72:
                                               _context5.t20 = _context5.sent;
-                                              _context5.next = 69;
+                                              _context5.next = 75;
                                               return generateSecondarySkillButton(userCurrentSelectedSkills.selectedSecondarySkill);
 
-                                            case 69:
+                                            case 75:
                                               _context5.t21 = _context5.sent;
                                               _context5.t22 = [_context5.t20, _context5.t21];
                                               _context5.t23 = {
@@ -550,10 +555,10 @@ var discordBattle = /*#__PURE__*/function () {
                                                 files: _context5.t18,
                                                 components: _context5.t27
                                               };
-                                              _context5.next = 79;
+                                              _context5.next = 85;
                                               return _context5.t13.editReply.call(_context5.t13, _context5.t28);
 
-                                            case 79:
+                                            case 85:
                                               if (userCurrentCharacter.condition.life < 1) {
                                                 setTimeout( /*#__PURE__*/(0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee3() {
                                                   return _regenerator["default"].wrap(function _callee3$(_context3) {
@@ -585,6 +590,8 @@ var discordBattle = /*#__PURE__*/function () {
                                               }
 
                                               if (battle.complete) {
+                                                console.log(battle.monsters[0].exp);
+                                                console.log('nenenen');
                                                 setTimeout( /*#__PURE__*/(0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee4() {
                                                   return _regenerator["default"].wrap(function _callee4$(_context4) {
                                                     while (1) {
@@ -616,84 +623,84 @@ var discordBattle = /*#__PURE__*/function () {
 
                                               return _context5.abrupt("return");
 
-                                            case 82:
+                                            case 88:
                                               if (!interaction.isSelectMenu()) {
-                                                _context5.next = 123;
+                                                _context5.next = 129;
                                                 break;
                                               }
 
                                               if (!(interaction.customId === 'select-mainSkill')) {
-                                                _context5.next = 91;
+                                                _context5.next = 97;
                                                 break;
                                               }
 
-                                              _context5.next = 86;
+                                              _context5.next = 92;
                                               return interaction.deferUpdate();
 
-                                            case 86:
+                                            case 92:
                                               if (!interaction.values[0].startsWith('mainSkill:')) {
-                                                _context5.next = 91;
+                                                _context5.next = 97;
                                                 break;
                                               }
 
                                               skillId = Number(interaction.values[0].replace('mainSkill:', ''));
-                                              _context5.next = 90;
+                                              _context5.next = 96;
                                               return (0, _updateSelectedSkills.updateUserCurrentSelectedSkills)(userId, // Discord User id
                                               skillId, // mainSkill
                                               false, // secondary skill
                                               t // t, transaction
                                               );
 
-                                            case 90:
+                                            case 96:
                                               userCurrentSelectedSkills = _context5.sent;
 
-                                            case 91:
+                                            case 97:
                                               if (!(interaction.customId === 'select-secondarySkill')) {
-                                                _context5.next = 99;
+                                                _context5.next = 105;
                                                 break;
                                               }
 
-                                              _context5.next = 94;
+                                              _context5.next = 100;
                                               return interaction.deferUpdate();
 
-                                            case 94:
+                                            case 100:
                                               if (!interaction.values[0].startsWith('secondarySkill:')) {
-                                                _context5.next = 99;
+                                                _context5.next = 105;
                                                 break;
                                               }
 
                                               skillId = Number(interaction.values[0].replace('secondarySkill:', ''));
-                                              _context5.next = 98;
+                                              _context5.next = 104;
                                               return (0, _updateSelectedSkills.updateUserCurrentSelectedSkills)(userId, // Discord User id
                                               false, // mainSkill
                                               skillId, // secondary skill
                                               t // t, transaction
                                               );
 
-                                            case 98:
+                                            case 104:
                                               userCurrentSelectedSkills = _context5.sent;
 
-                                            case 99:
+                                            case 105:
                                               _context5.t29 = interaction;
                                               _context5.t30 = [];
                                               _context5.t31 = _discord.MessageAttachment;
-                                              _context5.next = 104;
+                                              _context5.next = 110;
                                               return (0, _initBattle.renderInitBattleGif)(userCurrentCharacter, userCurrentSelectedSkills, battle, previousBattleState, previousUserState, monsterInfo, userInfo);
 
-                                            case 104:
+                                            case 110:
                                               _context5.t32 = _context5.sent;
                                               _context5.t33 = new _context5.t31(_context5.t32, 'battle.gif');
                                               _context5.t34 = [_context5.t33];
                                               _context5.t35 = _discord.MessageActionRow;
-                                              _context5.next = 110;
+                                              _context5.next = 116;
                                               return generateMainSkillButton(userCurrentSelectedSkills.selectedMainSkill);
 
-                                            case 110:
+                                            case 116:
                                               _context5.t36 = _context5.sent;
-                                              _context5.next = 113;
+                                              _context5.next = 119;
                                               return generateSecondarySkillButton(userCurrentSelectedSkills.selectedSecondarySkill);
 
-                                            case 113:
+                                            case 119:
                                               _context5.t37 = _context5.sent;
                                               _context5.t38 = [_context5.t36, _context5.t37];
                                               _context5.t39 = {
@@ -720,10 +727,10 @@ var discordBattle = /*#__PURE__*/function () {
                                                 files: _context5.t34,
                                                 components: _context5.t43
                                               };
-                                              _context5.next = 123;
+                                              _context5.next = 129;
                                               return _context5.t29.editReply.call(_context5.t29, _context5.t44);
 
-                                            case 123:
+                                            case 129:
                                             case "end":
                                               return _context5.stop();
                                           }

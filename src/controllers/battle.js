@@ -1,14 +1,7 @@
 /* eslint-disable import/prefer-default-export */
 import {
-  Sequelize,
   Transaction,
-  Op,
 } from "sequelize";
-import {
-  createCanvas,
-  loadImage,
-  registerFont,
-} from 'canvas';
 import {
   MessageActionRow,
   MessageButton,
@@ -315,6 +308,8 @@ export const discordBattle = async (
               t,
             );
             if (battle.complete) {
+              console.log('jajaja');
+              console.log(battle.monsters[0].exp);
               const newExp = await gainExp(
                 discordClient,
                 userCurrentCharacter.user.user_id,
@@ -324,7 +319,9 @@ export const discordBattle = async (
               );
             }
           }
+          console.log('before render gif');
           if (battle.complete) {
+            console.log('complete battle');
             await interaction.editReply({
               embeds: [],
               files: [
@@ -333,6 +330,8 @@ export const discordBattle = async (
                     userCurrentCharacter,
                     userCurrentSelectedSkills,
                     battle,
+                    previousBattleState,
+                    previousUserState,
                     monsterInfo,
                     userInfo,
                   ),
@@ -341,7 +340,9 @@ export const discordBattle = async (
               ],
               components: [],
             });
+            console.log('after complete battle');
           } else {
+            console.log('uncomplete battle');
             await interaction.editReply({
               embeds: [],
               files: [
@@ -404,6 +405,8 @@ export const discordBattle = async (
             }, 5000);
           }
           if (battle.complete) {
+            console.log(battle.monsters[0].exp);
+            console.log('nenenen');
             setTimeout(async () => {
               await interaction.editReply({
                 files: [

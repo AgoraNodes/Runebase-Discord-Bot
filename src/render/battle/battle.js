@@ -1,17 +1,11 @@
 import {
-  Sequelize,
-  Transaction,
-  Op,
-} from "sequelize";
-import {
   createCanvas,
   loadImage,
   registerFont,
 } from 'canvas';
 import path from 'path';
-// import db from '../models';
-import GIFEncoder from 'gif-encoder-2';
-import { calculateCharacterStats } from '../../helpers/stats/calculateCharacterStats';
+import GIF from 'gif.node';
+// import { calculateCharacterStats } from '../../helpers/stats/calculateCharacterStats';
 import { renderHpOrb } from '../orbs/hp';
 import { renderMpOrb } from '../orbs/mp';
 import { drawBattleScreenTools } from './tools';
@@ -205,41 +199,15 @@ export const renderBattleGif = async (
   const canvas = createCanvas(450, 200);
   const ctx = canvas.getContext('2d');
 
-  const encoder = new GIFEncoder(450, 200);
-  encoder.setDelay(200);
-  encoder.setRepeat(-1);
-  encoder.setQuality(30);
-  encoder.start();
-  // frame 1
-  const slice = 200 / 5; // this is the width of each rectangle
-  await background(
-    ctx,
-    'den',
-  );
+  const gif = new GIF({
+    worker: 8,
+    quality: 50,
+    debug: false,
+    width: 450,
+    height: 200,
+    repeat: -1,
+  });
 
-  drawPlayer(
-    ctx,
-    false,
-  );
-  drawEnemy(
-    ctx,
-    previousBattleState.monsters[0],
-    enemyFrame,
-  );
-  drawBattleScreenTools(
-    ctx,
-    mainSkill,
-    secondarySkill,
-    hpOrbImagePrevious,
-    mpOrbImagePrevious,
-  );
-  drawBattleLog(
-    ctx,
-    battle,
-  );
-  encoder.addFrame(ctx);
-
-  // frame 2
   await background(
     ctx,
     'den',
@@ -264,34 +232,9 @@ export const renderBattleGif = async (
     ctx,
     battle,
   );
-  encoder.addFrame(ctx);
-
-  // frame 3
-  await background(
-    ctx,
-    'den',
-  );
-  drawPlayer(
-    ctx,
-    false,
-  );
-  drawEnemy(
-    ctx,
-    previousBattleState.monsters[0],
-    enemyFrame,
-  );
-  drawBattleScreenTools(
-    ctx,
-    mainSkill,
-    secondarySkill,
-    hpOrbImagePrevious,
-    mpOrbImagePrevious,
-  );
-  drawBattleLog(
-    ctx,
-    battle,
-  );
-  encoder.addFrame(ctx);
+  gif.addFrame(ctx.getImageData(0, 0, canvas.width, canvas.height), {
+    delay: 600,
+  });
 
   // frame 4
   await background(
@@ -321,7 +264,9 @@ export const renderBattleGif = async (
   ctx.lineWidth = 1;
   ctx.font = 'bold 13px "HeartWarming"';
   ctx.strokeText(userInfo.attackDamage, 193, 38, 50);
-  encoder.addFrame(ctx);
+  gif.addFrame(ctx.getImageData(0, 0, canvas.width, canvas.height), {
+    delay: 200,
+  });
 
   // frame 5
   await background(
@@ -351,37 +296,9 @@ export const renderBattleGif = async (
   ctx.lineWidth = 1;
   ctx.font = 'bold 13px "HeartWarming"';
   ctx.strokeText(userInfo.attackDamage, 193, 38, 50);
-  encoder.addFrame(ctx);
-
-  // frame 6
-  await background(
-    ctx,
-    'den',
-  );
-  drawPlayer(
-    ctx,
-    false,
-  );
-  drawEnemy(
-    ctx,
-    battle.monsters[0],
-    enemyFrame,
-  );
-  drawBattleScreenTools(
-    ctx,
-    mainSkill,
-    secondarySkill,
-    hpOrbImagePrevious,
-    mpOrbImage,
-  );
-  drawBattleLog(
-    ctx,
-    battle,
-  );
-  ctx.lineWidth = 1;
-  ctx.font = 'bold 13px "HeartWarming"';
-  ctx.strokeText(userInfo.attackDamage, 193, 38, 50);
-  encoder.addFrame(ctx);
+  gif.addFrame(ctx.getImageData(0, 0, canvas.width, canvas.height), {
+    delay: 200,
+  });
 
   // frame 7
   await background(
@@ -411,36 +328,11 @@ export const renderBattleGif = async (
   ctx.lineWidth = 1;
   ctx.font = 'bold 13px "HeartWarming"';
   ctx.strokeText(userInfo.attackDamage, 193, 38, 50);
-  encoder.addFrame(ctx);
-
+  // encoder.addFrame(ctx);
+  gif.addFrame(ctx.getImageData(0, 0, canvas.width, canvas.height), {
+    delay: 400,
+  });
   if (monsterInfo.alive) {
-    // frame 8
-    await background(
-      ctx,
-      'den',
-    );
-    drawPlayer(
-      ctx,
-      false,
-    );
-    drawEnemy(
-      ctx,
-      battle.monsters[0],
-      enemyFrame,
-    );
-    drawBattleScreenTools(
-      ctx,
-      mainSkill,
-      secondarySkill,
-      hpOrbImagePrevious,
-      mpOrbImage,
-    );
-    drawBattleLog(
-      ctx,
-      battle,
-    );
-    encoder.addFrame(ctx);
-
     // frame 9
     await background(
       ctx,
@@ -466,8 +358,10 @@ export const renderBattleGif = async (
       ctx,
       battle,
     );
-    encoder.addFrame(ctx);
-
+    // encoder.addFrame(ctx);
+    gif.addFrame(ctx.getImageData(0, 0, canvas.width, canvas.height), {
+      delay: 400,
+    });
     // frame 6
     await background(
       ctx,
@@ -497,8 +391,10 @@ export const renderBattleGif = async (
     ctx.lineWidth = 1;
     ctx.font = 'bold 13px "HeartWarming"';
     ctx.strokeText(monsterInfo.attackDamage, 80, 45, 50);
-    encoder.addFrame(ctx);
-
+    // encoder.addFrame(ctx);
+    gif.addFrame(ctx.getImageData(0, 0, canvas.width, canvas.height), {
+      delay: 200,
+    });
     // frame 6
     await background(
       ctx,
@@ -529,8 +425,10 @@ export const renderBattleGif = async (
     ctx.lineWidth = 1;
     ctx.font = 'bold 13px "HeartWarming"';
     ctx.strokeText(monsterInfo.attackDamage, 80, 45, 50);
-    encoder.addFrame(ctx);
-
+    // encoder.addFrame(ctx);
+    gif.addFrame(ctx.getImageData(0, 0, canvas.width, canvas.height), {
+      delay: 200,
+    });
     // frame 6
     await background(
       ctx,
@@ -561,8 +459,10 @@ export const renderBattleGif = async (
     ctx.lineWidth = 1;
     ctx.font = 'bold 13px "HeartWarming"';
     ctx.strokeText(monsterInfo.attackDamage, 80, 45, 50);
-    encoder.addFrame(ctx);
-
+    // encoder.addFrame(ctx);
+    gif.addFrame(ctx.getImageData(0, 0, canvas.width, canvas.height), {
+      delay: 200,
+    });
     // frame 6
     await background(
       ctx,
@@ -588,10 +488,14 @@ export const renderBattleGif = async (
       ctx,
       battle,
     );
-    encoder.addFrame(ctx);
+    // encoder.addFrame(ctx);
+    gif.addFrame(ctx.getImageData(0, 0, canvas.width, canvas.height), {
+      delay: 200,
+    });
   }
-
-  encoder.finish();
-  const finalImage = await encoder.out.getData();
+  await gif.render();
+  const finalImage = await new Promise((resolve, reject) => {
+    gif.on('finished', resolve);
+  });
   return finalImage;
 };
