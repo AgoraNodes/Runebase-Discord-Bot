@@ -40,6 +40,7 @@ export const renderPickClassImage = async (
   classes,
   user,
 ) => {
+  await registerFont(path.join(__dirname, '../../assets/fonts/', 'Heart_warming.otf'), { family: 'HeartWarming' });
   const current = classes.slice(start, start + 1);
   const canvas = createCanvas(1400, 1050);
   const ctx = canvas.getContext('2d');
@@ -49,7 +50,7 @@ export const renderPickClassImage = async (
   // ctx.textAlign = "center";
   ctx.strokeStyle = 'black';
   ctx.lineWidth = 3;
-  const newClassImage = await loadImage(path.join(__dirname, '../assets/images/classes', `${current[0].classDescription.image}.png`));
+  const newClassImage = await loadImage(path.join(__dirname, '../../assets/images/classes', `${current[0].classDescription.image}.png`));
   ctx.drawImage(newClassImage, 0, 0, 500, 800);
   printAtWordWrap(
     ctx,

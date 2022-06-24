@@ -61,6 +61,12 @@ var renderPickClassImage = /*#__PURE__*/function () {
       while (1) {
         switch (_context.prev = _context.next) {
           case 0:
+            _context.next = 2;
+            return (0, _canvas.registerFont)(_path["default"].join(__dirname, '../../assets/fonts/', 'Heart_warming.otf'), {
+              family: 'HeartWarming'
+            });
+
+          case 2:
             current = classes.slice(start, start + 1);
             canvas = (0, _canvas.createCanvas)(1400, 1050);
             ctx = canvas.getContext('2d');
@@ -69,10 +75,10 @@ var renderPickClassImage = /*#__PURE__*/function () {
 
             ctx.strokeStyle = 'black';
             ctx.lineWidth = 3;
-            _context.next = 9;
-            return (0, _canvas.loadImage)(_path["default"].join(__dirname, '../assets/images/classes', "".concat(current[0].classDescription.image, ".png")));
+            _context.next = 11;
+            return (0, _canvas.loadImage)(_path["default"].join(__dirname, '../../assets/images/classes', "".concat(current[0].classDescription.image, ".png")));
 
-          case 9:
+          case 11:
             newClassImage = _context.sent;
             ctx.drawImage(newClassImage, 0, 0, 500, 800);
             printAtWordWrap(ctx, current[0].classDescription.description, 500, 100, 35, 500);
@@ -112,7 +118,7 @@ var renderPickClassImage = /*#__PURE__*/function () {
             ctx.fillText("".concat(user.username, " is picking a class"), 700, 1000, 1400);
             return _context.abrupt("return", new _discord.MessageAttachment(canvas.toBuffer(), 'class.png'));
 
-          case 38:
+          case 40:
           case "end":
             return _context.stop();
         }
