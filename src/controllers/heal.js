@@ -80,9 +80,10 @@ export const discordHeal = async (
   const notEnoughBalance = new MessageEmbed()
     .setTitle('Heal')
     .setDescription(`${userCurrentCharacter.user.username}, insufficient balance`);
-  const healCompelteEmebed = new MessageEmbed()
+  const healCompleteEmebed = new MessageEmbed()
     .setTitle('Heal')
-    .setDescription(`${userCurrentCharacter.user.username}, you have been healed`);
+    .setDescription(`💋 Freyja has kissed <@${userCurrentCharacter.user.user_id}>. 💋
+<@${userCurrentCharacter.user.user_id}> is now Healed!`);
 
   const embedMessage = await discordChannel.send({
     embeds: [
@@ -174,8 +175,9 @@ export const discordHeal = async (
               transaction: t,
             });
             await interaction.editReply({
+              content: `<@${userCurrentCharacter.user.user_id}>`,
               embeds: [
-                healCompelteEmebed,
+                healCompleteEmebed,
               ],
               components: [
               ],

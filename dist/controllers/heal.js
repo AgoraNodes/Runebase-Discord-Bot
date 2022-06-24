@@ -49,7 +49,7 @@ function randomIntFromInterval(min, max) {
 
 var discordHeal = /*#__PURE__*/function () {
   var _ref = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee7(discordClient, message, io, queue) {
-    var activity, userId, discordChannel, userCurrentCharacter, userCurrentSelectedSkills, generateAcceptHealButton, generateDeclineHealButton, confirmationEmbed, declineHealEmbed, notEnoughBalance, healCompelteEmebed, embedMessage, collector;
+    var activity, userId, discordChannel, userCurrentCharacter, userCurrentSelectedSkills, generateAcceptHealButton, generateDeclineHealButton, confirmationEmbed, declineHealEmbed, notEnoughBalance, healCompleteEmebed, embedMessage, collector;
     return _regenerator["default"].wrap(function _callee7$(_context7) {
       while (1) {
         switch (_context7.prev = _context7.next) {
@@ -133,7 +133,7 @@ var discordHeal = /*#__PURE__*/function () {
             confirmationEmbed = new _discord.MessageEmbed().setTitle('Heal').setDescription('Healing costs 0.1 RUNES, Are you sure you want to heal?');
             declineHealEmbed = new _discord.MessageEmbed().setTitle('Heal').setDescription("".concat(userCurrentCharacter.user.username, " declined heal"));
             notEnoughBalance = new _discord.MessageEmbed().setTitle('Heal').setDescription("".concat(userCurrentCharacter.user.username, ", insufficient balance"));
-            healCompelteEmebed = new _discord.MessageEmbed().setTitle('Heal').setDescription("".concat(userCurrentCharacter.user.username, ", you have been healed"));
+            healCompleteEmebed = new _discord.MessageEmbed().setTitle('Heal').setDescription("\uD83D\uDC8B Freyja has kissed <@".concat(userCurrentCharacter.user.user_id, ">. \uD83D\uDC8B\n<@").concat(userCurrentCharacter.user.user_id, "> is now Healed!"));
             _context7.t0 = discordChannel;
             _context7.t1 = [confirmationEmbed];
             _context7.t2 = _discord.MessageActionRow;
@@ -289,7 +289,8 @@ var discordHeal = /*#__PURE__*/function () {
                                             case 14:
                                               _context3.next = 16;
                                               return interaction.editReply({
-                                                embeds: [healCompelteEmebed],
+                                                content: "<@".concat(userCurrentCharacter.user.user_id, ">"),
+                                                embeds: [healCompleteEmebed],
                                                 components: []
                                               });
 
