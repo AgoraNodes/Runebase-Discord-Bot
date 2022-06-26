@@ -59,8 +59,20 @@ export const calculateCharacterStats = async (
 
   const attackTwoAr = currentCharacter.user.currentClass.attackRating + (currentCharacter.stats.dexterity * 5);
 
-  const block = 0;
+  console.log(currentCharacter.equipment.offHand.itemBase.itemFamily.itemType.name);
+  console.log('shield?');
+  let block = 0;
   let defense = 0;
+  if (
+    currentCharacter.equipment.offHand
+    && currentCharacter.equipment.offHand.itemBase.itemFamily.itemType.name === 'Shields'
+  ) {
+    const shieldBlock = currentCharacter.equipment.offHand.itemBase.block;
+    const blocking = (shieldBlock * (dexterity - 15)) / (currentCharacter.user.ranks[0].id * 2);
+    block = blocking > 50 ? 50 : blocking;
+    console.log(block);
+  }
+  console.log('block amount');
 
   const maxHp = currentCharacter.user.currentClass.life + currentCharacter.stats.life;
   const currentHp = currentCharacter.condition.life;
@@ -109,7 +121,7 @@ export const calculateCharacterStats = async (
       max: maxStamina,
     },
     defense,
-    block: 0,
+    block,
     hp: {
       current: currentHp,
       max: maxHp,

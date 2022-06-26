@@ -18,7 +18,9 @@ export const processBattleMove = async (
   const userUsedMove = "Attack";
   const {
     attackOne,
-  } = await calculateCharacterStats(userCurrentCharacter);
+  } = await calculateCharacterStats(
+    userCurrentCharacter,
+  );
   const randomAttackDamage = randomIntFromInterval(attackOne.min, attackOne.max);
   const randomMonsterAttackDamage = randomIntFromInterval(battle.monsters[0].minDamage, battle.monsters[0].maxDamage);
   const updatedMonster = await battle.monsters[0].BattleMonster.update({

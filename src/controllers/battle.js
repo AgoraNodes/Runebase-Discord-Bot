@@ -276,6 +276,7 @@ export const discordBattle = async (
           });
           if (userCurrentCharacter.condition.life < 1) {
             await interaction.editReply({
+              embeds: [],
               files: [
                 await renderUserDied(
                   userCurrentCharacter,
@@ -308,8 +309,6 @@ export const discordBattle = async (
               t,
             );
             if (battle.complete) {
-              console.log('jajaja');
-              console.log(battle.monsters[0].exp);
               const newExp = await gainExp(
                 discordClient,
                 userCurrentCharacter.user.user_id,
@@ -319,9 +318,7 @@ export const discordBattle = async (
               );
             }
           }
-          console.log('before render gif');
           if (battle.complete) {
-            console.log('complete battle');
             await interaction.editReply({
               embeds: [],
               files: [
@@ -340,9 +337,7 @@ export const discordBattle = async (
               ],
               components: [],
             });
-            console.log('after complete battle');
           } else {
-            console.log('uncomplete battle');
             await interaction.editReply({
               embeds: [],
               files: [
@@ -395,6 +390,7 @@ export const discordBattle = async (
           if (userCurrentCharacter.condition.life < 1) {
             setTimeout(async () => {
               await interaction.editReply({
+                embeds: [],
                 files: [
                   await renderUserDied(
                     userCurrentCharacter,
@@ -405,10 +401,9 @@ export const discordBattle = async (
             }, 5000);
           }
           if (battle.complete) {
-            console.log(battle.monsters[0].exp);
-            console.log('nenenen');
             setTimeout(async () => {
               await interaction.editReply({
+                embeds: [],
                 files: [
                   await renderBattleComplete(
                     userCurrentCharacter,

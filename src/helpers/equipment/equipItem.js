@@ -73,10 +73,46 @@ export const equipItem = async (
               {
                 model: db.item,
                 as: 'mainHand',
+                include: [
+                  {
+                    model: db.itemBase,
+                    as: 'itemBase',
+                    include: [
+                      {
+                        model: db.itemFamily,
+                        as: 'itemFamily',
+                        include: [
+                          {
+                            model: db.itemType,
+                            as: 'itemType',
+                          },
+                        ],
+                      },
+                    ],
+                  },
+                ],
               },
               {
                 model: db.item,
                 as: 'offHand',
+                include: [
+                  {
+                    model: db.itemBase,
+                    as: 'itemBase',
+                    include: [
+                      {
+                        model: db.itemFamily,
+                        as: 'itemFamily',
+                        include: [
+                          {
+                            model: db.itemType,
+                            as: 'itemType',
+                          },
+                        ],
+                      },
+                    ],
+                  },
+                ],
               },
               {
                 model: db.item,
@@ -170,26 +206,6 @@ export const equipItem = async (
         return;
       }
       console.log(userCurrentCharacter.user.currentClass.name);
-      console.log(userCurrentCharacter.user.currentClass.name);
-      console.log(userCurrentCharacter.user.currentClass.name);
-      console.log(userCurrentCharacter.user.currentClass.name);
-      console.log(userCurrentCharacter.user.currentClass.name);
-      console.log(userCurrentCharacter.user.currentClass.name);
-      console.log(userCurrentCharacter.user.currentClass.name);
-      console.log(userCurrentCharacter.user.currentClass.name);
-      console.log(userCurrentCharacter.user.currentClass.name);
-      console.log(userCurrentCharacter.user.currentClass.name);
-      console.log(userCurrentCharacter.user.currentClass.name);
-      console.log(userCurrentCharacter.user.currentClass.name);
-      console.log(userCurrentCharacter.user.currentClass.name);
-      console.log(userCurrentCharacter.user.currentClass.name);
-      console.log(userCurrentCharacter.user.currentClass.name);
-      console.log(userCurrentCharacter.user.currentClass.name);
-      console.log(userCurrentCharacter.user.currentClass.name);
-      console.log(userCurrentCharacter.user.currentClass.name);
-      console.log(userCurrentCharacter.user.currentClass.name);
-      console.log(userCurrentCharacter.user.currentClass.name);
-      console.log('userCurrentCharacter.user.currentClass.name');
 
       if (
         (
