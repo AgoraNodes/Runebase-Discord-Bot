@@ -64,16 +64,13 @@ var _updatePrice = require("./helpers/price/updatePrice");
 
 var _updateConversionRates = require("./helpers/price/updateConversionRates");
 
+var _replenishEveryonesStamina = require("./helpers/replenishEveryonesStamina");
+
 var _processWithdrawals = require("./services/processWithdrawals");
 
 var _settings = _interopRequireDefault(require("./config/settings"));
 
-function _createForOfIteratorHelper(o, allowArrayLike) { var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"]; if (!it) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = it.call(o); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it["return"] != null) it["return"](); } finally { if (didErr) throw err; } } }; }
-
-function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
-
-function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
-
+/* eslint-disable import/first */
 Object.freeze(Object.prototype);
 (0, _dotenv.config)();
 
@@ -104,7 +101,7 @@ var conditionalCSRF = function conditionalCSRF(req, res, next) {
 };
 
 (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee4() {
-  var queue, port, app, server, io, RedisStore, redisClient, sessionMiddleware, wrap, sockets, discordClient, replenishEveryonesStamina, schedulePatchDeposits, scheduleUpdateConversionRatesFiat, scheduleUpdateConversionRatesCrypto, schedulePriceUpdate, scheduleWithdrawal;
+  var queue, port, app, server, io, RedisStore, redisClient, sessionMiddleware, wrap, sockets, discordClient, replenishStamina, schedulePatchDeposits, scheduleUpdateConversionRatesFiat, scheduleUpdateConversionRatesCrypto, schedulePriceUpdate, scheduleWithdrawal;
   return _regenerator["default"].wrap(function _callee4$(_context4) {
     while (1) {
       switch (_context4.prev = _context4.next) {
@@ -250,82 +247,25 @@ var conditionalCSRF = function conditionalCSRF(req, res, next) {
         case 45:
           console.log(new Date());
           console.log('date now');
-          replenishEveryonesStamina = _nodeSchedule["default"].scheduleJob('05 03 * * *', /*#__PURE__*/(0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee2() {
-            var allUserCharacters, _iterator, _step, userChar;
+          _context4.next = 49;
+          return (0, _replenishEveryonesStamina.replenishEveryonesStamina)();
 
+        case 49:
+          replenishStamina = _nodeSchedule["default"].scheduleJob('05 03 * * *', /*#__PURE__*/(0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee2() {
             return _regenerator["default"].wrap(function _callee2$(_context2) {
               while (1) {
                 switch (_context2.prev = _context2.next) {
                   case 0:
                     console.log('node executed');
                     _context2.next = 3;
-                    return _models["default"].UserClass.findAll({
-                      include: [{
-                        model: _models["default"]["class"],
-                        as: 'class'
-                      }, {
-                        model: _models["default"].stats,
-                        as: 'stats'
-                      }, {
-                        model: _models["default"].condition,
-                        as: 'condition'
-                      }]
-                    });
+                    return (0, _replenishEveryonesStamina.replenishEveryonesStamina)();
 
                   case 3:
-                    allUserCharacters = _context2.sent;
-                    // eslint-disable-next-line no-restricted-syntax
-                    _iterator = _createForOfIteratorHelper(allUserCharacters);
-                    _context2.prev = 5;
-
-                    _iterator.s();
-
-                  case 7:
-                    if ((_step = _iterator.n()).done) {
-                      _context2.next = 15;
-                      break;
-                    }
-
-                    userChar = _step.value;
-                    console.log(userChar.condition);
-
-                    if (!(userChar["class"].stamina + userChar.stats.stamina > userChar.condition.stamina)) {
-                      _context2.next = 13;
-                      break;
-                    }
-
-                    _context2.next = 13;
-                    return userChar.condition.update({
-                      stamina: userChar["class"].stamina + userChar.stats.stamina
-                    });
-
-                  case 13:
-                    _context2.next = 7;
-                    break;
-
-                  case 15:
-                    _context2.next = 20;
-                    break;
-
-                  case 17:
-                    _context2.prev = 17;
-                    _context2.t0 = _context2["catch"](5);
-
-                    _iterator.e(_context2.t0);
-
-                  case 20:
-                    _context2.prev = 20;
-
-                    _iterator.f();
-
-                    return _context2.finish(20);
-
-                  case 23:
                   case "end":
                     return _context2.stop();
                 }
               }
-            }, _callee2, null, [[5, 17, 20, 23]]);
+            }, _callee2);
           })));
           schedulePatchDeposits = _nodeSchedule["default"].scheduleJob('10 */1 * * *', function () {
             (0, _patcher.patchRunebaseDeposits)(discordClient);
@@ -379,7 +319,7 @@ var conditionalCSRF = function conditionalCSRF(req, res, next) {
           server.listen(port);
           console.log('server listening on:', port);
 
-        case 58:
+        case 60:
         case "end":
           return _context4.stop();
       }

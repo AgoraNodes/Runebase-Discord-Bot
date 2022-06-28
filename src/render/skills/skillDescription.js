@@ -44,8 +44,8 @@ export const renderSkillDescriptionImage = async (
   skillTreeIndex,
   selectedSkill,
 ) => {
-  const skillTreeMenuImage = await loadImage(path.join(__dirname, `../assets/images/skilltree/`, `skillTreeMenu.png`));
-  const skillTreeImage = await loadImage(path.join(__dirname, `../assets/images/skilltree/`, `skilltree${skillTreeIndex}.png`));
+  const skillTreeMenuImage = await loadImage(path.join(__dirname, `../../assets/images/skilltree/`, `skillTreeMenu.png`));
+  const skillTreeImage = await loadImage(path.join(__dirname, `../../assets/images/skilltree/`, `skilltree${skillTreeIndex}.png`));
   const canvas = createCanvas(
     345,
     457,

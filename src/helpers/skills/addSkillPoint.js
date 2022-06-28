@@ -47,7 +47,11 @@ export const addSkillPoint = async (
         failAddSkillReason = 'Unable to add skills, user has no rank!';
         return;
       }
-      if (findUserRank.id >= sumOfSkills && sumOfSkills.length !== 0) {
+
+      if (
+        findUserRank.id <= Number(sumOfSkills[0].totalSpendPoints)
+        && Number(sumOfSkills[0].totalSpendPoints) !== 0
+      ) {
         failAddSkillReason = 'User already spend all of the skillpoints!';
         return;
       }

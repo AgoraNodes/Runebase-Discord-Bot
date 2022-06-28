@@ -31,6 +31,7 @@ import logger from "./helpers/logger";
 import { deployCommands } from './helpers/client/deployCommands';
 import { updatePrice } from "./helpers/price/updatePrice";
 import { updateConversionRatesFiat, updateConversionRatesCrypto } from "./helpers/price/updateConversionRates";
+import { replenishEveryonesStamina } from './helpers/replenishEveryonesStamina';
 import { processWithdrawals } from "./services/processWithdrawals";
 import settings from './config/settings';
 
@@ -238,34 +239,10 @@ const conditionalCSRF = function (
 
   console.log(new Date());
   console.log('date now');
-  const replenishEveryonesStamina = schedule.scheduleJob('05 03 * * *', async () => {
+  await replenishEveryonesStamina();
+  const replenishStamina = schedule.scheduleJob('05 03 * * *', async () => {
     console.log('node executed');
-    const allUserCharacters = await db.UserClass.findAll({
-      include: [
-        {
-          model: db.class,
-          as: 'class',
-        },
-        {
-          model: db.stats,
-          as: 'stats',
-        },
-        {
-          model: db.condition,
-          as: 'condition',
-        },
-      ],
-    });
-    // eslint-disable-next-line no-restricted-syntax
-    for (const userChar of allUserCharacters) {
-      console.log(userChar.condition);
-      if ((userChar.class.stamina + userChar.stats.stamina) > userChar.condition.stamina) {
-        // eslint-disable-next-line no-await-in-loop
-        await userChar.condition.update({
-          stamina: userChar.class.stamina + userChar.stats.stamina,
-        });
-      }
-    }
+    await replenishEveryonesStamina();
   });
 
   const schedulePatchDeposits = schedule.scheduleJob('10 */1 * * *', () => {

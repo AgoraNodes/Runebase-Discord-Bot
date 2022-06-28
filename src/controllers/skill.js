@@ -17,8 +17,9 @@ import { fetchDiscordUserIdFromMessageOrInteraction } from '../helpers/client/fe
 import { fetchDiscordChannel } from '../helpers/client/fetchDiscordChannel';
 import { addSkillPoint } from '../helpers/skills/addSkillPoint';
 
-import { renderSkillTreeImage } from "../render/skillTree";
-import { renderSkillDescriptionImage } from '../render/skillDescription';
+import { renderSkillTreeImage } from "../render/skills/skillTree";
+import { renderSkillDescriptionImage } from '../render/skills/skillDescription';
+import { renderCancelSkillPick } from '../render/skills/cancelSkillPick';
 
 export const discordSkills = async (
   discordClient,
@@ -86,9 +87,6 @@ export const discordSkills = async (
     );
     const ctx = canvas.getContext('2d');
 
-    console.log(skillTreeImage.width);
-    console.log(skillTreeImage.height);
-    console.log('---------------------');
     ctx.drawImage(
       skillTreeImage,
       0,
@@ -128,19 +126,6 @@ export const discordSkills = async (
     }
 
     return new MessageAttachment(canvas.toBuffer(), 'skillTree.png');
-  };
-
-  const generatecancelSkillPickPicked = async (start) => {
-    const canvas = createCanvas(500, 100);
-    const ctx = canvas.getContext('2d');
-
-    ctx.font = 'bold 30px "HeartWarming"';
-    ctx.fillStyle = "#ccc";
-    ctx.strokeStyle = 'black';
-    ctx.lineWidth = 3;
-    ctx.textAlign = "center";
-
-    return new MessageAttachment(canvas.toBuffer(), 'cancelSelection.png');
   };
 
   const generateCancelSkill = async () => new MessageButton({
@@ -242,9 +227,9 @@ export const discordSkills = async (
         );
       }
       if (interaction.customId === cancelSkillPickId) {
-        await interaction.update({
+        await interaction.editReply({
           files: [
-            await generatecancelSkillPickPicked(),
+            await renderCancelSkillPick(userCurrentCharacter),
           ],
           components: [],
         });

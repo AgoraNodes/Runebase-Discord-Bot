@@ -503,6 +503,36 @@ export const discordRouter = async (
           });
         }
 
+        if (commandName === 'skills') {
+          await interaction.deferReply().catch((e) => {
+            console.log(e);
+          });
+          const limited = await myRateLimiter(
+            discordClient,
+            interaction,
+            'Skills',
+          );
+          if (limited) {
+            await interaction.editReply('rate limited').catch((e) => {
+              console.log(e);
+            });
+            return;
+          }
+          const setting = await db.setting.findOne();
+          await queue.add(async () => {
+            const task = await discordSkills(
+              discordClient,
+              interaction,
+              setting,
+              io,
+              queue,
+            );
+          });
+          await interaction.editReply('\u200b').catch((e) => {
+            console.log(e);
+          });
+        }
+
         if (commandName === 'equipment') {
           await interaction.deferReply().catch((e) => {
             console.log(e);

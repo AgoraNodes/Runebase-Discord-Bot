@@ -44,8 +44,8 @@ export const renderSkillTreeImage = async (
   skillTreeIndex,
   selectedSkill,
 ) => {
-  const skillTreeMenuImage = await loadImage(path.join(__dirname, `../assets/images/skilltree/`, `skillTreeMenu.png`));
-  const skillTreeImage = await loadImage(path.join(__dirname, `../assets/images/skilltree/`, `skilltree${skillTreeIndex}.png`));
+  const skillTreeMenuImage = await loadImage(path.join(__dirname, `../../assets/images/skilltree/`, `skillTreeMenu.png`));
+  const skillTreeImage = await loadImage(path.join(__dirname, `../../assets/images/skilltree/`, `skilltree${skillTreeIndex}.png`));
   const canvas = createCanvas(
     skillTreeImage.width + 25,
     skillTreeImage.height + 25,
@@ -241,7 +241,7 @@ export const renderSkillTreeImage = async (
   ctx.strokeStyle = "black";
 
   for (let i = 0; i < skillTree.skills.length; i++) {
-    const skillIcon = await loadImage(path.join(__dirname, `../assets/images/skills/${userCharacter.user.currentClass.name}/${skillTree.name}`, `${skillTree.skills[i].name}.png`));
+    const skillIcon = await loadImage(path.join(__dirname, `../../assets/images/skills/${userCharacter.user.currentClass.name}/${skillTree.name}`, `${skillTree.skills[i].name}.png`));
     let skillImage;
     const userHasSkill = userCharacter.UserClassSkills.find((o) => o.skillId === skillTree.skills[i].id);
     let userHasPreviousSkills = true;

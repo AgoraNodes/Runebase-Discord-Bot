@@ -10,6 +10,7 @@ const commands = [
   new SlashCommandBuilder().setName('help').setDescription('DM\'s you with a help message'),
   new SlashCommandBuilder().setName('pickclass').setDescription('Select a new class'),
   new SlashCommandBuilder().setName('stats').setDescription('Select stats (attributes) for your class'),
+  new SlashCommandBuilder().setName('skills').setDescription('Skill Management'),
   new SlashCommandBuilder().setName('inventory').setDescription('Inventory Management'),
   new SlashCommandBuilder().setName('equipment').setDescription('Equipment Management'),
   new SlashCommandBuilder().setName('battle').setDescription('Battle a monster'),

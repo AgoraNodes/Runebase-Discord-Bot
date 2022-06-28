@@ -65,12 +65,12 @@ var renderSkillTreeImage = /*#__PURE__*/function () {
         switch (_context2.prev = _context2.next) {
           case 0:
             _context2.next = 2;
-            return (0, _canvas.loadImage)(_path["default"].join(__dirname, "../assets/images/skilltree/", "skillTreeMenu.png"));
+            return (0, _canvas.loadImage)(_path["default"].join(__dirname, "../../assets/images/skilltree/", "skillTreeMenu.png"));
 
           case 2:
             skillTreeMenuImage = _context2.sent;
             _context2.next = 5;
-            return (0, _canvas.loadImage)(_path["default"].join(__dirname, "../assets/images/skilltree/", "skilltree".concat(skillTreeIndex, ".png")));
+            return (0, _canvas.loadImage)(_path["default"].join(__dirname, "../../assets/images/skilltree/", "skilltree".concat(skillTreeIndex, ".png")));
 
           case 5:
             skillTreeImage = _context2.sent;
@@ -176,7 +176,7 @@ var renderSkillTreeImage = /*#__PURE__*/function () {
                   switch (_context.prev = _context.next) {
                     case 0:
                       _context.next = 2;
-                      return (0, _canvas.loadImage)(_path["default"].join(__dirname, "../assets/images/skills/".concat(userCharacter.user.currentClass.name, "/").concat(skillTree.name), "".concat(skillTree.skills[_i].name, ".png")));
+                      return (0, _canvas.loadImage)(_path["default"].join(__dirname, "../../assets/images/skills/".concat(userCharacter.user.currentClass.name, "/").concat(skillTree.name), "".concat(skillTree.skills[_i].name, ".png")));
 
                     case 2:
                       skillIcon = _context.sent;

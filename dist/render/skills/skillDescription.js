@@ -64,12 +64,12 @@ var renderSkillDescriptionImage = /*#__PURE__*/function () {
         switch (_context.prev = _context.next) {
           case 0:
             _context.next = 2;
-            return (0, _canvas.loadImage)(_path["default"].join(__dirname, "../assets/images/skilltree/", "skillTreeMenu.png"));
+            return (0, _canvas.loadImage)(_path["default"].join(__dirname, "../../assets/images/skilltree/", "skillTreeMenu.png"));
 
           case 2:
             skillTreeMenuImage = _context.sent;
             _context.next = 5;
-            return (0, _canvas.loadImage)(_path["default"].join(__dirname, "../assets/images/skilltree/", "skilltree".concat(skillTreeIndex, ".png")));
+            return (0, _canvas.loadImage)(_path["default"].join(__dirname, "../../assets/images/skilltree/", "skilltree".concat(skillTreeIndex, ".png")));
 
           case 5:
             skillTreeImage = _context.sent;
