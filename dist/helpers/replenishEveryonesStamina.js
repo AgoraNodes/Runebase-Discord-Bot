@@ -51,50 +51,55 @@ var replenishEveryonesStamina = /*#__PURE__*/function () {
 
           case 6:
             if ((_step = _iterator.n()).done) {
-              _context.next = 14;
+              _context.next = 15;
               break;
             }
 
             userChar = _step.value;
             console.log(userChar.condition);
 
-            if (!(userChar["class"].stamina + userChar.stats.stamina > userChar.condition.stamina)) {
-              _context.next = 12;
+            if (!(userChar.condition.stamina !== null)) {
+              _context.next = 13;
               break;
             }
 
-            _context.next = 12;
+            if (!(userChar["class"].stamina + userChar.stats.stamina > userChar.condition.stamina)) {
+              _context.next = 13;
+              break;
+            }
+
+            _context.next = 13;
             return userChar.condition.update({
               stamina: userChar["class"].stamina + userChar.stats.stamina
             });
 
-          case 12:
+          case 13:
             _context.next = 6;
             break;
 
-          case 14:
-            _context.next = 19;
+          case 15:
+            _context.next = 20;
             break;
 
-          case 16:
-            _context.prev = 16;
+          case 17:
+            _context.prev = 17;
             _context.t0 = _context["catch"](4);
 
             _iterator.e(_context.t0);
 
-          case 19:
-            _context.prev = 19;
+          case 20:
+            _context.prev = 20;
 
             _iterator.f();
 
-            return _context.finish(19);
+            return _context.finish(20);
 
-          case 22:
+          case 23:
           case "end":
             return _context.stop();
         }
       }
-    }, _callee, null, [[4, 16, 19, 22]]);
+    }, _callee, null, [[4, 17, 20, 23]]);
   }));
 
   return function replenishEveryonesStamina() {
