@@ -250,7 +250,7 @@ var conditionalCSRF = function conditionalCSRF(req, res, next) {
         case 45:
           console.log(new Date());
           console.log('date now');
-          replenishEveryonesStamina = _nodeSchedule["default"].scheduleJob('30 03 * * *', /*#__PURE__*/(0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee2() {
+          replenishEveryonesStamina = _nodeSchedule["default"].scheduleJob('05 03 * * *', /*#__PURE__*/(0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee2() {
             var allUserCharacters, _iterator, _step, userChar;
 
             return _regenerator["default"].wrap(function _callee2$(_context2) {

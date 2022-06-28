@@ -10,8 +10,6 @@ var calculateBarbSkillDamage = function calculateBarbSkillDamage(skillToCalculat
   var newMaxDamage = attack.max;
   var newAttackRating = attack.ar;
   var cost = 0;
-  console.log(skillToCalculate);
-  console.log(attack);
 
   if (skillToCalculate.skill.name === "Bonk") {
     newMinDamage = Math.round(newMinDamage + 1 + (skillToCalculate.points * 1 - 1));

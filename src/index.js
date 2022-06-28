@@ -238,7 +238,7 @@ const conditionalCSRF = function (
 
   console.log(new Date());
   console.log('date now');
-  const replenishEveryonesStamina = schedule.scheduleJob('30 03 * * *', async () => {
+  const replenishEveryonesStamina = schedule.scheduleJob('05 03 * * *', async () => {
     console.log('node executed');
     const allUserCharacters = await db.UserClass.findAll({
       include: [
