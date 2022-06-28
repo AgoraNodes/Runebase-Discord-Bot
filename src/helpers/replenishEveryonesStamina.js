@@ -20,10 +20,8 @@ export const replenishEveryonesStamina = async () => {
   // eslint-disable-next-line no-restricted-syntax
   for (const userChar of allUserCharacters) {
     console.log(userChar.condition);
-    if (userChar.condition.stamina !== null) {
-      if (
-        (userChar.class.stamina + userChar.stats.stamina) > userChar.condition.stamina
-      ) {
+    if (userChar.condition) {
+      if ((userChar.class.stamina + userChar.stats.stamina) > userChar.condition.stamina) {
         // eslint-disable-next-line no-await-in-loop
         await userChar.condition.update({
           stamina: userChar.class.stamina + userChar.stats.stamina,

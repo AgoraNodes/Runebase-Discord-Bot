@@ -58,7 +58,7 @@ var replenishEveryonesStamina = /*#__PURE__*/function () {
             userChar = _step.value;
             console.log(userChar.condition);
 
-            if (!(userChar.condition.stamina !== null)) {
+            if (!userChar.condition) {
               _context.next = 13;
               break;
             }
