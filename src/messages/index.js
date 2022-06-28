@@ -435,6 +435,25 @@ export const rollDiceTooFastMessage = (
   return result;
 };
 
+export const grantRoleExpMessage = (
+  userLength,
+  role,
+  amount,
+) => {
+  const result = new MessageEmbed()
+    .setColor(settings.bot.color)
+    .setTitle('Grant Exp to role')
+    .setDescription(`Congratulations!
+The ${userLength} users on the ${role} role have been granted ${amount} experience each!`)
+    .setTimestamp()
+    .setFooter({
+      text: `${settings.bot.name} v${pjson.version}`,
+      iconURL: settings.bot.logo,
+    });
+
+  return result;
+};
+
 export const gainBattleExpExpMessage = (
   userId,
   amount,

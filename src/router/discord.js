@@ -25,6 +25,7 @@ import { discordShowInventory } from '../controllers/inventory';
 import { discordShowEquipment } from '../controllers/equipment';
 import { discordBattle } from '../controllers/battle';
 import { discordHeal } from '../controllers/heal';
+import { discordGrantExp } from '../controllers/grantExp';
 
 import { discordExpTest } from '../controllers/expTest';
 import { myRateLimiter } from '../helpers/rateLimit';
@@ -1094,6 +1095,23 @@ export const discordRouter = async (
           queue,
         );
       });
+    }
+
+    if (filteredMessageDiscord[1] && filteredMessageDiscord[1].toLowerCase() === 'grantexp') {
+      console.log(message);
+      if (message && message.author && message.author.id === '217379915803131906') {
+        const setting = await db.setting.findOne();
+        await queue.add(async () => {
+          const task = await discordGrantExp(
+            discordClient,
+            message,
+            filteredMessageDiscord,
+            setting,
+            queue,
+            io,
+          );
+        });
+      }
     }
 
     // if (filteredMessageDiscord[1] && filteredMessageDiscord[1].toLowerCase() === 'account') {
