@@ -4,6 +4,8 @@ import {
   Op,
 } from "sequelize";
 import db from '../../models';
+import { calculateSkillDamage } from "../skills/calculateSkillDamage";
+import { fetchUserCurrentSelectedSkills } from "../character/selectedSkills";
 
 export const calculateCharacterStats = async (
   currentCharacter,
@@ -59,8 +61,6 @@ export const calculateCharacterStats = async (
 
   const attackTwoAr = currentCharacter.user.currentClass.attackRating + (currentCharacter.stats.dexterity * 5);
 
-  console.log(currentCharacter.equipment.offHand.itemBase.itemFamily.itemType.name);
-  console.log('shield?');
   let block = 0;
   let defense = 0;
   if (
@@ -70,9 +70,7 @@ export const calculateCharacterStats = async (
     const shieldBlock = currentCharacter.equipment.offHand.itemBase.block;
     const blocking = (shieldBlock * (dexterity - 15)) / (currentCharacter.user.ranks[0].id * 2);
     block = blocking > 50 ? 50 : blocking;
-    console.log(block);
   }
-  console.log('block amount');
 
   const maxHp = currentCharacter.user.currentClass.life + currentCharacter.stats.life;
   const currentHp = currentCharacter.condition.life;
@@ -80,8 +78,8 @@ export const calculateCharacterStats = async (
   const maxStamina = currentCharacter.user.currentClass.stamina + currentCharacter.stats.stamina;
   const currentStaminaPoints = currentCharacter.condition.stamina;
 
-  const currentMp = currentCharacter.user.currentClass.mana + currentCharacter.stats.mana;
-  const maxMp = currentCharacter.condition.mana;
+  const maxMp = currentCharacter.user.currentClass.mana + currentCharacter.stats.mana;
+  const currentMp = currentCharacter.condition.mana;
 
   defense += currentCharacter.user.currentClass.defense;
 
@@ -104,6 +102,35 @@ export const calculateCharacterStats = async (
       defense += realDefenseValue;
     }
   });
+
+  const selectedSkills = await fetchUserCurrentSelectedSkills(
+    currentCharacter.user.user_id,
+    t,
+  );
+
+  // calculate Skill damage
+  const skillOne = await calculateSkillDamage(
+    currentCharacter,
+    selectedSkills.selectedMainSkill,
+    {
+      min: attackOneMin,
+      max: attackOnemax,
+      ar: attackOneAr,
+    },
+    t,
+  );
+
+  // calculate Skill damage
+  const skillTwo = await calculateSkillDamage(
+    currentCharacter,
+    selectedSkills.selectedSecondarySkill,
+    {
+      min: attackOneMin,
+      max: attackOnemax,
+      ar: attackOneAr,
+    },
+    t,
+  );
 
   return {
     username: currentCharacter.user.username,
@@ -135,17 +162,25 @@ export const calculateCharacterStats = async (
     LR: 0,
     CR: 0,
     attackOne: {
-      name: 'Attack Damage',
+      name: skillOne.name,
+      min: skillOne.min,
+      max: skillOne.max,
+      ar: skillOne.ar,
+      cost: skillOne.cost,
+    },
+    attackTwo: {
+      name: skillTwo.name,
+      min: skillTwo.min,
+      max: skillTwo.max,
+      ar: skillTwo.ar,
+      cost: skillTwo.cost,
+    },
+    regularAttack: {
+      name: 'Attack',
       min: attackOneMin,
       max: attackOnemax,
       ar: attackOneAr,
+      cost: 0,
     },
-    attackTwo: {
-      name: 'Attack Damage',
-      min: 1,
-      max: 2,
-      ar: attackTwoAr,
-    },
-
   };
 };

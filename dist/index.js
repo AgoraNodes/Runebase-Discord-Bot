@@ -248,14 +248,17 @@ var conditionalCSRF = function conditionalCSRF(req, res, next) {
           return (0, _patcher.patchRunebaseDeposits)(discordClient);
 
         case 45:
-          replenishEveryonesStamina = _nodeSchedule["default"].scheduleJob('0 15 0 * * *', /*#__PURE__*/(0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee2() {
+          console.log(new Date());
+          console.log('date now');
+          replenishEveryonesStamina = _nodeSchedule["default"].scheduleJob('30 03 * * *', /*#__PURE__*/(0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee2() {
             var allUserCharacters, _iterator, _step, userChar;
 
             return _regenerator["default"].wrap(function _callee2$(_context2) {
               while (1) {
                 switch (_context2.prev = _context2.next) {
                   case 0:
-                    _context2.next = 2;
+                    console.log('node executed');
+                    _context2.next = 3;
                     return _models["default"].UserClass.findAll({
                       include: [{
                         model: _models["default"]["class"],
@@ -269,59 +272,60 @@ var conditionalCSRF = function conditionalCSRF(req, res, next) {
                       }]
                     });
 
-                  case 2:
+                  case 3:
                     allUserCharacters = _context2.sent;
                     // eslint-disable-next-line no-restricted-syntax
                     _iterator = _createForOfIteratorHelper(allUserCharacters);
-                    _context2.prev = 4;
+                    _context2.prev = 5;
 
                     _iterator.s();
 
-                  case 6:
+                  case 7:
                     if ((_step = _iterator.n()).done) {
-                      _context2.next = 13;
+                      _context2.next = 15;
                       break;
                     }
 
                     userChar = _step.value;
+                    console.log(userChar.condition);
 
                     if (!(userChar["class"].stamina + userChar.stats.stamina > userChar.condition.stamina)) {
-                      _context2.next = 11;
+                      _context2.next = 13;
                       break;
                     }
 
-                    _context2.next = 11;
+                    _context2.next = 13;
                     return userChar.condition.update({
                       stamina: userChar["class"].stamina + userChar.stats.stamina
                     });
 
-                  case 11:
-                    _context2.next = 6;
-                    break;
-
                   case 13:
-                    _context2.next = 18;
+                    _context2.next = 7;
                     break;
 
                   case 15:
-                    _context2.prev = 15;
-                    _context2.t0 = _context2["catch"](4);
+                    _context2.next = 20;
+                    break;
+
+                  case 17:
+                    _context2.prev = 17;
+                    _context2.t0 = _context2["catch"](5);
 
                     _iterator.e(_context2.t0);
 
-                  case 18:
-                    _context2.prev = 18;
+                  case 20:
+                    _context2.prev = 20;
 
                     _iterator.f();
 
-                    return _context2.finish(18);
+                    return _context2.finish(20);
 
-                  case 21:
+                  case 23:
                   case "end":
                     return _context2.stop();
                 }
               }
-            }, _callee2, null, [[4, 15, 18, 21]]);
+            }, _callee2, null, [[5, 17, 20, 23]]);
           })));
           schedulePatchDeposits = _nodeSchedule["default"].scheduleJob('10 */1 * * *', function () {
             (0, _patcher.patchRunebaseDeposits)(discordClient);
@@ -375,7 +379,7 @@ var conditionalCSRF = function conditionalCSRF(req, res, next) {
           server.listen(port);
           console.log('server listening on:', port);
 
-        case 56:
+        case 58:
         case "end":
           return _context4.stop();
       }

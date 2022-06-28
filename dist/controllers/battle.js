@@ -377,7 +377,7 @@ var discordBattle = /*#__PURE__*/function () {
                                     isolationLevel: _sequelize.Transaction.ISOLATION_LEVELS.SERIALIZABLE
                                   }, /*#__PURE__*/function () {
                                     var _ref7 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee5(t) {
-                                      var attackId, monsterInfo, userInfo, previousBattleState, previousUserState, _yield$processBattleM, _yield$processBattleM2, newExp, skillId;
+                                      var attackUsed, monsterInfo, userInfo, previousBattleState, previousUserState, _yield$processBattleM, _yield$processBattleM2, newExp, skillId;
 
                                       return _regenerator["default"].wrap(function _callee5$(_context5) {
                                         while (1) {
@@ -391,7 +391,7 @@ var discordBattle = /*#__PURE__*/function () {
                                               previousUserState = JSON.parse(previousUserState);
 
                                               if (!interaction.isButton()) {
-                                                _context5.next = 88;
+                                                _context5.next = 85;
                                                 break;
                                               }
 
@@ -414,46 +414,51 @@ var discordBattle = /*#__PURE__*/function () {
 
                                             case 14:
                                               if (!(userCurrentCharacter.condition.life < 1)) {
-                                                _context5.next = 25;
+                                                _context5.next = 26;
                                                 break;
                                               }
 
                                               _context5.t0 = interaction;
-                                              _context5.next = 18;
+                                              _context5.t1 = [];
+                                              _context5.next = 19;
                                               return (0, _userDied.renderUserDied)(userCurrentCharacter);
 
-                                            case 18:
-                                              _context5.t1 = _context5.sent;
-                                              _context5.t2 = [_context5.t1];
-                                              _context5.t3 = [];
-                                              _context5.t4 = {
-                                                files: _context5.t2,
-                                                components: _context5.t3
+                                            case 19:
+                                              _context5.t2 = _context5.sent;
+                                              _context5.t3 = [_context5.t2];
+                                              _context5.t4 = [];
+                                              _context5.t5 = {
+                                                embeds: _context5.t1,
+                                                files: _context5.t3,
+                                                components: _context5.t4
                                               };
-                                              _context5.next = 24;
-                                              return _context5.t0.editReply.call(_context5.t0, _context5.t4);
-
-                                            case 24:
-                                              return _context5.abrupt("return");
+                                              _context5.next = 25;
+                                              return _context5.t0.editReply.call(_context5.t0, _context5.t5);
 
                                             case 25:
-                                              if (interaction.customId.startsWith('mainSkill:')) {
-                                                attackId = Number(interaction.customId.replace("mainSkill:", ""));
+                                              return _context5.abrupt("return");
+
+                                            case 26:
+                                              console.log(interaction.customId);
+                                              console.log('interaction.customId');
+
+                                              if (interaction.customId.startsWith('attackMain:')) {
+                                                attackUsed = 'main';
                                               }
 
-                                              if (interaction.customId.startsWith('secondarySkill:')) {
-                                                attackId = Number(interaction.customId.replace("secondarySkill:", ""));
+                                              if (interaction.customId.startsWith('attackSecondary:')) {
+                                                attackUsed = 'secondary';
                                               }
 
                                               if (battle.complete) {
-                                                _context5.next = 42;
+                                                _context5.next = 43;
                                                 break;
                                               }
 
-                                              _context5.next = 30;
-                                              return (0, _processBattleMove.processBattleMove)(userCurrentCharacter, battle, attackId, io, queue, t);
+                                              _context5.next = 33;
+                                              return (0, _processBattleMove.processBattleMove)(userCurrentCharacter, battle, attackUsed, io, queue, t);
 
-                                            case 30:
+                                            case 33:
                                               _yield$processBattleM = _context5.sent;
                                               _yield$processBattleM2 = (0, _slicedToArray2["default"])(_yield$processBattleM, 4);
                                               userCurrentCharacter = _yield$processBattleM2[0];
@@ -462,103 +467,96 @@ var discordBattle = /*#__PURE__*/function () {
                                               monsterInfo = _yield$processBattleM2[3];
 
                                               if (!battle.complete) {
-                                                _context5.next = 42;
+                                                _context5.next = 43;
                                                 break;
                                               }
 
-                                              console.log('jajaja');
-                                              console.log(battle.monsters[0].exp);
-                                              _context5.next = 41;
+                                              _context5.next = 42;
                                               return (0, _experience.gainExp)(discordClient, userCurrentCharacter.user.user_id, battle.monsters[0].exp, 'battle', t);
 
-                                            case 41:
+                                            case 42:
                                               newExp = _context5.sent;
 
-                                            case 42:
-                                              console.log('before render gif');
-
+                                            case 43:
                                               if (!battle.complete) {
-                                                _context5.next = 60;
+                                                _context5.next = 58;
                                                 break;
                                               }
 
-                                              console.log('complete battle');
-                                              _context5.t5 = interaction;
-                                              _context5.t6 = [];
-                                              _context5.t7 = _discord.MessageAttachment;
-                                              _context5.next = 50;
+                                              _context5.t6 = interaction;
+                                              _context5.t7 = [];
+                                              _context5.t8 = _discord.MessageAttachment;
+                                              _context5.next = 49;
                                               return (0, _battle.renderBattleGif)(userCurrentCharacter, userCurrentSelectedSkills, battle, previousBattleState, previousUserState, monsterInfo, userInfo);
 
-                                            case 50:
-                                              _context5.t8 = _context5.sent;
-                                              _context5.t9 = new _context5.t7(_context5.t8, 'battle.gif');
-                                              _context5.t10 = [_context5.t9];
-                                              _context5.t11 = [];
-                                              _context5.t12 = {
-                                                embeds: _context5.t6,
-                                                files: _context5.t10,
-                                                components: _context5.t11
+                                            case 49:
+                                              _context5.t9 = _context5.sent;
+                                              _context5.t10 = new _context5.t8(_context5.t9, 'battle.gif');
+                                              _context5.t11 = [_context5.t10];
+                                              _context5.t12 = [];
+                                              _context5.t13 = {
+                                                embeds: _context5.t7,
+                                                files: _context5.t11,
+                                                components: _context5.t12
                                               };
-                                              _context5.next = 57;
-                                              return _context5.t5.editReply.call(_context5.t5, _context5.t12);
+                                              _context5.next = 56;
+                                              return _context5.t6.editReply.call(_context5.t6, _context5.t13);
 
-                                            case 57:
-                                              console.log('after complete battle');
-                                              _context5.next = 85;
+                                            case 56:
+                                              _context5.next = 82;
                                               break;
 
-                                            case 60:
-                                              console.log('uncomplete battle');
-                                              _context5.t13 = interaction;
-                                              _context5.t14 = [];
-                                              _context5.t15 = _discord.MessageAttachment;
-                                              _context5.next = 66;
+                                            case 58:
+                                              _context5.t14 = interaction;
+                                              _context5.t15 = [];
+                                              _context5.t16 = _discord.MessageAttachment;
+                                              _context5.next = 63;
                                               return (0, _battle.renderBattleGif)(userCurrentCharacter, userCurrentSelectedSkills, battle, previousBattleState, previousUserState, monsterInfo, userInfo);
 
-                                            case 66:
-                                              _context5.t16 = _context5.sent;
-                                              _context5.t17 = new _context5.t15(_context5.t16, 'battle.gif');
-                                              _context5.t18 = [_context5.t17];
-                                              _context5.t19 = _discord.MessageActionRow;
-                                              _context5.next = 72;
+                                            case 63:
+                                              _context5.t17 = _context5.sent;
+                                              _context5.t18 = new _context5.t16(_context5.t17, 'battle.gif');
+                                              _context5.t19 = [_context5.t18];
+                                              _context5.t20 = _discord.MessageActionRow;
+                                              _context5.next = 69;
                                               return generateMainSkillButton(userCurrentSelectedSkills.selectedMainSkill);
 
-                                            case 72:
-                                              _context5.t20 = _context5.sent;
-                                              _context5.next = 75;
+                                            case 69:
+                                              _context5.t21 = _context5.sent;
+                                              _context5.next = 72;
                                               return generateSecondarySkillButton(userCurrentSelectedSkills.selectedSecondarySkill);
 
-                                            case 75:
-                                              _context5.t21 = _context5.sent;
-                                              _context5.t22 = [_context5.t20, _context5.t21];
-                                              _context5.t23 = {
-                                                components: _context5.t22
+                                            case 72:
+                                              _context5.t22 = _context5.sent;
+                                              _context5.t23 = [_context5.t21, _context5.t22];
+                                              _context5.t24 = {
+                                                components: _context5.t23
                                               };
-                                              _context5.t24 = new _context5.t19(_context5.t23);
-                                              _context5.t25 = new _discord.MessageActionRow({
+                                              _context5.t25 = new _context5.t20(_context5.t24);
+                                              _context5.t26 = new _discord.MessageActionRow({
                                                 components: [new _discord.MessageSelectMenu({
                                                   type: 'SELECT_MENU',
                                                   customId: 'select-mainSkill',
                                                   options: mainSkillMap
                                                 })]
                                               });
-                                              _context5.t26 = new _discord.MessageActionRow({
+                                              _context5.t27 = new _discord.MessageActionRow({
                                                 components: [new _discord.MessageSelectMenu({
                                                   type: 'SELECT_MENU',
                                                   customId: 'select-secondarySkill',
                                                   options: secondarySkillMap
                                                 })]
                                               });
-                                              _context5.t27 = [_context5.t24, _context5.t25, _context5.t26];
-                                              _context5.t28 = {
-                                                embeds: _context5.t14,
-                                                files: _context5.t18,
-                                                components: _context5.t27
+                                              _context5.t28 = [_context5.t25, _context5.t26, _context5.t27];
+                                              _context5.t29 = {
+                                                embeds: _context5.t15,
+                                                files: _context5.t19,
+                                                components: _context5.t28
                                               };
-                                              _context5.next = 85;
-                                              return _context5.t13.editReply.call(_context5.t13, _context5.t28);
+                                              _context5.next = 82;
+                                              return _context5.t14.editReply.call(_context5.t14, _context5.t29);
 
-                                            case 85:
+                                            case 82:
                                               if (userCurrentCharacter.condition.life < 1) {
                                                 setTimeout( /*#__PURE__*/(0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee3() {
                                                   return _regenerator["default"].wrap(function _callee3$(_context3) {
@@ -566,21 +564,23 @@ var discordBattle = /*#__PURE__*/function () {
                                                       switch (_context3.prev = _context3.next) {
                                                         case 0:
                                                           _context3.t0 = interaction;
-                                                          _context3.next = 3;
+                                                          _context3.t1 = [];
+                                                          _context3.next = 4;
                                                           return (0, _userDied.renderUserDied)(userCurrentCharacter);
 
-                                                        case 3:
-                                                          _context3.t1 = _context3.sent;
-                                                          _context3.t2 = [_context3.t1];
-                                                          _context3.t3 = [];
-                                                          _context3.t4 = {
-                                                            files: _context3.t2,
-                                                            components: _context3.t3
+                                                        case 4:
+                                                          _context3.t2 = _context3.sent;
+                                                          _context3.t3 = [_context3.t2];
+                                                          _context3.t4 = [];
+                                                          _context3.t5 = {
+                                                            embeds: _context3.t1,
+                                                            files: _context3.t3,
+                                                            components: _context3.t4
                                                           };
-                                                          _context3.next = 9;
-                                                          return _context3.t0.editReply.call(_context3.t0, _context3.t4);
+                                                          _context3.next = 10;
+                                                          return _context3.t0.editReply.call(_context3.t0, _context3.t5);
 
-                                                        case 9:
+                                                        case 10:
                                                         case "end":
                                                           return _context3.stop();
                                                       }
@@ -590,29 +590,29 @@ var discordBattle = /*#__PURE__*/function () {
                                               }
 
                                               if (battle.complete) {
-                                                console.log(battle.monsters[0].exp);
-                                                console.log('nenenen');
                                                 setTimeout( /*#__PURE__*/(0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee4() {
                                                   return _regenerator["default"].wrap(function _callee4$(_context4) {
                                                     while (1) {
                                                       switch (_context4.prev = _context4.next) {
                                                         case 0:
                                                           _context4.t0 = interaction;
-                                                          _context4.next = 3;
+                                                          _context4.t1 = [];
+                                                          _context4.next = 4;
                                                           return (0, _battleComplete.renderBattleComplete)(userCurrentCharacter, battle.monsters[0].exp);
 
-                                                        case 3:
-                                                          _context4.t1 = _context4.sent;
-                                                          _context4.t2 = [_context4.t1];
-                                                          _context4.t3 = [];
-                                                          _context4.t4 = {
-                                                            files: _context4.t2,
-                                                            components: _context4.t3
+                                                        case 4:
+                                                          _context4.t2 = _context4.sent;
+                                                          _context4.t3 = [_context4.t2];
+                                                          _context4.t4 = [];
+                                                          _context4.t5 = {
+                                                            embeds: _context4.t1,
+                                                            files: _context4.t3,
+                                                            components: _context4.t4
                                                           };
-                                                          _context4.next = 9;
-                                                          return _context4.t0.editReply.call(_context4.t0, _context4.t4);
+                                                          _context4.next = 10;
+                                                          return _context4.t0.editReply.call(_context4.t0, _context4.t5);
 
-                                                        case 9:
+                                                        case 10:
                                                         case "end":
                                                           return _context4.stop();
                                                       }
@@ -623,114 +623,114 @@ var discordBattle = /*#__PURE__*/function () {
 
                                               return _context5.abrupt("return");
 
-                                            case 88:
+                                            case 85:
                                               if (!interaction.isSelectMenu()) {
-                                                _context5.next = 129;
+                                                _context5.next = 126;
                                                 break;
                                               }
 
                                               if (!(interaction.customId === 'select-mainSkill')) {
-                                                _context5.next = 97;
+                                                _context5.next = 94;
                                                 break;
                                               }
 
-                                              _context5.next = 92;
+                                              _context5.next = 89;
                                               return interaction.deferUpdate();
 
-                                            case 92:
+                                            case 89:
                                               if (!interaction.values[0].startsWith('mainSkill:')) {
-                                                _context5.next = 97;
+                                                _context5.next = 94;
                                                 break;
                                               }
 
                                               skillId = Number(interaction.values[0].replace('mainSkill:', ''));
-                                              _context5.next = 96;
+                                              _context5.next = 93;
                                               return (0, _updateSelectedSkills.updateUserCurrentSelectedSkills)(userId, // Discord User id
                                               skillId, // mainSkill
                                               false, // secondary skill
                                               t // t, transaction
                                               );
 
-                                            case 96:
+                                            case 93:
                                               userCurrentSelectedSkills = _context5.sent;
 
-                                            case 97:
+                                            case 94:
                                               if (!(interaction.customId === 'select-secondarySkill')) {
-                                                _context5.next = 105;
+                                                _context5.next = 102;
                                                 break;
                                               }
 
-                                              _context5.next = 100;
+                                              _context5.next = 97;
                                               return interaction.deferUpdate();
 
-                                            case 100:
+                                            case 97:
                                               if (!interaction.values[0].startsWith('secondarySkill:')) {
-                                                _context5.next = 105;
+                                                _context5.next = 102;
                                                 break;
                                               }
 
                                               skillId = Number(interaction.values[0].replace('secondarySkill:', ''));
-                                              _context5.next = 104;
+                                              _context5.next = 101;
                                               return (0, _updateSelectedSkills.updateUserCurrentSelectedSkills)(userId, // Discord User id
                                               false, // mainSkill
                                               skillId, // secondary skill
                                               t // t, transaction
                                               );
 
-                                            case 104:
+                                            case 101:
                                               userCurrentSelectedSkills = _context5.sent;
 
-                                            case 105:
-                                              _context5.t29 = interaction;
-                                              _context5.t30 = [];
-                                              _context5.t31 = _discord.MessageAttachment;
-                                              _context5.next = 110;
+                                            case 102:
+                                              _context5.t30 = interaction;
+                                              _context5.t31 = [];
+                                              _context5.t32 = _discord.MessageAttachment;
+                                              _context5.next = 107;
                                               return (0, _initBattle.renderInitBattleGif)(userCurrentCharacter, userCurrentSelectedSkills, battle, previousBattleState, previousUserState, monsterInfo, userInfo);
 
-                                            case 110:
-                                              _context5.t32 = _context5.sent;
-                                              _context5.t33 = new _context5.t31(_context5.t32, 'battle.gif');
-                                              _context5.t34 = [_context5.t33];
-                                              _context5.t35 = _discord.MessageActionRow;
-                                              _context5.next = 116;
+                                            case 107:
+                                              _context5.t33 = _context5.sent;
+                                              _context5.t34 = new _context5.t32(_context5.t33, 'battle.gif');
+                                              _context5.t35 = [_context5.t34];
+                                              _context5.t36 = _discord.MessageActionRow;
+                                              _context5.next = 113;
                                               return generateMainSkillButton(userCurrentSelectedSkills.selectedMainSkill);
 
-                                            case 116:
-                                              _context5.t36 = _context5.sent;
-                                              _context5.next = 119;
+                                            case 113:
+                                              _context5.t37 = _context5.sent;
+                                              _context5.next = 116;
                                               return generateSecondarySkillButton(userCurrentSelectedSkills.selectedSecondarySkill);
 
-                                            case 119:
-                                              _context5.t37 = _context5.sent;
-                                              _context5.t38 = [_context5.t36, _context5.t37];
-                                              _context5.t39 = {
-                                                components: _context5.t38
+                                            case 116:
+                                              _context5.t38 = _context5.sent;
+                                              _context5.t39 = [_context5.t37, _context5.t38];
+                                              _context5.t40 = {
+                                                components: _context5.t39
                                               };
-                                              _context5.t40 = new _context5.t35(_context5.t39);
-                                              _context5.t41 = new _discord.MessageActionRow({
+                                              _context5.t41 = new _context5.t36(_context5.t40);
+                                              _context5.t42 = new _discord.MessageActionRow({
                                                 components: [new _discord.MessageSelectMenu({
                                                   type: 'SELECT_MENU',
                                                   customId: 'select-mainSkill',
                                                   options: mainSkillMap
                                                 })]
                                               });
-                                              _context5.t42 = new _discord.MessageActionRow({
+                                              _context5.t43 = new _discord.MessageActionRow({
                                                 components: [new _discord.MessageSelectMenu({
                                                   type: 'SELECT_MENU',
                                                   customId: 'select-secondarySkill',
                                                   options: secondarySkillMap
                                                 })]
                                               });
-                                              _context5.t43 = [_context5.t40, _context5.t41, _context5.t42];
-                                              _context5.t44 = {
-                                                embeds: _context5.t30,
-                                                files: _context5.t34,
-                                                components: _context5.t43
+                                              _context5.t44 = [_context5.t41, _context5.t42, _context5.t43];
+                                              _context5.t45 = {
+                                                embeds: _context5.t31,
+                                                files: _context5.t35,
+                                                components: _context5.t44
                                               };
-                                              _context5.next = 129;
-                                              return _context5.t29.editReply.call(_context5.t29, _context5.t44);
+                                              _context5.next = 126;
+                                              return _context5.t30.editReply.call(_context5.t30, _context5.t45);
 
-                                            case 129:
+                                            case 126:
                                             case "end":
                                               return _context5.stop();
                                           }

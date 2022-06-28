@@ -251,7 +251,7 @@ export const discordBattle = async (
       await db.sequelize.transaction({
         isolationLevel: Transaction.ISOLATION_LEVELS.SERIALIZABLE,
       }, async (t) => {
-        let attackId;
+        let attackUsed;
         let monsterInfo;
         let userInfo;
         let previousBattleState = battle;
@@ -287,11 +287,14 @@ export const discordBattle = async (
             return;
           }
 
-          if (interaction.customId.startsWith('mainSkill:')) {
-            attackId = Number(interaction.customId.replace("mainSkill:", ""));
+          console.log(interaction.customId);
+          console.log('interaction.customId');
+
+          if (interaction.customId.startsWith('attackMain:')) {
+            attackUsed = 'main';
           }
-          if (interaction.customId.startsWith('secondarySkill:')) {
-            attackId = Number(interaction.customId.replace("secondarySkill:", ""));
+          if (interaction.customId.startsWith('attackSecondary:')) {
+            attackUsed = 'secondary';
           }
 
           if (!battle.complete) {
@@ -303,7 +306,7 @@ export const discordBattle = async (
             ] = await processBattleMove(
               userCurrentCharacter,
               battle,
-              attackId,
+              attackUsed,
               io,
               queue,
               t,

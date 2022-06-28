@@ -297,8 +297,8 @@ var discordShowInventory = /*#__PURE__*/function () {
                         ctx.strokeStyle = 'black';
                         ctx.lineWidth = 3;
                         ctx.textAlign = "center";
-                        ctx.strokeText("".concat(userCurrentCharacter.user.username, " canceled class selection"), 250, 60, 500);
-                        ctx.fillText("".concat(userCurrentCharacter.user.username, " canceled class selection"), 250, 60, 500);
+                        ctx.strokeText("".concat(userCurrentCharacter.user.username, " canceled inventory"), 250, 60, 500);
+                        ctx.fillText("".concat(userCurrentCharacter.user.username, " canceled inventory"), 250, 60, 500);
                         return _context5.abrupt("return", new _discord.MessageAttachment(canvas.toBuffer(), 'cancelSelection.png'));
 
                       case 10:
@@ -862,7 +862,7 @@ var discordShowInventory = /*#__PURE__*/function () {
                           components: _context15.t27
                         };
                         _context15.next = 84;
-                        return _context15.t24.update.call(_context15.t24, _context15.t28);
+                        return _context15.t24.editReply.call(_context15.t24, _context15.t28);
 
                       case 84:
                         return _context15.abrupt("return");

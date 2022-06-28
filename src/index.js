@@ -236,7 +236,10 @@ const conditionalCSRF = function (
     discordClient,
   );
 
-  const replenishEveryonesStamina = schedule.scheduleJob('0 15 0 * * *', async () => {
+  console.log(new Date());
+  console.log('date now');
+  const replenishEveryonesStamina = schedule.scheduleJob('30 03 * * *', async () => {
+    console.log('node executed');
     const allUserCharacters = await db.UserClass.findAll({
       include: [
         {
@@ -255,6 +258,7 @@ const conditionalCSRF = function (
     });
     // eslint-disable-next-line no-restricted-syntax
     for (const userChar of allUserCharacters) {
+      console.log(userChar.condition);
       if ((userChar.class.stamina + userChar.stats.stamina) > userChar.condition.stamina) {
         // eslint-disable-next-line no-await-in-loop
         await userChar.condition.update({

@@ -1,6 +1,7 @@
 import db from '../../models';
 import { calculateCharacterStats } from '../stats/calculateCharacterStats';
-import { fetchUserCurrentCharacter } from "../character/character";
+import { fetchUserCurrentSelectedSkills } from "../character/selectedSkills";
+import { calculateSkillDamage } from "../skills/calculateSkillDamage";
 
 function randomIntFromInterval(min, max) { // min and max included
   return Math.floor(Math.random() * (max - min + 1) + min);
@@ -9,19 +10,39 @@ function randomIntFromInterval(min, max) { // min and max included
 export const processBattleMove = async (
   userCurrentCharacter,
   battle,
-  attackId,
+  attackUsed,
   io,
   queue,
   t,
 ) => {
+  console.log('what');
+  console.log(attackUsed);
   const unitUsedMove = "Attack";
-  const userUsedMove = "Attack";
   const {
     attackOne,
+    attackTwo,
+    regularAttack,
+    block,
   } = await calculateCharacterStats(
     userCurrentCharacter,
   );
-  const randomAttackDamage = randomIntFromInterval(attackOne.min, attackOne.max);
+  let useAttack;
+  if (attackUsed === 'main') {
+    if (userCurrentCharacter.condition.mana >= attackOne.cost) {
+      useAttack = attackOne;
+    } else {
+      useAttack = regularAttack;
+    }
+  }
+  if (attackUsed === 'secondary') {
+    if (userCurrentCharacter.condition.mana >= attackTwo.cost) {
+      useAttack = attackTwo;
+    } else {
+      useAttack = regularAttack;
+    }
+  }
+
+  const randomAttackDamage = randomIntFromInterval(useAttack.min, useAttack.max);
   const randomMonsterAttackDamage = randomIntFromInterval(battle.monsters[0].minDamage, battle.monsters[0].maxDamage);
   const updatedMonster = await battle.monsters[0].BattleMonster.update({
     currentHp: battle.monsters[0].BattleMonster.currentHp - randomAttackDamage,
@@ -31,7 +52,7 @@ export const processBattleMove = async (
   });
   const createBattleLog = await db.battleLog.create({
     battleId: battle.id,
-    log: `${userCurrentCharacter.user.username} attacked ${battle.monsters[0].name} for ${randomAttackDamage} damage`,
+    log: `${userCurrentCharacter.user.username} used ${useAttack.name} ${battle.monsters[0].name} for ${randomAttackDamage} damage`,
   }, {
     lock: t.LOCK.UPDATE,
     transaction: t,
@@ -55,13 +76,14 @@ export const processBattleMove = async (
   if (updatedMonster.currentHp > 0) {
     updatedUserCondition = await userCurrentCharacter.condition.update({
       life: userCurrentCharacter.condition.life - randomMonsterAttackDamage,
+      mana: userCurrentCharacter.condition.mana - useAttack.cost,
     }, {
       lock: t.LOCK.UPDATE,
       transaction: t,
     });
     await db.battleLog.create({
       battleId: battle.id,
-      log: `${battle.monsters[0].name} attacked ${userCurrentCharacter.user.username} for ${randomMonsterAttackDamage} damage`,
+      log: `${battle.monsters[0].name} used attack ${userCurrentCharacter.user.username} for ${randomMonsterAttackDamage} damage`,
     }, {
       lock: t.LOCK.UPDATE,
       transaction: t,
@@ -107,7 +129,7 @@ export const processBattleMove = async (
   const userInfo = {
     alive: updatedUserCondition > 0,
     attackDamage: randomAttackDamage,
-    attack: userUsedMove,
+    attack: useAttack.name,
   };
   const monsterInfo = {
     alive: updatedMonster.currentHp > 0,

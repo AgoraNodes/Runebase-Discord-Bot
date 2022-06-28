@@ -97,10 +97,34 @@ var equipItem = /*#__PURE__*/function () {
                                         as: 'amulet'
                                       }, {
                                         model: _models["default"].item,
-                                        as: 'mainHand'
+                                        as: 'mainHand',
+                                        include: [{
+                                          model: _models["default"].itemBase,
+                                          as: 'itemBase',
+                                          include: [{
+                                            model: _models["default"].itemFamily,
+                                            as: 'itemFamily',
+                                            include: [{
+                                              model: _models["default"].itemType,
+                                              as: 'itemType'
+                                            }]
+                                          }]
+                                        }]
                                       }, {
                                         model: _models["default"].item,
-                                        as: 'offHand'
+                                        as: 'offHand',
+                                        include: [{
+                                          model: _models["default"].itemBase,
+                                          as: 'itemBase',
+                                          include: [{
+                                            model: _models["default"].itemFamily,
+                                            as: 'itemFamily',
+                                            include: [{
+                                              model: _models["default"].itemType,
+                                              as: 'itemType'
+                                            }]
+                                          }]
+                                        }]
                                       }, {
                                         model: _models["default"].item,
                                         as: 'gloves'
@@ -191,29 +215,9 @@ var equipItem = /*#__PURE__*/function () {
 
                                 case 24:
                                   console.log(userCurrentCharacter.user.currentClass.name);
-                                  console.log(userCurrentCharacter.user.currentClass.name);
-                                  console.log(userCurrentCharacter.user.currentClass.name);
-                                  console.log(userCurrentCharacter.user.currentClass.name);
-                                  console.log(userCurrentCharacter.user.currentClass.name);
-                                  console.log(userCurrentCharacter.user.currentClass.name);
-                                  console.log(userCurrentCharacter.user.currentClass.name);
-                                  console.log(userCurrentCharacter.user.currentClass.name);
-                                  console.log(userCurrentCharacter.user.currentClass.name);
-                                  console.log(userCurrentCharacter.user.currentClass.name);
-                                  console.log(userCurrentCharacter.user.currentClass.name);
-                                  console.log(userCurrentCharacter.user.currentClass.name);
-                                  console.log(userCurrentCharacter.user.currentClass.name);
-                                  console.log(userCurrentCharacter.user.currentClass.name);
-                                  console.log(userCurrentCharacter.user.currentClass.name);
-                                  console.log(userCurrentCharacter.user.currentClass.name);
-                                  console.log(userCurrentCharacter.user.currentClass.name);
-                                  console.log(userCurrentCharacter.user.currentClass.name);
-                                  console.log(userCurrentCharacter.user.currentClass.name);
-                                  console.log(userCurrentCharacter.user.currentClass.name);
-                                  console.log('userCurrentCharacter.user.currentClass.name');
 
                                   if (!(findItemToEquip.itemBase.itemFamily.itemType.name === 'Sorceress Orbs' && userCurrentCharacter.user.currentClass.name !== 'Sorceress' || findItemToEquip.itemBase.itemFamily.itemType.name === 'Paladin Shields' && userCurrentCharacter.user.currentClass.name !== 'Paladin' || findItemToEquip.itemBase.itemFamily.itemType.name === 'Necromancer Shrunken Heads' && userCurrentCharacter.user.currentClass.name !== 'Necromancer' || findItemToEquip.itemBase.itemFamily.itemType.name === 'Amazon Weapons' && userCurrentCharacter.user.currentClass.name !== 'Amazon' || findItemToEquip.itemBase.itemFamily.itemType.name === 'Assasin Katars' && userCurrentCharacter.user.currentClass.name !== 'Assasin' || findItemToEquip.itemBase.itemFamily.itemType.name === 'Druid Pelts' && userCurrentCharacter.user.currentClass.name !== 'Druid' || findItemToEquip.itemBase.itemFamily.itemType.name === 'Barbarian Helms' && userCurrentCharacter.user.currentClass.name !== 'Barbarian')) {
-                                    _context.next = 49;
+                                    _context.next = 29;
                                     break;
                                   }
 
@@ -221,89 +225,89 @@ var equipItem = /*#__PURE__*/function () {
                                   cannotEquip = true;
                                   return _context.abrupt("return");
 
-                                case 49:
+                                case 29:
                                   if (!(findItemToEquip.itemBase.itemFamily.itemType.name === 'Helms' || findItemToEquip.itemBase.itemFamily.itemType.name === 'Circlets' || findItemToEquip.itemBase.itemFamily.itemType.name === 'Druid Pelts' || findItemToEquip.itemBase.itemFamily.itemType.name === 'Barbarian Helms')) {
-                                    _context.next = 52;
+                                    _context.next = 32;
                                     break;
                                   }
 
-                                  _context.next = 52;
+                                  _context.next = 32;
                                   return (0, _Helm.equipHelm)(userCurrentCharacter, findUserCharacter.equipment, findItemToEquip, t);
 
-                                case 52:
+                                case 32:
                                   if (!(findItemToEquip.itemBase.itemFamily.itemType.name === 'Belts')) {
-                                    _context.next = 55;
+                                    _context.next = 35;
                                     break;
                                   }
 
-                                  _context.next = 55;
+                                  _context.next = 35;
                                   return (0, _Belt.equipBelt)(userCurrentCharacter, findUserCharacter.equipment, findItemToEquip, t);
 
-                                case 55:
+                                case 35:
                                   if (!(findItemToEquip.itemBase.itemFamily.itemType.name === 'Gloves')) {
-                                    _context.next = 58;
+                                    _context.next = 38;
                                     break;
                                   }
 
-                                  _context.next = 58;
+                                  _context.next = 38;
                                   return (0, _Gloves.equipGloves)(userCurrentCharacter, findUserCharacter.equipment, findItemToEquip, t);
 
-                                case 58:
+                                case 38:
                                   if (!(findItemToEquip.itemBase.itemFamily.itemType.name === 'Boots')) {
-                                    _context.next = 61;
+                                    _context.next = 41;
                                     break;
                                   }
 
-                                  _context.next = 61;
+                                  _context.next = 41;
                                   return (0, _Boots.equipBoots)(userCurrentCharacter, findUserCharacter.equipment, findItemToEquip, t);
 
-                                case 61:
+                                case 41:
                                   if (!(findItemToEquip.itemBase.itemFamily.itemType.name === 'Rings')) {
-                                    _context.next = 64;
+                                    _context.next = 44;
                                     break;
                                   }
 
-                                  _context.next = 64;
+                                  _context.next = 44;
                                   return (0, _Rings.equipRing)(userCurrentCharacter, findUserCharacter.equipment, findItemToEquip, t);
 
-                                case 64:
+                                case 44:
                                   if (!(findItemToEquip.itemBase.itemFamily.itemType.name === 'Amulets')) {
-                                    _context.next = 67;
+                                    _context.next = 47;
                                     break;
                                   }
 
-                                  _context.next = 67;
+                                  _context.next = 47;
                                   return (0, _Amulet.equipAmulet)(userCurrentCharacter, findUserCharacter.equipment, findItemToEquip, t);
 
-                                case 67:
+                                case 47:
                                   if (!(findItemToEquip.itemBase.itemFamily.itemType.name === 'Armors')) {
-                                    _context.next = 70;
+                                    _context.next = 50;
                                     break;
                                   }
 
-                                  _context.next = 70;
+                                  _context.next = 50;
                                   return (0, _Armor.equipArmor)(userCurrentCharacter, findUserCharacter.equipment, findItemToEquip, t);
 
-                                case 70:
+                                case 50:
                                   if (!(findItemToEquip.itemBase.itemFamily.itemType.name === 'Shields' || findItemToEquip.itemBase.itemFamily.itemType.name === 'Sorceress Orbs' || findItemToEquip.itemBase.itemFamily.itemType.name === 'Paladin Shields' || findItemToEquip.itemBase.itemFamily.itemType.name === 'Necromancer Shrunken Heads')) {
-                                    _context.next = 73;
+                                    _context.next = 53;
                                     break;
                                   }
 
-                                  _context.next = 73;
+                                  _context.next = 53;
                                   return (0, _OffHand.equipOffHand)(userCurrentCharacter, findUserCharacter.equipment, findItemToEquip, t);
 
-                                case 73:
+                                case 53:
                                   if (!(findItemToEquip.itemBase.itemFamily.itemType.name === 'Axes' || findItemToEquip.itemBase.itemFamily.itemType.name === 'Bows' || findItemToEquip.itemBase.itemFamily.itemType.name === 'Crossbows' || findItemToEquip.itemBase.itemFamily.itemType.name === 'Daggers' || findItemToEquip.itemBase.itemFamily.itemType.name === 'Javelins' || findItemToEquip.itemBase.itemFamily.itemType.name === 'Maces' || findItemToEquip.itemBase.itemFamily.itemType.name === 'Polearms' || findItemToEquip.itemBase.itemFamily.itemType.name === 'Scepters' || findItemToEquip.itemBase.itemFamily.itemType.name === 'Spears' || findItemToEquip.itemBase.itemFamily.itemType.name === 'Staves' || findItemToEquip.itemBase.itemFamily.itemType.name === 'Swords' || findItemToEquip.itemBase.itemFamily.itemType.name === 'Throwing' || findItemToEquip.itemBase.itemFamily.itemType.name === 'Wands' || findItemToEquip.itemBase.itemFamily.itemType.name === 'Assasin Katars' || findItemToEquip.itemBase.itemFamily.itemType.name === 'Amazon Weapons')) {
-                                    _context.next = 76;
+                                    _context.next = 56;
                                     break;
                                   }
 
-                                  _context.next = 76;
+                                  _context.next = 56;
                                   return (0, _MainHand.equipMainHand)(userCurrentCharacter, findUserCharacter.equipment, findItemToEquip, t);
 
-                                case 76:
-                                  _context.next = 78;
+                                case 56:
+                                  _context.next = 58;
                                   return _models["default"].activity.create({
                                     type: 'equipItem_s',
                                     earnerId: userCurrentCharacter.user.id
@@ -312,9 +316,9 @@ var equipItem = /*#__PURE__*/function () {
                                     transaction: t
                                   });
 
-                                case 78:
+                                case 58:
                                   preActivity = _context.sent;
-                                  _context.next = 81;
+                                  _context.next = 61;
                                   return _models["default"].activity.findOne({
                                     where: {
                                       id: preActivity.id
@@ -327,11 +331,11 @@ var equipItem = /*#__PURE__*/function () {
                                     transaction: t
                                   });
 
-                                case 81:
+                                case 61:
                                   finalActivity = _context.sent;
                                   activity.unshift(finalActivity);
 
-                                case 83:
+                                case 63:
                                 case "end":
                                   return _context.stop();
                               }
