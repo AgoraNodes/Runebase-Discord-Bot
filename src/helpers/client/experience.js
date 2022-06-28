@@ -100,15 +100,17 @@ export const gainMultiExp = async (
       // eslint-disable-next-line no-await-in-loop
       await discordChannel.send({
         content: element,
-        embeds: [
-          grantRoleExpMessage(
-            userDiscordIdArray.length,
-            filteredMessage[3],
-            amount,
-          ),
-        ],
       });
     }
+    await discordChannel.send({
+      embeds: [
+        grantRoleExpMessage(
+          userDiscordIdArray.length,
+          filteredMessage[3],
+          amount,
+        ),
+      ],
+    });
   }
   if (usersLeveledUp.length > 0) {
     for await (const userUp of usersLeveledUp) {

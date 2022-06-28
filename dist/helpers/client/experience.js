@@ -281,7 +281,7 @@ var gainMultiExp = /*#__PURE__*/function () {
 
           case 89:
             if (!(userDiscordIdArray.length > 0)) {
-              _context.next = 109;
+              _context.next = 111;
               break;
             }
 
@@ -301,8 +301,7 @@ var gainMultiExp = /*#__PURE__*/function () {
             element = _step4.value;
             _context.next = 99;
             return discordChannel.send({
-              content: element,
-              embeds: [(0, _messages.grantRoleExpMessage)(userDiscordIdArray.length, filteredMessage[3], amount)]
+              content: element
             });
 
           case 99:
@@ -327,81 +326,87 @@ var gainMultiExp = /*#__PURE__*/function () {
             return _context.finish(106);
 
           case 109:
+            _context.next = 111;
+            return discordChannel.send({
+              embeds: [(0, _messages.grantRoleExpMessage)(userDiscordIdArray.length, filteredMessage[3], amount)]
+            });
+
+          case 111:
             if (!(usersLeveledUp.length > 0)) {
-              _context.next = 139;
+              _context.next = 141;
               break;
             }
 
             _iteratorAbruptCompletion2 = false;
             _didIteratorError2 = false;
-            _context.prev = 112;
+            _context.prev = 114;
             _iterator2 = _asyncIterator(usersLeveledUp);
 
-          case 114:
-            _context.next = 116;
+          case 116:
+            _context.next = 118;
             return _iterator2.next();
 
-          case 116:
+          case 118:
             if (!(_iteratorAbruptCompletion2 = !(_step2 = _context.sent).done)) {
-              _context.next = 123;
+              _context.next = 125;
               break;
             }
 
             userUp = _step2.value;
-            _context.next = 120;
+            _context.next = 122;
             return discordChannel.send({
               embeds: [(0, _messages.levelUpMessage)(userUp.user_id, userUp.rank)]
             });
 
-          case 120:
+          case 122:
             _iteratorAbruptCompletion2 = false;
-            _context.next = 114;
-            break;
-
-          case 123:
-            _context.next = 129;
+            _context.next = 116;
             break;
 
           case 125:
-            _context.prev = 125;
-            _context.t3 = _context["catch"](112);
+            _context.next = 131;
+            break;
+
+          case 127:
+            _context.prev = 127;
+            _context.t3 = _context["catch"](114);
             _didIteratorError2 = true;
             _iteratorError2 = _context.t3;
 
-          case 129:
-            _context.prev = 129;
-            _context.prev = 130;
+          case 131:
+            _context.prev = 131;
+            _context.prev = 132;
 
             if (!(_iteratorAbruptCompletion2 && _iterator2["return"] != null)) {
-              _context.next = 134;
+              _context.next = 136;
               break;
             }
 
-            _context.next = 134;
+            _context.next = 136;
             return _iterator2["return"]();
 
-          case 134:
-            _context.prev = 134;
+          case 136:
+            _context.prev = 136;
 
             if (!_didIteratorError2) {
-              _context.next = 137;
+              _context.next = 139;
               break;
             }
 
             throw _iteratorError2;
 
-          case 137:
-            return _context.finish(134);
-
-          case 138:
-            return _context.finish(129);
-
           case 139:
+            return _context.finish(136);
+
+          case 140:
+            return _context.finish(131);
+
+          case 141:
           case "end":
             return _context.stop();
         }
       }
-    }, _callee, null, [[13, 75, 79, 89], [40, 52, 55, 58], [80,, 84, 88], [93, 103, 106, 109], [112, 125, 129, 139], [130,, 134, 138]]);
+    }, _callee, null, [[13, 75, 79, 89], [40, 52, 55, 58], [80,, 84, 88], [93, 103, 106, 109], [114, 127, 131, 141], [132,, 136, 140]]);
   }));
 
   return function gainMultiExp(_x, _x2, _x3, _x4, _x5) {
