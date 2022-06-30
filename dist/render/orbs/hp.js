@@ -32,7 +32,7 @@ var renderHpOrb = /*#__PURE__*/function () {
           case 2:
             _yield$calculateChara = _context.sent;
             hp = _yield$calculateChara.hp;
-            console.log(hp);
+            // console.log(hp);
             canvas = (0, _canvas.createCanvas)(100, 100);
             ctx = canvas.getContext('2d');
             percentage = hp.current / hp.max * 100;
@@ -54,14 +54,14 @@ var renderHpOrb = /*#__PURE__*/function () {
             ctx.translate(-50, -50);
             ctx.strokeText("".concat(hp.current, " / ").concat(hp.max), 50, 50, 100);
             ctx.fillText("".concat(hp.current, " / ").concat(hp.max), 50, 50, 100);
-            _context.next = 28;
+            _context.next = 27;
             return canvas.toBuffer();
 
-          case 28:
+          case 27:
             finalImage = _context.sent;
             return _context.abrupt("return", finalImage);
 
-          case 30:
+          case 29:
           case "end":
             return _context.stop();
         }

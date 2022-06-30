@@ -5,7 +5,7 @@ var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefau
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.discordShowCaseMagicItem = void 0;
+exports.discordStartDagger = void 0;
 
 var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
 
@@ -534,8 +534,8 @@ var listenLoot = /*#__PURE__*/function () {
   };
 }();
 
-var discordShowCaseMagicItem = /*#__PURE__*/function () {
-  var _ref11 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee15(discordClient, message, level, queue, io) {
+var discordStartDagger = /*#__PURE__*/function () {
+  var _ref11 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee15(discordClient, message, queue, io) {
     var activity;
     return _regenerator["default"].wrap(function _callee15$(_context15) {
       while (1) {
@@ -547,7 +547,7 @@ var discordShowCaseMagicItem = /*#__PURE__*/function () {
               isolationLevel: _sequelize.Transaction.ISOLATION_LEVELS.SERIALIZABLE
             }, /*#__PURE__*/function () {
               var _ref12 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee13(t) {
-                var userId, discordChannel, userCurrentCharacter, newItem, generateLootButton, countDownDate, now, distance, lootImage, attachment, messageDropLoot, updateMessage, preActivity, finalActivity, item;
+                var userId, discordChannel, userCurrentCharacter, newItem, generateLootButton, countDownDate, now, distance, lootImage, attachment, messageDropLoot, updateMessage, preActivity, finalActivity;
                 return _regenerator["default"].wrap(function _callee13$(_context13) {
                   while (1) {
                     switch (_context13.prev = _context13.next) {
@@ -581,7 +581,7 @@ var discordShowCaseMagicItem = /*#__PURE__*/function () {
 
                       case 12:
                         _context13.next = 14;
-                        return (0, _generateRandomMagicItem.generateRandomMagicItem)(level);
+                        return (0, _generateStartingDagger.generateRandomStartDagger)(1);
 
                       case 14:
                         newItem = _context13.sent;
@@ -798,13 +798,8 @@ var discordShowCaseMagicItem = /*#__PURE__*/function () {
                       case 54:
                         finalActivity = _context13.sent;
                         activity.unshift(finalActivity);
-                        _context13.next = 58;
-                        return (0, _generateLoot.generateLoot)(1);
 
-                      case 58:
-                        item = _context13.sent;
-
-                      case 59:
+                      case 56:
                       case "end":
                         return _context13.stop();
                     }
@@ -812,7 +807,7 @@ var discordShowCaseMagicItem = /*#__PURE__*/function () {
                 }, _callee13);
               }));
 
-              return function (_x19) {
+              return function (_x18) {
                 return _ref12.apply(this, arguments);
               };
             }())["catch"]( /*#__PURE__*/function () {
@@ -825,7 +820,7 @@ var discordShowCaseMagicItem = /*#__PURE__*/function () {
                         _context14.prev = 1;
                         _context14.next = 4;
                         return _models["default"].error.create({
-                          type: 'MyRank',
+                          type: 'GenerateStartDagger',
                           error: "".concat(err)
                         });
 
@@ -847,7 +842,7 @@ var discordShowCaseMagicItem = /*#__PURE__*/function () {
                 }, _callee14, null, [[1, 6]]);
               }));
 
-              return function (_x20) {
+              return function (_x19) {
                 return _ref15.apply(this, arguments);
               };
             }());
@@ -867,9 +862,9 @@ var discordShowCaseMagicItem = /*#__PURE__*/function () {
     }, _callee15);
   }));
 
-  return function discordShowCaseMagicItem(_x14, _x15, _x16, _x17, _x18) {
+  return function discordStartDagger(_x14, _x15, _x16, _x17) {
     return _ref11.apply(this, arguments);
   };
 }();
 
-exports.discordShowCaseMagicItem = discordShowCaseMagicItem;
+exports.discordStartDagger = discordStartDagger;

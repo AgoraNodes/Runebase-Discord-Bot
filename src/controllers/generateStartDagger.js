@@ -344,10 +344,9 @@ const listenLoot = async (
   });
 };
 
-export const discordShowCaseMagicItem = async (
+export const discordStartDagger = async (
   discordClient,
   message,
-  level,
   queue,
   io,
 ) => {
@@ -375,7 +374,7 @@ export const discordShowCaseMagicItem = async (
       return;
     }
 
-    const newItem = await generateRandomMagicItem(level);
+    const newItem = await generateRandomStartDagger(1);
     // const itemImage = await renderItemImage(newItem);
 
     const generateLootButton = async () => new MessageButton({
@@ -523,12 +522,11 @@ export const discordShowCaseMagicItem = async (
       transaction: t,
     });
     activity.unshift(finalActivity);
-    const item = await generateLoot(1);
   }).catch(async (err) => {
     console.log(err);
     try {
       await db.error.create({
-        type: 'MyRank',
+        type: 'GenerateStartDagger',
         error: `${err}`,
       });
     } catch (e) {

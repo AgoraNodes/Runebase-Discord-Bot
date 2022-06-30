@@ -84,6 +84,11 @@ const rateLimiterSkills = new RateLimiterFlexible.default.RateLimiterMemory({
   duration: 30,
 });
 
+const rateLimiterGenerateStartDagger = new RateLimiterFlexible.default.RateLimiterMemory({
+  points: 2,
+  duration: 30,
+});
+
 export const myRateLimiter = async (
   client,
   message,
@@ -166,7 +171,11 @@ export const myRateLimiter = async (
         return false;
       }
       if (title.toLowerCase() === 'skills') {
-        await rateLimiterEquipment.consume(userId, 1);
+        await rateLimiterSkills.consume(userId, 1);
+        return false;
+      }
+      if (title.toLowerCase() === 'generatestartdagger') {
+        await rateLimiterGenerateStartDagger.consume(userId, 1);
         return false;
       }
 

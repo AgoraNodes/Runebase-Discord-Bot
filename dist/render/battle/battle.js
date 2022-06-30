@@ -97,13 +97,23 @@ var drawEnemy = function drawEnemy(ctx, monster, enemyFrame) {
   // XP Bar
   ctx.lineJoin = 'round';
   ctx.lineWidth = 5;
-  ctx.strokeStyle = "red"; // empty bar
+  ctx.strokeStyle = "red";
+  var hpPercentage = monster.BattleMonster.currentHp / monster.BattleMonster.maxHp;
+
+  if (hpPercentage < 0) {
+    hpPercentage = 0;
+  }
+
+  if (hpPercentage > 100) {
+    hpPercentage = 0;
+  } // empty bar
+
 
   if (!movedToUser) {
     ctx.strokeStyle = 'black';
     ctx.strokeRect(185, 45, 40, 0);
     ctx.strokeStyle = 'red';
-    ctx.strokeRect(185, 45, 40 * (monster.BattleMonster.currentHp / monster.BattleMonster.maxHp), 0);
+    ctx.strokeRect(185, 45, 40 * hpPercentage, 0);
     ctx.drawImage(enemyFrame[number], 190, // x position
     45, // y position
     enemyFrame[number].width / 1.5, enemyFrame[number].height / 1.5);
@@ -111,7 +121,7 @@ var drawEnemy = function drawEnemy(ctx, monster, enemyFrame) {
     ctx.strokeStyle = 'black';
     ctx.strokeRect(110, 37, 40, 0);
     ctx.strokeStyle = 'red';
-    ctx.strokeRect(110, 37, 40 * (monster.BattleMonster.currentHp / monster.BattleMonster.maxHp), 0);
+    ctx.strokeRect(110, 37, 40 * hpPercentage, 0);
     ctx.drawImage(enemyFrame[number], 115, // x position
     37, // y position
     enemyFrame[number].width / 1.5, enemyFrame[number].height / 1.5);

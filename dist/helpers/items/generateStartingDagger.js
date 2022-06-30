@@ -5,7 +5,7 @@ var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefau
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.generateRandomMagicItem = void 0;
+exports.generateRandomStartDagger = void 0;
 
 var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
 
@@ -23,7 +23,7 @@ function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (O
 
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { (0, _defineProperty2["default"])(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
 
-var generateRandomMagicItem = /*#__PURE__*/function () {
+var generateRandomStartDagger = /*#__PURE__*/function () {
   var _ref = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(level) {
     var randomBaseItem, itemQualityRecord, randomItemModifiers, prefixModifier, suffixModifier, levelReq, rndDefense, minDamage, maxDamage, minThrowDamage, maxThrowDamage, addStrength, addDexterity, addVitality, addEnergy, addEdefense, addEdamage, rndStrength, _rndStrength, rndDexterity, _rndDexterity, rndVitality, _rndVitality, rndEnergy, _rndEnergy, rndEdefense, _rndEdefense, rndEdamage, _rndEdamage, baseItemName, itemName, createNewItem, newItem;
 
@@ -35,7 +35,7 @@ var generateRandomMagicItem = /*#__PURE__*/function () {
             return _models["default"].itemBase.findOne({
               order: [[_sequelize.Sequelize.literal('RAND()')]],
               where: {
-                // '$itemFamily.itemType.name$': 'Assassin Katars',
+                '$itemFamily.itemType.name$': 'Daggers',
                 levelReq: (0, _defineProperty2["default"])({}, _sequelize.Op.or, [(0, _defineProperty2["default"])({}, _sequelize.Op.lte, level), null])
               },
               // where: { '$itemFamily.name$': 'War Axe' },
@@ -273,9 +273,9 @@ var generateRandomMagicItem = /*#__PURE__*/function () {
     }, _callee);
   }));
 
-  return function generateRandomMagicItem(_x) {
+  return function generateRandomStartDagger(_x) {
     return _ref.apply(this, arguments);
   };
 }();
 
-exports.generateRandomMagicItem = generateRandomMagicItem;
+exports.generateRandomStartDagger = generateRandomStartDagger;

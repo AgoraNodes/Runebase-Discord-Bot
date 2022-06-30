@@ -89,6 +89,10 @@ var rateLimiterSkills = new RateLimiterFlexible["default"].RateLimiterMemory({
   points: 2,
   duration: 30
 });
+var rateLimiterGenerateStartDagger = new RateLimiterFlexible["default"].RateLimiterMemory({
+  points: 2,
+  duration: 30
+});
 
 var myRateLimiter = /*#__PURE__*/function () {
   var _ref = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(client, message, title) {
@@ -307,75 +311,87 @@ var myRateLimiter = /*#__PURE__*/function () {
             }
 
             _context.next = 71;
-            return rateLimiterEquipment.consume(userId, 1);
+            return rateLimiterSkills.consume(userId, 1);
 
           case 71:
             return _context.abrupt("return", false);
 
           case 72:
-            throw new Error("no Rate limiter could be reached");
-
-          case 75:
-            _context.prev = 75;
-            _context.t0 = _context["catch"](5);
-            console.log(_context.t0);
-            _context.prev = 78;
-            _context.next = 81;
-            return errorConsumer.consume(userId, 1);
-
-          case 81:
-            notError = _context.sent;
-
-            if (!(notError.remainingPoints > 0)) {
-              _context.next = 89;
+            if (!(title.toLowerCase() === 'generatestartdagger')) {
+              _context.next = 76;
               break;
             }
 
+            _context.next = 75;
+            return rateLimiterGenerateStartDagger.consume(userId, 1);
+
+          case 75:
+            return _context.abrupt("return", false);
+
+          case 76:
+            throw new Error("no Rate limiter could be reached");
+
+          case 79:
+            _context.prev = 79;
+            _context.t0 = _context["catch"](5);
+            console.log(_context.t0);
+            _context.prev = 82;
             _context.next = 85;
-            return client.channels.fetch(discordChannelId)["catch"](function (e) {
-              console.log(e);
-            });
+            return errorConsumer.consume(userId, 1);
 
           case 85:
-            discordChannel = _context.sent;
+            notError = _context.sent;
 
-            if (!discordChannel) {
-              _context.next = 89;
+            if (!(notError.remainingPoints > 0)) {
+              _context.next = 93;
               break;
             }
 
             _context.next = 89;
+            return client.channels.fetch(discordChannelId)["catch"](function (e) {
+              console.log(e);
+            });
+
+          case 89:
+            discordChannel = _context.sent;
+
+            if (!discordChannel) {
+              _context.next = 93;
+              break;
+            }
+
+            _context.next = 93;
             return discordChannel.send({
               embeds: [(0, _messages.discordLimitSpamMessage)(userId, title)]
             })["catch"](function (e) {
               console.log(e);
             });
 
-          case 89:
-            return _context.abrupt("return", true);
-
-          case 92:
-            _context.prev = 92;
-            _context.t1 = _context["catch"](78);
-            console.log(_context.t1);
+          case 93:
             return _context.abrupt("return", true);
 
           case 96:
-            _context.next = 102;
+            _context.prev = 96;
+            _context.t1 = _context["catch"](82);
+            console.log(_context.t1);
+            return _context.abrupt("return", true);
+
+          case 100:
+            _context.next = 106;
             break;
 
-          case 98:
-            _context.prev = 98;
+          case 102:
+            _context.prev = 102;
             _context.t2 = _context["catch"](0);
             console.log(_context.t2);
             return _context.abrupt("return", true);
 
-          case 102:
+          case 106:
           case "end":
             return _context.stop();
         }
       }
-    }, _callee, null, [[0, 98], [5, 75], [78, 92]]);
+    }, _callee, null, [[0, 102], [5, 79], [82, 96]]);
   }));
 
   return function myRateLimiter(_x, _x2, _x3) {

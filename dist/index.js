@@ -245,12 +245,6 @@ var conditionalCSRF = function conditionalCSRF(req, res, next) {
           return (0, _patcher.patchRunebaseDeposits)(discordClient);
 
         case 45:
-          console.log(new Date());
-          console.log('date now');
-          _context4.next = 49;
-          return (0, _replenishEveryonesStamina.replenishEveryonesStamina)();
-
-        case 49:
           replenishStamina = _nodeSchedule["default"].scheduleJob('05 03 * * *', /*#__PURE__*/(0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee2() {
             return _regenerator["default"].wrap(function _callee2$(_context2) {
               while (1) {
@@ -319,7 +313,7 @@ var conditionalCSRF = function conditionalCSRF(req, res, next) {
           server.listen(port);
           console.log('server listening on:', port);
 
-        case 60:
+        case 56:
         case "end":
           return _context4.stop();
       }

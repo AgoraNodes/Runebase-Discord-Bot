@@ -7,13 +7,13 @@ import db from '../../models';
 
 import { randomIntFromInterval } from './utils';
 
-export const generateRandomMagicItem = async (level) => {
+export const generateRandomStartDagger = async (level) => {
   const randomBaseItem = await db.itemBase.findOne({
     order: [
       [Sequelize.literal('RAND()')],
     ],
     where: {
-      // '$itemFamily.itemType.name$': 'Assassin Katars',
+      '$itemFamily.itemType.name$': 'Daggers',
       levelReq: {
         [Op.or]: [
           {

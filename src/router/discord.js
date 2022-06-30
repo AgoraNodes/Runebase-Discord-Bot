@@ -26,6 +26,7 @@ import { discordShowEquipment } from '../controllers/equipment';
 import { discordBattle } from '../controllers/battle';
 import { discordHeal } from '../controllers/heal';
 import { discordGrantExp } from '../controllers/grantExp';
+import { discordStartDagger } from '../controllers/generateStartDagger';
 
 import { discordExpTest } from '../controllers/expTest';
 import { myRateLimiter } from '../helpers/rateLimit';
@@ -1073,6 +1074,23 @@ export const discordRouter = async (
           );
         });
       }
+    }
+
+    if (filteredMessageDiscord[1] && filteredMessageDiscord[1].toLowerCase() === 'generatestartdagger') {
+      const limited = await myRateLimiter(
+        discordClient,
+        message,
+        'GenerateStartDagger',
+      );
+      if (limited) return;
+      await queue.add(async () => {
+        const task = await discordStartDagger(
+          discordClient,
+          message,
+          queue,
+          io,
+        );
+      });
     }
 
     if (filteredMessageDiscord[1] && filteredMessageDiscord[1].toLowerCase() === 'battle') {
