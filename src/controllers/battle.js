@@ -21,7 +21,11 @@ import { fetchDiscordUserIdFromMessageOrInteraction } from '../helpers/client/fe
 import { fetchDiscordChannel } from '../helpers/client/fetchDiscordChannel';
 import { processBattleMove } from '../helpers/battle/processBattleMove';
 import { renderBattleComplete } from '../render/battle/battleComplete';
+import { noLootFound } from '../render/battle/noLootFound';
+
 import { gainExp } from '../helpers/client/experience';
+import { generateLoot } from '../helpers/items/generateLoot';
+import { renderItemImage } from "../render/item";
 
 function randomIntFromInterval(min, max) { // min and max included
   return Math.floor(Math.random() * (max - min + 1) + min);
@@ -238,15 +242,83 @@ export const discordBattle = async (
     ],
   });
 
+  const generateLootImagesArray = async (theLoot) => {
+    const lootArray = [];
+    // eslint-disable-next-line no-restricted-syntax
+    for await (const looot of theLoot) {
+      lootArray.push(
+        new MessageAttachment(
+          await renderItemImage(looot),
+          `${looot.id}.png`,
+        ),
+      );
+    }
+    return lootArray;
+  };
+
+  const generateLootItemButtonArray = async (theLoot) => {
+    const lootButtonArray = [];
+    // eslint-disable-next-line no-restricted-syntax
+    for await (const looot of theLoot) {
+      console.log(looot);
+      const addLootId = `lootItem:${looot.id}`;
+      lootButtonArray.push(
+        new MessageButton({
+          style: 'SECONDARY',
+          label: `Loot ${looot.name}`,
+          emoji: '🤏',
+          customId: addLootId,
+        }),
+      );
+    }
+    return lootButtonArray;
+  };
+
   const loadingEmbed = new MessageEmbed()
     .setTitle('Battle')
     .setDescription(`${userCurrentCharacter.user.username}, Your next move is calculating..`);
 
-  const collector = embedMessage.createMessageComponentCollector({
-    filter: ({ user: discordUser }) => discordUser.id === userCurrentCharacter.user.user_id,
-  });
+  const battleCompleteEmbed = async (
+    userCurrentCharacter,
+    expEarned,
+    newLootC,
+  ) => {
+    let itemString = '';
+    // eslint-disable-next-line no-restricted-syntax
+    for await (const looot of newLootC) {
+      itemString += `\n- **${looot.name}** [${looot.itemQuality.name}]`;
+    }
+    return new MessageEmbed()
+      .setTitle(`${userCurrentCharacter.user.username} battle#${battle.id} results`)
+      .setDescription(`Exp earned: **${expEarned}**
 
+${newLootC.length > 0 ? `__found ${newLootC.length} ${newLootC.length === 1 ? `item` : `items`}__` : ``}${itemString}`);
+  };
+
+  const collector = embedMessage.createMessageComponentCollector({
+    // filter: ({ user: discordUser }) => discordUser.id === userCurrentCharacter.user.user_id,
+  });
+  let newLoot = [];
   collector.on('collect', async (interaction) => {
+    // If someobody clicks loot that isn't hes/hers
+    if (interaction.isButton()) {
+      if (interaction.customId.startsWith('lootItem:')) {
+        if (interaction.user.id !== userCurrentCharacter.user.user_id) {
+          await interaction.reply({
+            content: `<@${interaction.user.id}>, This loot isn't ment for you!`,
+            ephemeral: true,
+          });
+          return;
+        }
+      }
+    }
+    if (interaction.user.id !== userCurrentCharacter.user.user_id) {
+      await interaction.reply({
+        content: `<@${interaction.user.id}>, These buttons aren't for you!`,
+        ephemeral: true,
+      });
+      return;
+    }
     await queue.add(async () => {
       await db.sequelize.transaction({
         isolationLevel: Transaction.ISOLATION_LEVELS.SERIALIZABLE,
@@ -254,6 +326,7 @@ export const discordBattle = async (
         let attackUsed;
         let monsterInfo;
         let userInfo;
+
         let previousBattleState = battle;
         previousBattleState = JSON.stringify(previousBattleState);
         previousBattleState = JSON.parse(previousBattleState);
@@ -263,6 +336,60 @@ export const discordBattle = async (
 
         if (interaction.isButton()) {
           await interaction.deferUpdate();
+          if (interaction.customId.startsWith('lootItem:')) {
+            const itemId = Number(interaction.customId.replace("lootItem:", ""));
+            const findItemToLoot = newLoot.find((x) => x.id === itemId);
+            if (!findItemToLoot) {
+              await interaction.reply({
+                content: `<@${interaction.user.id}>, We didn't find this item for you to loot!`,
+                ephemeral: true,
+              });
+              return;
+            }
+            const findItemInDB = await db.item.findOne({
+              where: {
+                id: findItemToLoot.id,
+              },
+              transaction: t,
+              lock: t.LOCK.UPDATE,
+            });
+            console.log(findItemInDB);
+            console.log('findItemInDB');
+            if (findItemInDB.inventoryId) {
+              await interaction.followUp({
+                content: `<@${interaction.user.id}>, Item was already looted!`,
+                ephemeral: true,
+              });
+              return;
+            }
+            await findItemInDB.update({
+              inventoryId: userCurrentCharacter.inventoryId,
+            }, {
+              transaction: t,
+              lock: t.LOCK.UPDATE,
+            });
+            newLoot = newLoot.filter((data) => data.id !== itemId);
+            await interaction.editReply({
+              files: [
+                await renderBattleComplete(
+                  userCurrentCharacter,
+                  battle,
+                ),
+                ...(newLoot.length > 0 ? await generateLootImagesArray(newLoot) : []),
+              ],
+              components: [
+                ...(newLoot.length > 0
+                  ? [
+                    new MessageActionRow({
+                      components: await generateLootItemButtonArray(newLoot),
+                    }),
+                  ]
+                  : []
+                ),
+              ],
+            });
+            return;
+          }
           userCurrentCharacter = await fetchUserCurrentCharacter(
             userId, // user discord id
             false, // Need inventory?
@@ -287,8 +414,8 @@ export const discordBattle = async (
             return;
           }
 
-          console.log(interaction.customId);
-          console.log('interaction.customId');
+          // console.log(interaction.customId);
+          // console.log('interaction.customId');
 
           if (interaction.customId.startsWith('attackMain:')) {
             attackUsed = 'main';
@@ -319,6 +446,15 @@ export const discordBattle = async (
                 'battle',
                 t,
               );
+              const foundLoot = await generateLoot(battle.monsters[0].level);
+              if (foundLoot) {
+                newLoot.push(foundLoot);
+              }
+
+              const foundLootTwo = await generateLoot(battle.monsters[0].level);
+              if (foundLootTwo) {
+                newLoot.push(foundLootTwo);
+              }
             }
           }
           if (battle.complete) {
@@ -337,6 +473,7 @@ export const discordBattle = async (
                   ),
                   'battle.gif',
                 ),
+
               ],
               components: [],
             });
@@ -406,14 +543,30 @@ export const discordBattle = async (
           if (battle.complete) {
             setTimeout(async () => {
               await interaction.editReply({
-                embeds: [],
+                embeds: [
+                  await battleCompleteEmbed(
+                    userCurrentCharacter,
+                    battle.monsters[0].exp,
+                    newLoot,
+                  ),
+                ],
                 files: [
                   await renderBattleComplete(
                     userCurrentCharacter,
-                    battle.monsters[0].exp,
+                    battle,
+                  ),
+                  ...(newLoot.length > 0 ? await generateLootImagesArray(newLoot) : []),
+                ],
+                components: [
+                  ...(newLoot.length > 0
+                    ? [
+                      new MessageActionRow({
+                        components: await generateLootItemButtonArray(newLoot),
+                      }),
+                    ]
+                    : []
                   ),
                 ],
-                components: [],
               });
             }, 5000);
           }

@@ -24,7 +24,11 @@ import {
 import db from '../models';
 import logger from "../helpers/logger";
 import { userWalletExist } from "../helpers/client/userWalletExist";
+import { generateLoot } from "../helpers/items/generateLoot";
 import { generateRandomMagicItem } from "../helpers/items/generateRandomMagicItem";
+import { generateRandomNormalItem } from "../helpers/items/generateRandomNormalItem";
+import { generateRandomLowQualityItem } from "../helpers/items/generateRandomLowQualityItem";
+import { generateRandomSuperiorItem } from "../helpers/items/generateRandomSuperiorItem";
 import { generateModifierStringArray } from "../helpers/items/generateModifierStringArray";
 import { renderItemImage } from "../render/item";
 
@@ -518,6 +522,7 @@ export const discordShowCaseMagicItem = async (
       transaction: t,
     });
     activity.unshift(finalActivity);
+    const item = await generateLoot(1);
   }).catch(async (err) => {
     console.log(err);
     try {

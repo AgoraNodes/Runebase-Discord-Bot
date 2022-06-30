@@ -5,9 +5,7 @@ import {
 } from "sequelize";
 import db from '../../models';
 
-function randomIntFromInterval(min, max) {
-  return Math.floor(Math.random() * (max - min + 1) + min);
-}
+import { randomIntFromInterval } from './utils';
 
 export const generateRandomMagicItem = async (level) => {
   const randomBaseItem = await db.itemBase.findOne({
@@ -15,7 +13,7 @@ export const generateRandomMagicItem = async (level) => {
       [Sequelize.literal('RAND()')],
     ],
     where: {
-      // '$itemFamily.itemType.name$': 'Throwing',
+      '$itemFamily.itemType.name$': 'Assassin Katars',
       levelReq: {
         [Op.or]: [
           {

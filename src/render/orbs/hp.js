@@ -12,7 +12,7 @@ export const renderHpOrb = async (
   const {
     hp,
   } = await calculateCharacterStats(currentUser);
-  console.log(hp);
+  // console.log(hp);
   const canvas = createCanvas(100, 100);
   const ctx = canvas.getContext('2d');
   const percentage = (hp.current / hp.max) * 100;

@@ -237,9 +237,6 @@ const conditionalCSRF = function (
     discordClient,
   );
 
-  console.log(new Date());
-  console.log('date now');
-  await replenishEveryonesStamina();
   const replenishStamina = schedule.scheduleJob('05 03 * * *', async () => {
     console.log('node executed');
     await replenishEveryonesStamina();

@@ -11,7 +11,7 @@ import {
 
 export const renderBattleComplete = async (
   currentCharacter,
-  xpEarned,
+  battle,
 ) => {
   await registerFont(path.join(__dirname, '../../assets/fonts/', 'Heart_warming.otf'), { family: 'HeartWarming' });
   const canvas = createCanvas(1400, 300);
@@ -22,8 +22,8 @@ export const renderBattleComplete = async (
   ctx.textAlign = "center";
   ctx.strokeStyle = 'black';
   ctx.lineWidth = 3;
-  ctx.strokeText(`${currentCharacter.user.username} you won the battle and earned ${xpEarned} exp`, 700, 150, 1400);
-  ctx.fillText(`${currentCharacter.user.username} you won the battle and earned ${xpEarned} exp`, 700, 150, 1400);
+  ctx.strokeText(`${currentCharacter.user.username} won battle#${battle.id}`, 700, 150, 1400);
+  ctx.fillText(`${currentCharacter.user.username} won battle#${battle.id}`, 700, 150, 1400);
 
   return new MessageAttachment(canvas.toBuffer(), 'class.png');
 };

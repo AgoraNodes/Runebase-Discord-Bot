@@ -82,6 +82,13 @@ const drawEnemy = (
   ctx.lineJoin = 'round';
   ctx.lineWidth = 5;
   ctx.strokeStyle = "red";
+  let hpPercentage = monster.BattleMonster.currentHp / monster.BattleMonster.maxHp;
+  if (hpPercentage < 0) {
+    hpPercentage = 0;
+  }
+  if (hpPercentage > 100) {
+    hpPercentage = 0;
+  }
 
   // empty bar
 
@@ -98,7 +105,7 @@ const drawEnemy = (
     ctx.strokeRect(
       185,
       45,
-      40 * (monster.BattleMonster.currentHp / monster.BattleMonster.maxHp),
+      40 * (hpPercentage),
       0,
     );
     ctx.drawImage(
@@ -121,7 +128,7 @@ const drawEnemy = (
     ctx.strokeRect(
       110,
       37,
-      40 * (monster.BattleMonster.currentHp / monster.BattleMonster.maxHp),
+      40 * (hpPercentage),
       0,
     );
     ctx.drawImage(

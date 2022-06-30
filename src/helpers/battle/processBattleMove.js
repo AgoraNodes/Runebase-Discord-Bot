@@ -15,8 +15,8 @@ export const processBattleMove = async (
   queue,
   t,
 ) => {
-  console.log('what');
-  console.log(attackUsed);
+  // console.log('what');
+  // console.log(attackUsed);
   const unitUsedMove = "Attack";
   const {
     attackOne,
