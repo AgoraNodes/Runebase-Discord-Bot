@@ -5,10 +5,7 @@ import db from '../../models';
 import { calculateCharacterStats } from '../stats/calculateCharacterStats';
 import { fetchUserCurrentSelectedSkills } from "../character/selectedSkills";
 import { calculateSkillDamage } from "../skills/calculateSkillDamage";
-
-function randomIntFromInterval(min, max) { // min and max included
-  return Math.floor(Math.random() * (max - min + 1) + min);
-}
+import { randomIntFromInterval } from "../utils";
 
 export const processBattleMove = async (
   userCurrentCharacter,
@@ -141,7 +138,7 @@ export const processBattleMove = async (
 
         await db.battleLog.create({
           battleId: battle.id,
-          log: `${battle.monsters[0].name} used attack on ${userCurrentCharacter.user.username} for ${randomMonsterAttackDamage} damage`,
+          log: `${remainingMonster.monster.name} used attack on ${userCurrentCharacter.user.username} for ${randomMonsterAttackDamage} damage`,
         }, {
           lock: t.LOCK.UPDATE,
           transaction: t,
@@ -149,7 +146,7 @@ export const processBattleMove = async (
         if (currentUserHp < 1) {
           await db.battleLog.create({
             battleId: battle.id,
-            log: `${battle.monsters[0].name} killed ${userCurrentCharacter.user.username}`,
+            log: `${remainingMonster.monster.name} killed ${userCurrentCharacter.user.username}`,
           }, {
             lock: t.LOCK.UPDATE,
             transaction: t,

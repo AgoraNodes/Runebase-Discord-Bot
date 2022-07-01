@@ -72,7 +72,7 @@ export const discordTopggVote = async (
     const newExp = await gainExp(
       discordClient,
       message.user,
-      10,
+      16,
       'topggVote',
       t,
     );

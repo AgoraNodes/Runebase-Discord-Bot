@@ -21,14 +21,12 @@ import { fetchDiscordUserIdFromMessageOrInteraction } from '../helpers/client/fe
 import { fetchDiscordChannel } from '../helpers/client/fetchDiscordChannel';
 import { processBattleMove } from '../helpers/battle/processBattleMove';
 import { renderBattleComplete } from '../render/battle/battleComplete';
+import { randomIntFromInterval } from "../helpers/utils";
 
 import { gainExp } from '../helpers/client/experience';
 import { generateLoot } from '../helpers/items/generateLoot';
 import { renderItemImage } from "../render/item";
 
-function randomIntFromInterval(min, max) { // min and max included
-  return Math.floor(Math.random() * (max - min + 1) + min);
-}
 let currentSelectedMonster;
 
 export const discordBattle = async (
@@ -64,7 +62,7 @@ export const discordBattle = async (
     return;
   }
 
-  if (userCurrentCharacter.condition.stamina < 10) {
+  if (userCurrentCharacter.condition.stamina < 20) {
     await discordChannel.send({
       files: [
         await renderOutOfStamina(
@@ -88,7 +86,7 @@ export const discordBattle = async (
     return;
   }
   await userCurrentCharacter.condition.update({
-    stamina: userCurrentCharacter.condition.stamina - 10,
+    stamina: userCurrentCharacter.condition.stamina - 20,
   });
   userCurrentCharacter = await fetchUserCurrentCharacter(
     userId, // user discord id
@@ -126,34 +124,29 @@ export const discordBattle = async (
     ],
   });
   if (!battle) {
+    const newBattle = await db.battle.create({
+      complete: false,
+      UserClassId: userCurrentCharacter.id,
+    });
     const monster = await db.monster.findOne({
       where: {
         name: 'Zombie',
       },
     });
-    const newBattle = await db.battle.create({
-      complete: false,
-      UserClassId: userCurrentCharacter.id,
-    });
-    const randomMonsterHp = randomIntFromInterval(monster.minHp, monster.maxHp);
-    await db.BattleMonster.create({
-      battleId: newBattle.id,
-      monsterId: monster.id,
-      currentHp: randomMonsterHp,
-      maxHp: randomMonsterHp,
-    });
-    await db.BattleMonster.create({
-      battleId: newBattle.id,
-      monsterId: monster.id,
-      currentHp: randomMonsterHp,
-      maxHp: randomMonsterHp,
-    });
-    await db.BattleMonster.create({
-      battleId: newBattle.id,
-      monsterId: monster.id,
-      currentHp: randomMonsterHp,
-      maxHp: randomMonsterHp,
-    });
+    const randomAmountOfMobs = randomIntFromInterval(1, 4);
+    const mobPromises = [];
+    for (let i = 0; i < randomAmountOfMobs; i += 1) {
+      const randomMonsterHp = randomIntFromInterval(monster.minHp, monster.maxHp);
+      const newMobPromise = db.BattleMonster.create({
+        battleId: newBattle.id,
+        monsterId: monster.id,
+        currentHp: randomMonsterHp,
+        maxHp: randomMonsterHp,
+      });
+      mobPromises.push(newMobPromise);
+    }
+    await Promise.all(mobPromises);
+
     battle = await db.battle.findOne({
       where: {
         id: newBattle.id,
@@ -184,9 +177,6 @@ export const discordBattle = async (
       ],
     });
   }
-  // console.log(battle.monsters);
-  // console.log(battle.monsters[0].BattleMonster);
-  // console.log('monsters');
 
   const mainSkillMap = userCurrentSelectedSkills.UserClassSkills.map((
     mySkill,
@@ -207,64 +197,10 @@ export const discordBattle = async (
     value: `secondarySkill:${mySkill.id}`,
     default: mySkill.id === userCurrentSelectedSkills.selectedSecondarySkillId,
   }));
-  // console.log(battle.BattleMonsters);
-  // console.log('-----------------');
 
-  // console.log(battle.monsters);
-  // const selectMonsterMap = battle.BattleMonsters.map((
-  //   battleMonster,
-  //   index,
-  // ) => {
-  //   console.log(battleMonster);
-  //   return {
-  //     placeholder: 'Select a mob to attack',
-  //     label: `Select Mob: ${battleMonster.monster.name} #${battleMonster.id} (${battleMonster.currentHp} / ${battleMonster.maxHp})`,
-  //     value: `selectMonster:${battleMonster.id}`,
-  //     // default: mySkill.id === userCurrentSelectedSkills.selectedSecondarySkillId,
-  //   };
-  // });
-  console.log(currentSelectedMonster);
-  console.log("before currentSelectedMonster");
-  console.log("before currentSelectedMonster");
-  console.log("before currentSelectedMonster");
-  console.log("before currentSelectedMonster");
-  console.log("before currentSelectedMonster");
-  console.log("before currentSelectedMonster");
-  console.log("before currentSelectedMonster");
-  console.log("before currentSelectedMonster");
-  console.log("before currentSelectedMonster");
-  console.log("before currentSelectedMonster");
-  console.log("before currentSelectedMonster");
-  console.log("before currentSelectedMonster");
-  console.log("before currentSelectedMonster");
-  console.log("before currentSelectedMonster");
-  console.log("before currentSelectedMonster");
-
-  if (!currentSelectedMonster) {
+  if (!currentSelectedMonster || (currentSelectedMonster && currentSelectedMonster.currentHp < 1)) {
     currentSelectedMonster = battle.BattleMonsters.find((element) => element.currentHp > 0);
   }
-  console.log(currentSelectedMonster);
-  console.log("after currentSelectedMonster");
-  console.log("after currentSelectedMonster");
-  console.log("after currentSelectedMonster");
-  console.log("after currentSelectedMonster");
-  console.log("after currentSelectedMonster");
-  console.log("after currentSelectedMonster");
-  console.log("after currentSelectedMonster");
-  console.log("after currentSelectedMonster");
-  console.log("after currentSelectedMonster");
-  console.log("after currentSelectedMonster");
-  console.log("after currentSelectedMonster");
-  console.log("after currentSelectedMonster");
-  console.log("after currentSelectedMonster");
-  console.log("after currentSelectedMonster");
-  console.log("after currentSelectedMonster");
-  console.log("after currentSelectedMonster");
-  console.log("after currentSelectedMonster");
-  console.log("after currentSelectedMonster");
-  console.log("after currentSelectedMonster");
-  console.log("after currentSelectedMonster");
-  console.log("after currentSelectedMonster");
 
   let selectMonsterMap = battle.BattleMonsters.reduce((filtered, battleMonster, index) => {
     if (battleMonster.currentHp > 0) {
@@ -278,7 +214,6 @@ export const discordBattle = async (
     }
     return filtered;
   }, []);
-  console.log(selectMonsterMap);
 
   const generateMainSkillButton = async (mySelectedSkill) => {
     const addSkillId = `attackMain:${mySelectedSkill.id}`;
@@ -434,6 +369,15 @@ ${newLootC.length > 0 ? `__found ${newLootC.length} ${newLootC.length === 1 ? `i
       });
       return;
     }
+    if (interaction.isButton()) {
+      if (!currentSelectedMonster) {
+        await interaction.reply({
+          content: `<@${interaction.user.id}>, You need to select a monster to attack!`,
+          ephemeral: true,
+        });
+        return;
+      }
+    }
     if (interaction.isSelectMenu()) {
       if (interaction.customId === 'select-mob') {
         await interaction.deferUpdate();
@@ -493,8 +437,6 @@ ${newLootC.length > 0 ? `__found ${newLootC.length} ${newLootC.length === 1 ? `i
               transaction: t,
               lock: t.LOCK.UPDATE,
             });
-            console.log(findItemInDB);
-            console.log('findItemInDB');
             if (findItemInDB.inventoryId) {
               await interaction.followUp({
                 content: `<@${interaction.user.id}>, Item was already looted!`,
@@ -554,9 +496,6 @@ ${newLootC.length > 0 ? `__found ${newLootC.length} ${newLootC.length === 1 ? `i
             return;
           }
 
-          // console.log(interaction.customId);
-          // console.log('interaction.customId');
-
           if (interaction.customId.startsWith('attackMain:')) {
             attackUsed = 'main';
           }
@@ -580,9 +519,8 @@ ${newLootC.length > 0 ? `__found ${newLootC.length} ${newLootC.length === 1 ? `i
               queue,
               t,
             );
-            console.log('after processBattleMove 1');
             if (battle.complete) {
-              console.log('battle is complete');
+              currentSelectedMonster = null;
               const newExp = await gainExp(
                 discordClient,
                 userCurrentCharacter.user.user_id,
@@ -591,8 +529,6 @@ ${newLootC.length > 0 ? `__found ${newLootC.length} ${newLootC.length === 1 ? `i
                 t,
               );
               const highestLevelMob = Math.max(...battle.BattleMonsters.map((o) => o.monster.level));
-              console.log('highest level');
-              console.log(highestLevelMob);
               const foundLoot = await generateLoot(highestLevelMob);
               if (foundLoot) {
                 newLoot.push(foundLoot);
@@ -626,17 +562,15 @@ ${newLootC.length > 0 ? `__found ${newLootC.length} ${newLootC.length === 1 ? `i
               components: [],
             });
           } else {
-            console.log('before change current selection');
             const checkCurrentSelected = battle.BattleMonsters.find((element) => element && element.id === currentSelectedMonster.id);
-            const defaultSelectionCurrentMob = checkCurrentSelected.currentHp > 0 ? checkCurrentSelected : battle.BattleMonsters.find((element) => element.currentHp > 0);
-            console.log('after change current selection');
+            currentSelectedMonster = checkCurrentSelected.currentHp > 0 ? checkCurrentSelected : battle.BattleMonsters.find((element) => element.currentHp > 0);
             selectMonsterMap = battle.BattleMonsters.reduce((filtered, battleMonster, index) => {
               if (battleMonster.currentHp > 0) {
                 const someNewValue = {
                   placeholder: 'Select a mob to attack',
                   label: `Select Mob: ${battleMonster.monster.name} #${battleMonster.id} (${battleMonster.currentHp} / ${battleMonster.maxHp})`,
                   value: `selectMonster:${battleMonster.id}`,
-                  default: defaultSelectionCurrentMob.id === battleMonster.id,
+                  default: currentSelectedMonster.id === battleMonster.id,
                 };
                 filtered.push(someNewValue);
               }

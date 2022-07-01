@@ -26,13 +26,6 @@ export const renderBattleGif = async (
   battleInfoArray = false,
   monsterInfo = false,
 ) => {
-  console.log('start render gif');
-  // console.log(previousUserState.condition);
-  // console.log('previous user state');
-  // console.log(currentUser.condition);
-  // console.log('next user state');
-  // console.log('renderBattlegif');
-  // console.log('123');
   const enemyPosition = [];
   const playerPosition = [];
   const enemies = [];
@@ -52,9 +45,6 @@ export const renderBattleGif = async (
     );
   });
   console.log('start render gif 22');
-  // const enemyFrame = await loadEnemy(
-  //   'Zombie',
-  // );
 
   const [
     hpOrbs,
@@ -88,7 +78,7 @@ export const renderBattleGif = async (
     height: canvas.height,
     repeat: -1,
   });
-  console.log('start render gif 3');
+
   console.log('Render Frame #1');
   drawBackground(
     ctx,
@@ -107,7 +97,7 @@ export const renderBattleGif = async (
       enemyPosition[i] = drawEnemy(
         ctx, // CTX
         previousBattleState.BattleMonsters.find((element) => element.id === battleMonster.id), // MonsterState
-        currentSelectedMonster.id === battleMonster.id, // is current Monster selected?
+        currentSelectedMonster && currentSelectedMonster.id === battleMonster.id, // is current Monster selected?
         enemies[battleMonster.id], // Enemy Image
         false, // Moved To user?
         0, // Enemy Image Frame Shown
@@ -139,18 +129,13 @@ export const renderBattleGif = async (
     backgroundImage,
   );
 
-  console.log(previousBattleState.BattleMonsters);
-  console.log('888');
-  console.log(battle.BattleMonsters);
-  console.log('777');
-
   previousBattleState.BattleMonsters.forEach(async (battleMonster, i) => {
     if (battleMonster.currentHp > 0) {
       // const findUpdatedMonsterState = monsterInfo.find((element) => element.monsterId === battleMonster.id);
       enemyPosition[i] = drawEnemy(
         ctx, // CTX
         previousBattleState.BattleMonsters.find((element) => element.id === battleMonster.id), // MonsterState
-        currentSelectedMonster.id === battleMonster.id, // is current Monster selected?
+        currentSelectedMonster && currentSelectedMonster.id === battleMonster.id, // is current Monster selected?
         enemies[battleMonster.id], // Enemy Image
         false, // Moved To user?
         0, // Enemy Image Frame Shown
@@ -209,7 +194,7 @@ export const renderBattleGif = async (
       enemyPosition[i] = drawEnemy(
         ctx, // CTX
         battle.BattleMonsters.find((element) => element.id === battleMonster.id), // MonsterState
-        currentSelectedMonster.id === battleMonster.id, // is current Monster selected?
+        currentSelectedMonster && currentSelectedMonster.id === battleMonster.id, // is current Monster selected?
         enemies[battleMonster.id], // Enemy Image
         false, // Moved To user?
         0, // Enemy Image Frame Shown
@@ -267,7 +252,7 @@ export const renderBattleGif = async (
       enemyPosition[i] = drawEnemy(
         ctx, // CTX
         battle.BattleMonsters.find((element) => element.id === battleMonster.id), // MonsterState
-        currentSelectedMonster.id === battleMonster.id, // is current Monster selected?
+        currentSelectedMonster && currentSelectedMonster.id === battleMonster.id, // is current Monster selected?
         enemies[battleMonster.id], // Enemy Image
         false, // Moved To user?
         0, // Enemy Image Frame Shown
@@ -320,7 +305,7 @@ export const renderBattleGif = async (
         enemyPosition[i] = drawEnemy(
           ctx, // CTX
           battle.BattleMonsters.find((element) => element.id === battleMonster.id), // MonsterState
-          currentSelectedMonster.id === battleMonster.id, // is current Monster selected?
+          currentSelectedMonster && currentSelectedMonster.id === battleMonster.id, // is current Monster selected?
           enemies[battleMonster.id], // Enemy Image
           battleMonster.id === battleInfo.monsterId, // Moved To user?
           battleMonster.id === battleInfo.monsterId ? 0 : 0, // Enemy Image Frame Shown
@@ -362,7 +347,7 @@ export const renderBattleGif = async (
         enemyPosition[i] = drawEnemy(
           ctx, // CTX
           battle.BattleMonsters.find((element) => element.id === battleMonster.id), // MonsterState
-          currentSelectedMonster.id === battleMonster.id, // is current Monster selected?
+          currentSelectedMonster && currentSelectedMonster.id === battleMonster.id, // is current Monster selected?
           enemies[battleMonster.id], // Enemy Image
           battleMonster.id === battleInfo.monsterId, // Moved To user?
           battleMonster.id === battleInfo.monsterId ? 1 : 0, // Enemy Image Frame Shown
@@ -413,7 +398,7 @@ export const renderBattleGif = async (
         enemyPosition[i] = drawEnemy(
           ctx, // CTX
           battle.BattleMonsters.find((element) => element.id === battleMonster.id), // MonsterState
-          currentSelectedMonster.id === battleMonster.id, // is current Monster selected?
+          currentSelectedMonster && currentSelectedMonster.id === battleMonster.id, // is current Monster selected?
           enemies[battleMonster.id], // Enemy Image
           battleMonster.id === battleInfo.monsterId, // Moved To user?
           battleMonster.id === battleInfo.monsterId ? 2 : 0, // Enemy Image Frame Shown
@@ -461,7 +446,7 @@ export const renderBattleGif = async (
         enemyPosition[i] = drawEnemy(
           ctx, // CTX
           battle.BattleMonsters.find((element) => element.id === battleMonster.id), // MonsterState
-          currentSelectedMonster.id === battleMonster.id, // is current Monster selected?
+          currentSelectedMonster && currentSelectedMonster.id === battleMonster.id, // is current Monster selected?
           enemies[battleMonster.id], // Enemy Image
           battleMonster.id === battleInfo.monsterId, // Moved To user?
           battleMonster.id === battleInfo.monsterId ? 0 : 0, // Enemy Image Frame Shown
@@ -509,7 +494,7 @@ export const renderBattleGif = async (
         enemyPosition[i] = drawEnemy(
           ctx, // CTX
           battle.BattleMonsters.find((element) => element.id === battleMonster.id), // MonsterState
-          currentSelectedMonster.id === battleMonster.id, // is current Monster selected?
+          currentSelectedMonster && currentSelectedMonster.id === battleMonster.id, // is current Monster selected?
           enemies[battleMonster.id], // Enemy Image
           false, // Moved To user?
           0, // Enemy Image Frame Shown

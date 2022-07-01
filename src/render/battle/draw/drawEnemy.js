@@ -15,14 +15,18 @@ export const drawEnemy = (
   let extraPositionX = 0;
   let extraPositionY = 0;
 
+  let minusIndex = 0;
   if (index % 2 === 0 && index !== 0) {
-    const minusIndex = index / 2;
+    minusIndex = index / 2;
     extraPositionX = (index - minusIndex) * 30;
     extraPositionY = (index - minusIndex) * 30;
   }
   if (index % 2 !== 0 && index !== 0) {
-    extraPositionX = index * -30;
-    extraPositionY = index * -30;
+    if (index > 2) {
+      minusIndex = 1;
+    }
+    extraPositionX = (index - minusIndex) * -30;
+    extraPositionY = (index - minusIndex) * -30;
   }
 
   let x = 0;
