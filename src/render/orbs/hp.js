@@ -1,9 +1,7 @@
 /* eslint-disable import/prefer-default-export */
 import {
   createCanvas,
-  registerFont,
 } from 'canvas';
-import path from 'path';
 import { calculateCharacterStats } from '../../helpers/stats/calculateCharacterStats';
 
 export const renderHpOrb = async (
@@ -12,7 +10,6 @@ export const renderHpOrb = async (
   const {
     hp,
   } = await calculateCharacterStats(currentUser);
-  // console.log(hp);
   const canvas = createCanvas(100, 100);
   const ctx = canvas.getContext('2d');
   const percentage = (hp.current / hp.max) * 100;

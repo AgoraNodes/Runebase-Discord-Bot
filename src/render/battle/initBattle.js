@@ -1,144 +1,20 @@
 import {
-  Sequelize,
-  Transaction,
-  Op,
-} from "sequelize";
-import {
   createCanvas,
   loadImage,
   registerFont,
 } from 'canvas';
 import path from 'path';
-// import db from '../models';
-import GIFEncoder from 'gif-encoder-2';
-import { calculateCharacterStats } from '../../helpers/stats/calculateCharacterStats';
-import { renderHpOrb } from '../orbs/hp';
-import { renderMpOrb } from '../orbs/mp';
-import { drawBattleScreenTools } from './tools';
+import GIF from 'gif.node';
 
-const background = async (
-  ctx,
-  zone,
-) => {
-  const mapImage = await loadImage(path.join(__dirname, `../../assets/images/zone/background`, `${zone}.png`));
-  ctx.drawImage(
-    mapImage,
-    0, // x position
-    0, // y position
-    mapImage.width,
-    mapImage.height,
-  );
-};
+import { loadPlayer } from './load/loadPlayer';
+import { loadEnemy } from './load/loadEnemy';
+import { loadOrbs } from './load/loadOrbs';
 
-const drawBattleLog = (
-  ctx,
-  battle,
-) => {
-  ctx.fillStyle = 'white';
-  ctx.fillRect(320, 0, 130, 200);
-  ctx.font = 'bold 13px "HeartWarming"';
-  ctx.strokeText('Battle log', 330, 20, 100);
-  ctx.fillText('Battle log', 330, 20, 100);
-  ctx.font = 'normal 10px serif';
-  ctx.fillStyle = 'black';
-  for (let i = 0; i < battle.battleLogs.length; i++) {
-    ctx.fillText(
-      battle.battleLogs[i].log,
-      330,
-      25 + ((i + 1) * 15),
-      100,
-    );
-  }
-};
-
-const drawPlayer = (
-  ctx,
-  inAttackPosition,
-) => {
-  function drawBorder(xPos, yPos, width, height, thickness = 1) {
-    ctx.fillStyle = '#FFF';
-    ctx.fillRect(xPos - (thickness), yPos - (thickness), width + (thickness * 2), height + (thickness * 2));
-  }
-  let rectXPos = 80;
-  let rectYPos = 70;
-  let rectWidth = 20;
-  let rectHeight = 50;
-
-  if (inAttackPosition) {
-    rectXPos = 175;
-    rectYPos = 60;
-    rectWidth = 20;
-    rectHeight = 50;
-  }
-
-  drawBorder(rectXPos, rectYPos, rectWidth, rectHeight);
-
-  ctx.fillStyle = '#000';
-  ctx.fillRect(rectXPos, rectYPos, rectWidth, rectHeight);
-};
-
-const drawEnemy = (
-  ctx,
-  monster,
-  enemyFrame,
-  movedToUser = false,
-  number = 0,
-) => {
-  // XP Bar
-  ctx.lineJoin = 'round';
-  ctx.lineWidth = 5;
-  ctx.strokeStyle = "red";
-
-  // empty bar
-
-  if (!movedToUser) {
-    ctx.strokeStyle = 'black';
-    ctx.strokeRect(
-      185,
-      45,
-      40,
-      0,
-    );
-
-    ctx.strokeStyle = 'red';
-    ctx.strokeRect(
-      185,
-      45,
-      40 * (monster.BattleMonster.currentHp / monster.BattleMonster.maxHp),
-      0,
-    );
-    ctx.drawImage(
-      enemyFrame[number],
-      190, // x position
-      45, // y position
-      enemyFrame[number].width / 1.5,
-      enemyFrame[number].height / 1.5,
-    );
-  } else {
-    ctx.strokeStyle = 'black';
-    ctx.strokeRect(
-      110,
-      37,
-      40,
-      0,
-    );
-
-    ctx.strokeStyle = 'red';
-    ctx.strokeRect(
-      110,
-      37,
-      40 * (monster.BattleMonster.currentHp / monster.BattleMonster.maxHp),
-      0,
-    );
-    ctx.drawImage(
-      enemyFrame[number],
-      115, // x position
-      37, // y position
-      enemyFrame[number].width / 1.5,
-      enemyFrame[number].height / 1.5,
-    );
-  }
-};
+import { drawBackground } from "./draw/drawBackground";
+import { drawBattleLog } from './draw/drawBattleLog';
+import { drawBattleScreenTools } from './draw/drawBattleScreenTools';
+import { drawPlayer } from "./draw/drawPlayer";
+import { drawEnemy } from './draw/drawEnemy';
 
 export const renderInitBattleGif = async (
   currentUser,
@@ -150,90 +26,86 @@ export const renderInitBattleGif = async (
   userInfo = false,
 ) => {
   await registerFont(path.join(__dirname, '../../assets/fonts/', 'Heart_warming.otf'), { family: 'HeartWarming' });
-  const enemyFrame = [];
-  const hpOrbBufferPrevious = await renderHpOrb(
-    previousUserState,
-  );
-  const mpOrbBufferPrevious = await renderMpOrb(
-    previousUserState,
-  );
-  const hpOrbBuffer = await renderHpOrb(
-    currentUser,
-  );
-  const mpOrbBuffer = await renderMpOrb(
-    currentUser,
-  );
-  const hpOrbImage = await loadImage(hpOrbBuffer);
-  const mpOrbImage = await loadImage(mpOrbBuffer);
-  const hpOrbImagePrevious = await loadImage(hpOrbBufferPrevious);
-  const mpOrbImagePrevious = await loadImage(mpOrbBufferPrevious);
-  enemyFrame[0] = await loadImage(path.join(
-    __dirname,
-    `../../assets/images/monsters/Zombie/`,
-    `zombie.png`,
-  ));
-  enemyFrame[1] = await loadImage(path.join(
-    __dirname,
-    `../../assets/images/monsters/Zombie/`,
-    `zombie (8).png`,
-  ));
-  enemyFrame[2] = await loadImage(path.join(
-    __dirname,
-    `../../assets/images/monsters/Zombie/`,
-    `zombie (6).png`,
-  ));
-  console.log('renderBattlegif');
 
+  const zone = 'den';
+  const backgroundImage = await loadImage(path.join(__dirname, `../../assets/images/battle/background`, `${zone}.png`));
+
+  const enemyFrame = await loadEnemy(
+    'Zombie',
+  );
+
+  const playerImage = await loadPlayer(
+    currentUser.class.name,
+  );
+
+  const [
+    hpOrbImageCurrent,
+    mpOrbImageCurrent,
+    hpOrbImagePrevious,
+    mpOrbImagePrevious,
+  ] = await loadOrbs(
+    previousUserState,
+    currentUser,
+  );
   const mainSkill = await loadImage(path.join(
     __dirname,
     `../../assets/images/skills/${userCurrentSelectedSkills.selectedMainSkill.skill.skillTree ? `${userCurrentSelectedSkills.selectedMainSkill.skill.skillTree.class.name}/${userCurrentSelectedSkills.selectedMainSkill.skill.skillTree.name}` : ``}`,
     `${userCurrentSelectedSkills.selectedMainSkill.skill.name}.png`,
   ));
-  console.log('123');
+
   const secondarySkill = await loadImage(path.join(
     __dirname,
     `../../assets/images/skills/${userCurrentSelectedSkills.selectedSecondarySkill.skill.skillTree ? `${userCurrentSelectedSkills.selectedSecondarySkill.skill.skillTree.class.name}/${userCurrentSelectedSkills.selectedSecondarySkill.skill.skillTree.name}` : ``}`,
     `${userCurrentSelectedSkills.selectedSecondarySkill.skill.name}.png`,
   ));
 
-  const canvas = createCanvas(450, 200);
+  const canvas = createCanvas(650, 300);
   const ctx = canvas.getContext('2d');
 
-  const encoder = new GIFEncoder(450, 200);
-  encoder.setDelay(200);
-  encoder.setRepeat(-1);
-  encoder.setQuality(30);
-  encoder.start();
-  // frame 1
-  const slice = 200 / 5; // this is the width of each rectangle
-  await background(
+  const gif = new GIF({
+    worker: 8,
+    quality: 50,
+    debug: false,
+    width: canvas.width,
+    height: canvas.height,
+    repeat: -1,
+  });
+
+  await drawBackground(
     ctx,
-    'den',
+    canvas,
+    backgroundImage,
   );
 
   drawPlayer(
-    ctx,
-    false,
+    ctx, // Ctx drawing canvas
+    playerImage, // image array of player images
+    0, // number of image in the array to show
+    false, // user attacking [false || enemyImagePosition]
   );
+
   drawEnemy(
     ctx,
     previousBattleState.monsters[0],
     enemyFrame,
   );
-  drawBattleScreenTools(
-    ctx,
+  await drawBattleScreenTools(
+    ctx, // pass canvas ctx
     mainSkill,
     secondarySkill,
     hpOrbImagePrevious,
     mpOrbImagePrevious,
   );
-  drawBattleLog(
+  await drawBattleLog(
     ctx,
     battle,
   );
-  encoder.addFrame(ctx);
-
-  encoder.finish();
-  const finalImage = await encoder.out.getData();
+  gif.addFrame(ctx.getImageData(0, 0, canvas.width, canvas.height), {
+    delay: 200,
+  });
+  await gif.render();
+  const finalImage = await new Promise((resolve, reject) => {
+    gif.on('finished', resolve);
+  });
   return finalImage;
 };

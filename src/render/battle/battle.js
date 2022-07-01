@@ -5,141 +5,16 @@ import {
 } from 'canvas';
 import path from 'path';
 import GIF from 'gif.node';
-// import { calculateCharacterStats } from '../../helpers/stats/calculateCharacterStats';
-import { renderHpOrb } from '../orbs/hp';
-import { renderMpOrb } from '../orbs/mp';
-import { drawBattleScreenTools } from './tools';
 
-const background = async (
-  ctx,
-  zone,
-) => {
-  const mapImage = await loadImage(path.join(__dirname, `../../assets/images/zone/background`, `${zone}.png`));
-  ctx.drawImage(
-    mapImage,
-    0, // x position
-    0, // y position
-    mapImage.width,
-    mapImage.height,
-  );
-};
+import { loadPlayer } from './load/loadPlayer';
+import { loadEnemy } from './load/loadEnemy';
+import { loadOrbs } from './load/loadOrbs';
 
-const drawBattleLog = (
-  ctx,
-  battle,
-) => {
-  ctx.fillStyle = 'white';
-  ctx.fillRect(320, 0, 130, 200);
-  ctx.font = 'bold 13px "HeartWarming"';
-  ctx.strokeText('Battle log', 330, 20, 100);
-  ctx.fillText('Battle log', 330, 20, 100);
-  ctx.font = 'normal 10px serif';
-  ctx.fillStyle = 'black';
-  for (let i = 0; i < battle.battleLogs.length; i++) {
-    ctx.fillText(
-      battle.battleLogs[i].log,
-      330,
-      25 + ((i + 1) * 15),
-      100,
-    );
-  }
-};
-
-const drawPlayer = (
-  ctx,
-  inAttackPosition,
-) => {
-  function drawBorder(xPos, yPos, width, height, thickness = 1) {
-    ctx.fillStyle = '#FFF';
-    ctx.fillRect(xPos - (thickness), yPos - (thickness), width + (thickness * 2), height + (thickness * 2));
-  }
-  let rectXPos = 80;
-  let rectYPos = 70;
-  let rectWidth = 20;
-  let rectHeight = 50;
-
-  if (inAttackPosition) {
-    rectXPos = 175;
-    rectYPos = 60;
-    rectWidth = 20;
-    rectHeight = 50;
-  }
-
-  drawBorder(rectXPos, rectYPos, rectWidth, rectHeight);
-
-  ctx.fillStyle = '#000';
-  ctx.fillRect(rectXPos, rectYPos, rectWidth, rectHeight);
-};
-
-const drawEnemy = (
-  ctx,
-  monster,
-  enemyFrame,
-  movedToUser = false,
-  number = 0,
-) => {
-  // XP Bar
-  ctx.lineJoin = 'round';
-  ctx.lineWidth = 5;
-  ctx.strokeStyle = "red";
-  let hpPercentage = monster.BattleMonster.currentHp / monster.BattleMonster.maxHp;
-  if (hpPercentage < 0) {
-    hpPercentage = 0;
-  }
-  if (hpPercentage > 100) {
-    hpPercentage = 0;
-  }
-
-  // empty bar
-
-  if (!movedToUser) {
-    ctx.strokeStyle = 'black';
-    ctx.strokeRect(
-      185,
-      45,
-      40,
-      0,
-    );
-
-    ctx.strokeStyle = 'red';
-    ctx.strokeRect(
-      185,
-      45,
-      40 * (hpPercentage),
-      0,
-    );
-    ctx.drawImage(
-      enemyFrame[number],
-      190, // x position
-      45, // y position
-      enemyFrame[number].width / 1.5,
-      enemyFrame[number].height / 1.5,
-    );
-  } else {
-    ctx.strokeStyle = 'black';
-    ctx.strokeRect(
-      110,
-      37,
-      40,
-      0,
-    );
-
-    ctx.strokeStyle = 'red';
-    ctx.strokeRect(
-      110,
-      37,
-      40 * (hpPercentage),
-      0,
-    );
-    ctx.drawImage(
-      enemyFrame[number],
-      115, // x position
-      37, // y position
-      enemyFrame[number].width / 1.5,
-      enemyFrame[number].height / 1.5,
-    );
-  }
-};
+import { drawBackground } from './draw/drawBackground';
+import { drawBattleLog } from './draw/drawBattleLog';
+import { drawBattleScreenTools } from './draw/drawBattleScreenTools';
+import { drawPlayer } from "./draw/drawPlayer";
+import { drawEnemy } from './draw/drawEnemy';
 
 export const renderBattleGif = async (
   currentUser,
@@ -156,41 +31,31 @@ export const renderBattleGif = async (
   // console.log('next user state');
   // console.log('renderBattlegif');
   // console.log('123');
+  let enemy;
+  let player;
 
   await registerFont(path.join(__dirname, '../../assets/fonts/', 'Heart_warming.otf'), { family: 'HeartWarming' });
-  const enemyFrame = [];
-  const hpOrbBufferPrevious = await renderHpOrb(
-    previousUserState,
-  );
-  const mpOrbBufferPrevious = await renderMpOrb(
-    previousUserState,
-  );
-  const hpOrbBuffer = await renderHpOrb(
-    currentUser,
-  );
-  const mpOrbBuffer = await renderMpOrb(
-    currentUser,
-  );
-  const hpOrbImage = await loadImage(hpOrbBuffer);
-  const mpOrbImage = await loadImage(mpOrbBuffer);
-  const hpOrbImagePrevious = await loadImage(hpOrbBufferPrevious);
-  const mpOrbImagePrevious = await loadImage(mpOrbBufferPrevious);
-  enemyFrame[0] = await loadImage(path.join(
-    __dirname,
-    `../../assets/images/monsters/Zombie/`,
-    `zombie.png`,
-  ));
-  enemyFrame[1] = await loadImage(path.join(
-    __dirname,
-    `../../assets/images/monsters/Zombie/`,
-    `zombie (8).png`,
-  ));
-  enemyFrame[2] = await loadImage(path.join(
-    __dirname,
-    `../../assets/images/monsters/Zombie/`,
-    `zombie (6).png`,
-  ));
 
+  const zone = 'den';
+  const backgroundImage = await loadImage(path.join(__dirname, `../../assets/images/battle/background`, `${zone}.png`));
+
+  const playerImage = await loadPlayer(
+    currentUser.class.name,
+  );
+
+  const enemyFrame = await loadEnemy(
+    'Zombie',
+  );
+
+  const [
+    hpOrbImageCurrent,
+    mpOrbImageCurrent,
+    hpOrbImagePrevious,
+    mpOrbImagePrevious,
+  ] = await loadOrbs(
+    previousUserState,
+    currentUser,
+  );
   const mainSkill = await loadImage(path.join(
     __dirname,
     `../../assets/images/skills/${userCurrentSelectedSkills.selectedMainSkill.skill.skillTree ? `${userCurrentSelectedSkills.selectedMainSkill.skill.skillTree.class.name}/${userCurrentSelectedSkills.selectedMainSkill.skill.skillTree.name}` : ``}`,
@@ -203,33 +68,38 @@ export const renderBattleGif = async (
     `${userCurrentSelectedSkills.selectedSecondarySkill.skill.name}.png`,
   ));
 
-  const canvas = createCanvas(450, 200);
+  const canvas = createCanvas(650, 300);
   const ctx = canvas.getContext('2d');
 
   const gif = new GIF({
     worker: 8,
     quality: 50,
     debug: false,
-    width: 450,
-    height: 200,
+    width: canvas.width,
+    height: canvas.height,
     repeat: -1,
   });
 
-  await background(
+  console.log('Render Frame #1');
+  drawBackground(
     ctx,
-    'den',
+    canvas,
+    backgroundImage,
   );
-  drawPlayer(
-    ctx,
-    false,
+  player = drawPlayer(
+    ctx, // Ctx drawing canvas
+    playerImage, // image array of player images
+    0, // number of image in the array to show
+    false, // user attacking [false || enemyImagePosition]
   );
-  drawEnemy(
+  enemy = await drawEnemy(
     ctx,
     previousBattleState.monsters[0],
     enemyFrame,
   );
+  console.log(enemy);
   drawBattleScreenTools(
-    ctx,
+    ctx, // pass canvas ctx
     mainSkill,
     secondarySkill,
     hpOrbImagePrevious,
@@ -243,20 +113,26 @@ export const renderBattleGif = async (
     delay: 600,
   });
 
-  // frame 4
-  await background(
+  console.log('Render Frame #2');
+  drawBackground(
     ctx,
-    'den',
+    canvas,
+    backgroundImage,
   );
-  drawPlayer(
-    ctx,
-    true,
-  );
-  drawEnemy(
+
+  enemy = await drawEnemy(
     ctx,
     previousBattleState.monsters[0],
     enemyFrame,
   );
+
+  player = drawPlayer(
+    ctx, // Ctx drawing canvas
+    playerImage, // image array of player images
+    0, // number of image in the array to show
+    true, // user attacking [false || enemyImagePosition]
+  );
+
   drawBattleScreenTools(
     ctx,
     mainSkill,
@@ -275,27 +151,34 @@ export const renderBattleGif = async (
     delay: 200,
   });
 
-  // frame 5
-  await background(
+  console.log('Render Frame #3');
+  drawBackground(
     ctx,
-    'den',
+    canvas,
+    backgroundImage,
   );
-  drawPlayer(
-    ctx,
-    true,
-  );
+
   drawEnemy(
     ctx,
     battle.monsters[0],
     enemyFrame,
   );
+
+  drawPlayer(
+    ctx, // Ctx drawing canvas
+    playerImage, // image array of player images
+    0, // number of image in the array to show
+    true, // user attacking [false || enemyImagePosition]
+  );
+
   drawBattleScreenTools(
     ctx,
     mainSkill,
     secondarySkill,
     hpOrbImagePrevious,
-    mpOrbImage,
+    mpOrbImageCurrent,
   );
+
   drawBattleLog(
     ctx,
     battle,
@@ -307,14 +190,17 @@ export const renderBattleGif = async (
     delay: 200,
   });
 
-  // frame 7
-  await background(
+  console.log('Render Frame #4');
+  drawBackground(
     ctx,
-    'den',
+    canvas,
+    backgroundImage,
   );
   drawPlayer(
-    ctx,
-    false,
+    ctx, // Ctx drawing canvas
+    playerImage, // image array of player images
+    0, // number of image in the array to show
+    false, // user attacking [false || enemyImagePosition]
   );
   drawEnemy(
     ctx,
@@ -326,7 +212,7 @@ export const renderBattleGif = async (
     mainSkill,
     secondarySkill,
     hpOrbImagePrevious,
-    mpOrbImage,
+    mpOrbImageCurrent,
   );
   drawBattleLog(
     ctx,
@@ -335,19 +221,21 @@ export const renderBattleGif = async (
   ctx.lineWidth = 1;
   ctx.font = 'bold 13px "HeartWarming"';
   ctx.strokeText(userInfo.attackDamage, 193, 38, 50);
-  // encoder.addFrame(ctx);
   gif.addFrame(ctx.getImageData(0, 0, canvas.width, canvas.height), {
     delay: 400,
   });
   if (monsterInfo.alive) {
-    // frame 9
-    await background(
+    console.log('Render Frame #5');
+    drawBackground(
       ctx,
-      'den',
+      canvas,
+      backgroundImage,
     );
     drawPlayer(
-      ctx,
-      false,
+      ctx, // Ctx drawing canvas
+      playerImage, // image array of player images
+      0, // number of image in the array to show
+      false, // user attacking [false || enemyImagePosition]
     );
     drawEnemy(
       ctx,
@@ -359,24 +247,27 @@ export const renderBattleGif = async (
       mainSkill,
       secondarySkill,
       hpOrbImagePrevious,
-      mpOrbImage,
+      mpOrbImageCurrent,
     );
     drawBattleLog(
       ctx,
       battle,
     );
-    // encoder.addFrame(ctx);
     gif.addFrame(ctx.getImageData(0, 0, canvas.width, canvas.height), {
       delay: 400,
     });
-    // frame 6
-    await background(
+
+    console.log('Render Frame #6');
+    drawBackground(
       ctx,
-      'den',
+      canvas,
+      backgroundImage,
     );
     drawPlayer(
-      ctx,
-      false,
+      ctx, // Ctx drawing canvas
+      playerImage, // image array of player images
+      0, // number of image in the array to show
+      false, // user attacking [false || enemyImagePosition]
     );
     drawEnemy(
       ctx,
@@ -389,7 +280,7 @@ export const renderBattleGif = async (
       mainSkill,
       secondarySkill,
       hpOrbImagePrevious,
-      mpOrbImage,
+      mpOrbImageCurrent,
     );
     drawBattleLog(
       ctx,
@@ -398,18 +289,21 @@ export const renderBattleGif = async (
     ctx.lineWidth = 1;
     ctx.font = 'bold 13px "HeartWarming"';
     ctx.strokeText(monsterInfo.attackDamage, 80, 45, 50);
-    // encoder.addFrame(ctx);
     gif.addFrame(ctx.getImageData(0, 0, canvas.width, canvas.height), {
       delay: 200,
     });
-    // frame 6
-    await background(
+
+    console.log('Render Frame #7');
+    drawBackground(
       ctx,
-      'den',
+      canvas,
+      backgroundImage,
     );
     drawPlayer(
-      ctx,
-      false,
+      ctx, // Ctx drawing canvas
+      playerImage, // image array of player images
+      0, // number of image in the array to show
+      false, // user attacking [false || enemyImagePosition]
     );
     drawEnemy(
       ctx,
@@ -422,8 +316,8 @@ export const renderBattleGif = async (
       ctx,
       mainSkill,
       secondarySkill,
-      hpOrbImage,
-      mpOrbImage,
+      hpOrbImageCurrent,
+      mpOrbImageCurrent,
     );
     drawBattleLog(
       ctx,
@@ -436,14 +330,18 @@ export const renderBattleGif = async (
     gif.addFrame(ctx.getImageData(0, 0, canvas.width, canvas.height), {
       delay: 200,
     });
-    // frame 6
-    await background(
+
+    console.log('Render Frame #8');
+    drawBackground(
       ctx,
-      'den',
+      canvas,
+      backgroundImage,
     );
     drawPlayer(
-      ctx,
-      false,
+      ctx, // Ctx drawing canvas
+      playerImage, // image array of player images
+      0, // number of image in the array to show
+      false, // user attacking [false || enemyImagePosition]
     );
     drawEnemy(
       ctx,
@@ -456,8 +354,8 @@ export const renderBattleGif = async (
       ctx,
       mainSkill,
       secondarySkill,
-      hpOrbImage,
-      mpOrbImage,
+      hpOrbImageCurrent,
+      mpOrbImageCurrent,
     );
     drawBattleLog(
       ctx,
@@ -470,14 +368,18 @@ export const renderBattleGif = async (
     gif.addFrame(ctx.getImageData(0, 0, canvas.width, canvas.height), {
       delay: 200,
     });
-    // frame 6
-    await background(
+
+    console.log('Render Frame #9');
+    drawBackground(
       ctx,
-      'den',
+      canvas,
+      backgroundImage,
     );
     drawPlayer(
-      ctx,
-      false,
+      ctx, // Ctx drawing canvas
+      playerImage, // image array of player images
+      0, // number of image in the array to show
+      false, // user attacking [false || enemyImagePosition]
     );
     drawEnemy(
       ctx,
@@ -488,20 +390,21 @@ export const renderBattleGif = async (
       ctx,
       mainSkill,
       secondarySkill,
-      hpOrbImage,
-      mpOrbImage,
+      hpOrbImageCurrent,
+      mpOrbImageCurrent,
     );
     drawBattleLog(
       ctx,
       battle,
     );
-    // encoder.addFrame(ctx);
     gif.addFrame(ctx.getImageData(0, 0, canvas.width, canvas.height), {
       delay: 200,
     });
   }
-  await gif.render();
+  console.log('before gif render');
+  gif.render();
   const finalImage = await new Promise((resolve, reject) => {
+    console.log('Resolving Gif render');
     gif.on('finished', resolve);
   });
   return finalImage;

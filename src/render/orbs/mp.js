@@ -1,9 +1,7 @@
 /* eslint-disable import/prefer-default-export */
 import {
   createCanvas,
-  registerFont,
 } from 'canvas';
-import path from 'path';
 import { calculateCharacterStats } from '../../helpers/stats/calculateCharacterStats';
 
 export const renderMpOrb = async (

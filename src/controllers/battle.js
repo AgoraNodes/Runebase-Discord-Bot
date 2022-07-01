@@ -21,7 +21,6 @@ import { fetchDiscordUserIdFromMessageOrInteraction } from '../helpers/client/fe
 import { fetchDiscordChannel } from '../helpers/client/fetchDiscordChannel';
 import { processBattleMove } from '../helpers/battle/processBattleMove';
 import { renderBattleComplete } from '../render/battle/battleComplete';
-import { noLootFound } from '../render/battle/noLootFound';
 
 import { gainExp } from '../helpers/client/experience';
 import { generateLoot } from '../helpers/items/generateLoot';
