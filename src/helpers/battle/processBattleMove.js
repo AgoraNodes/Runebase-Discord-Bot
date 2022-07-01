@@ -1,3 +1,6 @@
+import {
+  Op,
+} from 'sequelize';
 import db from '../../models';
 import { calculateCharacterStats } from '../stats/calculateCharacterStats';
 import { fetchUserCurrentSelectedSkills } from "../character/selectedSkills";
@@ -10,13 +13,15 @@ function randomIntFromInterval(min, max) { // min and max included
 export const processBattleMove = async (
   userCurrentCharacter,
   battle,
+  currentSelectedMonster,
   attackUsed,
   io,
   queue,
   t,
 ) => {
-  // console.log('what');
-  // console.log(attackUsed);
+  const sumExp = battle.BattleMonsters.reduce((accumulator, object) => accumulator + object.monster.exp, 0);
+  // const isAnyMobAlive = battle.BattleMonsters.find((element) => element.currentHp > 0);
+  console.log('1');
   const unitUsedMove = "Attack";
   const {
     attackOne,
@@ -41,30 +46,74 @@ export const processBattleMove = async (
       useAttack = regularAttack;
     }
   }
-
   const randomAttackDamage = randomIntFromInterval(useAttack.min, useAttack.max);
-  const randomMonsterAttackDamage = randomIntFromInterval(battle.monsters[0].minDamage, battle.monsters[0].maxDamage);
-  const updatedMonster = await battle.monsters[0].BattleMonster.update({
-    currentHp: battle.monsters[0].BattleMonster.currentHp - randomAttackDamage,
+  const monsterToUpdate = battle.BattleMonsters.find((element) => element.id === currentSelectedMonster.id);
+  const updatedMonster = await monsterToUpdate.decrement('currentHp', {
+    by: randomAttackDamage,
+    lock: t.LOCK.UPDATE,
+    transaction: t,
+  });
+  const newUserMp = userCurrentCharacter.condition.mana - useAttack.cost;
+  await userCurrentCharacter.condition.update({
+    mana: newUserMp,
   }, {
     lock: t.LOCK.UPDATE,
     transaction: t,
   });
+  console.log('2');
+  const monsterInfo = [];
+
   const createBattleLog = await db.battleLog.create({
     battleId: battle.id,
-    log: `${userCurrentCharacter.user.username} used ${useAttack.name} ${battle.monsters[0].name} for ${randomAttackDamage} damage`,
+    log: `${userCurrentCharacter.user.username} used ${useAttack.name} on ${monsterToUpdate.monster.name} for ${randomAttackDamage} damage`,
   }, {
     lock: t.LOCK.UPDATE,
     transaction: t,
   });
-  if (updatedMonster.currentHp < 1) {
+
+  if (updatedMonster.currentHp > 0) {
+    monsterInfo.push({
+      monsterId: updatedMonster.id,
+      userDamage: randomAttackDamage,
+      currentMonsterHp: monsterToUpdate.currentHp - randomAttackDamage,
+      currentUserMp: newUserMp,
+      died: false,
+    });
+  } else {
     await db.battleLog.create({
       battleId: battle.id,
-      log: `${userCurrentCharacter.user.username} killed ${battle.monsters[0].name}`,
+      log: `${userCurrentCharacter.user.username} killed ${monsterToUpdate.monster.name}`,
     }, {
       lock: t.LOCK.UPDATE,
       transaction: t,
     });
+    monsterInfo.push({
+      monsterId: updatedMonster.id,
+      userDamage: randomAttackDamage,
+      currentMonsterHp: monsterToUpdate.currentHp - randomAttackDamage,
+      currentMp: newUserMp,
+      died: true,
+    });
+  }
+  const allRemainingBattleMonster = await db.BattleMonster.findAll({
+    where: {
+      battleId: battle.id,
+      currentHp: {
+        [Op.gt]: 0,
+      },
+    },
+    include: [
+      {
+        model: db.monster,
+        as: 'monster',
+      },
+    ],
+    lock: t.LOCK.UPDATE,
+    transaction: t,
+  });
+  console.log(allRemainingBattleMonster);
+  console.log('allRemainingBattleMonster');
+  if (!allRemainingBattleMonster || allRemainingBattleMonster.length < 1) {
     await battle.update({
       complete: true,
     }, {
@@ -72,38 +121,50 @@ export const processBattleMove = async (
       transaction: t,
     });
   }
-  let updatedUserCondition;
-  if (updatedMonster.currentHp > 0) {
-    updatedUserCondition = await userCurrentCharacter.condition.update({
-      life: userCurrentCharacter.condition.life - randomMonsterAttackDamage,
-      mana: userCurrentCharacter.condition.mana - useAttack.cost,
-    }, {
-      lock: t.LOCK.UPDATE,
-      transaction: t,
-    });
-    await db.battleLog.create({
-      battleId: battle.id,
-      log: `${battle.monsters[0].name} used attack ${userCurrentCharacter.user.username} for ${randomMonsterAttackDamage} damage`,
+  console.log('3');
+  const battleInfoArray = [];
+
+  if (allRemainingBattleMonster) {
+    let currentUserHp = userCurrentCharacter.condition.life;
+    let totalDamageByMonsters = 0;
+    // eslint-disable-next-line no-restricted-syntax
+    for await (const remainingMonster of allRemainingBattleMonster) {
+      if (currentUserHp > 0) {
+        const randomMonsterAttackDamage = randomIntFromInterval(remainingMonster.monster.minDamage, remainingMonster.monster.maxDamage);
+        battleInfoArray.push({
+          monsterId: remainingMonster.id,
+          damage: randomMonsterAttackDamage,
+          currentHp: currentUserHp - randomMonsterAttackDamage,
+        });
+        totalDamageByMonsters += randomMonsterAttackDamage;
+        currentUserHp -= randomMonsterAttackDamage;
+
+        await db.battleLog.create({
+          battleId: battle.id,
+          log: `${battle.monsters[0].name} used attack on ${userCurrentCharacter.user.username} for ${randomMonsterAttackDamage} damage`,
+        }, {
+          lock: t.LOCK.UPDATE,
+          transaction: t,
+        });
+        if (currentUserHp < 1) {
+          await db.battleLog.create({
+            battleId: battle.id,
+            log: `${battle.monsters[0].name} killed ${userCurrentCharacter.user.username}`,
+          }, {
+            lock: t.LOCK.UPDATE,
+            transaction: t,
+          });
+        }
+      }
+    }
+    await userCurrentCharacter.condition.update({
+      life: userCurrentCharacter.condition.life - totalDamageByMonsters,
     }, {
       lock: t.LOCK.UPDATE,
       transaction: t,
     });
   }
-
-  if (userCurrentCharacter.condition.life < 1) {
-    await db.battleLog.create({
-      battleId: battle.id,
-      log: `${battle.monsters[0].name} killed ${userCurrentCharacter.user.username}`,
-    }, {
-      lock: t.LOCK.UPDATE,
-      transaction: t,
-    });
-  }
-
-  // console.log(updatedMonster);
-  // console.log(attackOne);
-  // console.log('123');
-  // Fetch Updated User Character And Battle
+  console.log('4');
   const updatedBattle = await db.battle.findOne({
     where: {
       id: battle.id,
@@ -118,28 +179,27 @@ export const processBattleMove = async (
         required: false,
       },
       {
-        model: db.monster,
-        as: 'monsters',
+        model: db.BattleMonster,
+        as: 'BattleMonsters',
+        include: [
+          {
+            model: db.monster,
+            as: 'monster',
+          },
+        ],
       },
     ],
     lock: t.LOCK.UPDATE,
     transaction: t,
   });
 
-  const userInfo = {
-    alive: updatedUserCondition > 0,
-    attackDamage: randomAttackDamage,
-    attack: useAttack.name,
-  };
-  const monsterInfo = {
-    alive: updatedMonster.currentHp > 0,
-    attackDamage: randomMonsterAttackDamage,
-    attack: unitUsedMove,
-  };
+  console.log('done processing battle moves');
+
   return [
     userCurrentCharacter,
     updatedBattle,
-    userInfo,
+    battleInfoArray,
     monsterInfo,
+    sumExp,
   ];
 };

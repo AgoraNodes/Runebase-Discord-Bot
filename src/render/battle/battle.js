@@ -22,18 +22,20 @@ export const renderBattleGif = async (
   battle,
   previousBattleState,
   previousUserState,
+  currentSelectedMonster,
+  battleInfoArray = false,
   monsterInfo = false,
-  userInfo = false,
 ) => {
+  console.log('start render gif');
   // console.log(previousUserState.condition);
   // console.log('previous user state');
   // console.log(currentUser.condition);
   // console.log('next user state');
   // console.log('renderBattlegif');
   // console.log('123');
-  let enemy;
-  let player;
-
+  const enemyPosition = [];
+  const playerPosition = [];
+  const enemies = [];
   await registerFont(path.join(__dirname, '../../assets/fonts/', 'Heart_warming.otf'), { family: 'HeartWarming' });
 
   const zone = 'den';
@@ -42,20 +44,27 @@ export const renderBattleGif = async (
   const playerImage = await loadPlayer(
     currentUser.class.name,
   );
+  console.log('start render gif 1');
 
-  const enemyFrame = await loadEnemy(
-    'Zombie',
-  );
+  previousBattleState.BattleMonsters.forEach(async (battleMonster, i) => {
+    enemies[parseInt(battleMonster.id, 10)] = await loadEnemy(
+      battleMonster.monster.name,
+    );
+  });
+  console.log('start render gif 22');
+  // const enemyFrame = await loadEnemy(
+  //   'Zombie',
+  // );
 
   const [
-    hpOrbImageCurrent,
-    mpOrbImageCurrent,
-    hpOrbImagePrevious,
-    mpOrbImagePrevious,
+    hpOrbs,
+    mpOrbs,
   ] = await loadOrbs(
     previousUserState,
-    currentUser,
+    battleInfoArray,
+    monsterInfo,
   );
+  console.log('start render gif 3');
   const mainSkill = await loadImage(path.join(
     __dirname,
     `../../assets/images/skills/${userCurrentSelectedSkills.selectedMainSkill.skill.skillTree ? `${userCurrentSelectedSkills.selectedMainSkill.skill.skillTree.class.name}/${userCurrentSelectedSkills.selectedMainSkill.skill.skillTree.name}` : ``}`,
@@ -67,7 +76,7 @@ export const renderBattleGif = async (
     `../../assets/images/skills/${userCurrentSelectedSkills.selectedSecondarySkill.skill.skillTree ? `${userCurrentSelectedSkills.selectedSecondarySkill.skill.skillTree.class.name}/${userCurrentSelectedSkills.selectedSecondarySkill.skill.skillTree.name}` : ``}`,
     `${userCurrentSelectedSkills.selectedSecondarySkill.skill.name}.png`,
   ));
-
+  console.log('start render gif 2');
   const canvas = createCanvas(650, 300);
   const ctx = canvas.getContext('2d');
 
@@ -79,31 +88,41 @@ export const renderBattleGif = async (
     height: canvas.height,
     repeat: -1,
   });
-
+  console.log('start render gif 3');
   console.log('Render Frame #1');
   drawBackground(
     ctx,
     canvas,
     backgroundImage,
   );
-  player = drawPlayer(
+  playerPosition[0] = drawPlayer(
     ctx, // Ctx drawing canvas
     playerImage, // image array of player images
     0, // number of image in the array to show
     false, // user attacking [false || enemyImagePosition]
   );
-  enemy = await drawEnemy(
-    ctx,
-    previousBattleState.monsters[0],
-    enemyFrame,
-  );
-  console.log(enemy);
+
+  previousBattleState.BattleMonsters.forEach(async (battleMonster, i) => {
+    if (battleMonster.currentHp > 0) {
+      enemyPosition[i] = drawEnemy(
+        ctx, // CTX
+        previousBattleState.BattleMonsters.find((element) => element.id === battleMonster.id), // MonsterState
+        currentSelectedMonster.id === battleMonster.id, // is current Monster selected?
+        enemies[battleMonster.id], // Enemy Image
+        false, // Moved To user?
+        0, // Enemy Image Frame Shown
+        playerPosition, // PlayerCords
+        i, // Index
+      );
+    }
+  });
+
   drawBattleScreenTools(
     ctx, // pass canvas ctx
     mainSkill,
     secondarySkill,
-    hpOrbImagePrevious,
-    mpOrbImagePrevious,
+    hpOrbs[0],
+    mpOrbs[0],
   );
   drawBattleLog(
     ctx,
@@ -120,25 +139,47 @@ export const renderBattleGif = async (
     backgroundImage,
   );
 
-  enemy = await drawEnemy(
-    ctx,
-    previousBattleState.monsters[0],
-    enemyFrame,
-  );
+  console.log(previousBattleState.BattleMonsters);
+  console.log('888');
+  console.log(battle.BattleMonsters);
+  console.log('777');
 
-  player = drawPlayer(
+  previousBattleState.BattleMonsters.forEach(async (battleMonster, i) => {
+    if (battleMonster.currentHp > 0) {
+      // const findUpdatedMonsterState = monsterInfo.find((element) => element.monsterId === battleMonster.id);
+      enemyPosition[i] = drawEnemy(
+        ctx, // CTX
+        previousBattleState.BattleMonsters.find((element) => element.id === battleMonster.id), // MonsterState
+        currentSelectedMonster.id === battleMonster.id, // is current Monster selected?
+        enemies[battleMonster.id], // Enemy Image
+        false, // Moved To user?
+        0, // Enemy Image Frame Shown
+        playerPosition, // PlayerCords
+        i, // Index
+        // findUpdatedMonsterState,
+      );
+    }
+  });
+
+  console.log(enemyPosition);
+  console.log('find enemy position before');
+
+  const findAttackedEnemyByUser = enemyPosition.find((element) => element && element.id === monsterInfo[0].monsterId);
+  console.log('find enemy position after');
+  console.log(findAttackedEnemyByUser);
+  playerPosition[0] = drawPlayer(
     ctx, // Ctx drawing canvas
     playerImage, // image array of player images
     0, // number of image in the array to show
-    true, // user attacking [false || enemyImagePosition]
+    findAttackedEnemyByUser, // user attacking [false || enemyImagePosition]
   );
 
   drawBattleScreenTools(
     ctx,
     mainSkill,
     secondarySkill,
-    hpOrbImagePrevious,
-    mpOrbImagePrevious,
+    hpOrbs[0],
+    mpOrbs[0],
   );
   drawBattleLog(
     ctx,
@@ -146,7 +187,12 @@ export const renderBattleGif = async (
   );
   ctx.lineWidth = 1;
   ctx.font = 'bold 13px "HeartWarming"';
-  ctx.strokeText(userInfo.attackDamage, 193, 38, 50);
+  ctx.strokeText(
+    monsterInfo[0].userDamage,
+    findAttackedEnemyByUser.x,
+    findAttackedEnemyByUser.y - 20,
+    50,
+  );
   gif.addFrame(ctx.getImageData(0, 0, canvas.width, canvas.height), {
     delay: 200,
   });
@@ -158,25 +204,34 @@ export const renderBattleGif = async (
     backgroundImage,
   );
 
-  drawEnemy(
-    ctx,
-    battle.monsters[0],
-    enemyFrame,
-  );
+  battle.BattleMonsters.forEach(async (battleMonster, i) => {
+    if (battleMonster.currentHp > 0) {
+      enemyPosition[i] = drawEnemy(
+        ctx, // CTX
+        battle.BattleMonsters.find((element) => element.id === battleMonster.id), // MonsterState
+        currentSelectedMonster.id === battleMonster.id, // is current Monster selected?
+        enemies[battleMonster.id], // Enemy Image
+        false, // Moved To user?
+        0, // Enemy Image Frame Shown
+        playerPosition, // PlayerCords
+        i, // Index
+      );
+    }
+  });
 
-  drawPlayer(
+  playerPosition[0] = drawPlayer(
     ctx, // Ctx drawing canvas
     playerImage, // image array of player images
     0, // number of image in the array to show
-    true, // user attacking [false || enemyImagePosition]
+    findAttackedEnemyByUser, // user attacking [false || enemyImagePosition]
   );
 
   drawBattleScreenTools(
     ctx,
     mainSkill,
     secondarySkill,
-    hpOrbImagePrevious,
-    mpOrbImageCurrent,
+    hpOrbs[0],
+    mpOrbs[1],
   );
 
   drawBattleLog(
@@ -185,7 +240,12 @@ export const renderBattleGif = async (
   );
   ctx.lineWidth = 1;
   ctx.font = 'bold 13px "HeartWarming"';
-  ctx.strokeText(userInfo.attackDamage, 193, 38, 50);
+  ctx.strokeText(
+    monsterInfo[0].userDamage,
+    findAttackedEnemyByUser.x,
+    findAttackedEnemyByUser.y - 20,
+    50,
+  );
   gif.addFrame(ctx.getImageData(0, 0, canvas.width, canvas.height), {
     delay: 200,
   });
@@ -196,23 +256,33 @@ export const renderBattleGif = async (
     canvas,
     backgroundImage,
   );
-  drawPlayer(
+  playerPosition[0] = drawPlayer(
     ctx, // Ctx drawing canvas
     playerImage, // image array of player images
     0, // number of image in the array to show
     false, // user attacking [false || enemyImagePosition]
   );
-  drawEnemy(
-    ctx,
-    battle.monsters[0],
-    enemyFrame,
-  );
+  battle.BattleMonsters.forEach(async (battleMonster, i) => {
+    if (battleMonster.currentHp > 0) {
+      enemyPosition[i] = drawEnemy(
+        ctx, // CTX
+        battle.BattleMonsters.find((element) => element.id === battleMonster.id), // MonsterState
+        currentSelectedMonster.id === battleMonster.id, // is current Monster selected?
+        enemies[battleMonster.id], // Enemy Image
+        false, // Moved To user?
+        0, // Enemy Image Frame Shown
+        playerPosition, // PlayerCords
+        i, // Index
+      );
+    }
+  });
+
   drawBattleScreenTools(
     ctx,
     mainSkill,
     secondarySkill,
-    hpOrbImagePrevious,
-    mpOrbImageCurrent,
+    hpOrbs[0],
+    mpOrbs[1],
   );
   drawBattleLog(
     ctx,
@@ -220,34 +290,51 @@ export const renderBattleGif = async (
   );
   ctx.lineWidth = 1;
   ctx.font = 'bold 13px "HeartWarming"';
-  ctx.strokeText(userInfo.attackDamage, 193, 38, 50);
+  ctx.strokeText(
+    monsterInfo[0].userDamage,
+    findAttackedEnemyByUser.x,
+    findAttackedEnemyByUser.y - 20,
+    50,
+  );
   gif.addFrame(ctx.getImageData(0, 0, canvas.width, canvas.height), {
     delay: 400,
   });
-  if (monsterInfo.alive) {
+
+  // eslint-disable-next-line no-restricted-syntax
+  for (const [index, battleInfo] of battleInfoArray.entries()) {
     console.log('Render Frame #5');
     drawBackground(
       ctx,
       canvas,
       backgroundImage,
     );
-    drawPlayer(
+    playerPosition[0] = drawPlayer(
       ctx, // Ctx drawing canvas
       playerImage, // image array of player images
       0, // number of image in the array to show
       false, // user attacking [false || enemyImagePosition]
     );
-    drawEnemy(
-      ctx,
-      battle.monsters[0],
-      enemyFrame,
-    );
+
+    battle.BattleMonsters.forEach(async (battleMonster, i) => {
+      if (battleMonster.currentHp > 0) {
+        enemyPosition[i] = drawEnemy(
+          ctx, // CTX
+          battle.BattleMonsters.find((element) => element.id === battleMonster.id), // MonsterState
+          currentSelectedMonster.id === battleMonster.id, // is current Monster selected?
+          enemies[battleMonster.id], // Enemy Image
+          battleMonster.id === battleInfo.monsterId, // Moved To user?
+          battleMonster.id === battleInfo.monsterId ? 0 : 0, // Enemy Image Frame Shown
+          playerPosition[0], // PlayerCords
+          i, // Index
+        );
+      }
+    });
     drawBattleScreenTools(
       ctx,
       mainSkill,
       secondarySkill,
-      hpOrbImagePrevious,
-      mpOrbImageCurrent,
+      hpOrbs[index + 1],
+      mpOrbs[1],
     );
     drawBattleLog(
       ctx,
@@ -256,39 +343,55 @@ export const renderBattleGif = async (
     gif.addFrame(ctx.getImageData(0, 0, canvas.width, canvas.height), {
       delay: 400,
     });
-
     console.log('Render Frame #6');
     drawBackground(
       ctx,
       canvas,
       backgroundImage,
     );
-    drawPlayer(
+
+    console.log('draw player');
+    playerPosition[0] = drawPlayer(
       ctx, // Ctx drawing canvas
       playerImage, // image array of player images
       0, // number of image in the array to show
       false, // user attacking [false || enemyImagePosition]
     );
-    drawEnemy(
-      ctx,
-      battle.monsters[0],
-      enemyFrame,
-      true,
-    );
+    battle.BattleMonsters.forEach(async (battleMonster, i) => {
+      if (battleMonster.currentHp > 0) {
+        enemyPosition[i] = drawEnemy(
+          ctx, // CTX
+          battle.BattleMonsters.find((element) => element.id === battleMonster.id), // MonsterState
+          currentSelectedMonster.id === battleMonster.id, // is current Monster selected?
+          enemies[battleMonster.id], // Enemy Image
+          battleMonster.id === battleInfo.monsterId, // Moved To user?
+          battleMonster.id === battleInfo.monsterId ? 1 : 0, // Enemy Image Frame Shown
+          playerPosition[0], // PlayerCords
+          i, // Index
+        );
+      }
+    });
+    console.log('draw screenTools');
     drawBattleScreenTools(
       ctx,
       mainSkill,
       secondarySkill,
-      hpOrbImagePrevious,
-      mpOrbImageCurrent,
+      hpOrbs[index + 1],
+      mpOrbs[1],
     );
+    console.log('draw battleLog');
     drawBattleLog(
       ctx,
       battle,
     );
     ctx.lineWidth = 1;
     ctx.font = 'bold 13px "HeartWarming"';
-    ctx.strokeText(monsterInfo.attackDamage, 80, 45, 50);
+    ctx.strokeText(
+      battleInfo.damage,
+      playerPosition[0].x,
+      playerPosition[0].y - 20,
+      50,
+    );
     gif.addFrame(ctx.getImageData(0, 0, canvas.width, canvas.height), {
       delay: 200,
     });
@@ -299,25 +402,32 @@ export const renderBattleGif = async (
       canvas,
       backgroundImage,
     );
-    drawPlayer(
+    playerPosition[0] = drawPlayer(
       ctx, // Ctx drawing canvas
       playerImage, // image array of player images
       0, // number of image in the array to show
       false, // user attacking [false || enemyImagePosition]
     );
-    drawEnemy(
-      ctx,
-      battle.monsters[0],
-      enemyFrame,
-      true,
-      1,
-    );
+    battle.BattleMonsters.forEach(async (battleMonster, i) => {
+      if (battleMonster.currentHp > 0) {
+        enemyPosition[i] = drawEnemy(
+          ctx, // CTX
+          battle.BattleMonsters.find((element) => element.id === battleMonster.id), // MonsterState
+          currentSelectedMonster.id === battleMonster.id, // is current Monster selected?
+          enemies[battleMonster.id], // Enemy Image
+          battleMonster.id === battleInfo.monsterId, // Moved To user?
+          battleMonster.id === battleInfo.monsterId ? 2 : 0, // Enemy Image Frame Shown
+          playerPosition[0], // PlayerCords
+          i, // Index
+        );
+      }
+    });
     drawBattleScreenTools(
       ctx,
       mainSkill,
       secondarySkill,
-      hpOrbImageCurrent,
-      mpOrbImageCurrent,
+      hpOrbs[index + 1],
+      mpOrbs[1],
     );
     drawBattleLog(
       ctx,
@@ -325,37 +435,47 @@ export const renderBattleGif = async (
     );
     ctx.lineWidth = 1;
     ctx.font = 'bold 13px "HeartWarming"';
-    ctx.strokeText(monsterInfo.attackDamage, 80, 45, 50);
-    // encoder.addFrame(ctx);
+    ctx.strokeText(
+      battleInfo.damage,
+      playerPosition[0].x,
+      playerPosition[0].y - 20,
+      50,
+    );
     gif.addFrame(ctx.getImageData(0, 0, canvas.width, canvas.height), {
       delay: 200,
     });
-
     console.log('Render Frame #8');
     drawBackground(
       ctx,
       canvas,
       backgroundImage,
     );
-    drawPlayer(
+    playerPosition[0] = drawPlayer(
       ctx, // Ctx drawing canvas
       playerImage, // image array of player images
       0, // number of image in the array to show
       false, // user attacking [false || enemyImagePosition]
     );
-    drawEnemy(
-      ctx,
-      battle.monsters[0],
-      enemyFrame,
-      true,
-      2,
-    );
+    battle.BattleMonsters.forEach(async (battleMonster, i) => {
+      if (battleMonster.currentHp > 0) {
+        enemyPosition[i] = drawEnemy(
+          ctx, // CTX
+          battle.BattleMonsters.find((element) => element.id === battleMonster.id), // MonsterState
+          currentSelectedMonster.id === battleMonster.id, // is current Monster selected?
+          enemies[battleMonster.id], // Enemy Image
+          battleMonster.id === battleInfo.monsterId, // Moved To user?
+          battleMonster.id === battleInfo.monsterId ? 0 : 0, // Enemy Image Frame Shown
+          playerPosition[0], // PlayerCords
+          i, // Index
+        );
+      }
+    });
     drawBattleScreenTools(
       ctx,
       mainSkill,
       secondarySkill,
-      hpOrbImageCurrent,
-      mpOrbImageCurrent,
+      hpOrbs[index + 1],
+      mpOrbs[1],
     );
     drawBattleLog(
       ctx,
@@ -363,45 +483,57 @@ export const renderBattleGif = async (
     );
     ctx.lineWidth = 1;
     ctx.font = 'bold 13px "HeartWarming"';
-    ctx.strokeText(monsterInfo.attackDamage, 80, 45, 50);
-    // encoder.addFrame(ctx);
+    ctx.strokeText(
+      battleInfo.damage,
+      playerPosition[0].x,
+      playerPosition[0].y - 20,
+      50,
+    );
     gif.addFrame(ctx.getImageData(0, 0, canvas.width, canvas.height), {
       delay: 200,
     });
-
     console.log('Render Frame #9');
     drawBackground(
       ctx,
       canvas,
       backgroundImage,
     );
-    drawPlayer(
+    playerPosition[0] = drawPlayer(
       ctx, // Ctx drawing canvas
       playerImage, // image array of player images
       0, // number of image in the array to show
       false, // user attacking [false || enemyImagePosition]
     );
-    drawEnemy(
-      ctx,
-      battle.monsters[0],
-      enemyFrame,
-    );
+    battle.BattleMonsters.forEach(async (battleMonster, i) => {
+      if (battleMonster.currentHp > 0) {
+        enemyPosition[i] = drawEnemy(
+          ctx, // CTX
+          battle.BattleMonsters.find((element) => element.id === battleMonster.id), // MonsterState
+          currentSelectedMonster.id === battleMonster.id, // is current Monster selected?
+          enemies[battleMonster.id], // Enemy Image
+          false, // Moved To user?
+          0, // Enemy Image Frame Shown
+          playerPosition[0], // PlayerCords
+          i, // Index
+        );
+      }
+    });
     drawBattleScreenTools(
       ctx,
       mainSkill,
       secondarySkill,
-      hpOrbImageCurrent,
-      mpOrbImageCurrent,
+      hpOrbs[index + 1],
+      mpOrbs[1],
     );
     drawBattleLog(
       ctx,
       battle,
     );
     gif.addFrame(ctx.getImageData(0, 0, canvas.width, canvas.height), {
-      delay: 200,
+      delay: 300,
     });
   }
-  console.log('before gif render');
+
   gif.render();
   const finalImage = await new Promise((resolve, reject) => {
     console.log('Resolving Gif render');

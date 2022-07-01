@@ -22,30 +22,33 @@ export const renderInitBattleGif = async (
   battle,
   previousBattleState,
   previousUserState,
+  currentSelectedMonster,
+  battleInfoArray = false,
   monsterInfo = false,
-  userInfo = false,
 ) => {
+  const enemies = [];
   await registerFont(path.join(__dirname, '../../assets/fonts/', 'Heart_warming.otf'), { family: 'HeartWarming' });
 
   const zone = 'den';
   const backgroundImage = await loadImage(path.join(__dirname, `../../assets/images/battle/background`, `${zone}.png`));
 
-  const enemyFrame = await loadEnemy(
-    'Zombie',
-  );
+  battle.BattleMonsters.forEach(async (battleMonster, i) => {
+    enemies[parseInt(battleMonster.id, 10)] = await loadEnemy(
+      battleMonster.monster.name,
+    );
+  });
 
   const playerImage = await loadPlayer(
     currentUser.class.name,
   );
 
   const [
-    hpOrbImageCurrent,
-    mpOrbImageCurrent,
-    hpOrbImagePrevious,
-    mpOrbImagePrevious,
+    hpOrbs,
+    mpOrbs,
   ] = await loadOrbs(
     previousUserState,
-    currentUser,
+    battleInfoArray,
+    monsterInfo,
   );
   const mainSkill = await loadImage(path.join(
     __dirname,
@@ -71,39 +74,53 @@ export const renderInitBattleGif = async (
     repeat: -1,
   });
 
-  await drawBackground(
+  drawBackground(
     ctx,
     canvas,
     backgroundImage,
   );
 
-  drawPlayer(
+  const playerPosition = drawPlayer(
     ctx, // Ctx drawing canvas
     playerImage, // image array of player images
     0, // number of image in the array to show
     false, // user attacking [false || enemyImagePosition]
   );
 
-  drawEnemy(
-    ctx,
-    previousBattleState.monsters[0],
-    enemyFrame,
-  );
-  await drawBattleScreenTools(
+  battle.BattleMonsters.forEach(async (battleMonster, i) => {
+    if (battleMonster.currentHp > 0) {
+      drawEnemy(
+        ctx, // CTX
+        previousBattleState.BattleMonsters.find((element) => element.id === battleMonster.id), // MonsterState
+        currentSelectedMonster.id === battleMonster.id, // is current Monster selected?
+        enemies[battleMonster.id], // Enemy Image
+        false, // Moved To user?
+        0, // Enemy Image Frame Shown
+        playerPosition, // PlayerCords
+        i, // Index
+      );
+    }
+  });
+
+  drawBattleScreenTools(
     ctx, // pass canvas ctx
     mainSkill,
     secondarySkill,
-    hpOrbImagePrevious,
-    mpOrbImagePrevious,
+    hpOrbs[0],
+    mpOrbs[0],
   );
-  await drawBattleLog(
+
+  drawBattleLog(
     ctx,
     battle,
   );
+
   gif.addFrame(ctx.getImageData(0, 0, canvas.width, canvas.height), {
     delay: 200,
   });
-  await gif.render();
+
+  gif.render();
+
   const finalImage = await new Promise((resolve, reject) => {
     gif.on('finished', resolve);
   });

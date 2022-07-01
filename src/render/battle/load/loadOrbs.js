@@ -1,33 +1,59 @@
+/* eslint-disable no-restricted-syntax */
 import {
   loadImage,
 } from 'canvas';
 import { renderHpOrb } from '../../orbs/hp';
 import { renderMpOrb } from '../../orbs/mp';
+import { calculateCharacterStats } from '../../../helpers/stats/calculateCharacterStats';
 
 export const loadOrbs = async (
   previousUserState,
-  currentUser,
+  battleInfoArray,
+  monsterInfo,
 ) => {
-  const hpOrbBufferPrevious = await renderHpOrb(
-    previousUserState,
+  const hpOrbsBuffer = [];
+  const mpOrbsBuffer = [];
+  const hpOrbs = [];
+  const mpOrbs = [];
+  const {
+    hp,
+    mp,
+  } = await calculateCharacterStats(previousUserState);
+
+  hpOrbsBuffer[0] = await renderHpOrb(
+    hp.current,
+    hp.max,
   );
-  const mpOrbBufferPrevious = await renderMpOrb(
-    previousUserState,
+  mpOrbsBuffer[0] = await renderMpOrb(
+    mp.current,
+    mp.max,
   );
-  const hpOrbBuffer = await renderHpOrb(
-    currentUser,
-  );
-  const mpOrbBuffer = await renderMpOrb(
-    currentUser,
-  );
-  const hpOrbImage = await loadImage(hpOrbBuffer);
-  const mpOrbImage = await loadImage(mpOrbBuffer);
-  const hpOrbImagePrevious = await loadImage(hpOrbBufferPrevious);
-  const mpOrbImagePrevious = await loadImage(mpOrbBufferPrevious);
+  if (battleInfoArray) {
+    for await (const [index, info] of battleInfoArray.entries()) {
+      hpOrbsBuffer[index + 1] = await renderHpOrb(
+        info.currentHp,
+        hp.max,
+      );
+    }
+  }
+  if (monsterInfo) {
+    for await (const [index, info] of monsterInfo.entries()) {
+      mpOrbsBuffer[index + 1] = await renderMpOrb(
+        info.currentUserMp,
+        mp.max,
+      );
+    }
+  }
+
+  for await (const [index, buffer] of hpOrbsBuffer.entries()) {
+    hpOrbs[index] = await loadImage(buffer);
+  }
+  for await (const [index, buffer] of mpOrbsBuffer.entries()) {
+    mpOrbs[index] = await loadImage(buffer);
+  }
+
   return [
-    hpOrbImage,
-    mpOrbImage,
-    hpOrbImagePrevious,
-    mpOrbImagePrevious,
+    hpOrbs,
+    mpOrbs,
   ];
 };

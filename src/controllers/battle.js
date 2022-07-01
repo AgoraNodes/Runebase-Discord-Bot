@@ -29,6 +29,7 @@ import { renderItemImage } from "../render/item";
 function randomIntFromInterval(min, max) { // min and max included
   return Math.floor(Math.random() * (max - min + 1) + min);
 }
+let currentSelectedMonster;
 
 export const discordBattle = async (
   discordClient,
@@ -112,6 +113,16 @@ export const discordBattle = async (
         model: db.monster,
         as: 'monsters',
       },
+      {
+        model: db.BattleMonster,
+        as: 'BattleMonsters',
+        include: [
+          {
+            model: db.monster,
+            as: 'monster',
+          },
+        ],
+      },
     ],
   });
   if (!battle) {
@@ -125,6 +136,18 @@ export const discordBattle = async (
       UserClassId: userCurrentCharacter.id,
     });
     const randomMonsterHp = randomIntFromInterval(monster.minHp, monster.maxHp);
+    await db.BattleMonster.create({
+      battleId: newBattle.id,
+      monsterId: monster.id,
+      currentHp: randomMonsterHp,
+      maxHp: randomMonsterHp,
+    });
+    await db.BattleMonster.create({
+      battleId: newBattle.id,
+      monsterId: monster.id,
+      currentHp: randomMonsterHp,
+      maxHp: randomMonsterHp,
+    });
     await db.BattleMonster.create({
       battleId: newBattle.id,
       monsterId: monster.id,
@@ -147,6 +170,16 @@ export const discordBattle = async (
         {
           model: db.monster,
           as: 'monsters',
+        },
+        {
+          model: db.BattleMonster,
+          as: 'BattleMonsters',
+          include: [
+            {
+              model: db.monster,
+              as: 'monster',
+            },
+          ],
         },
       ],
     });
@@ -174,6 +207,78 @@ export const discordBattle = async (
     value: `secondarySkill:${mySkill.id}`,
     default: mySkill.id === userCurrentSelectedSkills.selectedSecondarySkillId,
   }));
+  // console.log(battle.BattleMonsters);
+  // console.log('-----------------');
+
+  // console.log(battle.monsters);
+  // const selectMonsterMap = battle.BattleMonsters.map((
+  //   battleMonster,
+  //   index,
+  // ) => {
+  //   console.log(battleMonster);
+  //   return {
+  //     placeholder: 'Select a mob to attack',
+  //     label: `Select Mob: ${battleMonster.monster.name} #${battleMonster.id} (${battleMonster.currentHp} / ${battleMonster.maxHp})`,
+  //     value: `selectMonster:${battleMonster.id}`,
+  //     // default: mySkill.id === userCurrentSelectedSkills.selectedSecondarySkillId,
+  //   };
+  // });
+  console.log(currentSelectedMonster);
+  console.log("before currentSelectedMonster");
+  console.log("before currentSelectedMonster");
+  console.log("before currentSelectedMonster");
+  console.log("before currentSelectedMonster");
+  console.log("before currentSelectedMonster");
+  console.log("before currentSelectedMonster");
+  console.log("before currentSelectedMonster");
+  console.log("before currentSelectedMonster");
+  console.log("before currentSelectedMonster");
+  console.log("before currentSelectedMonster");
+  console.log("before currentSelectedMonster");
+  console.log("before currentSelectedMonster");
+  console.log("before currentSelectedMonster");
+  console.log("before currentSelectedMonster");
+  console.log("before currentSelectedMonster");
+
+  if (!currentSelectedMonster) {
+    currentSelectedMonster = battle.BattleMonsters.find((element) => element.currentHp > 0);
+  }
+  console.log(currentSelectedMonster);
+  console.log("after currentSelectedMonster");
+  console.log("after currentSelectedMonster");
+  console.log("after currentSelectedMonster");
+  console.log("after currentSelectedMonster");
+  console.log("after currentSelectedMonster");
+  console.log("after currentSelectedMonster");
+  console.log("after currentSelectedMonster");
+  console.log("after currentSelectedMonster");
+  console.log("after currentSelectedMonster");
+  console.log("after currentSelectedMonster");
+  console.log("after currentSelectedMonster");
+  console.log("after currentSelectedMonster");
+  console.log("after currentSelectedMonster");
+  console.log("after currentSelectedMonster");
+  console.log("after currentSelectedMonster");
+  console.log("after currentSelectedMonster");
+  console.log("after currentSelectedMonster");
+  console.log("after currentSelectedMonster");
+  console.log("after currentSelectedMonster");
+  console.log("after currentSelectedMonster");
+  console.log("after currentSelectedMonster");
+
+  let selectMonsterMap = battle.BattleMonsters.reduce((filtered, battleMonster, index) => {
+    if (battleMonster.currentHp > 0) {
+      const someNewValue = {
+        placeholder: 'Select a mob to attack',
+        label: `Select Mob: ${battleMonster.monster.name} #${battleMonster.id} (${battleMonster.currentHp} / ${battleMonster.maxHp})`,
+        value: `selectMonster:${battleMonster.id}`,
+        default: currentSelectedMonster.id === battleMonster.id,
+      };
+      filtered.push(someNewValue);
+    }
+    return filtered;
+  }, []);
+  console.log(selectMonsterMap);
 
   const generateMainSkillButton = async (mySelectedSkill) => {
     const addSkillId = `attackMain:${mySelectedSkill.id}`;
@@ -204,6 +309,7 @@ export const discordBattle = async (
           battle,
           battle,
           userCurrentCharacter,
+          currentSelectedMonster,
         ),
         'battle.gif',
       ),
@@ -219,6 +325,17 @@ export const discordBattle = async (
           ),
         ],
       }),
+      ...(selectMonsterMap && selectMonsterMap.length > 0 ? [
+        new MessageActionRow({
+          components: [
+            new MessageSelectMenu({
+              type: 'SELECT_MENU',
+              customId: 'select-mob',
+              options: selectMonsterMap,
+            }),
+          ],
+        }),
+      ] : []),
       new MessageActionRow({
         components: [
           new MessageSelectMenu({
@@ -226,7 +343,6 @@ export const discordBattle = async (
             customId: 'select-mainSkill',
             options: mainSkillMap,
           }),
-
         ],
       }),
       new MessageActionRow({
@@ -318,13 +434,38 @@ ${newLootC.length > 0 ? `__found ${newLootC.length} ${newLootC.length === 1 ? `i
       });
       return;
     }
+    if (interaction.isSelectMenu()) {
+      if (interaction.customId === 'select-mob') {
+        await interaction.deferUpdate();
+        if (interaction.values[0].startsWith('selectMonster:')) {
+          const newSelectedId = Number(interaction.values[0].replace('selectMonster:', ''));
+
+          selectMonsterMap = battle.BattleMonsters.reduce((filtered, battleMonster, index) => {
+            if (battleMonster.currentHp > 0) {
+              const someNewValue = {
+                placeholder: 'Select a mob to attack',
+                label: `Select Mob: ${battleMonster.monster.name} #${battleMonster.id} (${battleMonster.currentHp} / ${battleMonster.maxHp})`,
+                value: `selectMonster:${battleMonster.id}`,
+                default: newSelectedId === battleMonster.id,
+              };
+              filtered.push(someNewValue);
+            }
+            return filtered;
+          }, []);
+          currentSelectedMonster = battle.BattleMonsters.find((element) => element.id === newSelectedId);
+        }
+      }
+    }
+
     await queue.add(async () => {
       await db.sequelize.transaction({
         isolationLevel: Transaction.ISOLATION_LEVELS.SERIALIZABLE,
       }, async (t) => {
         let attackUsed;
+        let battleInfoArray;
         let monsterInfo;
         let userInfo;
+        let sumExp = 0;
 
         let previousBattleState = battle;
         previousBattleState = JSON.stringify(previousBattleState);
@@ -427,30 +568,37 @@ ${newLootC.length > 0 ? `__found ${newLootC.length} ${newLootC.length === 1 ? `i
             [
               userCurrentCharacter,
               battle,
-              userInfo,
+              battleInfoArray,
               monsterInfo,
+              sumExp,
             ] = await processBattleMove(
               userCurrentCharacter,
               battle,
+              currentSelectedMonster,
               attackUsed,
               io,
               queue,
               t,
             );
+            console.log('after processBattleMove 1');
             if (battle.complete) {
+              console.log('battle is complete');
               const newExp = await gainExp(
                 discordClient,
                 userCurrentCharacter.user.user_id,
-                battle.monsters[0].exp,
+                sumExp,
                 'battle',
                 t,
               );
-              const foundLoot = await generateLoot(battle.monsters[0].level);
+              const highestLevelMob = Math.max(...battle.BattleMonsters.map((o) => o.monster.level));
+              console.log('highest level');
+              console.log(highestLevelMob);
+              const foundLoot = await generateLoot(highestLevelMob);
               if (foundLoot) {
                 newLoot.push(foundLoot);
               }
 
-              const foundLootTwo = await generateLoot(battle.monsters[0].level);
+              const foundLootTwo = await generateLoot(highestLevelMob);
               if (foundLootTwo) {
                 newLoot.push(foundLootTwo);
               }
@@ -467,8 +615,9 @@ ${newLootC.length > 0 ? `__found ${newLootC.length} ${newLootC.length === 1 ? `i
                     battle,
                     previousBattleState,
                     previousUserState,
+                    currentSelectedMonster,
+                    battleInfoArray,
                     monsterInfo,
-                    userInfo,
                   ),
                   'battle.gif',
                 ),
@@ -477,6 +626,22 @@ ${newLootC.length > 0 ? `__found ${newLootC.length} ${newLootC.length === 1 ? `i
               components: [],
             });
           } else {
+            console.log('before change current selection');
+            const checkCurrentSelected = battle.BattleMonsters.find((element) => element && element.id === currentSelectedMonster.id);
+            const defaultSelectionCurrentMob = checkCurrentSelected.currentHp > 0 ? checkCurrentSelected : battle.BattleMonsters.find((element) => element.currentHp > 0);
+            console.log('after change current selection');
+            selectMonsterMap = battle.BattleMonsters.reduce((filtered, battleMonster, index) => {
+              if (battleMonster.currentHp > 0) {
+                const someNewValue = {
+                  placeholder: 'Select a mob to attack',
+                  label: `Select Mob: ${battleMonster.monster.name} #${battleMonster.id} (${battleMonster.currentHp} / ${battleMonster.maxHp})`,
+                  value: `selectMonster:${battleMonster.id}`,
+                  default: defaultSelectionCurrentMob.id === battleMonster.id,
+                };
+                filtered.push(someNewValue);
+              }
+              return filtered;
+            }, []);
             await interaction.editReply({
               embeds: [],
               files: [
@@ -487,8 +652,9 @@ ${newLootC.length > 0 ? `__found ${newLootC.length} ${newLootC.length === 1 ? `i
                     battle,
                     previousBattleState,
                     previousUserState,
+                    currentSelectedMonster,
+                    battleInfoArray,
                     monsterInfo,
-                    userInfo,
                   ),
                   'battle.gif',
                 ),
@@ -504,6 +670,17 @@ ${newLootC.length > 0 ? `__found ${newLootC.length} ${newLootC.length === 1 ? `i
                     ),
                   ],
                 }),
+                ...(selectMonsterMap && selectMonsterMap.length > 0 ? [
+                  new MessageActionRow({
+                    components: [
+                      new MessageSelectMenu({
+                        type: 'SELECT_MENU',
+                        customId: 'select-mob',
+                        options: selectMonsterMap,
+                      }),
+                    ],
+                  }),
+                ] : []),
                 new MessageActionRow({
                   components: [
                     new MessageSelectMenu({
@@ -545,7 +722,7 @@ ${newLootC.length > 0 ? `__found ${newLootC.length} ${newLootC.length === 1 ? `i
                 embeds: [
                   await battleCompleteEmbed(
                     userCurrentCharacter,
-                    battle.monsters[0].exp,
+                    sumExp,
                     newLoot,
                   ),
                 ],
@@ -609,6 +786,7 @@ ${newLootC.length > 0 ? `__found ${newLootC.length} ${newLootC.length === 1 ? `i
                   battle,
                   previousBattleState,
                   previousUserState,
+                  currentSelectedMonster,
                   monsterInfo,
                   userInfo,
                 ),
@@ -626,6 +804,17 @@ ${newLootC.length > 0 ? `__found ${newLootC.length} ${newLootC.length === 1 ? `i
                   ),
                 ],
               }),
+              ...(selectMonsterMap && selectMonsterMap.length > 0 ? [
+                new MessageActionRow({
+                  components: [
+                    new MessageSelectMenu({
+                      type: 'SELECT_MENU',
+                      customId: 'select-mob',
+                      options: selectMonsterMap,
+                    }),
+                  ],
+                }),
+              ] : []),
               new MessageActionRow({
                 components: [
                   new MessageSelectMenu({

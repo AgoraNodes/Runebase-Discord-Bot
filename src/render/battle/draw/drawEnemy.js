@@ -1,17 +1,40 @@
 export const drawEnemy = (
   ctx,
   monster,
+  isSelected,
   enemyFrame,
   movedToUser = false,
   number = 0,
+  playerPosition = {
+    x: 0,
+    y: 0,
+  },
+  index = 0,
+  updatedMonsterState = false,
 ) => {
-  let x;
-  let y;
+  let extraPositionX = 0;
+  let extraPositionY = 0;
+
+  if (index % 2 === 0 && index !== 0) {
+    const minusIndex = index / 2;
+    extraPositionX = (index - minusIndex) * 30;
+    extraPositionY = (index - minusIndex) * 30;
+  }
+  if (index % 2 !== 0 && index !== 0) {
+    extraPositionX = index * -30;
+    extraPositionY = index * -30;
+  }
+
+  let x = 0;
+  let y = 0;
   // XP Bar
   ctx.lineJoin = 'round';
-  ctx.lineWidth = 5;
-  ctx.strokeStyle = "red";
-  let hpPercentage = monster.BattleMonster.currentHp / monster.BattleMonster.maxHp;
+  const currentMonsterHp = updatedMonsterState ? updatedMonsterState.currentMonsterHp : monster.currentHp;
+  // console.log('sdqdfqsdqsd');
+  // console.log(monster.currentHp);
+  // console.log(updatedMonsterState);
+  // console.log(currentMonsterHp);
+  let hpPercentage = currentMonsterHp / monster.maxHp;
   if (hpPercentage < 0) {
     hpPercentage = 0;
   }
@@ -19,61 +42,77 @@ export const drawEnemy = (
     hpPercentage = 0;
   }
 
-  // empty bar
-
   if (!movedToUser) {
+    x = 280;
+    y = 85;
+    if (isSelected) {
+      ctx.lineWidth = 2;
+      ctx.strokeStyle = "#EEE621";
+      ctx.strokeRect(
+        x - 3 + extraPositionX,
+        y + 55 + extraPositionY,
+        30,
+        1,
+      );
+    }
+    ctx.lineWidth = 5;
+    // Enemy Healthbar
     ctx.strokeStyle = 'black';
     ctx.strokeRect(
-      185,
-      45,
+      x + extraPositionX - 5,
+      y + extraPositionY,
       40,
       0,
     );
-
     ctx.strokeStyle = 'red';
     ctx.strokeRect(
-      185,
-      45,
+      x + extraPositionX - 5,
+      y + extraPositionY,
       40 * (hpPercentage),
       0,
     );
-    x = 190;
-    y = 45;
+
+    // Enemy Image
     ctx.drawImage(
       enemyFrame[number],
-      190, // x position
-      45, // y position
+      x + extraPositionX, // x position
+      y + extraPositionY, // y position
       enemyFrame[number].width / 1.5,
       enemyFrame[number].height / 1.5,
     );
   } else {
+    console.log(playerPosition);
+    console.log('playerPosition');
+    x = 115;
+    y = 37;
+    // Enemy Healthbar
     ctx.strokeStyle = 'black';
     ctx.strokeRect(
-      110,
-      37,
+      playerPosition.x - 5,
+      playerPosition.y,
       40,
       0,
     );
-
     ctx.strokeStyle = 'red';
     ctx.strokeRect(
-      110,
-      37,
+      playerPosition.x - 5,
+      playerPosition.y,
       40 * (hpPercentage),
       0,
     );
-    x = 115;
-    y = 37;
+
+    // Enemy Image
     ctx.drawImage(
       enemyFrame[number],
-      x, // x position
-      y, // y position
+      playerPosition.x + 20, // x position
+      playerPosition.y, // y position
       enemyFrame[number].width / 1.5,
       enemyFrame[number].height / 1.5,
     );
   }
   return {
-    x,
-    y,
+    id: monster.id,
+    x: x + extraPositionX,
+    y: y + extraPositionY,
   };
 };

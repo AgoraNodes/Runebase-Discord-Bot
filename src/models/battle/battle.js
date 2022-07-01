@@ -26,6 +26,10 @@ module.exports = (sequelize, DataTypes) => {
     BattleModel.belongsTo(model.UserClass);
     BattleModel.hasMany(model.battleLog);
     BattleModel.hasMany(model.BattleMonster);
+    // BattleModel.belongsTo(model.BattleMonster, {
+    //   as: 'currentSelectedMonster',
+    //   foreignKey: 'currentSelectedMonsterId',
+    // });
     // BattleModel.hasMany(model.battleLog);
     BattleModel.belongsToMany(
       model.monster,

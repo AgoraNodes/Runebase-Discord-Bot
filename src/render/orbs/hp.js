@@ -2,17 +2,14 @@
 import {
   createCanvas,
 } from 'canvas';
-import { calculateCharacterStats } from '../../helpers/stats/calculateCharacterStats';
 
 export const renderHpOrb = async (
-  currentUser,
+  currentHp,
+  maxHp,
 ) => {
-  const {
-    hp,
-  } = await calculateCharacterStats(currentUser);
   const canvas = createCanvas(100, 100);
   const ctx = canvas.getContext('2d');
-  const percentage = (hp.current / hp.max) * 100;
+  const percentage = (currentHp / maxHp) * 100;
   ctx.beginPath();
   ctx.arc(50, 50, 50, 0, 2 * Math.PI);
   ctx.clip();
@@ -34,8 +31,8 @@ export const renderHpOrb = async (
   ctx.translate(50, 50);
   ctx.rotate(Math.PI);
   ctx.translate(-50, -50);
-  ctx.strokeText(`${hp.current} / ${hp.max}`, 50, 50, 100);
-  ctx.fillText(`${hp.current} / ${hp.max}`, 50, 50, 100);
+  ctx.strokeText(`${currentHp} / ${maxHp}`, 50, 50, 100);
+  ctx.fillText(`${currentHp} / ${maxHp}`, 50, 50, 100);
   const finalImage = await canvas.toBuffer();
   return finalImage;
 };

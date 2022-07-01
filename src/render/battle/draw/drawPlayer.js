@@ -4,21 +4,19 @@ export const drawPlayer = (
   number,
   inAttackPosition = false,
 ) => {
-  let x;
-  let y;
+  let x = 0;
+  let y = 0;
   if (inAttackPosition) {
-    x = 175;
-    y = 60;
     ctx.drawImage(
       playerImage[number],
-      x, // x position
-      y, // y position
+      inAttackPosition.x - 20, // x position
+      inAttackPosition.y, // y position
       playerImage[number].width,
       playerImage[number].height,
     );
   } else {
-    x = 80;
-    y = 70;
+    x = 110;
+    y = 130;
     ctx.drawImage(
       playerImage[number],
       x, // x position
