@@ -13,28 +13,17 @@ var _asyncToGenerator2 = _interopRequireDefault(require("@babel/runtime/helpers/
 
 var _canvas = require("canvas");
 
-var _path = _interopRequireDefault(require("path"));
-
-var _calculateCharacterStats = require("../../helpers/stats/calculateCharacterStats");
-
 /* eslint-disable import/prefer-default-export */
 var renderMpOrb = /*#__PURE__*/function () {
-  var _ref = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(currentUser) {
-    var _yield$calculateChara, mp, canvas, ctx, percentage, finalImage;
-
+  var _ref = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(currentMp, maxMp) {
+    var canvas, ctx, percentage, finalImage;
     return _regenerator["default"].wrap(function _callee$(_context) {
       while (1) {
         switch (_context.prev = _context.next) {
           case 0:
-            _context.next = 2;
-            return (0, _calculateCharacterStats.calculateCharacterStats)(currentUser);
-
-          case 2:
-            _yield$calculateChara = _context.sent;
-            mp = _yield$calculateChara.mp;
             canvas = (0, _canvas.createCanvas)(100, 100);
             ctx = canvas.getContext('2d');
-            percentage = mp.current / mp.max * 100;
+            percentage = currentMp / maxMp * 100;
             ctx.beginPath();
             ctx.arc(50, 50, 50, 0, 2 * Math.PI);
             ctx.clip();
@@ -51,16 +40,16 @@ var renderMpOrb = /*#__PURE__*/function () {
             ctx.translate(50, 50);
             ctx.rotate(Math.PI);
             ctx.translate(-50, -50);
-            ctx.strokeText("".concat(mp.current, " / ").concat(mp.max), 50, 50, 100);
-            ctx.fillText("".concat(mp.current, " / ").concat(mp.max), 50, 50, 100);
-            _context.next = 27;
+            ctx.strokeText("".concat(currentMp, " / ").concat(maxMp), 50, 50, 100);
+            ctx.fillText("".concat(currentMp, " / ").concat(maxMp), 50, 50, 100);
+            _context.next = 23;
             return canvas.toBuffer();
 
-          case 27:
+          case 23:
             finalImage = _context.sent;
             return _context.abrupt("return", finalImage);
 
-          case 29:
+          case 25:
           case "end":
             return _context.stop();
         }
@@ -68,7 +57,7 @@ var renderMpOrb = /*#__PURE__*/function () {
     }, _callee);
   }));
 
-  return function renderMpOrb(_x) {
+  return function renderMpOrb(_x, _x2) {
     return _ref.apply(this, arguments);
   };
 }();

@@ -25,7 +25,11 @@ module.exports = function (sequelize, DataTypes) {
   BattleModel.associate = function (model) {
     BattleModel.belongsTo(model.UserClass);
     BattleModel.hasMany(model.battleLog);
-    BattleModel.hasMany(model.BattleMonster); // BattleModel.hasMany(model.battleLog);
+    BattleModel.hasMany(model.BattleMonster); // BattleModel.belongsTo(model.BattleMonster, {
+    //   as: 'currentSelectedMonster',
+    //   foreignKey: 'currentSelectedMonsterId',
+    // });
+    // BattleModel.hasMany(model.battleLog);
 
     BattleModel.belongsToMany(model.monster, {
       through: 'BattleMonster'

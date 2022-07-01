@@ -123,7 +123,7 @@ var discordTopggVote = /*#__PURE__*/function () {
                         newTopggRecord = _context.sent;
                         console.log('after record create');
                         _context.next = 32;
-                        return (0, _experience.gainExp)(discordClient, message.user, 10, 'topggVote', t);
+                        return (0, _experience.gainExp)(discordClient, message.user, 16, 'topggVote', t);
 
                       case 32:
                         newExp = _context.sent;

@@ -9,6 +9,8 @@ exports.renderBattleGif = void 0;
 
 var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
 
+var _slicedToArray2 = _interopRequireDefault(require("@babel/runtime/helpers/slicedToArray"));
+
 var _asyncToGenerator2 = _interopRequireDefault(require("@babel/runtime/helpers/asyncToGenerator"));
 
 var _canvas = require("canvas");
@@ -17,386 +19,604 @@ var _path = _interopRequireDefault(require("path"));
 
 var _gif = _interopRequireDefault(require("gif.node"));
 
-var _hp = require("../orbs/hp");
+var _loadPlayer = require("./load/loadPlayer");
 
-var _mp = require("../orbs/mp");
+var _loadEnemy = require("./load/loadEnemy");
 
-var _tools = require("./tools");
+var _loadOrbs = require("./load/loadOrbs");
 
-// import { calculateCharacterStats } from '../../helpers/stats/calculateCharacterStats';
-var background = /*#__PURE__*/function () {
-  var _ref = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(ctx, zone) {
-    var mapImage;
-    return _regenerator["default"].wrap(function _callee$(_context) {
-      while (1) {
-        switch (_context.prev = _context.next) {
-          case 0:
-            _context.next = 2;
-            return (0, _canvas.loadImage)(_path["default"].join(__dirname, "../../assets/images/zone/background", "".concat(zone, ".png")));
+var _drawBackground = require("./draw/drawBackground");
 
-          case 2:
-            mapImage = _context.sent;
-            ctx.drawImage(mapImage, 0, // x position
-            0, // y position
-            mapImage.width, mapImage.height);
+var _drawBattleLog = require("./draw/drawBattleLog");
 
-          case 4:
-          case "end":
-            return _context.stop();
-        }
-      }
-    }, _callee);
-  }));
+var _drawBattleScreenTools = require("./draw/drawBattleScreenTools");
 
-  return function background(_x, _x2) {
-    return _ref.apply(this, arguments);
-  };
-}();
+var _drawPlayer = require("./draw/drawPlayer");
 
-var drawBattleLog = function drawBattleLog(ctx, battle) {
-  ctx.fillStyle = 'white';
-  ctx.fillRect(320, 0, 130, 200);
-  ctx.font = 'bold 13px "HeartWarming"';
-  ctx.strokeText('Battle log', 330, 20, 100);
-  ctx.fillText('Battle log', 330, 20, 100);
-  ctx.font = 'normal 10px serif';
-  ctx.fillStyle = 'black';
+var _drawEnemy = require("./draw/drawEnemy");
 
-  for (var i = 0; i < battle.battleLogs.length; i++) {
-    ctx.fillText(battle.battleLogs[i].log, 330, 25 + (i + 1) * 15, 100);
-  }
-};
+function _createForOfIteratorHelper(o, allowArrayLike) { var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"]; if (!it) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = it.call(o); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it["return"] != null) it["return"](); } finally { if (didErr) throw err; } } }; }
 
-var drawPlayer = function drawPlayer(ctx, inAttackPosition) {
-  function drawBorder(xPos, yPos, width, height) {
-    var thickness = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : 1;
-    ctx.fillStyle = '#FFF';
-    ctx.fillRect(xPos - thickness, yPos - thickness, width + thickness * 2, height + thickness * 2);
-  }
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
 
-  var rectXPos = 80;
-  var rectYPos = 70;
-  var rectWidth = 20;
-  var rectHeight = 50;
-
-  if (inAttackPosition) {
-    rectXPos = 175;
-    rectYPos = 60;
-    rectWidth = 20;
-    rectHeight = 50;
-  }
-
-  drawBorder(rectXPos, rectYPos, rectWidth, rectHeight);
-  ctx.fillStyle = '#000';
-  ctx.fillRect(rectXPos, rectYPos, rectWidth, rectHeight);
-};
-
-var drawEnemy = function drawEnemy(ctx, monster, enemyFrame) {
-  var movedToUser = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : false;
-  var number = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : 0;
-  // XP Bar
-  ctx.lineJoin = 'round';
-  ctx.lineWidth = 5;
-  ctx.strokeStyle = "red";
-  var hpPercentage = monster.BattleMonster.currentHp / monster.BattleMonster.maxHp;
-
-  if (hpPercentage < 0) {
-    hpPercentage = 0;
-  }
-
-  if (hpPercentage > 100) {
-    hpPercentage = 0;
-  } // empty bar
-
-
-  if (!movedToUser) {
-    ctx.strokeStyle = 'black';
-    ctx.strokeRect(185, 45, 40, 0);
-    ctx.strokeStyle = 'red';
-    ctx.strokeRect(185, 45, 40 * hpPercentage, 0);
-    ctx.drawImage(enemyFrame[number], 190, // x position
-    45, // y position
-    enemyFrame[number].width / 1.5, enemyFrame[number].height / 1.5);
-  } else {
-    ctx.strokeStyle = 'black';
-    ctx.strokeRect(110, 37, 40, 0);
-    ctx.strokeStyle = 'red';
-    ctx.strokeRect(110, 37, 40 * hpPercentage, 0);
-    ctx.drawImage(enemyFrame[number], 115, // x position
-    37, // y position
-    enemyFrame[number].width / 1.5, enemyFrame[number].height / 1.5);
-  }
-};
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
 
 var renderBattleGif = /*#__PURE__*/function () {
-  var _ref2 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee2(currentUser, userCurrentSelectedSkills, battle, previousBattleState, previousUserState) {
-    var monsterInfo,
-        userInfo,
-        enemyFrame,
-        hpOrbBufferPrevious,
-        mpOrbBufferPrevious,
-        hpOrbBuffer,
-        mpOrbBuffer,
-        hpOrbImage,
-        mpOrbImage,
-        hpOrbImagePrevious,
-        mpOrbImagePrevious,
+  var _ref = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee11(currentUser, userCurrentSelectedSkills, battle, previousBattleState, previousUserState, currentSelectedMonster) {
+    var battleInfoArray,
+        monsterInfo,
+        enemyPosition,
+        playerPosition,
+        enemies,
+        zone,
+        backgroundImage,
+        playerImage,
+        _yield$loadOrbs,
+        _yield$loadOrbs2,
+        hpOrbs,
+        mpOrbs,
         mainSkill,
         secondarySkill,
         canvas,
         ctx,
         gif,
+        findAttackedEnemyByUser,
+        _iterator,
+        _step,
+        _loop,
         finalImage,
-        _args2 = arguments;
-    return _regenerator["default"].wrap(function _callee2$(_context2) {
+        _args11 = arguments;
+
+    return _regenerator["default"].wrap(function _callee11$(_context11) {
       while (1) {
-        switch (_context2.prev = _context2.next) {
+        switch (_context11.prev = _context11.next) {
           case 0:
-            monsterInfo = _args2.length > 5 && _args2[5] !== undefined ? _args2[5] : false;
-            userInfo = _args2.length > 6 && _args2[6] !== undefined ? _args2[6] : false;
-            _context2.next = 4;
+            battleInfoArray = _args11.length > 6 && _args11[6] !== undefined ? _args11[6] : false;
+            monsterInfo = _args11.length > 7 && _args11[7] !== undefined ? _args11[7] : false;
+            enemyPosition = [];
+            playerPosition = [];
+            enemies = [];
+            _context11.next = 7;
             return (0, _canvas.registerFont)(_path["default"].join(__dirname, '../../assets/fonts/', 'Heart_warming.otf'), {
               family: 'HeartWarming'
             });
 
-          case 4:
-            enemyFrame = [];
-            _context2.next = 7;
-            return (0, _hp.renderHpOrb)(previousUserState);
-
           case 7:
-            hpOrbBufferPrevious = _context2.sent;
-            _context2.next = 10;
-            return (0, _mp.renderMpOrb)(previousUserState);
+            zone = 'den';
+            _context11.next = 10;
+            return (0, _canvas.loadImage)(_path["default"].join(__dirname, "../../assets/images/battle/background", "".concat(zone, ".png")));
 
           case 10:
-            mpOrbBufferPrevious = _context2.sent;
-            _context2.next = 13;
-            return (0, _hp.renderHpOrb)(currentUser);
+            backgroundImage = _context11.sent;
+            _context11.next = 13;
+            return (0, _loadPlayer.loadPlayer)(currentUser["class"].name);
 
           case 13:
-            hpOrbBuffer = _context2.sent;
-            _context2.next = 16;
-            return (0, _mp.renderMpOrb)(currentUser);
+            playerImage = _context11.sent;
+            console.log('start render gif 1');
+            previousBattleState.BattleMonsters.forEach( /*#__PURE__*/function () {
+              var _ref2 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(battleMonster, i) {
+                return _regenerator["default"].wrap(function _callee$(_context) {
+                  while (1) {
+                    switch (_context.prev = _context.next) {
+                      case 0:
+                        _context.next = 2;
+                        return (0, _loadEnemy.loadEnemy)(battleMonster.monster.name);
 
-          case 16:
-            mpOrbBuffer = _context2.sent;
-            _context2.next = 19;
-            return (0, _canvas.loadImage)(hpOrbBuffer);
+                      case 2:
+                        enemies[parseInt(battleMonster.id, 10)] = _context.sent;
+
+                      case 3:
+                      case "end":
+                        return _context.stop();
+                    }
+                  }
+                }, _callee);
+              }));
+
+              return function (_x7, _x8) {
+                return _ref2.apply(this, arguments);
+              };
+            }());
+            console.log('start render gif 22');
+            _context11.next = 19;
+            return (0, _loadOrbs.loadOrbs)(previousUserState, battleInfoArray, monsterInfo);
 
           case 19:
-            hpOrbImage = _context2.sent;
-            _context2.next = 22;
-            return (0, _canvas.loadImage)(mpOrbBuffer);
-
-          case 22:
-            mpOrbImage = _context2.sent;
-            _context2.next = 25;
-            return (0, _canvas.loadImage)(hpOrbBufferPrevious);
-
-          case 25:
-            hpOrbImagePrevious = _context2.sent;
-            _context2.next = 28;
-            return (0, _canvas.loadImage)(mpOrbBufferPrevious);
-
-          case 28:
-            mpOrbImagePrevious = _context2.sent;
-            _context2.next = 31;
-            return (0, _canvas.loadImage)(_path["default"].join(__dirname, "../../assets/images/monsters/Zombie/", "zombie.png"));
-
-          case 31:
-            enemyFrame[0] = _context2.sent;
-            _context2.next = 34;
-            return (0, _canvas.loadImage)(_path["default"].join(__dirname, "../../assets/images/monsters/Zombie/", "zombie (8).png"));
-
-          case 34:
-            enemyFrame[1] = _context2.sent;
-            _context2.next = 37;
-            return (0, _canvas.loadImage)(_path["default"].join(__dirname, "../../assets/images/monsters/Zombie/", "zombie (6).png"));
-
-          case 37:
-            enemyFrame[2] = _context2.sent;
-            _context2.next = 40;
+            _yield$loadOrbs = _context11.sent;
+            _yield$loadOrbs2 = (0, _slicedToArray2["default"])(_yield$loadOrbs, 2);
+            hpOrbs = _yield$loadOrbs2[0];
+            mpOrbs = _yield$loadOrbs2[1];
+            console.log('start render gif 3');
+            _context11.next = 26;
             return (0, _canvas.loadImage)(_path["default"].join(__dirname, "../../assets/images/skills/".concat(userCurrentSelectedSkills.selectedMainSkill.skill.skillTree ? "".concat(userCurrentSelectedSkills.selectedMainSkill.skill.skillTree["class"].name, "/").concat(userCurrentSelectedSkills.selectedMainSkill.skill.skillTree.name) : ""), "".concat(userCurrentSelectedSkills.selectedMainSkill.skill.name, ".png")));
 
-          case 40:
-            mainSkill = _context2.sent;
-            _context2.next = 43;
+          case 26:
+            mainSkill = _context11.sent;
+            _context11.next = 29;
             return (0, _canvas.loadImage)(_path["default"].join(__dirname, "../../assets/images/skills/".concat(userCurrentSelectedSkills.selectedSecondarySkill.skill.skillTree ? "".concat(userCurrentSelectedSkills.selectedSecondarySkill.skill.skillTree["class"].name, "/").concat(userCurrentSelectedSkills.selectedSecondarySkill.skill.skillTree.name) : ""), "".concat(userCurrentSelectedSkills.selectedSecondarySkill.skill.name, ".png")));
 
-          case 43:
-            secondarySkill = _context2.sent;
-            canvas = (0, _canvas.createCanvas)(450, 200);
+          case 29:
+            secondarySkill = _context11.sent;
+            console.log('start render gif 2');
+            canvas = (0, _canvas.createCanvas)(650, 300);
             ctx = canvas.getContext('2d');
             gif = new _gif["default"]({
               worker: 8,
               quality: 50,
               debug: false,
-              width: 450,
-              height: 200,
+              width: canvas.width,
+              height: canvas.height,
               repeat: -1
             });
-            _context2.next = 49;
-            return background(ctx, 'den');
+            console.log('Render Frame #1');
+            (0, _drawBackground.drawBackground)(ctx, canvas, backgroundImage);
+            playerPosition[0] = (0, _drawPlayer.drawPlayer)(ctx, // Ctx drawing canvas
+            playerImage, // image array of player images
+            0, // number of image in the array to show
+            false // user attacking [false || enemyImagePosition]
+            );
+            previousBattleState.BattleMonsters.forEach( /*#__PURE__*/function () {
+              var _ref3 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee2(battleMonster, i) {
+                return _regenerator["default"].wrap(function _callee2$(_context2) {
+                  while (1) {
+                    switch (_context2.prev = _context2.next) {
+                      case 0:
+                        if (battleMonster.currentHp > 0) {
+                          enemyPosition[i] = (0, _drawEnemy.drawEnemy)(ctx, // CTX
+                          previousBattleState.BattleMonsters.find(function (element) {
+                            return element.id === battleMonster.id;
+                          }), // MonsterState
+                          currentSelectedMonster && currentSelectedMonster.id === battleMonster.id, // is current Monster selected?
+                          enemies[battleMonster.id], // Enemy Image
+                          false, // Moved To user?
+                          0, // Enemy Image Frame Shown
+                          playerPosition, // PlayerCords
+                          i // Index
+                          );
+                        }
 
-          case 49:
-            drawPlayer(ctx, false);
-            drawEnemy(ctx, previousBattleState.monsters[0], enemyFrame);
-            (0, _tools.drawBattleScreenTools)(ctx, mainSkill, secondarySkill, hpOrbImagePrevious, mpOrbImagePrevious);
-            drawBattleLog(ctx, battle);
+                      case 1:
+                      case "end":
+                        return _context2.stop();
+                    }
+                  }
+                }, _callee2);
+              }));
+
+              return function (_x9, _x10) {
+                return _ref3.apply(this, arguments);
+              };
+            }());
+            (0, _drawBattleScreenTools.drawBattleScreenTools)(ctx, // pass canvas ctx
+            mainSkill, secondarySkill, hpOrbs[0], mpOrbs[0]);
+            (0, _drawBattleLog.drawBattleLog)(ctx, battle);
             gif.addFrame(ctx.getImageData(0, 0, canvas.width, canvas.height), {
               delay: 600
-            }); // frame 4
+            });
+            console.log('Render Frame #2');
+            (0, _drawBackground.drawBackground)(ctx, canvas, backgroundImage);
+            previousBattleState.BattleMonsters.forEach( /*#__PURE__*/function () {
+              var _ref4 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee3(battleMonster, i) {
+                return _regenerator["default"].wrap(function _callee3$(_context3) {
+                  while (1) {
+                    switch (_context3.prev = _context3.next) {
+                      case 0:
+                        if (battleMonster.currentHp > 0) {
+                          // const findUpdatedMonsterState = monsterInfo.find((element) => element.monsterId === battleMonster.id);
+                          enemyPosition[i] = (0, _drawEnemy.drawEnemy)(ctx, // CTX
+                          previousBattleState.BattleMonsters.find(function (element) {
+                            return element.id === battleMonster.id;
+                          }), // MonsterState
+                          currentSelectedMonster && currentSelectedMonster.id === battleMonster.id, // is current Monster selected?
+                          enemies[battleMonster.id], // Enemy Image
+                          false, // Moved To user?
+                          0, // Enemy Image Frame Shown
+                          playerPosition, // PlayerCords
+                          i // Index
+                          // findUpdatedMonsterState,
+                          );
+                        }
 
-            _context2.next = 56;
-            return background(ctx, 'den');
+                      case 1:
+                      case "end":
+                        return _context3.stop();
+                    }
+                  }
+                }, _callee3);
+              }));
 
-          case 56:
-            drawPlayer(ctx, true);
-            drawEnemy(ctx, previousBattleState.monsters[0], enemyFrame);
-            (0, _tools.drawBattleScreenTools)(ctx, mainSkill, secondarySkill, hpOrbImagePrevious, mpOrbImagePrevious);
-            drawBattleLog(ctx, battle);
+              return function (_x11, _x12) {
+                return _ref4.apply(this, arguments);
+              };
+            }());
+            console.log(enemyPosition);
+            console.log('find enemy position before');
+            findAttackedEnemyByUser = enemyPosition.find(function (element) {
+              return element && element.id === monsterInfo[0].monsterId;
+            });
+            console.log('find enemy position after');
+            console.log(findAttackedEnemyByUser);
+            playerPosition[0] = (0, _drawPlayer.drawPlayer)(ctx, // Ctx drawing canvas
+            playerImage, // image array of player images
+            0, // number of image in the array to show
+            findAttackedEnemyByUser // user attacking [false || enemyImagePosition]
+            );
+            (0, _drawBattleScreenTools.drawBattleScreenTools)(ctx, mainSkill, secondarySkill, hpOrbs[0], mpOrbs[0]);
+            (0, _drawBattleLog.drawBattleLog)(ctx, battle);
             ctx.lineWidth = 1;
             ctx.font = 'bold 13px "HeartWarming"';
-            ctx.strokeText(userInfo.attackDamage, 193, 38, 50);
+            ctx.strokeText(monsterInfo[0].userDamage, findAttackedEnemyByUser.x, findAttackedEnemyByUser.y - 20, 50);
             gif.addFrame(ctx.getImageData(0, 0, canvas.width, canvas.height), {
               delay: 200
-            }); // frame 5
+            });
+            console.log('Render Frame #3');
+            (0, _drawBackground.drawBackground)(ctx, canvas, backgroundImage);
+            battle.BattleMonsters.forEach( /*#__PURE__*/function () {
+              var _ref5 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee4(battleMonster, i) {
+                return _regenerator["default"].wrap(function _callee4$(_context4) {
+                  while (1) {
+                    switch (_context4.prev = _context4.next) {
+                      case 0:
+                        if (battleMonster.currentHp > 0) {
+                          enemyPosition[i] = (0, _drawEnemy.drawEnemy)(ctx, // CTX
+                          battle.BattleMonsters.find(function (element) {
+                            return element.id === battleMonster.id;
+                          }), // MonsterState
+                          currentSelectedMonster && currentSelectedMonster.id === battleMonster.id, // is current Monster selected?
+                          enemies[battleMonster.id], // Enemy Image
+                          false, // Moved To user?
+                          0, // Enemy Image Frame Shown
+                          playerPosition, // PlayerCords
+                          i // Index
+                          );
+                        }
 
-            _context2.next = 66;
-            return background(ctx, 'den');
+                      case 1:
+                      case "end":
+                        return _context4.stop();
+                    }
+                  }
+                }, _callee4);
+              }));
 
-          case 66:
-            drawPlayer(ctx, true);
-            drawEnemy(ctx, battle.monsters[0], enemyFrame);
-            (0, _tools.drawBattleScreenTools)(ctx, mainSkill, secondarySkill, hpOrbImagePrevious, mpOrbImage);
-            drawBattleLog(ctx, battle);
+              return function (_x13, _x14) {
+                return _ref5.apply(this, arguments);
+              };
+            }());
+            playerPosition[0] = (0, _drawPlayer.drawPlayer)(ctx, // Ctx drawing canvas
+            playerImage, // image array of player images
+            0, // number of image in the array to show
+            findAttackedEnemyByUser // user attacking [false || enemyImagePosition]
+            );
+            (0, _drawBattleScreenTools.drawBattleScreenTools)(ctx, mainSkill, secondarySkill, hpOrbs[0], mpOrbs[1]);
+            (0, _drawBattleLog.drawBattleLog)(ctx, battle);
             ctx.lineWidth = 1;
             ctx.font = 'bold 13px "HeartWarming"';
-            ctx.strokeText(userInfo.attackDamage, 193, 38, 50);
+            ctx.strokeText(monsterInfo[0].userDamage, findAttackedEnemyByUser.x, findAttackedEnemyByUser.y - 20, 50);
             gif.addFrame(ctx.getImageData(0, 0, canvas.width, canvas.height), {
               delay: 200
-            }); // frame 7
+            });
+            console.log('Render Frame #4');
+            (0, _drawBackground.drawBackground)(ctx, canvas, backgroundImage);
+            playerPosition[0] = (0, _drawPlayer.drawPlayer)(ctx, // Ctx drawing canvas
+            playerImage, // image array of player images
+            0, // number of image in the array to show
+            false // user attacking [false || enemyImagePosition]
+            );
+            battle.BattleMonsters.forEach( /*#__PURE__*/function () {
+              var _ref6 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee5(battleMonster, i) {
+                return _regenerator["default"].wrap(function _callee5$(_context5) {
+                  while (1) {
+                    switch (_context5.prev = _context5.next) {
+                      case 0:
+                        if (battleMonster.currentHp > 0) {
+                          enemyPosition[i] = (0, _drawEnemy.drawEnemy)(ctx, // CTX
+                          battle.BattleMonsters.find(function (element) {
+                            return element.id === battleMonster.id;
+                          }), // MonsterState
+                          currentSelectedMonster && currentSelectedMonster.id === battleMonster.id, // is current Monster selected?
+                          enemies[battleMonster.id], // Enemy Image
+                          false, // Moved To user?
+                          0, // Enemy Image Frame Shown
+                          playerPosition, // PlayerCords
+                          i // Index
+                          );
+                        }
 
-            _context2.next = 76;
-            return background(ctx, 'den');
+                      case 1:
+                      case "end":
+                        return _context5.stop();
+                    }
+                  }
+                }, _callee5);
+              }));
 
-          case 76:
-            drawPlayer(ctx, false);
-            drawEnemy(ctx, battle.monsters[0], enemyFrame);
-            (0, _tools.drawBattleScreenTools)(ctx, mainSkill, secondarySkill, hpOrbImagePrevious, mpOrbImage);
-            drawBattleLog(ctx, battle);
+              return function (_x15, _x16) {
+                return _ref6.apply(this, arguments);
+              };
+            }());
+            (0, _drawBattleScreenTools.drawBattleScreenTools)(ctx, mainSkill, secondarySkill, hpOrbs[0], mpOrbs[1]);
+            (0, _drawBattleLog.drawBattleLog)(ctx, battle);
             ctx.lineWidth = 1;
             ctx.font = 'bold 13px "HeartWarming"';
-            ctx.strokeText(userInfo.attackDamage, 193, 38, 50); // encoder.addFrame(ctx);
-
+            ctx.strokeText(monsterInfo[0].userDamage, findAttackedEnemyByUser.x, findAttackedEnemyByUser.y - 20, 50);
             gif.addFrame(ctx.getImageData(0, 0, canvas.width, canvas.height), {
               delay: 400
-            });
+            }); // eslint-disable-next-line no-restricted-syntax
 
-            if (!monsterInfo.alive) {
-              _context2.next = 129;
-              break;
+            _iterator = _createForOfIteratorHelper(battleInfoArray.entries());
+
+            try {
+              _loop = function _loop() {
+                var _step$value = (0, _slicedToArray2["default"])(_step.value, 2),
+                    index = _step$value[0],
+                    battleInfo = _step$value[1];
+
+                console.log('Render Frame #5');
+                (0, _drawBackground.drawBackground)(ctx, canvas, backgroundImage);
+                playerPosition[0] = (0, _drawPlayer.drawPlayer)(ctx, // Ctx drawing canvas
+                playerImage, // image array of player images
+                0, // number of image in the array to show
+                false // user attacking [false || enemyImagePosition]
+                );
+                battle.BattleMonsters.forEach( /*#__PURE__*/function () {
+                  var _ref7 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee6(battleMonster, i) {
+                    return _regenerator["default"].wrap(function _callee6$(_context6) {
+                      while (1) {
+                        switch (_context6.prev = _context6.next) {
+                          case 0:
+                            if (battleMonster.currentHp > 0) {
+                              enemyPosition[i] = (0, _drawEnemy.drawEnemy)(ctx, // CTX
+                              battle.BattleMonsters.find(function (element) {
+                                return element.id === battleMonster.id;
+                              }), // MonsterState
+                              currentSelectedMonster && currentSelectedMonster.id === battleMonster.id, // is current Monster selected?
+                              enemies[battleMonster.id], // Enemy Image
+                              battleMonster.id === battleInfo.monsterId, // Moved To user?
+                              battleMonster.id === battleInfo.monsterId ? 0 : 0, // Enemy Image Frame Shown
+                              playerPosition[0], // PlayerCords
+                              i // Index
+                              );
+                            }
+
+                          case 1:
+                          case "end":
+                            return _context6.stop();
+                        }
+                      }
+                    }, _callee6);
+                  }));
+
+                  return function (_x17, _x18) {
+                    return _ref7.apply(this, arguments);
+                  };
+                }());
+                (0, _drawBattleScreenTools.drawBattleScreenTools)(ctx, mainSkill, secondarySkill, hpOrbs[index + 1], mpOrbs[1]);
+                (0, _drawBattleLog.drawBattleLog)(ctx, battle);
+                gif.addFrame(ctx.getImageData(0, 0, canvas.width, canvas.height), {
+                  delay: 400
+                });
+                console.log('Render Frame #6');
+                (0, _drawBackground.drawBackground)(ctx, canvas, backgroundImage);
+                console.log('draw player');
+                playerPosition[0] = (0, _drawPlayer.drawPlayer)(ctx, // Ctx drawing canvas
+                playerImage, // image array of player images
+                0, // number of image in the array to show
+                false // user attacking [false || enemyImagePosition]
+                );
+                battle.BattleMonsters.forEach( /*#__PURE__*/function () {
+                  var _ref8 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee7(battleMonster, i) {
+                    return _regenerator["default"].wrap(function _callee7$(_context7) {
+                      while (1) {
+                        switch (_context7.prev = _context7.next) {
+                          case 0:
+                            if (battleMonster.currentHp > 0) {
+                              enemyPosition[i] = (0, _drawEnemy.drawEnemy)(ctx, // CTX
+                              battle.BattleMonsters.find(function (element) {
+                                return element.id === battleMonster.id;
+                              }), // MonsterState
+                              currentSelectedMonster && currentSelectedMonster.id === battleMonster.id, // is current Monster selected?
+                              enemies[battleMonster.id], // Enemy Image
+                              battleMonster.id === battleInfo.monsterId, // Moved To user?
+                              battleMonster.id === battleInfo.monsterId ? 1 : 0, // Enemy Image Frame Shown
+                              playerPosition[0], // PlayerCords
+                              i // Index
+                              );
+                            }
+
+                          case 1:
+                          case "end":
+                            return _context7.stop();
+                        }
+                      }
+                    }, _callee7);
+                  }));
+
+                  return function (_x19, _x20) {
+                    return _ref8.apply(this, arguments);
+                  };
+                }());
+                console.log('draw screenTools');
+                (0, _drawBattleScreenTools.drawBattleScreenTools)(ctx, mainSkill, secondarySkill, hpOrbs[index + 1], mpOrbs[1]);
+                console.log('draw battleLog');
+                (0, _drawBattleLog.drawBattleLog)(ctx, battle);
+                ctx.lineWidth = 1;
+                ctx.font = 'bold 13px "HeartWarming"';
+                ctx.strokeText(battleInfo.damage, playerPosition[0].x, playerPosition[0].y - 20, 50);
+                gif.addFrame(ctx.getImageData(0, 0, canvas.width, canvas.height), {
+                  delay: 200
+                });
+                console.log('Render Frame #7');
+                (0, _drawBackground.drawBackground)(ctx, canvas, backgroundImage);
+                playerPosition[0] = (0, _drawPlayer.drawPlayer)(ctx, // Ctx drawing canvas
+                playerImage, // image array of player images
+                0, // number of image in the array to show
+                false // user attacking [false || enemyImagePosition]
+                );
+                battle.BattleMonsters.forEach( /*#__PURE__*/function () {
+                  var _ref9 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee8(battleMonster, i) {
+                    return _regenerator["default"].wrap(function _callee8$(_context8) {
+                      while (1) {
+                        switch (_context8.prev = _context8.next) {
+                          case 0:
+                            if (battleMonster.currentHp > 0) {
+                              enemyPosition[i] = (0, _drawEnemy.drawEnemy)(ctx, // CTX
+                              battle.BattleMonsters.find(function (element) {
+                                return element.id === battleMonster.id;
+                              }), // MonsterState
+                              currentSelectedMonster && currentSelectedMonster.id === battleMonster.id, // is current Monster selected?
+                              enemies[battleMonster.id], // Enemy Image
+                              battleMonster.id === battleInfo.monsterId, // Moved To user?
+                              battleMonster.id === battleInfo.monsterId ? 2 : 0, // Enemy Image Frame Shown
+                              playerPosition[0], // PlayerCords
+                              i // Index
+                              );
+                            }
+
+                          case 1:
+                          case "end":
+                            return _context8.stop();
+                        }
+                      }
+                    }, _callee8);
+                  }));
+
+                  return function (_x21, _x22) {
+                    return _ref9.apply(this, arguments);
+                  };
+                }());
+                (0, _drawBattleScreenTools.drawBattleScreenTools)(ctx, mainSkill, secondarySkill, hpOrbs[index + 1], mpOrbs[1]);
+                (0, _drawBattleLog.drawBattleLog)(ctx, battle);
+                ctx.lineWidth = 1;
+                ctx.font = 'bold 13px "HeartWarming"';
+                ctx.strokeText(battleInfo.damage, playerPosition[0].x, playerPosition[0].y - 20, 50);
+                gif.addFrame(ctx.getImageData(0, 0, canvas.width, canvas.height), {
+                  delay: 200
+                });
+                console.log('Render Frame #8');
+                (0, _drawBackground.drawBackground)(ctx, canvas, backgroundImage);
+                playerPosition[0] = (0, _drawPlayer.drawPlayer)(ctx, // Ctx drawing canvas
+                playerImage, // image array of player images
+                0, // number of image in the array to show
+                false // user attacking [false || enemyImagePosition]
+                );
+                battle.BattleMonsters.forEach( /*#__PURE__*/function () {
+                  var _ref10 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee9(battleMonster, i) {
+                    return _regenerator["default"].wrap(function _callee9$(_context9) {
+                      while (1) {
+                        switch (_context9.prev = _context9.next) {
+                          case 0:
+                            if (battleMonster.currentHp > 0) {
+                              enemyPosition[i] = (0, _drawEnemy.drawEnemy)(ctx, // CTX
+                              battle.BattleMonsters.find(function (element) {
+                                return element.id === battleMonster.id;
+                              }), // MonsterState
+                              currentSelectedMonster && currentSelectedMonster.id === battleMonster.id, // is current Monster selected?
+                              enemies[battleMonster.id], // Enemy Image
+                              battleMonster.id === battleInfo.monsterId, // Moved To user?
+                              battleMonster.id === battleInfo.monsterId ? 0 : 0, // Enemy Image Frame Shown
+                              playerPosition[0], // PlayerCords
+                              i // Index
+                              );
+                            }
+
+                          case 1:
+                          case "end":
+                            return _context9.stop();
+                        }
+                      }
+                    }, _callee9);
+                  }));
+
+                  return function (_x23, _x24) {
+                    return _ref10.apply(this, arguments);
+                  };
+                }());
+                (0, _drawBattleScreenTools.drawBattleScreenTools)(ctx, mainSkill, secondarySkill, hpOrbs[index + 1], mpOrbs[1]);
+                (0, _drawBattleLog.drawBattleLog)(ctx, battle);
+                ctx.lineWidth = 1;
+                ctx.font = 'bold 13px "HeartWarming"';
+                ctx.strokeText(battleInfo.damage, playerPosition[0].x, playerPosition[0].y - 20, 50);
+                gif.addFrame(ctx.getImageData(0, 0, canvas.width, canvas.height), {
+                  delay: 200
+                });
+                console.log('Render Frame #9');
+                (0, _drawBackground.drawBackground)(ctx, canvas, backgroundImage);
+                playerPosition[0] = (0, _drawPlayer.drawPlayer)(ctx, // Ctx drawing canvas
+                playerImage, // image array of player images
+                0, // number of image in the array to show
+                false // user attacking [false || enemyImagePosition]
+                );
+                battle.BattleMonsters.forEach( /*#__PURE__*/function () {
+                  var _ref11 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee10(battleMonster, i) {
+                    return _regenerator["default"].wrap(function _callee10$(_context10) {
+                      while (1) {
+                        switch (_context10.prev = _context10.next) {
+                          case 0:
+                            if (battleMonster.currentHp > 0) {
+                              enemyPosition[i] = (0, _drawEnemy.drawEnemy)(ctx, // CTX
+                              battle.BattleMonsters.find(function (element) {
+                                return element.id === battleMonster.id;
+                              }), // MonsterState
+                              currentSelectedMonster && currentSelectedMonster.id === battleMonster.id, // is current Monster selected?
+                              enemies[battleMonster.id], // Enemy Image
+                              false, // Moved To user?
+                              0, // Enemy Image Frame Shown
+                              playerPosition[0], // PlayerCords
+                              i // Index
+                              );
+                            }
+
+                          case 1:
+                          case "end":
+                            return _context10.stop();
+                        }
+                      }
+                    }, _callee10);
+                  }));
+
+                  return function (_x25, _x26) {
+                    return _ref11.apply(this, arguments);
+                  };
+                }());
+                (0, _drawBattleScreenTools.drawBattleScreenTools)(ctx, mainSkill, secondarySkill, hpOrbs[index + 1], mpOrbs[1]);
+                (0, _drawBattleLog.drawBattleLog)(ctx, battle);
+                gif.addFrame(ctx.getImageData(0, 0, canvas.width, canvas.height), {
+                  delay: 300
+                });
+              };
+
+              for (_iterator.s(); !(_step = _iterator.n()).done;) {
+                _loop();
+              }
+            } catch (err) {
+              _iterator.e(err);
+            } finally {
+              _iterator.f();
             }
 
-            _context2.next = 87;
-            return background(ctx, 'den');
-
-          case 87:
-            drawPlayer(ctx, false);
-            drawEnemy(ctx, battle.monsters[0], enemyFrame);
-            (0, _tools.drawBattleScreenTools)(ctx, mainSkill, secondarySkill, hpOrbImagePrevious, mpOrbImage);
-            drawBattleLog(ctx, battle); // encoder.addFrame(ctx);
-
-            gif.addFrame(ctx.getImageData(0, 0, canvas.width, canvas.height), {
-              delay: 400
-            }); // frame 6
-
-            _context2.next = 94;
-            return background(ctx, 'den');
-
-          case 94:
-            drawPlayer(ctx, false);
-            drawEnemy(ctx, battle.monsters[0], enemyFrame, true);
-            (0, _tools.drawBattleScreenTools)(ctx, mainSkill, secondarySkill, hpOrbImagePrevious, mpOrbImage);
-            drawBattleLog(ctx, battle);
-            ctx.lineWidth = 1;
-            ctx.font = 'bold 13px "HeartWarming"';
-            ctx.strokeText(monsterInfo.attackDamage, 80, 45, 50); // encoder.addFrame(ctx);
-
-            gif.addFrame(ctx.getImageData(0, 0, canvas.width, canvas.height), {
-              delay: 200
-            }); // frame 6
-
-            _context2.next = 104;
-            return background(ctx, 'den');
-
-          case 104:
-            drawPlayer(ctx, false);
-            drawEnemy(ctx, battle.monsters[0], enemyFrame, true, 1);
-            (0, _tools.drawBattleScreenTools)(ctx, mainSkill, secondarySkill, hpOrbImage, mpOrbImage);
-            drawBattleLog(ctx, battle);
-            ctx.lineWidth = 1;
-            ctx.font = 'bold 13px "HeartWarming"';
-            ctx.strokeText(monsterInfo.attackDamage, 80, 45, 50); // encoder.addFrame(ctx);
-
-            gif.addFrame(ctx.getImageData(0, 0, canvas.width, canvas.height), {
-              delay: 200
-            }); // frame 6
-
-            _context2.next = 114;
-            return background(ctx, 'den');
-
-          case 114:
-            drawPlayer(ctx, false);
-            drawEnemy(ctx, battle.monsters[0], enemyFrame, true, 2);
-            (0, _tools.drawBattleScreenTools)(ctx, mainSkill, secondarySkill, hpOrbImage, mpOrbImage);
-            drawBattleLog(ctx, battle);
-            ctx.lineWidth = 1;
-            ctx.font = 'bold 13px "HeartWarming"';
-            ctx.strokeText(monsterInfo.attackDamage, 80, 45, 50); // encoder.addFrame(ctx);
-
-            gif.addFrame(ctx.getImageData(0, 0, canvas.width, canvas.height), {
-              delay: 200
-            }); // frame 6
-
-            _context2.next = 124;
-            return background(ctx, 'den');
-
-          case 124:
-            drawPlayer(ctx, false);
-            drawEnemy(ctx, battle.monsters[0], enemyFrame);
-            (0, _tools.drawBattleScreenTools)(ctx, mainSkill, secondarySkill, hpOrbImage, mpOrbImage);
-            drawBattleLog(ctx, battle); // encoder.addFrame(ctx);
-
-            gif.addFrame(ctx.getImageData(0, 0, canvas.width, canvas.height), {
-              delay: 200
-            });
-
-          case 129:
-            _context2.next = 131;
-            return gif.render();
-
-          case 131:
-            _context2.next = 133;
+            gif.render();
+            _context11.next = 81;
             return new Promise(function (resolve, reject) {
+              console.log('Resolving Gif render');
               gif.on('finished', resolve);
             });
 
-          case 133:
-            finalImage = _context2.sent;
-            return _context2.abrupt("return", finalImage);
+          case 81:
+            finalImage = _context11.sent;
+            return _context11.abrupt("return", finalImage);
 
-          case 135:
+          case 83:
           case "end":
-            return _context2.stop();
+            return _context11.stop();
         }
       }
-    }, _callee2);
+    }, _callee11);
   }));
 
-  return function renderBattleGif(_x3, _x4, _x5, _x6, _x7) {
-    return _ref2.apply(this, arguments);
+  return function renderBattleGif(_x, _x2, _x3, _x4, _x5, _x6) {
+    return _ref.apply(this, arguments);
   };
 }();
 

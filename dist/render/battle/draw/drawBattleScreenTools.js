@@ -18,16 +18,16 @@ var drawBattleScreenTools = /*#__PURE__*/function () {
         switch (_context.prev = _context.next) {
           case 0:
             ctx.drawImage(mainSkill, 66, // x position
-            175, // y position
+            275, // y position
             hpOrbImage.width / 4, hpOrbImage.height / 4);
-            ctx.drawImage(secondarySkill, 225, // x position
-            175, // y position
+            ctx.drawImage(secondarySkill, 325, // x position
+            275, // y position
             hpOrbImage.width / 4, hpOrbImage.height / 4);
             ctx.drawImage(hpOrbImage, 0, // x position
-            132, // y position
+            232, // y position
             hpOrbImage.width / 1.5, hpOrbImage.height / 1.5);
-            ctx.drawImage(mpOrbImage, 250, // x position
-            132, // y position
+            ctx.drawImage(mpOrbImage, 350, // x position
+            232, // y position
             hpOrbImage.width / 1.5, hpOrbImage.height / 1.5);
 
           case 4:
