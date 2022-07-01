@@ -30,6 +30,7 @@ import { renderStatsImage } from '../render/stats';
 import { fetchUserCurrentCharacter } from "../helpers/character/character";
 import { fetchDiscordUserIdFromMessageOrInteraction } from '../helpers/client/fetchDiscordUserIdFromMessageOrInteraction';
 import { fetchDiscordChannel } from '../helpers/client/fetchDiscordChannel';
+import { calculateCharacterStats } from '../helpers/stats/calculateCharacterStats';
 
 export const discordStats = async (
   discordClient,
@@ -60,6 +61,9 @@ export const discordStats = async (
     });
     return;
   }
+  const {
+    unspedAttributes,
+  } = await calculateCharacterStats(userCurrentCharacter);
 
   const strengthButtonId = 'strength';
   const dexterityButtonId = 'dexterity';
@@ -114,12 +118,13 @@ export const discordStats = async (
     return new MessageAttachment(canvas.toBuffer(), 'cancelSelection.png');
   };
 
-  const calc = (
-    userCurrentCharacter.stats.strength
-    + userCurrentCharacter.stats.dexterity
-    + userCurrentCharacter.stats.vitality
-    + userCurrentCharacter.stats.energy
-  ) < (userCurrentCharacter.user.ranks[0].id * 5);
+  // const calc = (
+  //   userCurrentCharacter.stats.strength
+  //   + userCurrentCharacter.stats.dexterity
+  //   + userCurrentCharacter.stats.vitality
+  //   + userCurrentCharacter.stats.energy
+  // ) < (userCurrentCharacter.user.ranks[0].id * 5);
+  const calc = unspedAttributes > 0;
 
   const embedMessage = await discordChannel.send({
     files: [

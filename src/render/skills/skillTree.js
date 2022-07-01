@@ -44,6 +44,7 @@ export const renderSkillTreeImage = async (
   skillTreeIndex,
   selectedSkill,
 ) => {
+  const userCurrentRank = userCharacter.user.ranks[0] ? userCharacter.user.ranks[0] : { id: 0 };
   const skillTreeMenuImage = await loadImage(path.join(__dirname, `../../assets/images/skilltree/`, `skillTreeMenu.png`));
   const skillTreeImage = await loadImage(path.join(__dirname, `../../assets/images/skilltree/`, `skilltree${skillTreeIndex}.png`));
   const canvas = createCanvas(
@@ -263,7 +264,7 @@ export const renderSkillTreeImage = async (
 
     // check if we need gray scaled icon
     if (
-      skillTree.skills[i].level > userCharacter.user.ranks[0].id
+      skillTree.skills[i].level > userCurrentRank.id
       || !userHasPreviousSkills
     ) {
       const grayScaleIconBuffer = await renderGrayScaleIcon(skillIcon);
@@ -351,7 +352,7 @@ export const renderSkillTreeImage = async (
   }
 
   const totalSkillsPointsSpend = _.sumBy(userCharacter.UserClassSkills, 'points');
-  const skillPointsLeftToSpend = userCharacter.user.ranks[0].id ? (userCharacter.user.ranks[0].id - totalSkillsPointsSpend) : 0;
+  const skillPointsLeftToSpend = (userCurrentRank.id - totalSkillsPointsSpend);
 
   if (skillPointsLeftToSpend > 0) {
     ctx.font = 'bold 18px "HeartWarming"';

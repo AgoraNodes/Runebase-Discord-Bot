@@ -28,13 +28,16 @@ export const calculateCharacterStats = async (
     ),
   });
 
-  const nextRankExp = nextRank && nextRank.expNeeded ? nextRank.expNeeded : currentCharacter.user.ranks[0].expNeeded;
+  const userCurrentRank = currentCharacter.user.ranks[0] ? currentCharacter.user.ranks[0] : { id: 0, expNeeded: nextRank.expNeeded };
+  console.log(userCurrentRank);
+  console.log('userCurrentRank');
+  const nextRankExp = nextRank && nextRank.expNeeded ? nextRank.expNeeded : userCurrentRank.expNeeded;
 
   const countedSpendAttributes = currentCharacter.stats.strength
     + currentCharacter.stats.dexterity
     + currentCharacter.stats.vitality
     + currentCharacter.stats.energy;
-  const AttributesToSpend = (currentCharacter.user.ranks[0].id * 5) - countedSpendAttributes;
+  const AttributesToSpend = (userCurrentRank.id * 5) - countedSpendAttributes;
 
   const strength = currentCharacter.user.currentClass.strength + currentCharacter.stats.strength;
 
@@ -68,7 +71,7 @@ export const calculateCharacterStats = async (
     && currentCharacter.equipment.offHand.itemBase.itemFamily.itemType.name === 'Shields'
   ) {
     const shieldBlock = currentCharacter.equipment.offHand.itemBase.block;
-    const blocking = (shieldBlock * (dexterity - 15)) / (currentCharacter.user.ranks[0].id * 2);
+    const blocking = (shieldBlock * (dexterity - 15)) / (userCurrentRank.id * 2);
     block = blocking > 50 ? 50 : blocking;
   }
 
@@ -135,7 +138,7 @@ export const calculateCharacterStats = async (
   return {
     username: currentCharacter.user.username,
     currentClass: currentCharacter.user.currentClass.name,
-    lvl: currentCharacter.user.ranks[0].id,
+    lvl: userCurrentRank.id,
     exp: currentCharacter.user.exp,
     expNext: nextRankExp,
     unspedAttributes: AttributesToSpend,
