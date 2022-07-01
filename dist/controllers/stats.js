@@ -45,10 +45,13 @@ var _fetchDiscordUserIdFromMessageOrInteraction = require("../helpers/client/fet
 
 var _fetchDiscordChannel = require("../helpers/client/fetchDiscordChannel");
 
+var _calculateCharacterStats = require("../helpers/stats/calculateCharacterStats");
+
 /* eslint-disable import/prefer-default-export */
 var discordStats = /*#__PURE__*/function () {
   var _ref = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee3(discordClient, message, setting, io, queue) {
-    var activity, userId, discordChannel, userCurrentCharacter, strengthButtonId, dexterityButtonId, vitalityButtonId, energyButtonId, cancelStatsPickId, strengthButton, dexterityButton, vitalityButton, energyButton, cancelStatsPickButton, generateCancelClassPicked, calc, embedMessage, collector;
+    var activity, userId, discordChannel, userCurrentCharacter, _yield$calculateChara, unspedAttributes, strengthButtonId, dexterityButtonId, vitalityButtonId, energyButtonId, cancelStatsPickId, strengthButton, dexterityButton, vitalityButton, energyButton, cancelStatsPickButton, generateCancelClassPicked, calc, embedMessage, collector;
+
     return _regenerator["default"].wrap(function _callee3$(_context3) {
       while (1) {
         switch (_context3.prev = _context3.next) {
@@ -87,6 +90,12 @@ var discordStats = /*#__PURE__*/function () {
             return _context3.abrupt("return");
 
           case 14:
+            _context3.next = 16;
+            return (0, _calculateCharacterStats.calculateCharacterStats)(userCurrentCharacter);
+
+          case 16:
+            _yield$calculateChara = _context3.sent;
+            unspedAttributes = _yield$calculateChara.unspedAttributes;
             strengthButtonId = 'strength';
             dexterityButtonId = 'dexterity';
             vitalityButtonId = 'vitality';
@@ -152,15 +161,21 @@ var discordStats = /*#__PURE__*/function () {
               return function generateCancelClassPicked() {
                 return _ref2.apply(this, arguments);
               };
-            }();
+            }(); // const calc = (
+            //   userCurrentCharacter.stats.strength
+            //   + userCurrentCharacter.stats.dexterity
+            //   + userCurrentCharacter.stats.vitality
+            //   + userCurrentCharacter.stats.energy
+            // ) < (userCurrentCharacter.user.ranks[0].id * 5);
 
-            calc = userCurrentCharacter.stats.strength + userCurrentCharacter.stats.dexterity + userCurrentCharacter.stats.vitality + userCurrentCharacter.stats.energy < userCurrentCharacter.user.ranks[0].id * 5;
+
+            calc = unspedAttributes > 0;
             _context3.t0 = discordChannel;
             _context3.t1 = _discord.MessageAttachment;
-            _context3.next = 30;
+            _context3.next = 34;
             return (0, _stats.renderStatsImage)(userCurrentCharacter, false);
 
-          case 30:
+          case 34:
             _context3.t2 = _context3.sent;
             _context3.t3 = new _context3.t1(_context3.t2, 'class.png');
             _context3.t4 = [_context3.t3];
@@ -175,10 +190,10 @@ var discordStats = /*#__PURE__*/function () {
               files: _context3.t4,
               components: _context3.t5
             };
-            _context3.next = 37;
+            _context3.next = 41;
             return _context3.t0.send.call(_context3.t0, _context3.t6);
 
-          case 37:
+          case 41:
             embedMessage = _context3.sent;
             collector = embedMessage.createMessageComponentCollector({
               filter: function filter(_ref3) {
@@ -317,7 +332,7 @@ var discordStats = /*#__PURE__*/function () {
               };
             }());
 
-          case 40:
+          case 44:
           case "end":
             return _context3.stop();
         }

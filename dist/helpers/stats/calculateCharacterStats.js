@@ -29,6 +29,7 @@ var calculateCharacterStats = /*#__PURE__*/function () {
   var _ref = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(currentCharacter) {
     var t,
         nextRank,
+        userCurrentRank,
         nextRankExp,
         countedSpendAttributes,
         AttributesToSpend,
@@ -72,9 +73,15 @@ var calculateCharacterStats = /*#__PURE__*/function () {
 
           case 3:
             nextRank = _context.sent;
-            nextRankExp = nextRank && nextRank.expNeeded ? nextRank.expNeeded : currentCharacter.user.ranks[0].expNeeded;
+            userCurrentRank = currentCharacter.user.ranks[0] ? currentCharacter.user.ranks[0] : {
+              id: 0,
+              expNeeded: nextRank.expNeeded
+            };
+            console.log(userCurrentRank);
+            console.log('userCurrentRank');
+            nextRankExp = nextRank && nextRank.expNeeded ? nextRank.expNeeded : userCurrentRank.expNeeded;
             countedSpendAttributes = currentCharacter.stats.strength + currentCharacter.stats.dexterity + currentCharacter.stats.vitality + currentCharacter.stats.energy;
-            AttributesToSpend = currentCharacter.user.ranks[0].id * 5 - countedSpendAttributes;
+            AttributesToSpend = userCurrentRank.id * 5 - countedSpendAttributes;
             strength = currentCharacter.user.currentClass.strength + currentCharacter.stats.strength;
             dexterity = currentCharacter.user.currentClass.dexterity + currentCharacter.stats.dexterity;
             vitality = currentCharacter.user.currentClass.vitality + currentCharacter.stats.vitality;
@@ -89,7 +96,7 @@ var calculateCharacterStats = /*#__PURE__*/function () {
 
             if (currentCharacter.equipment.offHand && currentCharacter.equipment.offHand.itemBase.itemFamily.itemType.name === 'Shields') {
               shieldBlock = currentCharacter.equipment.offHand.itemBase.block;
-              blocking = shieldBlock * (dexterity - 15) / (currentCharacter.user.ranks[0].id * 2);
+              blocking = shieldBlock * (dexterity - 15) / (userCurrentRank.id * 2);
               block = blocking > 50 ? 50 : blocking;
             }
 
@@ -106,33 +113,33 @@ var calculateCharacterStats = /*#__PURE__*/function () {
                 defense += realDefenseValue;
               }
             });
-            _context.next = 28;
+            _context.next = 31;
             return (0, _selectedSkills.fetchUserCurrentSelectedSkills)(currentCharacter.user.user_id, t);
 
-          case 28:
+          case 31:
             selectedSkills = _context.sent;
-            _context.next = 31;
+            _context.next = 34;
             return (0, _calculateSkillDamage.calculateSkillDamage)(currentCharacter, selectedSkills.selectedMainSkill, {
               min: attackOneMin,
               max: attackOnemax,
               ar: attackOneAr
             }, t);
 
-          case 31:
+          case 34:
             skillOne = _context.sent;
-            _context.next = 34;
+            _context.next = 37;
             return (0, _calculateSkillDamage.calculateSkillDamage)(currentCharacter, selectedSkills.selectedSecondarySkill, {
               min: attackOneMin,
               max: attackOnemax,
               ar: attackOneAr
             }, t);
 
-          case 34:
+          case 37:
             skillTwo = _context.sent;
             return _context.abrupt("return", {
               username: currentCharacter.user.username,
               currentClass: currentCharacter.user.currentClass.name,
-              lvl: currentCharacter.user.ranks[0].id,
+              lvl: userCurrentRank.id,
               exp: currentCharacter.user.exp,
               expNext: nextRankExp,
               unspedAttributes: AttributesToSpend,
@@ -181,7 +188,7 @@ var calculateCharacterStats = /*#__PURE__*/function () {
               }
             });
 
-          case 36:
+          case 39:
           case "end":
             return _context.stop();
         }

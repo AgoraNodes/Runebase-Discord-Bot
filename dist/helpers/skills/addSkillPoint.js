@@ -79,7 +79,7 @@ var addSkillPoint = /*#__PURE__*/function () {
                                   return _context.abrupt("return");
 
                                 case 9:
-                                  if (!(findUserRank.id <= Number(sumOfSkills[0].totalSpendPoints) && Number(sumOfSkills[0].totalSpendPoints) !== 0)) {
+                                  if (!(findUserRank.rankId <= Number(sumOfSkills[0].totalSpendPoints) && Number(sumOfSkills[0].totalSpendPoints) !== 0)) {
                                     _context.next = 12;
                                     break;
                                   }
