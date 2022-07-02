@@ -12,8 +12,9 @@ export const calculateSkillDamage = async (
   attackOne,
   t,
 ) => {
-  console.log(skillToCalculate);
+  // console.log(skillToCalculate);
   console.log("userCharacter.class");
+  console.log(userCharacter.class);
   let attack;
   if (userCharacter.class.name === 'Barbarian') {
     attack = await calculateBarbSkillDamage(

@@ -175,6 +175,10 @@ export const addStrength = async (
         model: db.equipment,
         as: 'equipment',
       },
+      {
+        model: db.class,
+        as: 'class',
+      },
     ],
   });
 

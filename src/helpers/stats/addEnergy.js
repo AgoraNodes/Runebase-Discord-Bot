@@ -71,7 +71,8 @@ export const addEnergy = async (
       }
       let addMana = 0;
 
-      console.log(user.currentClass.name);
+      console.log(user.currentClass);
+      console.log("user.currentClass");
       if (user.currentClass.name === 'Barbarian') {
         addMana = 1;
       } else if (
@@ -206,6 +207,10 @@ export const addEnergy = async (
       {
         model: db.equipment,
         as: 'equipment',
+      },
+      {
+        model: db.class,
+        as: 'class',
       },
     ],
   });

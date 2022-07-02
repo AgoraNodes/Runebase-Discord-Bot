@@ -13,6 +13,7 @@ import {
   MessageActionRow,
   MessageButton,
   MessageAttachment,
+  MessageEmbed,
 } from 'discord.js';
 
 import path from 'path';
@@ -118,6 +119,10 @@ export const discordStats = async (
     return new MessageAttachment(canvas.toBuffer(), 'cancelSelection.png');
   };
 
+  const loadingEmbed = new MessageEmbed()
+    .setTitle('Adding Attribute')
+    .setDescription(`${userCurrentCharacter.user.username}, Loading..`);
+
   // const calc = (
   //   userCurrentCharacter.stats.strength
   //   + userCurrentCharacter.stats.dexterity
@@ -158,12 +163,26 @@ export const discordStats = async (
   });
 
   const collector = embedMessage.createMessageComponentCollector({
-    filter: ({ user: discordUser }) => discordUser.id === userCurrentCharacter.user.user_id,
+    // filter: ({ user: discordUser }) => discordUser.id === userCurrentCharacter.user.user_id,
   });
 
   collector.on('collect', async (interaction) => {
     let updatedUser;
     let cannotSpend;
+    if (interaction.user.id !== userCurrentCharacter.user.user_id) {
+      await interaction.reply({
+        content: `<@${interaction.user.id}>, These buttons aren't for you!`,
+        ephemeral: true,
+      });
+      return;
+    }
+    await interaction.deferUpdate();
+    await interaction.editReply({
+      embeds: [
+        loadingEmbed,
+      ],
+      components: [],
+    });
     if (interaction.customId === strengthButtonId) {
       [
         updatedUser,
@@ -221,7 +240,8 @@ export const discordStats = async (
         + updatedUser.stats.energy
       ) < (updatedUser.user.ranks[0].id * 5);
 
-      await interaction.update({
+      await interaction.editReply({
+        embeds: [],
         files: [
           new MessageAttachment(
             await renderStatsImage(
@@ -254,11 +274,12 @@ export const discordStats = async (
     }
     // Cancel class selection
     if (interaction.customId === cancelStatsPickId) {
-      await interaction.update({
+      await interaction.editReply({
         files: [
           await generateCancelClassPicked(),
         ],
         components: [],
+        embeds: [],
       });
     }
   });

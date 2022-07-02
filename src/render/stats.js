@@ -130,6 +130,7 @@ export const renderStatsImage = async (
   ctx.fillText(energy, 288, 920, 200);
 
   // attack 1
+  console.log('before attackOne name');
   ctx.strokeText(`${attackOne.name}`, 635, 290, 200);
   ctx.fillText(`${attackOne.name}`, 635, 290, 200);
   ctx.strokeText(`${attackOne.min}-${attackOne.max}`, 855, 290, 200);

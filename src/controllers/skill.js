@@ -9,6 +9,7 @@ import {
   MessageButton,
   MessageAttachment,
   MessageSelectMenu,
+  MessageEmbed,
 } from 'discord.js';
 
 import path from 'path';
@@ -203,8 +204,16 @@ export const discordSkills = async (
       ],
   });
 
+  const loadingSkillAddEmbed = new MessageEmbed()
+    .setTitle('Adding Skill Point')
+    .setDescription(`${userCurrentCharacter.user.username}, Loading..`);
+
+  const loadingSkillSelectEmbed = new MessageEmbed()
+    .setTitle('Selecting Skill')
+    .setDescription(`${userCurrentCharacter.user.username}, Loading..`);
+
   const collector = embedMessage.createMessageComponentCollector({
-    filter: ({ user: discordUser }) => discordUser.id === userCurrentCharacter.user.user_id,
+    // filter: ({ user: discordUser }) => discordUser.id === userCurrentCharacter.user.user_id,
   });
 
   let skillTreeIndex = 0;
@@ -212,9 +221,21 @@ export const discordSkills = async (
   let selectedSkill;
   collector.on('collect', async (interaction) => {
     let failAddSkillReason;
+    if (interaction.user.id !== userCurrentCharacter.user.user_id) {
+      await interaction.reply({
+        content: `<@${interaction.user.id}>, These buttons aren't for you!`,
+        ephemeral: true,
+      });
+      return;
+    }
+    await interaction.deferUpdate();
     if (interaction.isButton()) {
-      await interaction.deferUpdate();
       if (interaction.customId.startsWith('addSkill:')) {
+        await interaction.editReply({
+          embeds: [
+            loadingSkillAddEmbed,
+          ],
+        });
         const skillToAddId = Number(interaction.customId.replace("addSkill:", ""));
         [
           userCurrentCharacter,
@@ -237,8 +258,12 @@ export const discordSkills = async (
       }
     }
     if (interaction.isSelectMenu()) {
+      // await interaction.editReply({
+      //   embeds: [
+      //     loadingSkillSelectEmbed,
+      //   ],
+      // });
       if (interaction.customId === 'select-skilltree') {
-        await interaction.deferUpdate();
         if (interaction.values[0].startsWith('skilltree-')) {
           skillTreeIndex = Number(interaction.values[0].replace('skilltree-', ''));
           selectedSkill = false;
@@ -246,7 +271,6 @@ export const discordSkills = async (
         }
       }
       if (interaction.customId === 'select-skill') {
-        await interaction.deferUpdate();
         if (interaction.values[0].startsWith('skill-')) {
           skillIndex = Number(interaction.values[0].replace('skill-', ''));
           selectedSkill = userCurrentCharacter.class.skillTrees[Number(skillTreeIndex)].skills[Number(skillIndex)];
@@ -274,6 +298,7 @@ export const discordSkills = async (
     }));
 
     await interaction.editReply({
+      embeds: [],
       files: [
         await generateSkillTreeImage(
           userCurrentCharacter,

@@ -179,45 +179,12 @@ export const addDexterity = async (
         model: db.equipment,
         as: 'equipment',
       },
+      {
+        model: db.class,
+        as: 'class',
+      },
     ],
   });
-  console.log(myUpdatedUser);
-  console.log('found new userclass');
-
-  // const myUpdatedUserOld = await db.user.findOne({
-  //   where: {
-  //     id: userId,
-  //   },
-  //   include: [
-  //     {
-  //       model: db.class,
-  //       as: 'currentClass',
-  //     },
-  //     {
-  //       model: db.rank,
-  //       as: 'ranks',
-  //     },
-  //     {
-  //       model: db.UserClass,
-  //       as: 'UserClass',
-  //       where: {
-  //         classId: {
-  //           [Op.col]: 'user.currentClassId',
-  //         },
-  //       },
-  //       include: [
-  //         {
-  //           model: db.stats,
-  //           as: 'stats',
-  //         },
-  //         {
-  //           model: db.condition,
-  //           as: 'condition',
-  //         },
-  //       ],
-  //     },
-  //   ],
-  // });
 
   return [
     myUpdatedUser,
