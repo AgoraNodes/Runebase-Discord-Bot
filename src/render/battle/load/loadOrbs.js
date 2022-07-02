@@ -1,3 +1,4 @@
+/* eslint-disable no-await-in-loop */
 /* eslint-disable no-restricted-syntax */
 import {
   loadImage,
@@ -11,6 +12,8 @@ export const loadOrbs = async (
   battleInfoArray,
   monsterInfo,
 ) => {
+  const promises = [];
+  const bufferPromises = [];
   const hpOrbsBuffer = [];
   const mpOrbsBuffer = [];
   const hpOrbs = [];
@@ -20,37 +23,84 @@ export const loadOrbs = async (
     mp,
   } = await calculateCharacterStats(previousUserState);
 
-  hpOrbsBuffer[0] = await renderHpOrb(
-    hp.current,
-    hp.max,
-  );
-  mpOrbsBuffer[0] = await renderMpOrb(
-    mp.current,
-    mp.max,
-  );
-  if (battleInfoArray) {
-    for await (const [index, info] of battleInfoArray.entries()) {
-      hpOrbsBuffer[index + 1] = await renderHpOrb(
-        info.currentHp,
+  bufferPromises.push(
+    new Promise((resolve, reject) => {
+      renderHpOrb(
+        hp.current,
         hp.max,
+      ).then((buffer) => {
+        hpOrbsBuffer[0] = buffer;
+        resolve();
+      });
+    }),
+  );
+
+  bufferPromises.push(
+    new Promise((resolve, reject) => {
+      renderMpOrb(
+        mp.current,
+        mp.max,
+      ).then((buffer) => {
+        mpOrbsBuffer[0] = buffer;
+        resolve();
+      });
+    }),
+  );
+
+  if (battleInfoArray) {
+    for (const [index, info] of battleInfoArray.entries()) {
+      bufferPromises.push(
+        new Promise((resolve, reject) => {
+          renderHpOrb(
+            info.currentHp,
+            hp.max,
+          ).then((buffer) => {
+            hpOrbsBuffer[index + 1] = buffer;
+            resolve();
+          });
+        }),
       );
     }
   }
   if (monsterInfo) {
-    for await (const [index, info] of monsterInfo.entries()) {
-      mpOrbsBuffer[index + 1] = await renderMpOrb(
-        info.currentUserMp,
-        mp.max,
+    for (const [index, info] of monsterInfo.entries()) {
+      bufferPromises.push(
+        new Promise((resolve, reject) => {
+          renderMpOrb(
+            info.currentUserMp,
+            mp.max,
+          ).then((buffer) => {
+            mpOrbsBuffer[index + 1] = buffer;
+            resolve();
+          });
+        }),
       );
     }
   }
+  await Promise.all(bufferPromises);
 
-  for await (const [index, buffer] of hpOrbsBuffer.entries()) {
-    hpOrbs[index] = await loadImage(buffer);
+  for (const [index, buffer] of hpOrbsBuffer.entries()) {
+    promises.push(
+      new Promise((resolve, reject) => {
+        loadImage(buffer).then((image) => {
+          hpOrbs[index] = image;
+          resolve();
+        });
+      }),
+    );
   }
-  for await (const [index, buffer] of mpOrbsBuffer.entries()) {
-    mpOrbs[index] = await loadImage(buffer);
+  for (const [index, buffer] of mpOrbsBuffer.entries()) {
+    promises.push(
+      new Promise((resolve, reject) => {
+        loadImage(buffer).then((image) => {
+          mpOrbs[index] = image;
+          resolve();
+        });
+      }),
+    );
   }
+  console.log('before promise wait');
+  await Promise.all(promises);
 
   return [
     hpOrbs,

@@ -100,6 +100,7 @@ export const discordBattle = async (
     },
     order: [
       [db.battleLog, 'id', 'DESC'],
+      [db.BattleMonster, 'id', 'DESC'],
     ],
     include: [
       {
@@ -133,7 +134,7 @@ export const discordBattle = async (
         name: 'Zombie',
       },
     });
-    const randomAmountOfMobs = randomIntFromInterval(1, 4);
+    const randomAmountOfMobs = randomIntFromInterval(3, 4);
     const mobPromises = [];
     for (let i = 0; i < randomAmountOfMobs; i += 1) {
       const randomMonsterHp = randomIntFromInterval(monster.minHp, monster.maxHp);
@@ -153,6 +154,7 @@ export const discordBattle = async (
       },
       order: [
         [db.battleLog, 'id', 'DESC'],
+        [db.BattleMonster, 'id', 'DESC'],
       ],
       include: [
         {
@@ -234,7 +236,7 @@ export const discordBattle = async (
       customId: addSkillId,
     });
   };
-
+  console.log('before discord send');
   const embedMessage = await discordChannel.send({
     files: [
       new MessageAttachment(

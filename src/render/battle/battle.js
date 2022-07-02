@@ -1,3 +1,4 @@
+/* eslint-disable no-restricted-syntax */
 import {
   createCanvas,
   loadImage,
@@ -16,6 +17,8 @@ import { drawBattleScreenTools } from './draw/drawBattleScreenTools';
 import { drawPlayer } from "./draw/drawPlayer";
 import { drawEnemy } from './draw/drawEnemy';
 
+registerFont(path.join(__dirname, '../../assets/fonts/', 'Heart_warming.otf'), { family: 'HeartWarming' });
+
 export const renderBattleGif = async (
   currentUser,
   userCurrentSelectedSkills,
@@ -26,53 +29,103 @@ export const renderBattleGif = async (
   battleInfoArray = false,
   monsterInfo = false,
 ) => {
+  const zone = 'den';
   const enemyPosition = [];
   const playerPosition = [];
   const enemies = [];
-  await registerFont(path.join(__dirname, '../../assets/fonts/', 'Heart_warming.otf'), { family: 'HeartWarming' });
+  const loadPromises = [];
+  let mainSkill;
+  let secondarySkill;
+  let backgroundImage;
+  let playerImage;
+  let hpOrbs;
+  let mpOrbs;
 
-  const zone = 'den';
-  const backgroundImage = await loadImage(path.join(__dirname, `../../assets/images/battle/background`, `${zone}.png`));
-
-  const playerImage = await loadPlayer(
-    currentUser.class.name,
+  loadPromises.push(
+    new Promise((resolve, reject) => {
+      loadImage(path.join(
+        __dirname,
+        `../../assets/images/skills/${userCurrentSelectedSkills.selectedMainSkill.skill.skillTree ? `${userCurrentSelectedSkills.selectedMainSkill.skill.skillTree.class.name}/${userCurrentSelectedSkills.selectedMainSkill.skill.skillTree.name}` : ``}`,
+        `${userCurrentSelectedSkills.selectedMainSkill.skill.name}.png`,
+      )).then((image) => {
+        mainSkill = image;
+        resolve();
+      });
+    }),
   );
-  console.log('start render gif 1');
 
-  previousBattleState.BattleMonsters.forEach(async (battleMonster, i) => {
-    enemies[parseInt(battleMonster.id, 10)] = await loadEnemy(
-      battleMonster.monster.name,
+  loadPromises.push(
+    new Promise((resolve, reject) => {
+      loadImage(path.join(
+        __dirname,
+        `../../assets/images/skills/${userCurrentSelectedSkills.selectedSecondarySkill.skill.skillTree ? `${userCurrentSelectedSkills.selectedSecondarySkill.skill.skillTree.class.name}/${userCurrentSelectedSkills.selectedSecondarySkill.skill.skillTree.name}` : ``}`,
+        `${userCurrentSelectedSkills.selectedSecondarySkill.skill.name}.png`,
+      )).then((image) => {
+        secondarySkill = image;
+        resolve();
+      });
+    }),
+  );
+
+  loadPromises.push(
+    new Promise((resolve, reject) => {
+      loadImage(path.join(__dirname, `../../assets/images/battle/background`, `${zone}.png`)).then((image) => {
+        backgroundImage = image;
+        resolve();
+      });
+    }),
+  );
+
+  loadPromises.push(
+    new Promise((resolve, reject) => {
+      loadPlayer(
+        currentUser.class.name,
+      ).then((image) => {
+        playerImage = image;
+        resolve();
+      });
+    }),
+  );
+
+  for (const [i, battleMonster] of previousBattleState.BattleMonsters.entries()) {
+    loadPromises.push(
+      new Promise((resolve, reject) => {
+        loadEnemy(
+          battleMonster.monster.name,
+        ).then((image) => {
+          enemies[parseInt(battleMonster.id, 10)] = image;
+          resolve();
+        });
+      }),
     );
-  });
-  console.log('start render gif 22');
+  }
 
-  const [
-    hpOrbs,
-    mpOrbs,
-  ] = await loadOrbs(
-    previousUserState,
-    battleInfoArray,
-    monsterInfo,
+  loadPromises.push(
+    new Promise((resolve, reject) => {
+      loadOrbs(
+        previousUserState,
+        battleInfoArray,
+        monsterInfo,
+      ).then(([
+        hpOrbsReturn,
+        mpOrbsReturn,
+      ]) => {
+        hpOrbs = hpOrbsReturn;
+        mpOrbs = mpOrbsReturn;
+        resolve();
+      });
+    }),
   );
-  console.log('start render gif 3');
-  const mainSkill = await loadImage(path.join(
-    __dirname,
-    `../../assets/images/skills/${userCurrentSelectedSkills.selectedMainSkill.skill.skillTree ? `${userCurrentSelectedSkills.selectedMainSkill.skill.skillTree.class.name}/${userCurrentSelectedSkills.selectedMainSkill.skill.skillTree.name}` : ``}`,
-    `${userCurrentSelectedSkills.selectedMainSkill.skill.name}.png`,
-  ));
 
-  const secondarySkill = await loadImage(path.join(
-    __dirname,
-    `../../assets/images/skills/${userCurrentSelectedSkills.selectedSecondarySkill.skill.skillTree ? `${userCurrentSelectedSkills.selectedSecondarySkill.skill.skillTree.class.name}/${userCurrentSelectedSkills.selectedSecondarySkill.skill.skillTree.name}` : ``}`,
-    `${userCurrentSelectedSkills.selectedSecondarySkill.skill.name}.png`,
-  ));
-  console.log('start render gif 2');
+  await Promise.all(loadPromises);
+
   const canvas = createCanvas(650, 300);
   const ctx = canvas.getContext('2d');
 
   const gif = new GIF({
-    worker: 8,
-    quality: 50,
+    workers: 50,
+    worker: 50,
+    quality: 30,
     debug: false,
     width: canvas.width,
     height: canvas.height,
@@ -92,7 +145,7 @@ export const renderBattleGif = async (
     false, // user attacking [false || enemyImagePosition]
   );
 
-  previousBattleState.BattleMonsters.forEach(async (battleMonster, i) => {
+  for (const [i, battleMonster] of previousBattleState.BattleMonsters.entries()) {
     if (battleMonster.currentHp > 0) {
       enemyPosition[i] = drawEnemy(
         ctx, // CTX
@@ -105,7 +158,7 @@ export const renderBattleGif = async (
         i, // Index
       );
     }
-  });
+  }
 
   drawBattleScreenTools(
     ctx, // pass canvas ctx
@@ -119,6 +172,7 @@ export const renderBattleGif = async (
     battle,
   );
   gif.addFrame(ctx.getImageData(0, 0, canvas.width, canvas.height), {
+
     delay: 600,
   });
 
@@ -129,7 +183,7 @@ export const renderBattleGif = async (
     backgroundImage,
   );
 
-  previousBattleState.BattleMonsters.forEach(async (battleMonster, i) => {
+  for (const [i, battleMonster] of previousBattleState.BattleMonsters.entries()) {
     if (battleMonster.currentHp > 0) {
       // const findUpdatedMonsterState = monsterInfo.find((element) => element.monsterId === battleMonster.id);
       enemyPosition[i] = drawEnemy(
@@ -144,7 +198,7 @@ export const renderBattleGif = async (
         // findUpdatedMonsterState,
       );
     }
-  });
+  }
 
   console.log(enemyPosition);
   console.log('find enemy position before');
@@ -179,6 +233,7 @@ export const renderBattleGif = async (
     50,
   );
   gif.addFrame(ctx.getImageData(0, 0, canvas.width, canvas.height), {
+
     delay: 200,
   });
 
@@ -189,7 +244,7 @@ export const renderBattleGif = async (
     backgroundImage,
   );
 
-  battle.BattleMonsters.forEach(async (battleMonster, i) => {
+  for (const [i, battleMonster] of battle.BattleMonsters.entries()) {
     if (battleMonster.currentHp > 0) {
       enemyPosition[i] = drawEnemy(
         ctx, // CTX
@@ -202,7 +257,7 @@ export const renderBattleGif = async (
         i, // Index
       );
     }
-  });
+  }
 
   playerPosition[0] = drawPlayer(
     ctx, // Ctx drawing canvas
@@ -232,6 +287,7 @@ export const renderBattleGif = async (
     50,
   );
   gif.addFrame(ctx.getImageData(0, 0, canvas.width, canvas.height), {
+
     delay: 200,
   });
 
@@ -247,7 +303,8 @@ export const renderBattleGif = async (
     0, // number of image in the array to show
     false, // user attacking [false || enemyImagePosition]
   );
-  battle.BattleMonsters.forEach(async (battleMonster, i) => {
+
+  for (const [i, battleMonster] of battle.BattleMonsters.entries()) {
     if (battleMonster.currentHp > 0) {
       enemyPosition[i] = drawEnemy(
         ctx, // CTX
@@ -260,7 +317,7 @@ export const renderBattleGif = async (
         i, // Index
       );
     }
-  });
+  }
 
   drawBattleScreenTools(
     ctx,
@@ -282,6 +339,7 @@ export const renderBattleGif = async (
     50,
   );
   gif.addFrame(ctx.getImageData(0, 0, canvas.width, canvas.height), {
+
     delay: 400,
   });
 
@@ -300,7 +358,7 @@ export const renderBattleGif = async (
       false, // user attacking [false || enemyImagePosition]
     );
 
-    battle.BattleMonsters.forEach(async (battleMonster, i) => {
+    for (const [i, battleMonster] of battle.BattleMonsters.entries()) {
       if (battleMonster.currentHp > 0) {
         enemyPosition[i] = drawEnemy(
           ctx, // CTX
@@ -313,7 +371,7 @@ export const renderBattleGif = async (
           i, // Index
         );
       }
-    });
+    }
     drawBattleScreenTools(
       ctx,
       mainSkill,
@@ -326,6 +384,7 @@ export const renderBattleGif = async (
       battle,
     );
     gif.addFrame(ctx.getImageData(0, 0, canvas.width, canvas.height), {
+
       delay: 400,
     });
     console.log('Render Frame #6');
@@ -342,7 +401,7 @@ export const renderBattleGif = async (
       0, // number of image in the array to show
       false, // user attacking [false || enemyImagePosition]
     );
-    battle.BattleMonsters.forEach(async (battleMonster, i) => {
+    for (const [i, battleMonster] of battle.BattleMonsters.entries()) {
       if (battleMonster.currentHp > 0) {
         enemyPosition[i] = drawEnemy(
           ctx, // CTX
@@ -355,7 +414,7 @@ export const renderBattleGif = async (
           i, // Index
         );
       }
-    });
+    }
     console.log('draw screenTools');
     drawBattleScreenTools(
       ctx,
@@ -378,6 +437,7 @@ export const renderBattleGif = async (
       50,
     );
     gif.addFrame(ctx.getImageData(0, 0, canvas.width, canvas.height), {
+
       delay: 200,
     });
 
@@ -393,7 +453,7 @@ export const renderBattleGif = async (
       0, // number of image in the array to show
       false, // user attacking [false || enemyImagePosition]
     );
-    battle.BattleMonsters.forEach(async (battleMonster, i) => {
+    for (const [i, battleMonster] of battle.BattleMonsters.entries()) {
       if (battleMonster.currentHp > 0) {
         enemyPosition[i] = drawEnemy(
           ctx, // CTX
@@ -406,7 +466,7 @@ export const renderBattleGif = async (
           i, // Index
         );
       }
-    });
+    }
     drawBattleScreenTools(
       ctx,
       mainSkill,
@@ -427,6 +487,7 @@ export const renderBattleGif = async (
       50,
     );
     gif.addFrame(ctx.getImageData(0, 0, canvas.width, canvas.height), {
+
       delay: 200,
     });
     console.log('Render Frame #8');
@@ -441,7 +502,7 @@ export const renderBattleGif = async (
       0, // number of image in the array to show
       false, // user attacking [false || enemyImagePosition]
     );
-    battle.BattleMonsters.forEach(async (battleMonster, i) => {
+    for (const [i, battleMonster] of battle.BattleMonsters.entries()) {
       if (battleMonster.currentHp > 0) {
         enemyPosition[i] = drawEnemy(
           ctx, // CTX
@@ -454,7 +515,7 @@ export const renderBattleGif = async (
           i, // Index
         );
       }
-    });
+    }
     drawBattleScreenTools(
       ctx,
       mainSkill,
@@ -475,6 +536,7 @@ export const renderBattleGif = async (
       50,
     );
     gif.addFrame(ctx.getImageData(0, 0, canvas.width, canvas.height), {
+
       delay: 200,
     });
     console.log('Render Frame #9');
@@ -489,7 +551,7 @@ export const renderBattleGif = async (
       0, // number of image in the array to show
       false, // user attacking [false || enemyImagePosition]
     );
-    battle.BattleMonsters.forEach(async (battleMonster, i) => {
+    for (const [i, battleMonster] of battle.BattleMonsters.entries()) {
       if (battleMonster.currentHp > 0) {
         enemyPosition[i] = drawEnemy(
           ctx, // CTX
@@ -502,7 +564,7 @@ export const renderBattleGif = async (
           i, // Index
         );
       }
-    });
+    }
     drawBattleScreenTools(
       ctx,
       mainSkill,
@@ -515,6 +577,7 @@ export const renderBattleGif = async (
       battle,
     );
     gif.addFrame(ctx.getImageData(0, 0, canvas.width, canvas.height), {
+
       delay: 300,
     });
   }

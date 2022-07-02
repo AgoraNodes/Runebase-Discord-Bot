@@ -1,3 +1,4 @@
+/* eslint-disable no-restricted-syntax */
 import {
   createCanvas,
   loadImage,
@@ -16,6 +17,8 @@ import { drawBattleScreenTools } from './draw/drawBattleScreenTools';
 import { drawPlayer } from "./draw/drawPlayer";
 import { drawEnemy } from './draw/drawEnemy';
 
+registerFont(path.join(__dirname, '../../assets/fonts/', 'Heart_warming.otf'), { family: 'HeartWarming' });
+
 export const renderInitBattleGif = async (
   currentUser,
   userCurrentSelectedSkills,
@@ -26,48 +29,103 @@ export const renderInitBattleGif = async (
   battleInfoArray = false,
   monsterInfo = false,
 ) => {
-  const enemies = [];
-  await registerFont(path.join(__dirname, '../../assets/fonts/', 'Heart_warming.otf'), { family: 'HeartWarming' });
-
   const zone = 'den';
-  const backgroundImage = await loadImage(path.join(__dirname, `../../assets/images/battle/background`, `${zone}.png`));
+  const enemies = [];
+  const loadPromises = [];
+  let mainSkill;
+  let secondarySkill;
+  let backgroundImage;
+  let playerImage;
+  let hpOrbs;
+  let mpOrbs;
 
-  battle.BattleMonsters.forEach(async (battleMonster, i) => {
-    enemies[parseInt(battleMonster.id, 10)] = await loadEnemy(
-      battleMonster.monster.name,
+  loadPromises.push(
+    new Promise((resolve, reject) => {
+      loadImage(path.join(
+        __dirname,
+        `../../assets/images/skills/${userCurrentSelectedSkills.selectedMainSkill.skill.skillTree ? `${userCurrentSelectedSkills.selectedMainSkill.skill.skillTree.class.name}/${userCurrentSelectedSkills.selectedMainSkill.skill.skillTree.name}` : ``}`,
+        `${userCurrentSelectedSkills.selectedMainSkill.skill.name}.png`,
+      )).then((image) => {
+        mainSkill = image;
+        resolve();
+      });
+    }),
+  );
+
+  loadPromises.push(
+    new Promise((resolve, reject) => {
+      loadImage(path.join(
+        __dirname,
+        `../../assets/images/skills/${userCurrentSelectedSkills.selectedSecondarySkill.skill.skillTree ? `${userCurrentSelectedSkills.selectedSecondarySkill.skill.skillTree.class.name}/${userCurrentSelectedSkills.selectedSecondarySkill.skill.skillTree.name}` : ``}`,
+        `${userCurrentSelectedSkills.selectedSecondarySkill.skill.name}.png`,
+      )).then((image) => {
+        secondarySkill = image;
+        resolve();
+      });
+    }),
+  );
+
+  loadPromises.push(
+    new Promise((resolve, reject) => {
+      loadImage(path.join(__dirname, `../../assets/images/battle/background`, `${zone}.png`)).then((image) => {
+        backgroundImage = image;
+        resolve();
+      });
+    }),
+  );
+
+  loadPromises.push(
+    new Promise((resolve, reject) => {
+      loadPlayer(
+        currentUser.class.name,
+      ).then((image) => {
+        playerImage = image;
+        resolve();
+      });
+    }),
+  );
+
+  console.log('initBattle 1');
+  for (const [i, battleMonster] of battle.BattleMonsters.entries()) {
+    loadPromises.push(
+      new Promise((resolve, reject) => {
+        loadEnemy(
+          battleMonster.monster.name,
+        ).then((image) => {
+          enemies[parseInt(battleMonster.id, 10)] = image;
+          resolve();
+        });
+      }),
     );
-  });
+  }
 
-  const playerImage = await loadPlayer(
-    currentUser.class.name,
+  loadPromises.push(
+    new Promise((resolve, reject) => {
+      loadOrbs(
+        previousUserState,
+        battleInfoArray,
+        monsterInfo,
+      ).then(([
+        hpOrbsReturn,
+        mpOrbsReturn,
+      ]) => {
+        hpOrbs = hpOrbsReturn;
+        mpOrbs = mpOrbsReturn;
+        resolve();
+      });
+    }),
   );
 
-  const [
-    hpOrbs,
-    mpOrbs,
-  ] = await loadOrbs(
-    previousUserState,
-    battleInfoArray,
-    monsterInfo,
-  );
-  const mainSkill = await loadImage(path.join(
-    __dirname,
-    `../../assets/images/skills/${userCurrentSelectedSkills.selectedMainSkill.skill.skillTree ? `${userCurrentSelectedSkills.selectedMainSkill.skill.skillTree.class.name}/${userCurrentSelectedSkills.selectedMainSkill.skill.skillTree.name}` : ``}`,
-    `${userCurrentSelectedSkills.selectedMainSkill.skill.name}.png`,
-  ));
-
-  const secondarySkill = await loadImage(path.join(
-    __dirname,
-    `../../assets/images/skills/${userCurrentSelectedSkills.selectedSecondarySkill.skill.skillTree ? `${userCurrentSelectedSkills.selectedSecondarySkill.skill.skillTree.class.name}/${userCurrentSelectedSkills.selectedSecondarySkill.skill.skillTree.name}` : ``}`,
-    `${userCurrentSelectedSkills.selectedSecondarySkill.skill.name}.png`,
-  ));
+  await Promise.all(loadPromises);
+  console.log('initBattle 4');
 
   const canvas = createCanvas(650, 300);
   const ctx = canvas.getContext('2d');
 
   const gif = new GIF({
-    worker: 8,
-    quality: 50,
+    workers: 50,
+    worker: 50,
+    quality: 30,
     debug: false,
     width: canvas.width,
     height: canvas.height,
@@ -87,7 +145,7 @@ export const renderInitBattleGif = async (
     false, // user attacking [false || enemyImagePosition]
   );
 
-  battle.BattleMonsters.forEach(async (battleMonster, i) => {
+  for (const [i, battleMonster] of battle.BattleMonsters.entries()) {
     if (battleMonster.currentHp > 0) {
       drawEnemy(
         ctx, // CTX
@@ -100,7 +158,7 @@ export const renderInitBattleGif = async (
         i, // Index
       );
     }
-  });
+  }
 
   drawBattleScreenTools(
     ctx, // pass canvas ctx

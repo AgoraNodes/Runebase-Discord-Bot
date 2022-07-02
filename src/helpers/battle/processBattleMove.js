@@ -168,6 +168,7 @@ export const processBattleMove = async (
     },
     order: [
       [db.battleLog, 'id', 'DESC'],
+      [db.BattleMonster, 'id', 'DESC'],
     ],
     include: [
       {
