@@ -298,7 +298,7 @@ var processBattleMove = /*#__PURE__*/function () {
               where: {
                 id: battle.id
               },
-              order: [[_models["default"].battleLog, 'id', 'DESC']],
+              order: [[_models["default"].battleLog, 'id', 'DESC'], [_models["default"].BattleMonster, 'id', 'DESC']],
               include: [{
                 model: _models["default"].battleLog,
                 as: 'battleLogs',

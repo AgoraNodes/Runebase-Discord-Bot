@@ -35,98 +35,123 @@ var _drawPlayer = require("./draw/drawPlayer");
 
 var _drawEnemy = require("./draw/drawEnemy");
 
+function _createForOfIteratorHelper(o, allowArrayLike) { var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"]; if (!it) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = it.call(o); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it["return"] != null) it["return"](); } finally { if (didErr) throw err; } } }; }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+(0, _canvas.registerFont)(_path["default"].join(__dirname, '../../assets/fonts/', 'Heart_warming.otf'), {
+  family: 'HeartWarming'
+});
+
 var renderInitBattleGif = /*#__PURE__*/function () {
-  var _ref = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee3(currentUser, userCurrentSelectedSkills, battle, previousBattleState, previousUserState, currentSelectedMonster) {
+  var _ref = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(currentUser, userCurrentSelectedSkills, battle, previousBattleState, previousUserState, currentSelectedMonster) {
     var battleInfoArray,
         monsterInfo,
-        enemies,
         zone,
-        backgroundImage,
-        playerImage,
-        _yield$loadOrbs,
-        _yield$loadOrbs2,
-        hpOrbs,
-        mpOrbs,
+        enemies,
+        loadPromises,
         mainSkill,
         secondarySkill,
+        backgroundImage,
+        playerImage,
+        hpOrbs,
+        mpOrbs,
+        _iterator,
+        _step,
+        _loop,
         canvas,
         ctx,
         gif,
         playerPosition,
+        _iterator2,
+        _step2,
+        _loop2,
         finalImage,
-        _args3 = arguments;
+        _args = arguments;
 
-    return _regenerator["default"].wrap(function _callee3$(_context3) {
+    return _regenerator["default"].wrap(function _callee$(_context) {
       while (1) {
-        switch (_context3.prev = _context3.next) {
+        switch (_context.prev = _context.next) {
           case 0:
-            battleInfoArray = _args3.length > 6 && _args3[6] !== undefined ? _args3[6] : false;
-            monsterInfo = _args3.length > 7 && _args3[7] !== undefined ? _args3[7] : false;
-            enemies = [];
-            _context3.next = 5;
-            return (0, _canvas.registerFont)(_path["default"].join(__dirname, '../../assets/fonts/', 'Heart_warming.otf'), {
-              family: 'HeartWarming'
-            });
-
-          case 5:
+            battleInfoArray = _args.length > 6 && _args[6] !== undefined ? _args[6] : false;
+            monsterInfo = _args.length > 7 && _args[7] !== undefined ? _args[7] : false;
             zone = 'den';
-            _context3.next = 8;
-            return (0, _canvas.loadImage)(_path["default"].join(__dirname, "../../assets/images/battle/background", "".concat(zone, ".png")));
+            enemies = [];
+            loadPromises = [];
+            loadPromises.push(new Promise(function (resolve, reject) {
+              (0, _canvas.loadImage)(_path["default"].join(__dirname, "../../assets/images/skills/".concat(userCurrentSelectedSkills.selectedMainSkill.skill.skillTree ? "".concat(userCurrentSelectedSkills.selectedMainSkill.skill.skillTree["class"].name, "/").concat(userCurrentSelectedSkills.selectedMainSkill.skill.skillTree.name) : ""), "".concat(userCurrentSelectedSkills.selectedMainSkill.skill.name, ".png"))).then(function (image) {
+                mainSkill = image;
+                resolve();
+              });
+            }));
+            loadPromises.push(new Promise(function (resolve, reject) {
+              (0, _canvas.loadImage)(_path["default"].join(__dirname, "../../assets/images/skills/".concat(userCurrentSelectedSkills.selectedSecondarySkill.skill.skillTree ? "".concat(userCurrentSelectedSkills.selectedSecondarySkill.skill.skillTree["class"].name, "/").concat(userCurrentSelectedSkills.selectedSecondarySkill.skill.skillTree.name) : ""), "".concat(userCurrentSelectedSkills.selectedSecondarySkill.skill.name, ".png"))).then(function (image) {
+                secondarySkill = image;
+                resolve();
+              });
+            }));
+            loadPromises.push(new Promise(function (resolve, reject) {
+              (0, _canvas.loadImage)(_path["default"].join(__dirname, "../../assets/images/battle/background", "".concat(zone, ".png"))).then(function (image) {
+                backgroundImage = image;
+                resolve();
+              });
+            }));
+            loadPromises.push(new Promise(function (resolve, reject) {
+              (0, _loadPlayer.loadPlayer)(currentUser["class"].name).then(function (image) {
+                playerImage = image;
+                resolve();
+              });
+            }));
+            console.log('initBattle 1');
+            _iterator = _createForOfIteratorHelper(battle.BattleMonsters.entries());
 
-          case 8:
-            backgroundImage = _context3.sent;
-            battle.BattleMonsters.forEach( /*#__PURE__*/function () {
-              var _ref2 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(battleMonster, i) {
-                return _regenerator["default"].wrap(function _callee$(_context) {
-                  while (1) {
-                    switch (_context.prev = _context.next) {
-                      case 0:
-                        _context.next = 2;
-                        return (0, _loadEnemy.loadEnemy)(battleMonster.monster.name);
+            try {
+              _loop = function _loop() {
+                var _step$value = (0, _slicedToArray2["default"])(_step.value, 2),
+                    i = _step$value[0],
+                    battleMonster = _step$value[1];
 
-                      case 2:
-                        enemies[parseInt(battleMonster.id, 10)] = _context.sent;
-
-                      case 3:
-                      case "end":
-                        return _context.stop();
-                    }
-                  }
-                }, _callee);
-              }));
-
-              return function (_x7, _x8) {
-                return _ref2.apply(this, arguments);
+                loadPromises.push(new Promise(function (resolve, reject) {
+                  (0, _loadEnemy.loadEnemy)(battleMonster.monster.name).then(function (image) {
+                    enemies[parseInt(battleMonster.id, 10)] = image;
+                    resolve();
+                  });
+                }));
               };
-            }());
-            _context3.next = 12;
-            return (0, _loadPlayer.loadPlayer)(currentUser["class"].name);
 
-          case 12:
-            playerImage = _context3.sent;
-            _context3.next = 15;
-            return (0, _loadOrbs.loadOrbs)(previousUserState, battleInfoArray, monsterInfo);
+              for (_iterator.s(); !(_step = _iterator.n()).done;) {
+                _loop();
+              }
+            } catch (err) {
+              _iterator.e(err);
+            } finally {
+              _iterator.f();
+            }
+
+            loadPromises.push(new Promise(function (resolve, reject) {
+              (0, _loadOrbs.loadOrbs)(previousUserState, battleInfoArray, monsterInfo).then(function (_ref2) {
+                var _ref3 = (0, _slicedToArray2["default"])(_ref2, 2),
+                    hpOrbsReturn = _ref3[0],
+                    mpOrbsReturn = _ref3[1];
+
+                hpOrbs = hpOrbsReturn;
+                mpOrbs = mpOrbsReturn;
+                resolve();
+              });
+            }));
+            _context.next = 15;
+            return Promise.all(loadPromises);
 
           case 15:
-            _yield$loadOrbs = _context3.sent;
-            _yield$loadOrbs2 = (0, _slicedToArray2["default"])(_yield$loadOrbs, 2);
-            hpOrbs = _yield$loadOrbs2[0];
-            mpOrbs = _yield$loadOrbs2[1];
-            _context3.next = 21;
-            return (0, _canvas.loadImage)(_path["default"].join(__dirname, "../../assets/images/skills/".concat(userCurrentSelectedSkills.selectedMainSkill.skill.skillTree ? "".concat(userCurrentSelectedSkills.selectedMainSkill.skill.skillTree["class"].name, "/").concat(userCurrentSelectedSkills.selectedMainSkill.skill.skillTree.name) : ""), "".concat(userCurrentSelectedSkills.selectedMainSkill.skill.name, ".png")));
-
-          case 21:
-            mainSkill = _context3.sent;
-            _context3.next = 24;
-            return (0, _canvas.loadImage)(_path["default"].join(__dirname, "../../assets/images/skills/".concat(userCurrentSelectedSkills.selectedSecondarySkill.skill.skillTree ? "".concat(userCurrentSelectedSkills.selectedSecondarySkill.skill.skillTree["class"].name, "/").concat(userCurrentSelectedSkills.selectedSecondarySkill.skill.skillTree.name) : ""), "".concat(userCurrentSelectedSkills.selectedSecondarySkill.skill.name, ".png")));
-
-          case 24:
-            secondarySkill = _context3.sent;
+            console.log('initBattle 4');
             canvas = (0, _canvas.createCanvas)(650, 300);
             ctx = canvas.getContext('2d');
             gif = new _gif["default"]({
-              worker: 8,
-              quality: 50,
+              workers: 50,
+              worker: 50,
+              quality: 30,
               debug: false,
               width: canvas.width,
               height: canvas.height,
@@ -138,38 +163,38 @@ var renderInitBattleGif = /*#__PURE__*/function () {
             0, // number of image in the array to show
             false // user attacking [false || enemyImagePosition]
             );
-            battle.BattleMonsters.forEach( /*#__PURE__*/function () {
-              var _ref3 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee2(battleMonster, i) {
-                return _regenerator["default"].wrap(function _callee2$(_context2) {
-                  while (1) {
-                    switch (_context2.prev = _context2.next) {
-                      case 0:
-                        if (battleMonster.currentHp > 0) {
-                          (0, _drawEnemy.drawEnemy)(ctx, // CTX
-                          previousBattleState.BattleMonsters.find(function (element) {
-                            return element.id === battleMonster.id;
-                          }), // MonsterState
-                          currentSelectedMonster.id === battleMonster.id, // is current Monster selected?
-                          enemies[battleMonster.id], // Enemy Image
-                          false, // Moved To user?
-                          0, // Enemy Image Frame Shown
-                          playerPosition, // PlayerCords
-                          i // Index
-                          );
-                        }
+            _iterator2 = _createForOfIteratorHelper(battle.BattleMonsters.entries());
 
-                      case 1:
-                      case "end":
-                        return _context2.stop();
-                    }
-                  }
-                }, _callee2);
-              }));
+            try {
+              _loop2 = function _loop2() {
+                var _step2$value = (0, _slicedToArray2["default"])(_step2.value, 2),
+                    i = _step2$value[0],
+                    battleMonster = _step2$value[1];
 
-              return function (_x9, _x10) {
-                return _ref3.apply(this, arguments);
+                if (battleMonster.currentHp > 0) {
+                  (0, _drawEnemy.drawEnemy)(ctx, // CTX
+                  previousBattleState.BattleMonsters.find(function (element) {
+                    return element.id === battleMonster.id;
+                  }), // MonsterState
+                  currentSelectedMonster.id === battleMonster.id, // is current Monster selected?
+                  enemies[battleMonster.id], // Enemy Image
+                  false, // Moved To user?
+                  0, // Enemy Image Frame Shown
+                  playerPosition, // PlayerCords
+                  i // Index
+                  );
+                }
               };
-            }());
+
+              for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
+                _loop2();
+              }
+            } catch (err) {
+              _iterator2.e(err);
+            } finally {
+              _iterator2.f();
+            }
+
             (0, _drawBattleScreenTools.drawBattleScreenTools)(ctx, // pass canvas ctx
             mainSkill, secondarySkill, hpOrbs[0], mpOrbs[0]);
             (0, _drawBattleLog.drawBattleLog)(ctx, battle);
@@ -177,21 +202,21 @@ var renderInitBattleGif = /*#__PURE__*/function () {
               delay: 200
             });
             gif.render();
-            _context3.next = 37;
+            _context.next = 29;
             return new Promise(function (resolve, reject) {
               gif.on('finished', resolve);
             });
 
-          case 37:
-            finalImage = _context3.sent;
-            return _context3.abrupt("return", finalImage);
+          case 29:
+            finalImage = _context.sent;
+            return _context.abrupt("return", finalImage);
 
-          case 39:
+          case 31:
           case "end":
-            return _context3.stop();
+            return _context.stop();
         }
       }
-    }, _callee3);
+    }, _callee);
   }));
 
   return function renderInitBattleGif(_x, _x2, _x3, _x4, _x5, _x6) {

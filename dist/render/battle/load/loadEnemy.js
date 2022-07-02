@@ -17,30 +17,39 @@ var _path = _interopRequireDefault(require("path"));
 
 var loadEnemy = /*#__PURE__*/function () {
   var _ref = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(enemyType) {
-    var enemyFrame;
+    var enemyFrame, promises;
     return _regenerator["default"].wrap(function _callee$(_context) {
       while (1) {
         switch (_context.prev = _context.next) {
           case 0:
             enemyFrame = [];
-            _context.next = 3;
-            return (0, _canvas.loadImage)(_path["default"].join(__dirname, "../../../assets/images/battle/monsters/".concat(enemyType, "/"), "".concat(enemyType, ".png")));
+            promises = [];
+            promises.push(new Promise(function (resolve, reject) {
+              (0, _canvas.loadImage)(_path["default"].join(__dirname, "../../../assets/images/battle/monsters/".concat(enemyType, "/"), "".concat(enemyType, ".png"))).then(function (image) {
+                enemyFrame[0] = image;
+                resolve();
+              });
+            }));
+            promises.push(new Promise(function (resolve, reject) {
+              (0, _canvas.loadImage)(_path["default"].join(__dirname, "../../../assets/images/battle/monsters/".concat(enemyType, "/"), "".concat(enemyType, "-1.png"))).then(function (image) {
+                enemyFrame[1] = image;
+                resolve();
+              });
+            }));
+            promises.push(new Promise(function (resolve, reject) {
+              (0, _canvas.loadImage)(_path["default"].join(__dirname, "../../../assets/images/battle/monsters/".concat(enemyType, "/"), "".concat(enemyType, "-2.png"))).then(function (image) {
+                enemyFrame[2] = image;
+                resolve();
+              });
+            }));
+            console.log('before promise wait');
+            _context.next = 8;
+            return Promise.all(promises);
 
-          case 3:
-            enemyFrame[0] = _context.sent;
-            _context.next = 6;
-            return (0, _canvas.loadImage)(_path["default"].join(__dirname, "../../../assets/images/battle/monsters/".concat(enemyType, "/"), "".concat(enemyType, "-1.png")));
-
-          case 6:
-            enemyFrame[1] = _context.sent;
-            _context.next = 9;
-            return (0, _canvas.loadImage)(_path["default"].join(__dirname, "../../../assets/images/battle/monsters/".concat(enemyType, "/"), "".concat(enemyType, "-2.png")));
-
-          case 9:
-            enemyFrame[2] = _context.sent;
+          case 8:
             return _context.abrupt("return", enemyFrame);
 
-          case 11:
+          case 9:
           case "end":
             return _context.stop();
         }

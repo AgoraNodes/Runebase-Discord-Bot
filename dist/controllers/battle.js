@@ -59,60 +59,59 @@ var currentSelectedMonster;
 
 var discordBattle = /*#__PURE__*/function () {
   var _ref = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee12(discordClient, message, io, queue) {
-    var activity, userId, discordChannel, userCurrentCharacter, userCurrentSelectedSkills, battle, newBattle, monster, randomAmountOfMobs, mobPromises, i, randomMonsterHp, newMobPromise, mainSkillMap, secondarySkillMap, selectMonsterMap, generateMainSkillButton, generateSecondarySkillButton, embedMessage, generateLootImagesArray, generateLootItemButtonArray, loadingEmbed, battleCompleteEmbed, collector, newLoot;
+    var userId, discordChannel, userCurrentCharacter, userCurrentSelectedSkills, battle, newBattle, monster, randomAmountOfMobs, mobPromises, i, randomMonsterHp, newMobPromise, mainSkillMap, secondarySkillMap, selectMonsterMap, generateMainSkillButton, generateSecondarySkillButton, embedMessage, generateLootImagesArray, generateLootItemButtonArray, loadingEmbed, battleCompleteEmbed, collector, newLoot;
     return _regenerator["default"].wrap(function _callee12$(_context12) {
       while (1) {
         switch (_context12.prev = _context12.next) {
           case 0:
-            activity = [];
-            _context12.next = 3;
+            _context12.next = 2;
             return (0, _fetchDiscordUserIdFromMessageOrInteraction.fetchDiscordUserIdFromMessageOrInteraction)(message);
 
-          case 3:
+          case 2:
             userId = _context12.sent;
-            _context12.next = 6;
+            _context12.next = 5;
             return (0, _fetchDiscordChannel.fetchDiscordChannel)(discordClient, message);
 
-          case 6:
+          case 5:
             discordChannel = _context12.sent;
-            _context12.next = 9;
+            _context12.next = 8;
             return (0, _character.fetchUserCurrentCharacter)(userId, // user discord id
             false // Need inventory?
             );
 
-          case 9:
+          case 8:
             userCurrentCharacter = _context12.sent;
-            _context12.next = 12;
+            _context12.next = 11;
             return (0, _selectedSkills.fetchUserCurrentSelectedSkills)(userId);
 
-          case 12:
+          case 11:
             userCurrentSelectedSkills = _context12.sent;
 
             if (userCurrentCharacter) {
-              _context12.next = 17;
+              _context12.next = 16;
               break;
             }
 
-            _context12.next = 16;
+            _context12.next = 15;
             return message.reply({
               content: 'You have not selected a class yet\n`!runebase pickclass`\n/`pickclass`',
               ephemeral: true
             });
 
-          case 16:
+          case 15:
             return _context12.abrupt("return");
 
-          case 17:
+          case 16:
             if (!(userCurrentCharacter.condition.stamina < 20)) {
-              _context12.next = 28;
+              _context12.next = 27;
               break;
             }
 
             _context12.t0 = discordChannel;
-            _context12.next = 21;
+            _context12.next = 20;
             return (0, _outOfStamina.renderOutOfStamina)(userCurrentCharacter);
 
-          case 21:
+          case 20:
             _context12.t1 = _context12.sent;
             _context12.t2 = [_context12.t1];
             _context12.t3 = [];
@@ -120,23 +119,23 @@ var discordBattle = /*#__PURE__*/function () {
               files: _context12.t2,
               components: _context12.t3
             };
-            _context12.next = 27;
+            _context12.next = 26;
             return _context12.t0.send.call(_context12.t0, _context12.t4);
 
-          case 27:
+          case 26:
             return _context12.abrupt("return");
 
-          case 28:
+          case 27:
             if (!(userCurrentCharacter.condition.life < 1)) {
-              _context12.next = 39;
+              _context12.next = 38;
               break;
             }
 
             _context12.t5 = discordChannel;
-            _context12.next = 32;
+            _context12.next = 31;
             return (0, _userDied.renderUserDied)(userCurrentCharacter);
 
-          case 32:
+          case 31:
             _context12.t6 = _context12.sent;
             _context12.t7 = [_context12.t6];
             _context12.t8 = [];
@@ -144,40 +143,37 @@ var discordBattle = /*#__PURE__*/function () {
               files: _context12.t7,
               components: _context12.t8
             };
-            _context12.next = 38;
+            _context12.next = 37;
             return _context12.t5.send.call(_context12.t5, _context12.t9);
 
-          case 38:
+          case 37:
             return _context12.abrupt("return");
 
-          case 39:
-            _context12.next = 41;
+          case 38:
+            _context12.next = 40;
             return userCurrentCharacter.condition.update({
               stamina: userCurrentCharacter.condition.stamina - 20
             });
 
-          case 41:
-            _context12.next = 43;
+          case 40:
+            _context12.next = 42;
             return (0, _character.fetchUserCurrentCharacter)(userId, // user discord id
             false // Need inventory?
             );
 
-          case 43:
+          case 42:
             userCurrentCharacter = _context12.sent;
-            _context12.next = 46;
+            _context12.next = 45;
             return _models["default"].battle.findOne({
               where: {
                 complete: false,
                 UserClassId: userCurrentCharacter.id
               },
-              order: [[_models["default"].battleLog, 'id', 'DESC']],
+              order: [[_models["default"].battleLog, 'id', 'DESC'], [_models["default"].BattleMonster, 'id', 'DESC']],
               include: [{
                 model: _models["default"].battleLog,
                 as: 'battleLogs',
                 required: false
-              }, {
-                model: _models["default"].monster,
-                as: 'monsters'
               }, {
                 model: _models["default"].BattleMonster,
                 as: 'BattleMonsters',
@@ -188,32 +184,32 @@ var discordBattle = /*#__PURE__*/function () {
               }]
             });
 
-          case 46:
+          case 45:
             battle = _context12.sent;
 
             if (battle) {
-              _context12.next = 62;
+              _context12.next = 61;
               break;
             }
 
-            _context12.next = 50;
+            _context12.next = 49;
             return _models["default"].battle.create({
               complete: false,
               UserClassId: userCurrentCharacter.id
             });
 
-          case 50:
+          case 49:
             newBattle = _context12.sent;
-            _context12.next = 53;
+            _context12.next = 52;
             return _models["default"].monster.findOne({
               where: {
                 name: 'Zombie'
               }
             });
 
-          case 53:
+          case 52:
             monster = _context12.sent;
-            randomAmountOfMobs = (0, _utils.randomIntFromInterval)(1, 4);
+            randomAmountOfMobs = (0, _utils.randomIntFromInterval)(3, 4);
             mobPromises = [];
 
             for (i = 0; i < randomAmountOfMobs; i += 1) {
@@ -227,23 +223,20 @@ var discordBattle = /*#__PURE__*/function () {
               mobPromises.push(newMobPromise);
             }
 
-            _context12.next = 59;
+            _context12.next = 58;
             return Promise.all(mobPromises);
 
-          case 59:
-            _context12.next = 61;
+          case 58:
+            _context12.next = 60;
             return _models["default"].battle.findOne({
               where: {
                 id: newBattle.id
               },
-              order: [[_models["default"].battleLog, 'id', 'DESC']],
+              order: [[_models["default"].battleLog, 'id', 'DESC'], [_models["default"].BattleMonster, 'id', 'DESC']],
               include: [{
                 model: _models["default"].battleLog,
                 as: 'battleLogs',
                 required: false
-              }, {
-                model: _models["default"].monster,
-                as: 'monsters'
               }, {
                 model: _models["default"].BattleMonster,
                 as: 'BattleMonsters',
@@ -254,10 +247,10 @@ var discordBattle = /*#__PURE__*/function () {
               }]
             });
 
-          case 61:
+          case 60:
             battle = _context12.sent;
 
-          case 62:
+          case 61:
             mainSkillMap = userCurrentSelectedSkills.UserClassSkills.map(function (mySkill, index) {
               return {
                 placeholder: 'pick a skill',
@@ -353,23 +346,23 @@ var discordBattle = /*#__PURE__*/function () {
 
             _context12.t10 = discordChannel;
             _context12.t11 = _discord.MessageAttachment;
-            _context12.next = 72;
+            _context12.next = 71;
             return (0, _initBattle.renderInitBattleGif)(userCurrentCharacter, userCurrentSelectedSkills, battle, battle, userCurrentCharacter, currentSelectedMonster);
 
-          case 72:
+          case 71:
             _context12.t12 = _context12.sent;
             _context12.t13 = new _context12.t11(_context12.t12, 'battle.gif');
             _context12.t14 = [_context12.t13];
             _context12.t15 = _discord.MessageActionRow;
-            _context12.next = 78;
+            _context12.next = 77;
             return generateMainSkillButton(userCurrentSelectedSkills.selectedMainSkill);
 
-          case 78:
+          case 77:
             _context12.t16 = _context12.sent;
-            _context12.next = 81;
+            _context12.next = 80;
             return generateSecondarySkillButton(userCurrentSelectedSkills.selectedSecondarySkill);
 
-          case 81:
+          case 80:
             _context12.t17 = _context12.sent;
             _context12.t18 = [_context12.t16, _context12.t17];
             _context12.t19 = {
@@ -399,10 +392,10 @@ var discordBattle = /*#__PURE__*/function () {
               files: _context12.t14,
               components: _context12.t21
             };
-            _context12.next = 89;
+            _context12.next = 88;
             return _context12.t10.send.call(_context12.t10, _context12.t22);
 
-          case 89:
+          case 88:
             embedMessage = _context12.sent;
 
             generateLootImagesArray = /*#__PURE__*/function () {
@@ -685,8 +678,7 @@ var discordBattle = /*#__PURE__*/function () {
               };
             }();
 
-            collector = embedMessage.createMessageComponentCollector({// filter: ({ user: discordUser }) => discordUser.id === userCurrentCharacter.user.user_id,
-            });
+            collector = embedMessage.createMessageComponentCollector({});
             newLoot = [];
             collector.on('collect', /*#__PURE__*/function () {
               var _ref7 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee11(interaction) {
@@ -735,7 +727,7 @@ var discordBattle = /*#__PURE__*/function () {
                         return _context11.abrupt("return");
 
                       case 10:
-                        if (!interaction.isButton()) {
+                        if (!(interaction.isButton() && !interaction.customId.startsWith('lootItem:'))) {
                           _context11.next = 15;
                           break;
                         }
@@ -1440,7 +1432,7 @@ var discordBattle = /*#__PURE__*/function () {
               };
             }());
 
-          case 97:
+          case 96:
           case "end":
             return _context12.stop();
         }
