@@ -35,7 +35,7 @@ export const discordBattle = async (
   io,
   queue,
 ) => {
-  const activity = [];
+  // const activity = [];
   const userId = await fetchDiscordUserIdFromMessageOrInteraction(
     message,
   );
@@ -109,10 +109,6 @@ export const discordBattle = async (
         required: false,
       },
       {
-        model: db.monster,
-        as: 'monsters',
-      },
-      {
         model: db.BattleMonster,
         as: 'BattleMonsters',
         include: [
@@ -161,10 +157,6 @@ export const discordBattle = async (
           model: db.battleLog,
           as: 'battleLogs',
           required: false,
-        },
-        {
-          model: db.monster,
-          as: 'monsters',
         },
         {
           model: db.BattleMonster,
@@ -236,7 +228,7 @@ export const discordBattle = async (
       customId: addSkillId,
     });
   };
-  console.log('before discord send');
+
   const embedMessage = await discordChannel.send({
     files: [
       new MessageAttachment(
@@ -347,9 +339,7 @@ export const discordBattle = async (
 ${newLootC.length > 0 ? `__found ${newLootC.length} ${newLootC.length === 1 ? `item` : `items`}__` : ``}${itemString}`);
   };
 
-  const collector = embedMessage.createMessageComponentCollector({
-    // filter: ({ user: discordUser }) => discordUser.id === userCurrentCharacter.user.user_id,
-  });
+  const collector = embedMessage.createMessageComponentCollector({});
   let newLoot = [];
   collector.on('collect', async (interaction) => {
     // If someobody clicks loot that isn't hes/hers
@@ -371,7 +361,7 @@ ${newLootC.length > 0 ? `__found ${newLootC.length} ${newLootC.length === 1 ? `i
       });
       return;
     }
-    if (interaction.isButton()) {
+    if (interaction.isButton() && !interaction.customId.startsWith('lootItem:')) {
       if (!currentSelectedMonster) {
         await interaction.reply({
           content: `<@${interaction.user.id}>, You need to select a monster to attack!`,
