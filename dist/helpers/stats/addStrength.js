@@ -241,6 +241,9 @@ var addStrength = /*#__PURE__*/function () {
               }, {
                 model: _models["default"].equipment,
                 as: 'equipment'
+              }, {
+                model: _models["default"]["class"],
+                as: 'class'
               }]
             });
 

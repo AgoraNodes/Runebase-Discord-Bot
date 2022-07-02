@@ -141,6 +141,7 @@ var renderStatsImage = /*#__PURE__*/function () {
             ctx.strokeText(energy, 288, 920, 200);
             ctx.fillText(energy, 288, 920, 200); // attack 1
 
+            console.log('before attackOne name');
             ctx.strokeText("".concat(attackOne.name), 635, 290, 200);
             ctx.fillText("".concat(attackOne.name), 635, 290, 200);
             ctx.strokeText("".concat(attackOne.min, "-").concat(attackOne.max), 855, 290, 200);
@@ -221,14 +222,14 @@ var renderStatsImage = /*#__PURE__*/function () {
             ctx.font = 'bold 70px "HeartWarming"';
             ctx.strokeText("".concat(username, "'s ").concat(currentClass, " stats"), 480, 1380, 960);
             ctx.fillText("".concat(username, "'s ").concat(currentClass, " stats"), 480, 1380, 960);
-            _context.next = 136;
+            _context.next = 137;
             return canvas.toBuffer();
 
-          case 136:
+          case 137:
             finalImage = _context.sent;
             return _context.abrupt("return", finalImage);
 
-          case 138:
+          case 139:
           case "end":
             return _context.stop();
         }

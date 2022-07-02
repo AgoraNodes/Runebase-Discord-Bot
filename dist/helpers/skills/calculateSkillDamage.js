@@ -32,8 +32,9 @@ var calculateSkillDamage = /*#__PURE__*/function () {
       while (1) {
         switch (_context.prev = _context.next) {
           case 0:
-            console.log(skillToCalculate);
+            // console.log(skillToCalculate);
             console.log("userCharacter.class");
+            console.log(userCharacter["class"]);
 
             if (!(userCharacter["class"].name === 'Barbarian')) {
               _context.next = 6;

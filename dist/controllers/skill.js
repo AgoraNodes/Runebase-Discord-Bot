@@ -38,7 +38,7 @@ var _cancelSkillPick = require("../render/skills/cancelSkillPick");
 /* eslint-disable import/prefer-default-export */
 var discordSkills = /*#__PURE__*/function () {
   var _ref = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee5(discordClient, message, setting, io, queue) {
-    var userId, discordChannel, userCurrentCharacter, cancelSkillPickId, generateSkillTreeImage, generateCancelSkill, generateAddSkillButton, skillTreeMap, skillMap, embedMessage, collector, skillTreeIndex, skillIndex, selectedSkill;
+    var userId, discordChannel, userCurrentCharacter, cancelSkillPickId, generateSkillTreeImage, generateCancelSkill, generateAddSkillButton, skillTreeMap, skillMap, embedMessage, loadingSkillAddEmbed, loadingSkillSelectEmbed, collector, skillTreeIndex, skillIndex, selectedSkill;
     return _regenerator["default"].wrap(function _callee5$(_context5) {
       while (1) {
         switch (_context5.prev = _context5.next) {
@@ -259,56 +259,75 @@ var discordSkills = /*#__PURE__*/function () {
 
           case 39:
             embedMessage = _context5.sent;
-            collector = embedMessage.createMessageComponentCollector({
-              filter: function filter(_ref5) {
-                var discordUser = _ref5.user;
-                return discordUser.id === userCurrentCharacter.user.user_id;
-              }
+            loadingSkillAddEmbed = new _discord.MessageEmbed().setTitle('Adding Skill Point').setDescription("".concat(userCurrentCharacter.user.username, ", Loading.."));
+            loadingSkillSelectEmbed = new _discord.MessageEmbed().setTitle('Selecting Skill').setDescription("".concat(userCurrentCharacter.user.username, ", Loading.."));
+            collector = embedMessage.createMessageComponentCollector({// filter: ({ user: discordUser }) => discordUser.id === userCurrentCharacter.user.user_id,
             });
             skillTreeIndex = 0;
             collector.on('collect', /*#__PURE__*/function () {
-              var _ref6 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee4(interaction) {
+              var _ref5 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee4(interaction) {
                 var failAddSkillReason, skillToAddId, _yield$addSkillPoint, _yield$addSkillPoint2, skillTreeMapEdit, skillMapEdit;
 
                 return _regenerator["default"].wrap(function _callee4$(_context4) {
                   while (1) {
                     switch (_context4.prev = _context4.next) {
                       case 0:
-                        if (!interaction.isButton()) {
-                          _context4.next = 22;
+                        if (!(interaction.user.id !== userCurrentCharacter.user.user_id)) {
+                          _context4.next = 4;
                           break;
                         }
 
                         _context4.next = 3;
-                        return interaction.deferUpdate();
+                        return interaction.reply({
+                          content: "<@".concat(interaction.user.id, ">, These buttons aren't for you!"),
+                          ephemeral: true
+                        });
 
                       case 3:
-                        if (!interaction.customId.startsWith('addSkill:')) {
-                          _context4.next = 11;
+                        return _context4.abrupt("return");
+
+                      case 4:
+                        _context4.next = 6;
+                        return interaction.deferUpdate();
+
+                      case 6:
+                        if (!interaction.isButton()) {
+                          _context4.next = 28;
                           break;
                         }
 
+                        if (!interaction.customId.startsWith('addSkill:')) {
+                          _context4.next = 17;
+                          break;
+                        }
+
+                        _context4.next = 10;
+                        return interaction.editReply({
+                          embeds: [loadingSkillAddEmbed]
+                        });
+
+                      case 10:
                         skillToAddId = Number(interaction.customId.replace("addSkill:", ""));
-                        _context4.next = 7;
+                        _context4.next = 13;
                         return (0, _addSkillPoint.addSkillPoint)(userCurrentCharacter, skillToAddId, io, queue);
 
-                      case 7:
+                      case 13:
                         _yield$addSkillPoint = _context4.sent;
                         _yield$addSkillPoint2 = (0, _slicedToArray2["default"])(_yield$addSkillPoint, 2);
                         userCurrentCharacter = _yield$addSkillPoint2[0];
                         failAddSkillReason = _yield$addSkillPoint2[1];
 
-                      case 11:
+                      case 17:
                         if (!(interaction.customId === cancelSkillPickId)) {
-                          _context4.next = 22;
+                          _context4.next = 28;
                           break;
                         }
 
                         _context4.t0 = interaction;
-                        _context4.next = 15;
+                        _context4.next = 21;
                         return (0, _cancelSkillPick.renderCancelSkillPick)(userCurrentCharacter);
 
-                      case 15:
+                      case 21:
                         _context4.t1 = _context4.sent;
                         _context4.t2 = [_context4.t1];
                         _context4.t3 = [];
@@ -316,49 +335,35 @@ var discordSkills = /*#__PURE__*/function () {
                           files: _context4.t2,
                           components: _context4.t3
                         };
-                        _context4.next = 21;
+                        _context4.next = 27;
                         return _context4.t0.editReply.call(_context4.t0, _context4.t4);
 
-                      case 21:
+                      case 27:
                         return _context4.abrupt("return");
 
-                      case 22:
-                        if (!interaction.isSelectMenu()) {
-                          _context4.next = 31;
-                          break;
+                      case 28:
+                        if (interaction.isSelectMenu()) {
+                          // await interaction.editReply({
+                          //   embeds: [
+                          //     loadingSkillSelectEmbed,
+                          //   ],
+                          // });
+                          if (interaction.customId === 'select-skilltree') {
+                            if (interaction.values[0].startsWith('skilltree-')) {
+                              skillTreeIndex = Number(interaction.values[0].replace('skilltree-', ''));
+                              selectedSkill = false;
+                              skillIndex = false;
+                            }
+                          }
+
+                          if (interaction.customId === 'select-skill') {
+                            if (interaction.values[0].startsWith('skill-')) {
+                              skillIndex = Number(interaction.values[0].replace('skill-', ''));
+                              selectedSkill = userCurrentCharacter["class"].skillTrees[Number(skillTreeIndex)].skills[Number(skillIndex)];
+                            }
+                          }
                         }
 
-                        if (!(interaction.customId === 'select-skilltree')) {
-                          _context4.next = 27;
-                          break;
-                        }
-
-                        _context4.next = 26;
-                        return interaction.deferUpdate();
-
-                      case 26:
-                        if (interaction.values[0].startsWith('skilltree-')) {
-                          skillTreeIndex = Number(interaction.values[0].replace('skilltree-', ''));
-                          selectedSkill = false;
-                          skillIndex = false;
-                        }
-
-                      case 27:
-                        if (!(interaction.customId === 'select-skill')) {
-                          _context4.next = 31;
-                          break;
-                        }
-
-                        _context4.next = 30;
-                        return interaction.deferUpdate();
-
-                      case 30:
-                        if (interaction.values[0].startsWith('skill-')) {
-                          skillIndex = Number(interaction.values[0].replace('skill-', ''));
-                          selectedSkill = userCurrentCharacter["class"].skillTrees[Number(skillTreeIndex)].skills[Number(skillIndex)];
-                        }
-
-                      case 31:
                         skillTreeMapEdit = userCurrentCharacter["class"].skillTrees.map(function (skilltree, index) {
                           return {
                             label: skilltree.name,
@@ -375,76 +380,78 @@ var discordSkills = /*#__PURE__*/function () {
                           };
                         });
                         _context4.t5 = interaction;
-                        _context4.next = 36;
+                        _context4.t6 = [];
+                        _context4.next = 35;
                         return generateSkillTreeImage(userCurrentCharacter, userCurrentCharacter["class"].skillTrees[skillTreeIndex], skillTreeIndex, selectedSkill, failAddSkillReason);
 
-                      case 36:
-                        _context4.t6 = _context4.sent;
-                        _context4.t7 = [_context4.t6];
-                        _context4.t8 = [];
-                        _context4.t9 = _toConsumableArray2["default"];
+                      case 35:
+                        _context4.t7 = _context4.sent;
+                        _context4.t8 = [_context4.t7];
+                        _context4.t9 = [];
+                        _context4.t10 = _toConsumableArray2["default"];
 
                         if (!selectedSkill) {
-                          _context4.next = 51;
+                          _context4.next = 50;
                           break;
                         }
 
-                        _context4.t11 = _discord.MessageActionRow;
-                        _context4.next = 44;
+                        _context4.t12 = _discord.MessageActionRow;
+                        _context4.next = 43;
                         return generateAddSkillButton(selectedSkill);
 
-                      case 44:
-                        _context4.t12 = _context4.sent;
-                        _context4.t13 = [_context4.t12];
-                        _context4.t14 = {
-                          components: _context4.t13
+                      case 43:
+                        _context4.t13 = _context4.sent;
+                        _context4.t14 = [_context4.t13];
+                        _context4.t15 = {
+                          components: _context4.t14
                         };
-                        _context4.t15 = new _context4.t11(_context4.t14);
-                        _context4.t10 = [_context4.t15];
-                        _context4.next = 52;
+                        _context4.t16 = new _context4.t12(_context4.t15);
+                        _context4.t11 = [_context4.t16];
+                        _context4.next = 51;
                         break;
 
-                      case 51:
-                        _context4.t10 = [];
+                      case 50:
+                        _context4.t11 = [];
 
-                      case 52:
-                        _context4.t16 = _context4.t10;
-                        _context4.t17 = (0, _context4.t9)(_context4.t16);
-                        _context4.t18 = new _discord.MessageActionRow({
+                      case 51:
+                        _context4.t17 = _context4.t11;
+                        _context4.t18 = (0, _context4.t10)(_context4.t17);
+                        _context4.t19 = new _discord.MessageActionRow({
                           components: [new _discord.MessageSelectMenu({
                             type: 'SELECT_MENU',
                             customId: 'select-skilltree',
                             options: skillTreeMapEdit
                           })]
                         });
-                        _context4.t19 = new _discord.MessageActionRow({
+                        _context4.t20 = new _discord.MessageActionRow({
                           components: [new _discord.MessageSelectMenu({
                             type: 'SELECT_MENU',
                             customId: 'select-skill',
                             options: skillMapEdit
                           })]
                         });
-                        _context4.t20 = _discord.MessageActionRow;
-                        _context4.next = 59;
+                        _context4.t21 = _discord.MessageActionRow;
+                        _context4.next = 58;
                         return generateCancelSkill();
 
-                      case 59:
-                        _context4.t21 = _context4.sent;
-                        _context4.t22 = [_context4.t21];
-                        _context4.t23 = {
-                          components: _context4.t22
+                      case 58:
+                        _context4.t22 = _context4.sent;
+                        _context4.t23 = [_context4.t22];
+                        _context4.t24 = {
+                          components: _context4.t23
                         };
-                        _context4.t24 = new _context4.t20(_context4.t23);
-                        _context4.t25 = [_context4.t18, _context4.t19, _context4.t24];
-                        _context4.t26 = _context4.t8.concat.call(_context4.t8, _context4.t17, _context4.t25);
-                        _context4.t27 = {
-                          files: _context4.t7,
-                          components: _context4.t26
+                        _context4.t25 = new _context4.t21(_context4.t24);
+                        _context4.t26 = [_context4.t19, _context4.t20, _context4.t25];
+                        _context4.t27 = _context4.t9.concat.call(_context4.t9, _context4.t18, _context4.t26);
+                        _context4.t28 = {
+                          embeds: _context4.t6,
+                          files: _context4.t8,
+                          components: _context4.t27
                         };
-                        _context4.next = 68;
-                        return _context4.t5.editReply.call(_context4.t5, _context4.t27);
+                        _context4.next = 67;
+                        return _context4.t5.editReply.call(_context4.t5, _context4.t28);
 
-                      case 68:
+                      case 67:
                       case "end":
                         return _context4.stop();
                     }
@@ -453,11 +460,11 @@ var discordSkills = /*#__PURE__*/function () {
               }));
 
               return function (_x12) {
-                return _ref6.apply(this, arguments);
+                return _ref5.apply(this, arguments);
               };
             }());
 
-          case 43:
+          case 45:
           case "end":
             return _context5.stop();
         }

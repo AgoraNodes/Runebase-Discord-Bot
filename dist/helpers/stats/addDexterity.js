@@ -244,50 +244,17 @@ var addDexterity = /*#__PURE__*/function () {
               }, {
                 model: _models["default"].equipment,
                 as: 'equipment'
+              }, {
+                model: _models["default"]["class"],
+                as: 'class'
               }]
             });
 
           case 5:
             myUpdatedUser = _context4.sent;
-            console.log(myUpdatedUser);
-            console.log('found new userclass'); // const myUpdatedUserOld = await db.user.findOne({
-            //   where: {
-            //     id: userId,
-            //   },
-            //   include: [
-            //     {
-            //       model: db.class,
-            //       as: 'currentClass',
-            //     },
-            //     {
-            //       model: db.rank,
-            //       as: 'ranks',
-            //     },
-            //     {
-            //       model: db.UserClass,
-            //       as: 'UserClass',
-            //       where: {
-            //         classId: {
-            //           [Op.col]: 'user.currentClassId',
-            //         },
-            //       },
-            //       include: [
-            //         {
-            //           model: db.stats,
-            //           as: 'stats',
-            //         },
-            //         {
-            //           model: db.condition,
-            //           as: 'condition',
-            //         },
-            //       ],
-            //     },
-            //   ],
-            // });
-
             return _context4.abrupt("return", [myUpdatedUser, cannotSpend]);
 
-          case 9:
+          case 7:
           case "end":
             return _context4.stop();
         }
