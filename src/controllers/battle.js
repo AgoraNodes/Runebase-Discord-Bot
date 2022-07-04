@@ -365,7 +365,10 @@ ${newLootC.length > 0 ? `__found ${newLootC.length} ${newLootC.length === 1 ? `i
       });
       return;
     }
-    if (battle.userClassId !== userCurrentCharacter.id) {
+    console.log(battle.UserClassId);
+    console.log(userCurrentCharacter.id);
+    console.log('123');
+    if (battle.UserClassId !== userCurrentCharacter.id) {
       await interaction.reply({
         content: `<@${interaction.user.id}>, This battle belongs to a different character!`,
         ephemeral: true,

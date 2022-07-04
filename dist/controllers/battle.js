@@ -727,55 +727,59 @@ var discordBattle = /*#__PURE__*/function () {
                         return _context11.abrupt("return");
 
                       case 10:
-                        if (!(battle.userClassId !== userCurrentCharacter.id)) {
-                          _context11.next = 14;
+                        console.log(battle.UserClassId);
+                        console.log(userCurrentCharacter.id);
+                        console.log('123');
+
+                        if (!(battle.UserClassId !== userCurrentCharacter.id)) {
+                          _context11.next = 17;
                           break;
                         }
 
-                        _context11.next = 13;
+                        _context11.next = 16;
                         return interaction.reply({
                           content: "<@".concat(interaction.user.id, ">, This battle belongs to a different character!"),
                           ephemeral: true
                         });
 
-                      case 13:
+                      case 16:
                         return _context11.abrupt("return");
 
-                      case 14:
+                      case 17:
                         if (!(interaction.isButton() && !interaction.customId.startsWith('lootItem:'))) {
-                          _context11.next = 19;
+                          _context11.next = 22;
                           break;
                         }
 
                         if (currentSelectedMonster) {
-                          _context11.next = 19;
+                          _context11.next = 22;
                           break;
                         }
 
-                        _context11.next = 18;
+                        _context11.next = 21;
                         return interaction.reply({
                           content: "<@".concat(interaction.user.id, ">, You need to select a monster to attack!"),
                           ephemeral: true
                         });
 
-                      case 18:
+                      case 21:
                         return _context11.abrupt("return");
 
-                      case 19:
+                      case 22:
                         if (!interaction.isSelectMenu()) {
-                          _context11.next = 24;
+                          _context11.next = 27;
                           break;
                         }
 
                         if (!(interaction.customId === 'select-mob')) {
-                          _context11.next = 24;
+                          _context11.next = 27;
                           break;
                         }
 
-                        _context11.next = 23;
+                        _context11.next = 26;
                         return interaction.deferUpdate();
 
-                      case 23:
+                      case 26:
                         if (interaction.values[0].startsWith('selectMonster:')) {
                           newSelectedId = Number(interaction.values[0].replace('selectMonster:', ''));
                           selectMonsterMap = battle.BattleMonsters.reduce(function (filtered, battleMonster, index) {
@@ -796,8 +800,8 @@ var discordBattle = /*#__PURE__*/function () {
                           });
                         }
 
-                      case 24:
-                        _context11.next = 26;
+                      case 27:
+                        _context11.next = 29;
                         return queue.add( /*#__PURE__*/(0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee9() {
                           return _regenerator["default"].wrap(function _callee9$(_context9) {
                             while (1) {
@@ -1434,7 +1438,7 @@ var discordBattle = /*#__PURE__*/function () {
                           };
                         }());
 
-                      case 26:
+                      case 29:
                       case "end":
                         return _context11.stop();
                     }
