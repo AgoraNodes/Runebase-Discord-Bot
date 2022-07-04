@@ -37,116 +37,76 @@ var _fetchDiscordUserIdFromMessageOrInteraction = require("../helpers/client/fet
 
 var _fetchDiscordChannel = require("../helpers/client/fetchDiscordChannel");
 
+var _buttons = require("../buttons");
+
 /* eslint-disable import/prefer-default-export */
 // import { generateStatsImage } from "../helpers/stats/generateStatsImage";
 // import { generateEquipmentImage } from '../helpers/equipment/generateEquipmentImage';
 var discordShowInventory = /*#__PURE__*/function () {
-  var _ref = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee16(discordClient, message, setting, io, queue) {
-    var activity, userId, discordChannel, userCurrentCharacter, exitInventoryId, backId, forwardId, backButton, forwardButton, generateExitInventoryButton, generateConfirmDestroyItemImage, generateInventoryImage, generateClassPicked, generateExitInventoryImage, generateEmptyInventoryImage, generateEquipmentCompareButton, generateEquipItemButton, generateDestroyYesButton, generateDestroyNoButton, generateDestroyItemButton, row, canFitOnOnePage, embedMessage, collector, currentIndex;
-    return _regenerator["default"].wrap(function _callee16$(_context16) {
+  var _ref = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee11(discordClient, message, setting, io, queue) {
+    var activity, userId, discordChannel, userCurrentCharacter, generateConfirmDestroyItemImage, generateInventoryImage, generateClassPicked, generateExitInventoryImage, generateEmptyInventoryImage, generateEquipmentCompareButton, row, canFitOnOnePage, embedMessage, collector, currentIndex;
+    return _regenerator["default"].wrap(function _callee11$(_context11) {
       while (1) {
-        switch (_context16.prev = _context16.next) {
+        switch (_context11.prev = _context11.next) {
           case 0:
             activity = [];
-            _context16.next = 3;
+            _context11.next = 3;
             return (0, _fetchDiscordUserIdFromMessageOrInteraction.fetchDiscordUserIdFromMessageOrInteraction)(message);
 
           case 3:
-            userId = _context16.sent;
-            _context16.next = 6;
+            userId = _context11.sent;
+            _context11.next = 6;
             return (0, _fetchDiscordChannel.fetchDiscordChannel)(discordClient, message);
 
           case 6:
-            discordChannel = _context16.sent;
-            _context16.next = 9;
+            discordChannel = _context11.sent;
+            _context11.next = 9;
             return (0, _character.fetchUserCurrentCharacter)(userId, // user discord id
             true // Need inventory?
             );
 
           case 9:
-            userCurrentCharacter = _context16.sent;
+            userCurrentCharacter = _context11.sent;
 
             if (userCurrentCharacter) {
-              _context16.next = 14;
+              _context11.next = 14;
               break;
             }
 
-            _context16.next = 13;
+            _context11.next = 13;
             return message.reply({
               content: 'You have not selected a class yet\n`!runebase pickclass`\n/`pickclass`',
               ephemeral: true
             });
 
           case 13:
-            return _context16.abrupt("return");
+            return _context11.abrupt("return");
 
           case 14:
-            exitInventoryId = 'exitInventory';
-            backId = 'back';
-            forwardId = 'forward';
-            backButton = new _discord.MessageButton({
-              style: 'SECONDARY',
-              label: 'Back',
-              emoji: '⬅️',
-              customId: backId
-            });
-            forwardButton = new _discord.MessageButton({
-              style: 'SECONDARY',
-              label: 'Next',
-              emoji: '➡️',
-              customId: forwardId
-            });
-
-            generateExitInventoryButton = /*#__PURE__*/function () {
-              var _ref2 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee() {
-                return _regenerator["default"].wrap(function _callee$(_context) {
-                  while (1) {
-                    switch (_context.prev = _context.next) {
-                      case 0:
-                        return _context.abrupt("return", new _discord.MessageButton({
-                          style: 'SECONDARY',
-                          label: "Exit Inventory",
-                          emoji: '❌',
-                          customId: exitInventoryId
-                        }));
-
-                      case 1:
-                      case "end":
-                        return _context.stop();
-                    }
-                  }
-                }, _callee);
-              }));
-
-              return function generateExitInventoryButton() {
-                return _ref2.apply(this, arguments);
-              };
-            }();
-
-            _context16.next = 22;
+            _context11.next = 16;
             return (0, _canvas.registerFont)(_path["default"].join(__dirname, '../assets/fonts/', 'Heart_warming.otf'), {
               family: 'HeartWarming'
             });
 
-          case 22:
+          case 16:
             generateConfirmDestroyItemImage = /*#__PURE__*/function () {
-              var _ref3 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee2(currentUserCharacter, start) {
+              var _ref2 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(start, currentUserCharacter) {
                 var current, inventoryItemOneBuffer, inventoryItemOne, canvas, ctx;
-                return _regenerator["default"].wrap(function _callee2$(_context2) {
+                return _regenerator["default"].wrap(function _callee$(_context) {
                   while (1) {
-                    switch (_context2.prev = _context2.next) {
+                    switch (_context.prev = _context.next) {
                       case 0:
                         current = currentUserCharacter.inventory.items.slice(start, start + 1);
-                        _context2.next = 3;
+                        _context.next = 3;
                         return (0, _item.renderItemImage)(current[0]);
 
                       case 3:
-                        inventoryItemOneBuffer = _context2.sent;
-                        _context2.next = 6;
+                        inventoryItemOneBuffer = _context.sent;
+                        _context.next = 6;
                         return (0, _canvas.loadImage)(inventoryItemOneBuffer);
 
                       case 6:
-                        inventoryItemOne = _context2.sent;
+                        inventoryItemOne = _context.sent;
                         canvas = (0, _canvas.createCanvas)(inventoryItemOne.width, inventoryItemOne.height + 40);
                         ctx = canvas.getContext('2d'); // Inventory item one image
 
@@ -165,27 +125,27 @@ var discordShowInventory = /*#__PURE__*/function () {
                         ctx.lineWidth = 3;
                         ctx.strokeText("".concat(current[0].name), canvas.width / 2, inventoryItemOne.height + 20, inventoryItemOne.width);
                         ctx.fillText("".concat(current[0].name), canvas.width / 2, inventoryItemOne.height + 20, inventoryItemOne.width);
-                        return _context2.abrupt("return", new _discord.MessageAttachment(canvas.toBuffer(), 'destroy.png'));
+                        return _context.abrupt("return", new _discord.MessageAttachment(canvas.toBuffer(), 'destroy.png'));
 
                       case 25:
                       case "end":
-                        return _context2.stop();
+                        return _context.stop();
                     }
                   }
-                }, _callee2);
+                }, _callee);
               }));
 
               return function generateConfirmDestroyItemImage(_x6, _x7) {
-                return _ref3.apply(this, arguments);
+                return _ref2.apply(this, arguments);
               };
             }();
 
             generateInventoryImage = /*#__PURE__*/function () {
-              var _ref4 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee3(currentUserCharacter, itemDestroyed, itemEquiped, cannotEquip, cannotEquipReason, start) {
+              var _ref3 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee2(currentUserCharacter, itemDestroyed, itemEquiped, cannotEquip, cannotEquipReason, start) {
                 var current, extraDestroyedHeight, extraEquipedHeight, extraCannotEquipedHeight, inventoryItemOneBuffer, inventoryItemOne, canvas, ctx;
-                return _regenerator["default"].wrap(function _callee3$(_context3) {
+                return _regenerator["default"].wrap(function _callee2$(_context2) {
                   while (1) {
-                    switch (_context3.prev = _context3.next) {
+                    switch (_context2.prev = _context2.next) {
                       case 0:
                         current = currentUserCharacter.inventory.items.slice(start, start + 1); // console.log(current);
                         // console.log(current[0]);
@@ -194,16 +154,16 @@ var discordShowInventory = /*#__PURE__*/function () {
                         extraDestroyedHeight = itemDestroyed ? 20 : 0;
                         extraEquipedHeight = itemEquiped && !cannotEquip ? 20 : 0;
                         extraCannotEquipedHeight = cannotEquip ? 60 : 0;
-                        _context3.next = 6;
+                        _context2.next = 6;
                         return (0, _item.renderItemImage)(current[0]);
 
                       case 6:
-                        inventoryItemOneBuffer = _context3.sent;
-                        _context3.next = 9;
+                        inventoryItemOneBuffer = _context2.sent;
+                        _context2.next = 9;
                         return (0, _canvas.loadImage)(inventoryItemOneBuffer);
 
                       case 9:
-                        inventoryItemOne = _context3.sent;
+                        inventoryItemOne = _context2.sent;
                         canvas = (0, _canvas.createCanvas)(inventoryItemOne.width, inventoryItemOne.height + 20 + extraDestroyedHeight + extraCannotEquipedHeight + extraEquipedHeight);
                         ctx = canvas.getContext('2d'); // Inventory item one image
 
@@ -236,27 +196,27 @@ var discordShowInventory = /*#__PURE__*/function () {
                           ctx.fillText("equiped ".concat(itemEquiped.name), canvas.width / 2, inventoryItemOne.height + 20, inventoryItemOne.width);
                         }
 
-                        return _context3.abrupt("return", new _discord.MessageAttachment(canvas.toBuffer(), 'inventory.png'));
+                        return _context2.abrupt("return", new _discord.MessageAttachment(canvas.toBuffer(), 'inventory.png'));
 
                       case 24:
                       case "end":
-                        return _context3.stop();
+                        return _context2.stop();
                     }
                   }
-                }, _callee3);
+                }, _callee2);
               }));
 
               return function generateInventoryImage(_x8, _x9, _x10, _x11, _x12, _x13) {
-                return _ref4.apply(this, arguments);
+                return _ref3.apply(this, arguments);
               };
             }();
 
             generateClassPicked = /*#__PURE__*/function () {
-              var _ref5 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee4(start) {
+              var _ref4 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee3(start) {
                 var current, canvas, ctx;
-                return _regenerator["default"].wrap(function _callee4$(_context4) {
+                return _regenerator["default"].wrap(function _callee3$(_context3) {
                   while (1) {
-                    switch (_context4.prev = _context4.next) {
+                    switch (_context3.prev = _context3.next) {
                       case 0:
                         current = userCurrentCharacter.inventory.items.slice(start, start + 1);
                         canvas = (0, _canvas.createCanvas)(500, 100);
@@ -268,9 +228,40 @@ var discordShowInventory = /*#__PURE__*/function () {
                         ctx.textAlign = "center";
                         ctx.strokeText("".concat(userCurrentCharacter.user.username, " picked ").concat(current[0].name, "!"), 250, 40, 500);
                         ctx.fillText("".concat(userCurrentCharacter.user.username, " picked ").concat(current[0].name, "!"), 250, 40, 500);
-                        return _context4.abrupt("return", new _discord.MessageAttachment(canvas.toBuffer(), 'picked.png'));
+                        return _context3.abrupt("return", new _discord.MessageAttachment(canvas.toBuffer(), 'picked.png'));
 
                       case 11:
+                      case "end":
+                        return _context3.stop();
+                    }
+                  }
+                }, _callee3);
+              }));
+
+              return function generateClassPicked(_x14) {
+                return _ref4.apply(this, arguments);
+              };
+            }();
+
+            generateExitInventoryImage = /*#__PURE__*/function () {
+              var _ref5 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee4(start) {
+                var canvas, ctx;
+                return _regenerator["default"].wrap(function _callee4$(_context4) {
+                  while (1) {
+                    switch (_context4.prev = _context4.next) {
+                      case 0:
+                        canvas = (0, _canvas.createCanvas)(500, 100);
+                        ctx = canvas.getContext('2d');
+                        ctx.font = 'bold 30px "HeartWarming"';
+                        ctx.fillStyle = "#ccc";
+                        ctx.strokeStyle = 'black';
+                        ctx.lineWidth = 3;
+                        ctx.textAlign = "center";
+                        ctx.strokeText("".concat(userCurrentCharacter.user.username, " canceled inventory"), 250, 60, 500);
+                        ctx.fillText("".concat(userCurrentCharacter.user.username, " canceled inventory"), 250, 60, 500);
+                        return _context4.abrupt("return", new _discord.MessageAttachment(canvas.toBuffer(), 'cancelSelection.png'));
+
+                      case 10:
                       case "end":
                         return _context4.stop();
                     }
@@ -278,12 +269,12 @@ var discordShowInventory = /*#__PURE__*/function () {
                 }, _callee4);
               }));
 
-              return function generateClassPicked(_x14) {
+              return function generateExitInventoryImage(_x15) {
                 return _ref5.apply(this, arguments);
               };
             }();
 
-            generateExitInventoryImage = /*#__PURE__*/function () {
+            generateEmptyInventoryImage = /*#__PURE__*/function () {
               var _ref6 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee5(start) {
                 var canvas, ctx;
                 return _regenerator["default"].wrap(function _callee5$(_context5) {
@@ -297,9 +288,9 @@ var discordShowInventory = /*#__PURE__*/function () {
                         ctx.strokeStyle = 'black';
                         ctx.lineWidth = 3;
                         ctx.textAlign = "center";
-                        ctx.strokeText("".concat(userCurrentCharacter.user.username, " canceled inventory"), 250, 60, 500);
-                        ctx.fillText("".concat(userCurrentCharacter.user.username, " canceled inventory"), 250, 60, 500);
-                        return _context5.abrupt("return", new _discord.MessageAttachment(canvas.toBuffer(), 'cancelSelection.png'));
+                        ctx.strokeText("".concat(userCurrentCharacter.user.username, " Your inventory is empty"), 250, 60, 500);
+                        ctx.fillText("".concat(userCurrentCharacter.user.username, " Your inventory is empty"), 250, 60, 500);
+                        return _context5.abrupt("return", new _discord.MessageAttachment(canvas.toBuffer(), 'emptyInventory.png'));
 
                       case 10:
                       case "end":
@@ -309,52 +300,21 @@ var discordShowInventory = /*#__PURE__*/function () {
                 }, _callee5);
               }));
 
-              return function generateExitInventoryImage(_x15) {
+              return function generateEmptyInventoryImage(_x16) {
                 return _ref6.apply(this, arguments);
               };
             }();
 
-            generateEmptyInventoryImage = /*#__PURE__*/function () {
+            generateEquipmentCompareButton = /*#__PURE__*/function () {
               var _ref7 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee6(start) {
-                var canvas, ctx;
+                var current, equipItemId;
                 return _regenerator["default"].wrap(function _callee6$(_context6) {
                   while (1) {
                     switch (_context6.prev = _context6.next) {
                       case 0:
-                        canvas = (0, _canvas.createCanvas)(500, 100);
-                        ctx = canvas.getContext('2d');
-                        ctx.font = 'bold 30px "HeartWarming"';
-                        ctx.fillStyle = "#ccc";
-                        ctx.strokeStyle = 'black';
-                        ctx.lineWidth = 3;
-                        ctx.textAlign = "center";
-                        ctx.strokeText("".concat(userCurrentCharacter.user.username, " Your inventory is empty"), 250, 60, 500);
-                        ctx.fillText("".concat(userCurrentCharacter.user.username, " Your inventory is empty"), 250, 60, 500);
-                        return _context6.abrupt("return", new _discord.MessageAttachment(canvas.toBuffer(), 'emptyInventory.png'));
-
-                      case 10:
-                      case "end":
-                        return _context6.stop();
-                    }
-                  }
-                }, _callee6);
-              }));
-
-              return function generateEmptyInventoryImage(_x16) {
-                return _ref7.apply(this, arguments);
-              };
-            }();
-
-            generateEquipmentCompareButton = /*#__PURE__*/function () {
-              var _ref8 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee7(start) {
-                var current, equipItemId;
-                return _regenerator["default"].wrap(function _callee7$(_context7) {
-                  while (1) {
-                    switch (_context7.prev = _context7.next) {
-                      case 0:
                         current = userCurrentCharacter.inventory.items.slice(start, start + 1);
                         equipItemId = "Compare:".concat(current[0].id);
-                        return _context7.abrupt("return", new _discord.MessageButton({
+                        return _context6.abrupt("return", new _discord.MessageButton({
                           style: 'SECONDARY',
                           label: "Compare ".concat(current[0].name),
                           emoji: '👀',
@@ -363,281 +323,165 @@ var discordShowInventory = /*#__PURE__*/function () {
 
                       case 3:
                       case "end":
-                        return _context7.stop();
+                        return _context6.stop();
                     }
                   }
-                }, _callee7);
+                }, _callee6);
               }));
 
               return function generateEquipmentCompareButton(_x17) {
-                return _ref8.apply(this, arguments);
+                return _ref7.apply(this, arguments);
               };
             }();
-
-            generateEquipItemButton = /*#__PURE__*/function () {
-              var _ref9 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee8(start) {
-                var current, equipItemId;
-                return _regenerator["default"].wrap(function _callee8$(_context8) {
-                  while (1) {
-                    switch (_context8.prev = _context8.next) {
-                      case 0:
-                        current = userCurrentCharacter.inventory.items.slice(start, start + 1);
-                        equipItemId = "Equip:".concat(current[0].id);
-                        return _context8.abrupt("return", new _discord.MessageButton({
-                          style: 'SECONDARY',
-                          label: "Equip ".concat(current[0].name),
-                          emoji: '⛏️',
-                          customId: equipItemId
-                        }));
-
-                      case 3:
-                      case "end":
-                        return _context8.stop();
-                    }
-                  }
-                }, _callee8);
-              }));
-
-              return function generateEquipItemButton(_x18) {
-                return _ref9.apply(this, arguments);
-              };
-            }();
-
-            generateDestroyYesButton = /*#__PURE__*/function () {
-              var _ref10 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee9(start) {
-                var current, destroyYesButtonId;
-                return _regenerator["default"].wrap(function _callee9$(_context9) {
-                  while (1) {
-                    switch (_context9.prev = _context9.next) {
-                      case 0:
-                        current = userCurrentCharacter.inventory.items.slice(start, start + 1);
-                        destroyYesButtonId = "ConfirmDestroy:".concat(current[0].id);
-                        return _context9.abrupt("return", new _discord.MessageButton({
-                          style: 'SECONDARY',
-                          label: "Yes, destroy ".concat(current[0].name),
-                          emoji: '🚮',
-                          customId: destroyYesButtonId
-                        }));
-
-                      case 3:
-                      case "end":
-                        return _context9.stop();
-                    }
-                  }
-                }, _callee9);
-              }));
-
-              return function generateDestroyYesButton(_x19) {
-                return _ref10.apply(this, arguments);
-              };
-            }();
-
-            generateDestroyNoButton = /*#__PURE__*/function () {
-              var _ref11 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee10(start) {
-                var destroyNoButtonId;
-                return _regenerator["default"].wrap(function _callee10$(_context10) {
-                  while (1) {
-                    switch (_context10.prev = _context10.next) {
-                      case 0:
-                        destroyNoButtonId = "cancelDestroy";
-                        return _context10.abrupt("return", new _discord.MessageButton({
-                          style: 'SECONDARY',
-                          label: "No, go back",
-                          emoji: '⬅️',
-                          customId: destroyNoButtonId
-                        }));
-
-                      case 2:
-                      case "end":
-                        return _context10.stop();
-                    }
-                  }
-                }, _callee10);
-              }));
-
-              return function generateDestroyNoButton(_x20) {
-                return _ref11.apply(this, arguments);
-              };
-            }();
-
-            generateDestroyItemButton = /*#__PURE__*/function () {
-              var _ref12 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee11(start) {
-                var current, destroyItemId;
-                return _regenerator["default"].wrap(function _callee11$(_context11) {
-                  while (1) {
-                    switch (_context11.prev = _context11.next) {
-                      case 0:
-                        current = userCurrentCharacter.inventory.items.slice(start, start + 1);
-                        destroyItemId = "Destroy:".concat(current[0].id);
-                        return _context11.abrupt("return", new _discord.MessageButton({
-                          style: 'SECONDARY',
-                          label: "Destroy ".concat(current[0].name),
-                          emoji: '❌',
-                          customId: destroyItemId
-                        }));
-
-                      case 3:
-                      case "end":
-                        return _context11.stop();
-                    }
-                  }
-                }, _callee11);
-              }));
-
-              return function generateDestroyItemButton(_x21) {
-                return _ref12.apply(this, arguments);
-              };
-            }(); // console.log(userCurrentCharacter.inventory.items.length);
-
 
             row = new _discord.MessageActionRow();
 
             if (!(userCurrentCharacter.inventory && userCurrentCharacter.inventory.items && userCurrentCharacter.inventory.items.length > 0)) {
-              _context16.next = 39;
+              _context11.next = 29;
               break;
             }
 
-            _context16.t0 = row;
-            _context16.next = 37;
+            _context11.t0 = row;
+            _context11.next = 27;
             return generateEquipmentCompareButton(0);
 
-          case 37:
-            _context16.t1 = _context16.sent;
+          case 27:
+            _context11.t1 = _context11.sent;
 
-            _context16.t0.addComponents.call(_context16.t0, _context16.t1);
+            _context11.t0.addComponents.call(_context11.t0, _context11.t1);
 
-          case 39:
+          case 29:
             canFitOnOnePage = userCurrentCharacter.inventory.items.length <= 1;
-            _context16.t2 = discordChannel;
-            _context16.t3 = _toConsumableArray2["default"];
+            _context11.t2 = discordChannel;
+            _context11.t3 = _toConsumableArray2["default"];
 
             if (!(userCurrentCharacter.inventory.items.length > 0)) {
-              _context16.next = 49;
+              _context11.next = 39;
               break;
             }
 
-            _context16.next = 45;
+            _context11.next = 35;
             return generateInventoryImage(userCurrentCharacter, false, false, false, false, 0);
 
-          case 45:
-            _context16.t5 = _context16.sent;
-            _context16.t4 = [_context16.t5];
-            _context16.next = 53;
+          case 35:
+            _context11.t5 = _context11.sent;
+            _context11.t4 = [_context11.t5];
+            _context11.next = 43;
             break;
 
-          case 49:
-            _context16.next = 51;
+          case 39:
+            _context11.next = 41;
             return generateEmptyInventoryImage();
 
-          case 51:
-            _context16.t6 = _context16.sent;
-            _context16.t4 = [_context16.t6];
+          case 41:
+            _context11.t6 = _context11.sent;
+            _context11.t4 = [_context11.t6];
 
-          case 53:
-            _context16.t7 = _context16.t4;
-            _context16.t8 = (0, _context16.t3)(_context16.t7);
-            _context16.t9 = [];
-            _context16.t10 = _toConsumableArray2["default"];
+          case 43:
+            _context11.t7 = _context11.t4;
+            _context11.t8 = (0, _context11.t3)(_context11.t7);
+            _context11.t9 = [];
+            _context11.t10 = _toConsumableArray2["default"];
 
             if (!(userCurrentCharacter.inventory && userCurrentCharacter.inventory.items && userCurrentCharacter.inventory.items.length > 0)) {
-              _context16.next = 78;
+              _context11.next = 68;
               break;
             }
 
-            _context16.t12 = _discord.MessageActionRow;
-            _context16.next = 61;
+            _context11.t12 = _discord.MessageActionRow;
+            _context11.next = 51;
             return generateEquipmentCompareButton(0);
 
+          case 51:
+            _context11.t13 = _context11.sent;
+            _context11.t14 = [_context11.t13];
+            _context11.t15 = {
+              components: _context11.t14
+            };
+            _context11.t16 = new _context11.t12(_context11.t15);
+            _context11.t17 = _discord.MessageActionRow;
+            _context11.next = 58;
+            return (0, _buttons.generateEquipItemButton)(0, userCurrentCharacter);
+
+          case 58:
+            _context11.t18 = _context11.sent;
+            _context11.next = 61;
+            return (0, _buttons.generateDestroyItemButton)(0, userCurrentCharacter);
+
           case 61:
-            _context16.t13 = _context16.sent;
-            _context16.t14 = [_context16.t13];
-            _context16.t15 = {
-              components: _context16.t14
+            _context11.t19 = _context11.sent;
+            _context11.t20 = [_context11.t18, _context11.t19];
+            _context11.t21 = {
+              components: _context11.t20
             };
-            _context16.t16 = new _context16.t12(_context16.t15);
-            _context16.t17 = _discord.MessageActionRow;
-            _context16.next = 68;
-            return generateEquipItemButton(0);
-
-          case 68:
-            _context16.t18 = _context16.sent;
-            _context16.next = 71;
-            return generateDestroyItemButton(0);
-
-          case 71:
-            _context16.t19 = _context16.sent;
-            _context16.t20 = [_context16.t18, _context16.t19];
-            _context16.t21 = {
-              components: _context16.t20
-            };
-            _context16.t22 = new _context16.t17(_context16.t21);
-            _context16.t11 = [_context16.t16, _context16.t22];
-            _context16.next = 79;
+            _context11.t22 = new _context11.t17(_context11.t21);
+            _context11.t11 = [_context11.t16, _context11.t22];
+            _context11.next = 69;
             break;
 
-          case 78:
-            _context16.t11 = [];
+          case 68:
+            _context11.t11 = [];
 
-          case 79:
-            _context16.t23 = _context16.t11;
-            _context16.t24 = (0, _context16.t10)(_context16.t23);
-            _context16.t25 = (0, _toConsumableArray2["default"])(!canFitOnOnePage ? [new _discord.MessageActionRow({
-              components: [forwardButton]
+          case 69:
+            _context11.t23 = _context11.t11;
+            _context11.t24 = (0, _context11.t10)(_context11.t23);
+            _context11.t25 = (0, _toConsumableArray2["default"])(!canFitOnOnePage ? [new _discord.MessageActionRow({
+              components: [(0, _buttons.generateForwardButton)()]
             })] : []);
-            _context16.t26 = _toConsumableArray2["default"];
+            _context11.t26 = _toConsumableArray2["default"];
 
             if (!(userCurrentCharacter.inventory.items.length > 0)) {
-              _context16.next = 94;
+              _context11.next = 84;
               break;
             }
 
-            _context16.t28 = _discord.MessageActionRow;
-            _context16.next = 87;
-            return generateExitInventoryButton();
+            _context11.t28 = _discord.MessageActionRow;
+            _context11.next = 77;
+            return (0, _buttons.generateExitInventoryButton)();
 
-          case 87:
-            _context16.t29 = _context16.sent;
-            _context16.t30 = [_context16.t29];
-            _context16.t31 = {
-              components: _context16.t30
+          case 77:
+            _context11.t29 = _context11.sent;
+            _context11.t30 = [_context11.t29];
+            _context11.t31 = {
+              components: _context11.t30
             };
-            _context16.t32 = new _context16.t28(_context16.t31);
-            _context16.t27 = [_context16.t32];
-            _context16.next = 95;
+            _context11.t32 = new _context11.t28(_context11.t31);
+            _context11.t27 = [_context11.t32];
+            _context11.next = 85;
             break;
 
-          case 94:
-            _context16.t27 = [];
+          case 84:
+            _context11.t27 = [];
 
-          case 95:
-            _context16.t33 = _context16.t27;
-            _context16.t34 = (0, _context16.t26)(_context16.t33);
-            _context16.t35 = _context16.t9.concat.call(_context16.t9, _context16.t24, _context16.t25, _context16.t34);
-            _context16.t36 = {
-              files: _context16.t8,
-              components: _context16.t35
+          case 85:
+            _context11.t33 = _context11.t27;
+            _context11.t34 = (0, _context11.t26)(_context11.t33);
+            _context11.t35 = _context11.t9.concat.call(_context11.t9, _context11.t24, _context11.t25, _context11.t34);
+            _context11.t36 = {
+              files: _context11.t8,
+              components: _context11.t35
             };
-            _context16.next = 101;
-            return _context16.t2.send.call(_context16.t2, _context16.t36);
+            _context11.next = 91;
+            return _context11.t2.send.call(_context11.t2, _context11.t36);
 
-          case 101:
-            embedMessage = _context16.sent;
+          case 91:
+            embedMessage = _context11.sent;
             collector = embedMessage.createMessageComponentCollector({
-              filter: function filter(_ref13) {
-                var discordUser = _ref13.user;
+              filter: function filter(_ref8) {
+                var discordUser = _ref8.user;
                 return discordUser.id === userCurrentCharacter.user.user_id;
               }
             });
             currentIndex = 0;
             collector.on('collect', /*#__PURE__*/function () {
-              var _ref14 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee15(interaction) {
+              var _ref9 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee10(interaction) {
                 var destroyedItem, equipedItem, cannotEquip, cannotEquipReason, updatedUserCharacter, itemId, _yield$equipItem, _yield$equipItem2, _itemId, _yield$destroyItem, _yield$destroyItem2;
 
-                return _regenerator["default"].wrap(function _callee15$(_context15) {
+                return _regenerator["default"].wrap(function _callee10$(_context10) {
                   while (1) {
-                    switch (_context15.prev = _context15.next) {
+                    switch (_context10.prev = _context10.next) {
                       case 0:
-                        _context15.next = 2;
+                        _context10.next = 2;
                         return interaction.deferUpdate();
 
                       case 2:
@@ -647,56 +491,56 @@ var discordShowInventory = /*#__PURE__*/function () {
                         cannotEquipReason = '';
 
                         if (!interaction.customId.startsWith('Compare:')) {
-                          _context15.next = 19;
+                          _context10.next = 19;
                           break;
                         }
 
-                        _context15.next = 9;
-                        return queue.add( /*#__PURE__*/(0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee14() {
-                          return _regenerator["default"].wrap(function _callee14$(_context14) {
+                        _context10.next = 9;
+                        return queue.add( /*#__PURE__*/(0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee9() {
+                          return _regenerator["default"].wrap(function _callee9$(_context9) {
                             while (1) {
-                              switch (_context14.prev = _context14.next) {
+                              switch (_context9.prev = _context9.next) {
                                 case 0:
-                                  _context14.next = 2;
+                                  _context9.next = 2;
                                   return _models["default"].sequelize.transaction({
                                     isolationLevel: _sequelize.Transaction.ISOLATION_LEVELS.SERIALIZABLE
                                   }, /*#__PURE__*/function () {
-                                    var _ref16 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee12(t) {
-                                      return _regenerator["default"].wrap(function _callee12$(_context12) {
+                                    var _ref11 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee7(t) {
+                                      return _regenerator["default"].wrap(function _callee7$(_context7) {
                                         while (1) {
-                                          switch (_context12.prev = _context12.next) {
+                                          switch (_context7.prev = _context7.next) {
                                             case 0:
                                               console.log('item compare');
 
                                             case 1:
                                             case "end":
-                                              return _context12.stop();
+                                              return _context7.stop();
                                           }
                                         }
-                                      }, _callee12);
+                                      }, _callee7);
                                     }));
 
-                                    return function (_x23) {
-                                      return _ref16.apply(this, arguments);
+                                    return function (_x19) {
+                                      return _ref11.apply(this, arguments);
                                     };
                                   }())["catch"]( /*#__PURE__*/function () {
-                                    var _ref17 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee13(err) {
-                                      return _regenerator["default"].wrap(function _callee13$(_context13) {
+                                    var _ref12 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee8(err) {
+                                      return _regenerator["default"].wrap(function _callee8$(_context8) {
                                         while (1) {
-                                          switch (_context13.prev = _context13.next) {
+                                          switch (_context8.prev = _context8.next) {
                                             case 0:
                                               console.log(err);
 
                                             case 1:
                                             case "end":
-                                              return _context13.stop();
+                                              return _context8.stop();
                                           }
                                         }
-                                      }, _callee13);
+                                      }, _callee8);
                                     }));
 
-                                    return function (_x24) {
-                                      return _ref17.apply(this, arguments);
+                                    return function (_x20) {
+                                      return _ref12.apply(this, arguments);
                                     };
                                   }());
 
@@ -709,43 +553,43 @@ var discordShowInventory = /*#__PURE__*/function () {
 
                                 case 3:
                                 case "end":
-                                  return _context14.stop();
+                                  return _context9.stop();
                               }
                             }
-                          }, _callee14);
+                          }, _callee9);
                         })));
 
                       case 9:
-                        _context15.t0 = interaction;
-                        _context15.next = 12;
+                        _context10.t0 = interaction;
+                        _context10.next = 12;
                         return generateClassPicked(currentIndex);
 
                       case 12:
-                        _context15.t1 = _context15.sent;
-                        _context15.t2 = [_context15.t1];
-                        _context15.t3 = [];
-                        _context15.t4 = {
-                          files: _context15.t2,
-                          components: _context15.t3
+                        _context10.t1 = _context10.sent;
+                        _context10.t2 = [_context10.t1];
+                        _context10.t3 = [];
+                        _context10.t4 = {
+                          files: _context10.t2,
+                          components: _context10.t3
                         };
-                        _context15.next = 18;
-                        return _context15.t0.update.call(_context15.t0, _context15.t4);
+                        _context10.next = 18;
+                        return _context10.t0.update.call(_context10.t0, _context10.t4);
 
                       case 18:
-                        return _context15.abrupt("return");
+                        return _context10.abrupt("return");
 
                       case 19:
                         if (!interaction.customId.startsWith('Equip:')) {
-                          _context15.next = 30;
+                          _context10.next = 30;
                           break;
                         }
 
                         itemId = Number(interaction.customId.replace("Equip:", ""));
-                        _context15.next = 23;
+                        _context10.next = 23;
                         return (0, _equipItem.equipItem)(userCurrentCharacter, itemId, discordChannel, io, queue);
 
                       case 23:
-                        _yield$equipItem = _context15.sent;
+                        _yield$equipItem = _context10.sent;
                         _yield$equipItem2 = (0, _slicedToArray2["default"])(_yield$equipItem, 4);
                         userCurrentCharacter = _yield$equipItem2[0];
                         equipedItem = _yield$equipItem2[1];
@@ -758,83 +602,83 @@ var discordShowInventory = /*#__PURE__*/function () {
 
                       case 30:
                         if (!interaction.customId.startsWith('Destroy:')) {
-                          _context15.next = 65;
+                          _context10.next = 65;
                           break;
                         }
 
-                        _context15.t5 = interaction;
-                        _context15.t6 = _toConsumableArray2["default"];
+                        _context10.t5 = interaction;
+                        _context10.t6 = _toConsumableArray2["default"];
 
                         if (!(userCurrentCharacter.inventory.items.length > 0)) {
-                          _context15.next = 40;
+                          _context10.next = 40;
                           break;
                         }
 
-                        _context15.next = 36;
-                        return generateConfirmDestroyItemImage(userCurrentCharacter, currentIndex);
+                        _context10.next = 36;
+                        return generateConfirmDestroyItemImage(currentIndex, userCurrentCharacter);
 
                       case 36:
-                        _context15.t8 = _context15.sent;
-                        _context15.t7 = [_context15.t8];
-                        _context15.next = 44;
+                        _context10.t8 = _context10.sent;
+                        _context10.t7 = [_context10.t8];
+                        _context10.next = 44;
                         break;
 
                       case 40:
-                        _context15.next = 42;
+                        _context10.next = 42;
                         return generateEmptyInventoryImage();
 
                       case 42:
-                        _context15.t9 = _context15.sent;
-                        _context15.t7 = [_context15.t9];
+                        _context10.t9 = _context10.sent;
+                        _context10.t7 = [_context10.t9];
 
                       case 44:
-                        _context15.t10 = _context15.t7;
-                        _context15.t11 = (0, _context15.t6)(_context15.t10);
-                        _context15.t12 = _discord.MessageActionRow;
-                        _context15.next = 49;
-                        return generateDestroyYesButton(currentIndex);
+                        _context10.t10 = _context10.t7;
+                        _context10.t11 = (0, _context10.t6)(_context10.t10);
+                        _context10.t12 = _discord.MessageActionRow;
+                        _context10.next = 49;
+                        return (0, _buttons.generateDestroyYesButton)(currentIndex, userCurrentCharacter);
 
                       case 49:
-                        _context15.t13 = _context15.sent;
-                        _context15.t14 = [_context15.t13];
-                        _context15.t15 = {
-                          components: _context15.t14
+                        _context10.t13 = _context10.sent;
+                        _context10.t14 = [_context10.t13];
+                        _context10.t15 = {
+                          components: _context10.t14
                         };
-                        _context15.t16 = new _context15.t12(_context15.t15);
-                        _context15.t17 = _discord.MessageActionRow;
-                        _context15.next = 56;
-                        return generateDestroyNoButton();
+                        _context10.t16 = new _context10.t12(_context10.t15);
+                        _context10.t17 = _discord.MessageActionRow;
+                        _context10.next = 56;
+                        return (0, _buttons.generateDestroyNoButton)();
 
                       case 56:
-                        _context15.t18 = _context15.sent;
-                        _context15.t19 = [_context15.t18];
-                        _context15.t20 = {
-                          components: _context15.t19
+                        _context10.t18 = _context10.sent;
+                        _context10.t19 = [_context10.t18];
+                        _context10.t20 = {
+                          components: _context10.t19
                         };
-                        _context15.t21 = new _context15.t17(_context15.t20);
-                        _context15.t22 = [_context15.t16, _context15.t21];
-                        _context15.t23 = {
-                          files: _context15.t11,
-                          components: _context15.t22
+                        _context10.t21 = new _context10.t17(_context10.t20);
+                        _context10.t22 = [_context10.t16, _context10.t21];
+                        _context10.t23 = {
+                          files: _context10.t11,
+                          components: _context10.t22
                         };
-                        _context15.next = 64;
-                        return _context15.t5.editReply.call(_context15.t5, _context15.t23);
+                        _context10.next = 64;
+                        return _context10.t5.editReply.call(_context10.t5, _context10.t23);
 
                       case 64:
-                        return _context15.abrupt("return");
+                        return _context10.abrupt("return");
 
                       case 65:
                         if (!interaction.customId.startsWith('ConfirmDestroy:')) {
-                          _context15.next = 74;
+                          _context10.next = 74;
                           break;
                         }
 
                         _itemId = Number(interaction.customId.replace("ConfirmDestroy:", ""));
-                        _context15.next = 69;
+                        _context10.next = 69;
                         return (0, _destroyItem.destroyItem)(userCurrentCharacter, _itemId, discordChannel, io, queue);
 
                       case 69:
-                        _yield$destroyItem = _context15.sent;
+                        _yield$destroyItem = _context10.sent;
                         _yield$destroyItem2 = (0, _slicedToArray2["default"])(_yield$destroyItem, 2);
                         userCurrentCharacter = _yield$destroyItem2[0];
                         destroyedItem = _yield$destroyItem2[1];
@@ -844,166 +688,166 @@ var discordShowInventory = /*#__PURE__*/function () {
                         }
 
                       case 74:
-                        if (!(interaction.customId === exitInventoryId)) {
-                          _context15.next = 85;
+                        if (!(interaction.customId === 'exitInventory')) {
+                          _context10.next = 85;
                           break;
                         }
 
-                        _context15.t24 = interaction;
-                        _context15.next = 78;
+                        _context10.t24 = interaction;
+                        _context10.next = 78;
                         return generateExitInventoryImage();
 
                       case 78:
-                        _context15.t25 = _context15.sent;
-                        _context15.t26 = [_context15.t25];
-                        _context15.t27 = [];
-                        _context15.t28 = {
-                          files: _context15.t26,
-                          components: _context15.t27
+                        _context10.t25 = _context10.sent;
+                        _context10.t26 = [_context10.t25];
+                        _context10.t27 = [];
+                        _context10.t28 = {
+                          files: _context10.t26,
+                          components: _context10.t27
                         };
-                        _context15.next = 84;
-                        return _context15.t24.editReply.call(_context15.t24, _context15.t28);
+                        _context10.next = 84;
+                        return _context10.t24.editReply.call(_context10.t24, _context10.t28);
 
                       case 84:
-                        return _context15.abrupt("return");
+                        return _context10.abrupt("return");
 
                       case 85:
-                        if (interaction.customId === backId || interaction.customId === forwardId) {
-                          interaction.customId === backId ? currentIndex -= 1 : currentIndex += 1;
+                        if (interaction.customId === 'back' || interaction.customId === 'forward') {
+                          interaction.customId === 'back' ? currentIndex -= 1 : currentIndex += 1;
                         }
 
-                        _context15.t29 = interaction;
-                        _context15.t30 = _toConsumableArray2["default"];
+                        _context10.t29 = interaction;
+                        _context10.t30 = _toConsumableArray2["default"];
 
                         if (!(userCurrentCharacter.inventory.items.length > 0)) {
-                          _context15.next = 95;
+                          _context10.next = 95;
                           break;
                         }
 
-                        _context15.next = 91;
+                        _context10.next = 91;
                         return generateInventoryImage(userCurrentCharacter, destroyedItem, equipedItem, cannotEquip, cannotEquipReason, currentIndex);
 
                       case 91:
-                        _context15.t32 = _context15.sent;
-                        _context15.t31 = [_context15.t32];
-                        _context15.next = 99;
+                        _context10.t32 = _context10.sent;
+                        _context10.t31 = [_context10.t32];
+                        _context10.next = 99;
                         break;
 
                       case 95:
-                        _context15.next = 97;
+                        _context10.next = 97;
                         return generateEmptyInventoryImage();
 
                       case 97:
-                        _context15.t33 = _context15.sent;
-                        _context15.t31 = [_context15.t33];
+                        _context10.t33 = _context10.sent;
+                        _context10.t31 = [_context10.t33];
 
                       case 99:
-                        _context15.t34 = _context15.t31;
-                        _context15.t35 = (0, _context15.t30)(_context15.t34);
-                        _context15.t36 = [];
-                        _context15.t37 = _toConsumableArray2["default"];
+                        _context10.t34 = _context10.t31;
+                        _context10.t35 = (0, _context10.t30)(_context10.t34);
+                        _context10.t36 = [];
+                        _context10.t37 = _toConsumableArray2["default"];
 
                         if (!(userCurrentCharacter.inventory.items.length > 0)) {
-                          _context15.next = 114;
+                          _context10.next = 114;
                           break;
                         }
 
-                        _context15.t39 = _discord.MessageActionRow;
-                        _context15.next = 107;
+                        _context10.t39 = _discord.MessageActionRow;
+                        _context10.next = 107;
                         return generateEquipmentCompareButton(currentIndex);
 
                       case 107:
-                        _context15.t40 = _context15.sent;
-                        _context15.t41 = [_context15.t40];
-                        _context15.t42 = {
-                          components: _context15.t41
+                        _context10.t40 = _context10.sent;
+                        _context10.t41 = [_context10.t40];
+                        _context10.t42 = {
+                          components: _context10.t41
                         };
-                        _context15.t43 = new _context15.t39(_context15.t42);
-                        _context15.t38 = [_context15.t43];
-                        _context15.next = 115;
+                        _context10.t43 = new _context10.t39(_context10.t42);
+                        _context10.t38 = [_context10.t43];
+                        _context10.next = 115;
                         break;
 
                       case 114:
-                        _context15.t38 = [];
+                        _context10.t38 = [];
 
                       case 115:
-                        _context15.t44 = _context15.t38;
-                        _context15.t45 = (0, _context15.t37)(_context15.t44);
-                        _context15.t46 = _toConsumableArray2["default"];
+                        _context10.t44 = _context10.t38;
+                        _context10.t45 = (0, _context10.t37)(_context10.t44);
+                        _context10.t46 = _toConsumableArray2["default"];
 
                         if (!(userCurrentCharacter.inventory.items.length > 0)) {
-                          _context15.next = 132;
+                          _context10.next = 132;
                           break;
                         }
 
-                        _context15.t48 = _discord.MessageActionRow;
-                        _context15.next = 122;
-                        return generateEquipItemButton(currentIndex);
+                        _context10.t48 = _discord.MessageActionRow;
+                        _context10.next = 122;
+                        return (0, _buttons.generateEquipItemButton)(currentIndex, userCurrentCharacter);
 
                       case 122:
-                        _context15.t49 = _context15.sent;
-                        _context15.next = 125;
-                        return generateDestroyItemButton(currentIndex);
+                        _context10.t49 = _context10.sent;
+                        _context10.next = 125;
+                        return (0, _buttons.generateDestroyItemButton)(currentIndex, userCurrentCharacter);
 
                       case 125:
-                        _context15.t50 = _context15.sent;
-                        _context15.t51 = [_context15.t49, _context15.t50];
-                        _context15.t52 = {
-                          components: _context15.t51
+                        _context10.t50 = _context10.sent;
+                        _context10.t51 = [_context10.t49, _context10.t50];
+                        _context10.t52 = {
+                          components: _context10.t51
                         };
-                        _context15.t53 = new _context15.t48(_context15.t52);
-                        _context15.t47 = [_context15.t53];
-                        _context15.next = 133;
+                        _context10.t53 = new _context10.t48(_context10.t52);
+                        _context10.t47 = [_context10.t53];
+                        _context10.next = 133;
                         break;
 
                       case 132:
-                        _context15.t47 = [];
+                        _context10.t47 = [];
 
                       case 133:
-                        _context15.t54 = _context15.t47;
-                        _context15.t55 = (0, _context15.t46)(_context15.t54);
-                        _context15.t56 = new _discord.MessageActionRow({
-                          components: [].concat((0, _toConsumableArray2["default"])(currentIndex ? [backButton] : []), (0, _toConsumableArray2["default"])(currentIndex + 1 < userCurrentCharacter.inventory.items.length ? [forwardButton] : []))
+                        _context10.t54 = _context10.t47;
+                        _context10.t55 = (0, _context10.t46)(_context10.t54);
+                        _context10.t56 = new _discord.MessageActionRow({
+                          components: [].concat((0, _toConsumableArray2["default"])(currentIndex ? [(0, _buttons.generateBackButton)()] : []), (0, _toConsumableArray2["default"])(currentIndex + 1 < userCurrentCharacter.inventory.items.length ? [(0, _buttons.generateForwardButton)()] : []))
                         });
-                        _context15.t57 = _discord.MessageActionRow;
-                        _context15.next = 139;
-                        return generateExitInventoryButton();
+                        _context10.t57 = _discord.MessageActionRow;
+                        _context10.next = 139;
+                        return (0, _buttons.generateExitInventoryButton)();
 
                       case 139:
-                        _context15.t58 = _context15.sent;
-                        _context15.t59 = [_context15.t58];
-                        _context15.t60 = {
-                          components: _context15.t59
+                        _context10.t58 = _context10.sent;
+                        _context10.t59 = [_context10.t58];
+                        _context10.t60 = {
+                          components: _context10.t59
                         };
-                        _context15.t61 = new _context15.t57(_context15.t60);
-                        _context15.t62 = [_context15.t56, _context15.t61];
-                        _context15.t63 = _context15.t36.concat.call(_context15.t36, _context15.t45, _context15.t55, _context15.t62);
-                        _context15.t64 = {
-                          files: _context15.t35,
-                          components: _context15.t63
+                        _context10.t61 = new _context10.t57(_context10.t60);
+                        _context10.t62 = [_context10.t56, _context10.t61];
+                        _context10.t63 = _context10.t36.concat.call(_context10.t36, _context10.t45, _context10.t55, _context10.t62);
+                        _context10.t64 = {
+                          files: _context10.t35,
+                          components: _context10.t63
                         };
-                        _context15.next = 148;
-                        return _context15.t29.editReply.call(_context15.t29, _context15.t64);
+                        _context10.next = 148;
+                        return _context10.t29.editReply.call(_context10.t29, _context10.t64);
 
                       case 148:
                       case "end":
-                        return _context15.stop();
+                        return _context10.stop();
                     }
                   }
-                }, _callee15);
+                }, _callee10);
               }));
 
-              return function (_x22) {
-                return _ref14.apply(this, arguments);
+              return function (_x18) {
+                return _ref9.apply(this, arguments);
               };
             }());
 
-          case 105:
+          case 95:
           case "end":
-            return _context16.stop();
+            return _context11.stop();
         }
       }
-    }, _callee16);
+    }, _callee11);
   }));
 
   return function discordShowInventory(_x, _x2, _x3, _x4, _x5) {

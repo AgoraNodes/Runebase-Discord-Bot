@@ -93,6 +93,14 @@ var rateLimiterGenerateStartDagger = new RateLimiterFlexible["default"].RateLimi
   points: 2,
   duration: 30
 });
+var rateLimiterResetSkills = new RateLimiterFlexible["default"].RateLimiterMemory({
+  points: 2,
+  duration: 30
+});
+var rateLimiterResetStats = new RateLimiterFlexible["default"].RateLimiterMemory({
+  points: 2,
+  duration: 30
+});
 
 var myRateLimiter = /*#__PURE__*/function () {
   var _ref = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(client, message, title) {
@@ -329,69 +337,93 @@ var myRateLimiter = /*#__PURE__*/function () {
             return _context.abrupt("return", false);
 
           case 76:
-            throw new Error("no Rate limiter could be reached");
-
-          case 79:
-            _context.prev = 79;
-            _context.t0 = _context["catch"](5);
-            console.log(_context.t0);
-            _context.prev = 82;
-            _context.next = 85;
-            return errorConsumer.consume(userId, 1);
-
-          case 85:
-            notError = _context.sent;
-
-            if (!(notError.remainingPoints > 0)) {
-              _context.next = 93;
+            if (!(title.toLowerCase() === 'resetskills')) {
+              _context.next = 80;
               break;
             }
 
-            _context.next = 89;
+            _context.next = 79;
+            return rateLimiterResetSkills.consume(userId, 1);
+
+          case 79:
+            return _context.abrupt("return", false);
+
+          case 80:
+            if (!(title.toLowerCase() === 'resetstats')) {
+              _context.next = 84;
+              break;
+            }
+
+            _context.next = 83;
+            return rateLimiterResetStats.consume(userId, 1);
+
+          case 83:
+            return _context.abrupt("return", false);
+
+          case 84:
+            throw new Error("no Rate limiter could be reached");
+
+          case 87:
+            _context.prev = 87;
+            _context.t0 = _context["catch"](5);
+            console.log(_context.t0);
+            _context.prev = 90;
+            _context.next = 93;
+            return errorConsumer.consume(userId, 1);
+
+          case 93:
+            notError = _context.sent;
+
+            if (!(notError.remainingPoints > 0)) {
+              _context.next = 101;
+              break;
+            }
+
+            _context.next = 97;
             return client.channels.fetch(discordChannelId)["catch"](function (e) {
               console.log(e);
             });
 
-          case 89:
+          case 97:
             discordChannel = _context.sent;
 
             if (!discordChannel) {
-              _context.next = 93;
+              _context.next = 101;
               break;
             }
 
-            _context.next = 93;
+            _context.next = 101;
             return discordChannel.send({
               embeds: [(0, _messages.discordLimitSpamMessage)(userId, title)]
             })["catch"](function (e) {
               console.log(e);
             });
 
-          case 93:
+          case 101:
             return _context.abrupt("return", true);
 
-          case 96:
-            _context.prev = 96;
-            _context.t1 = _context["catch"](82);
+          case 104:
+            _context.prev = 104;
+            _context.t1 = _context["catch"](90);
             console.log(_context.t1);
             return _context.abrupt("return", true);
 
-          case 100:
-            _context.next = 106;
+          case 108:
+            _context.next = 114;
             break;
 
-          case 102:
-            _context.prev = 102;
+          case 110:
+            _context.prev = 110;
             _context.t2 = _context["catch"](0);
             console.log(_context.t2);
             return _context.abrupt("return", true);
 
-          case 106:
+          case 114:
           case "end":
             return _context.stop();
         }
       }
-    }, _callee, null, [[0, 102], [5, 79], [82, 96]]);
+    }, _callee, null, [[0, 110], [5, 87], [90, 104]]);
   }));
 
   return function myRateLimiter(_x, _x2, _x3) {

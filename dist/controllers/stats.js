@@ -47,10 +47,12 @@ var _fetchDiscordChannel = require("../helpers/client/fetchDiscordChannel");
 
 var _calculateCharacterStats = require("../helpers/stats/calculateCharacterStats");
 
+var _buttons = require("../buttons");
+
 /* eslint-disable import/prefer-default-export */
 var discordStats = /*#__PURE__*/function () {
   var _ref = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee3(discordClient, message, setting, io, queue) {
-    var activity, userId, discordChannel, userCurrentCharacter, _yield$calculateChara, unspedAttributes, strengthButtonId, dexterityButtonId, vitalityButtonId, energyButtonId, cancelStatsPickId, strengthButton, dexterityButton, vitalityButton, energyButton, cancelStatsPickButton, generateCancelClassPicked, loadingEmbed, calc, embedMessage, collector;
+    var activity, userId, discordChannel, userCurrentCharacter, _yield$calculateChara, unspedAttributes, generateCancelClassPicked, loadingEmbed, calc, embedMessage, collector;
 
     return _regenerator["default"].wrap(function _callee3$(_context3) {
       while (1) {
@@ -96,41 +98,6 @@ var discordStats = /*#__PURE__*/function () {
           case 16:
             _yield$calculateChara = _context3.sent;
             unspedAttributes = _yield$calculateChara.unspedAttributes;
-            strengthButtonId = 'strength';
-            dexterityButtonId = 'dexterity';
-            vitalityButtonId = 'vitality';
-            energyButtonId = 'energy';
-            cancelStatsPickId = 'cancelStatsPick';
-            strengthButton = new _discord.MessageButton({
-              style: 'SECONDARY',
-              label: 'Strength ➕',
-              emoji: '💪',
-              customId: strengthButtonId
-            });
-            dexterityButton = new _discord.MessageButton({
-              style: 'SECONDARY',
-              label: 'Dexterity ➕',
-              emoji: '🏃‍♂️',
-              customId: dexterityButtonId
-            });
-            vitalityButton = new _discord.MessageButton({
-              style: 'SECONDARY',
-              label: 'Vitality ➕',
-              emoji: '❤️',
-              customId: vitalityButtonId
-            });
-            energyButton = new _discord.MessageButton({
-              style: 'SECONDARY',
-              label: 'Energy ➕',
-              emoji: '🧙',
-              customId: energyButtonId
-            });
-            cancelStatsPickButton = new _discord.MessageButton({
-              style: 'SECONDARY',
-              label: 'Cancel Stats Selection',
-              emoji: '❌',
-              customId: cancelStatsPickId
-            });
 
             generateCancelClassPicked = /*#__PURE__*/function () {
               var _ref2 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee() {
@@ -173,28 +140,28 @@ var discordStats = /*#__PURE__*/function () {
             calc = unspedAttributes > 0;
             _context3.t0 = discordChannel;
             _context3.t1 = _discord.MessageAttachment;
-            _context3.next = 35;
+            _context3.next = 25;
             return (0, _stats.renderStatsImage)(userCurrentCharacter, false);
 
-          case 35:
+          case 25:
             _context3.t2 = _context3.sent;
             _context3.t3 = new _context3.t1(_context3.t2, 'class.png');
             _context3.t4 = [_context3.t3];
             _context3.t5 = [].concat((0, _toConsumableArray2["default"])(calc ? [new _discord.MessageActionRow({
-              components: [strengthButton, dexterityButton]
+              components: [(0, _buttons.generateAddStrengthButton)(), (0, _buttons.generateAddDexterityButton)()]
             })] : []), (0, _toConsumableArray2["default"])(calc ? [new _discord.MessageActionRow({
-              components: [vitalityButton, energyButton]
+              components: [(0, _buttons.generateAddVitalityButton)(), (0, _buttons.generateAddEnergyButton)()]
             })] : []), [new _discord.MessageActionRow({
-              components: [cancelStatsPickButton]
+              components: [(0, _buttons.generateCancelStatsPickButton)()]
             })]);
             _context3.t6 = {
               files: _context3.t4,
               components: _context3.t5
             };
-            _context3.next = 42;
+            _context3.next = 32;
             return _context3.t0.send.call(_context3.t0, _context3.t6);
 
-          case 42:
+          case 32:
             embedMessage = _context3.sent;
             collector = embedMessage.createMessageComponentCollector({// filter: ({ user: discordUser }) => discordUser.id === userCurrentCharacter.user.user_id,
             });
@@ -232,7 +199,7 @@ var discordStats = /*#__PURE__*/function () {
                         });
 
                       case 8:
-                        if (!(interaction.customId === strengthButtonId)) {
+                        if (!(interaction.customId === 'strength')) {
                           _context2.next = 15;
                           break;
                         }
@@ -247,7 +214,7 @@ var discordStats = /*#__PURE__*/function () {
                         cannotSpend = _yield$addStrength2[1];
 
                       case 15:
-                        if (!(interaction.customId === dexterityButtonId)) {
+                        if (!(interaction.customId === 'dexterity')) {
                           _context2.next = 22;
                           break;
                         }
@@ -262,7 +229,7 @@ var discordStats = /*#__PURE__*/function () {
                         cannotSpend = _yield$addDexterity2[1];
 
                       case 22:
-                        if (!(interaction.customId === vitalityButtonId)) {
+                        if (!(interaction.customId === 'vitality')) {
                           _context2.next = 29;
                           break;
                         }
@@ -277,7 +244,7 @@ var discordStats = /*#__PURE__*/function () {
                         cannotSpend = _yield$addVitality2[1];
 
                       case 29:
-                        if (!(interaction.customId === energyButtonId)) {
+                        if (!(interaction.customId === 'energy')) {
                           _context2.next = 36;
                           break;
                         }
@@ -292,7 +259,7 @@ var discordStats = /*#__PURE__*/function () {
                         cannotSpend = _yield$addEnergy2[1];
 
                       case 36:
-                        if (!(interaction.customId === strengthButtonId || interaction.customId === dexterityButtonId || interaction.customId === vitalityButtonId || interaction.customId === energyButtonId)) {
+                        if (!(interaction.customId === 'strength' || interaction.customId === 'dexterity' || interaction.customId === 'vitality' || interaction.customId === 'energy')) {
                           _context2.next = 50;
                           break;
                         }
@@ -309,11 +276,11 @@ var discordStats = /*#__PURE__*/function () {
                         _context2.t4 = new _context2.t2(_context2.t3, 'class.png');
                         _context2.t5 = [_context2.t4];
                         _context2.t6 = [].concat((0, _toConsumableArray2["default"])(newCalc ? [new _discord.MessageActionRow({
-                          components: [strengthButton, dexterityButton]
+                          components: [(0, _buttons.generateAddStrengthButton)(), (0, _buttons.generateAddDexterityButton)()]
                         })] : []), (0, _toConsumableArray2["default"])(newCalc ? [new _discord.MessageActionRow({
-                          components: [vitalityButton, energyButton]
+                          components: [(0, _buttons.generateAddVitalityButton)(), (0, _buttons.generateAddEnergyButton)()]
                         })] : []), [new _discord.MessageActionRow({
-                          components: [cancelStatsPickButton]
+                          components: [(0, _buttons.generateCancelStatsPickButton)()]
                         })]);
                         _context2.t7 = {
                           embeds: _context2.t1,
@@ -324,7 +291,7 @@ var discordStats = /*#__PURE__*/function () {
                         return _context2.t0.editReply.call(_context2.t0, _context2.t7);
 
                       case 50:
-                        if (!(interaction.customId === cancelStatsPickId)) {
+                        if (!(interaction.customId === 'cancelStatsPick')) {
                           _context2.next = 61;
                           break;
                         }
@@ -359,7 +326,7 @@ var discordStats = /*#__PURE__*/function () {
               };
             }());
 
-          case 45:
+          case 35:
           case "end":
             return _context3.stop();
         }

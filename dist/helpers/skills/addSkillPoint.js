@@ -69,26 +69,29 @@ var addSkillPoint = /*#__PURE__*/function () {
 
                                 case 5:
                                   sumOfSkills = _context.sent;
+                                  console.log(userCurrentCharacter.id);
+                                  console.log(sumOfSkills);
+                                  console.log('sumOfSkills');
 
                                   if (findUserRank) {
-                                    _context.next = 9;
+                                    _context.next = 12;
                                     break;
                                   }
 
                                   failAddSkillReason = 'Unable to add skills, user has no rank!';
                                   return _context.abrupt("return");
 
-                                case 9:
+                                case 12:
                                   if (!(findUserRank.rankId <= Number(sumOfSkills[0].totalSpendPoints) && Number(sumOfSkills[0].totalSpendPoints) !== 0)) {
-                                    _context.next = 12;
+                                    _context.next = 15;
                                     break;
                                   }
 
                                   failAddSkillReason = 'User already spend all of the skillpoints!';
                                   return _context.abrupt("return");
 
-                                case 12:
-                                  _context.next = 14;
+                                case 15:
+                                  _context.next = 17;
                                   return _models["default"].skill.findOne({
                                     where: {
                                       id: skillToAddId
@@ -101,19 +104,19 @@ var addSkillPoint = /*#__PURE__*/function () {
                                     transaction: t
                                   });
 
-                                case 14:
+                                case 17:
                                   findSkillToAdd = _context.sent;
 
                                   if (!(findUserRank.rankId < findSkillToAdd.level)) {
-                                    _context.next = 18;
+                                    _context.next = 21;
                                     break;
                                   }
 
                                   failAddSkillReason = 'Unable to add, user has insuffiecent level!';
                                   return _context.abrupt("return");
 
-                                case 18:
-                                  _context.next = 20;
+                                case 21:
+                                  _context.next = 23;
                                   return _models["default"].UserClassSkill.findOne({
                                     where: {
                                       userClassId: userCurrentCharacter.id,
@@ -123,19 +126,19 @@ var addSkillPoint = /*#__PURE__*/function () {
                                     transaction: t
                                   });
 
-                                case 20:
+                                case 23:
                                   findUserSkillToAdd = _context.sent;
 
                                   if (!(findUserSkillToAdd && findUserSkillToAdd.points >= 20)) {
-                                    _context.next = 24;
+                                    _context.next = 27;
                                     break;
                                   }
 
                                   failAddSkillReason = 'skill already maxed out!';
                                   return _context.abrupt("return");
 
-                                case 24:
-                                  _context.next = 26;
+                                case 27:
+                                  _context.next = 29;
                                   return _models["default"].UserClassSkill.findAll({
                                     where: {
                                       userClassId: userCurrentCharacter.id
@@ -144,7 +147,7 @@ var addSkillPoint = /*#__PURE__*/function () {
                                     transaction: t
                                   });
 
-                                case 26:
+                                case 29:
                                   findAllUserSkills = _context.sent;
                                   userHasPreviousSkills = true; // check if user has the previous skills
 
@@ -172,20 +175,20 @@ var addSkillPoint = /*#__PURE__*/function () {
                                   }
 
                                   if (userHasPreviousSkills) {
-                                    _context.next = 33;
+                                    _context.next = 36;
                                     break;
                                   }
 
                                   failAddSkillReason = 'user doesnt have the prerequisite skills!';
                                   return _context.abrupt("return");
 
-                                case 33:
+                                case 36:
                                   if (findUserSkillToAdd) {
-                                    _context.next = 38;
+                                    _context.next = 41;
                                     break;
                                   }
 
-                                  _context.next = 36;
+                                  _context.next = 39;
                                   return _models["default"].UserClassSkill.create({
                                     UserClassId: userCurrentCharacter.id,
                                     skillId: skillToAddId,
@@ -195,12 +198,12 @@ var addSkillPoint = /*#__PURE__*/function () {
                                     transaction: t
                                   });
 
-                                case 36:
-                                  _context.next = 40;
+                                case 39:
+                                  _context.next = 43;
                                   break;
 
-                                case 38:
-                                  _context.next = 40;
+                                case 41:
+                                  _context.next = 43;
                                   return findUserSkillToAdd.update({
                                     points: findUserSkillToAdd.points + 1
                                   }, {
@@ -208,8 +211,8 @@ var addSkillPoint = /*#__PURE__*/function () {
                                     transaction: t
                                   });
 
-                                case 40:
-                                  _context.next = 42;
+                                case 43:
+                                  _context.next = 45;
                                   return _models["default"].activity.create({
                                     type: 'destroyItem_s',
                                     earnerId: userCurrentCharacter.user.id
@@ -218,9 +221,9 @@ var addSkillPoint = /*#__PURE__*/function () {
                                     transaction: t
                                   });
 
-                                case 42:
+                                case 45:
                                   preActivity = _context.sent;
-                                  _context.next = 45;
+                                  _context.next = 48;
                                   return _models["default"].activity.findOne({
                                     where: {
                                       id: preActivity.id
@@ -233,11 +236,11 @@ var addSkillPoint = /*#__PURE__*/function () {
                                     transaction: t
                                   });
 
-                                case 45:
+                                case 48:
                                   finalActivity = _context.sent;
                                   activity.unshift(finalActivity);
 
-                                case 47:
+                                case 50:
                                 case "end":
                                   return _context.stop();
                               }

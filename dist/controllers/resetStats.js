@@ -5,7 +5,7 @@ var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefau
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.discordHeal = void 0;
+exports.discordResetStats = void 0;
 
 var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
 
@@ -23,14 +23,14 @@ var _fetchDiscordUserIdFromMessageOrInteraction = require("../helpers/client/fet
 
 var _fetchDiscordChannel = require("../helpers/client/fetchDiscordChannel");
 
-var _buttons = require("../buttons");
-
 var _messages = require("../messages");
 
+var _buttons = require("../buttons");
+
 /* eslint-disable import/prefer-default-export */
-var discordHeal = /*#__PURE__*/function () {
+var discordResetStats = /*#__PURE__*/function () {
   var _ref = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee5(discordClient, message, io, queue) {
-    var activity, userId, discordChannel, userCurrentCharacter, userWallet, embedMessage, collector;
+    var activity, userId, discordChannel, userCurrentCharacter, userWallet, totalStatsCost, embedMessage, collector;
     return _regenerator["default"].wrap(function _callee5$(_context5) {
       while (1) {
         switch (_context5.prev = _context5.next) {
@@ -62,23 +62,24 @@ var discordHeal = /*#__PURE__*/function () {
 
           case 12:
             userWallet = _context5.sent;
+            totalStatsCost = (userCurrentCharacter.stats.strength + userCurrentCharacter.stats.dexterity + userCurrentCharacter.stats.vitality + userCurrentCharacter.stats.energy) * 0.1;
             _context5.t0 = discordChannel;
-            _context5.next = 16;
-            return (0, _messages.confirmationHealMessage)(userCurrentCharacter.user.user_id, userWallet.available);
+            _context5.next = 17;
+            return (0, _messages.resetStatsConfirmationMessage)(userCurrentCharacter.user.user_id, userWallet.available, totalStatsCost);
 
-          case 16:
+          case 17:
             _context5.t1 = _context5.sent;
             _context5.t2 = [_context5.t1];
             _context5.t3 = _discord.MessageActionRow;
-            _context5.next = 21;
+            _context5.next = 22;
             return (0, _buttons.generateAcceptButton)();
 
-          case 21:
+          case 22:
             _context5.t4 = _context5.sent;
-            _context5.next = 24;
+            _context5.next = 25;
             return (0, _buttons.generateDeclineButton)();
 
-          case 24:
+          case 25:
             _context5.t5 = _context5.sent;
             _context5.t6 = [_context5.t4, _context5.t5];
             _context5.t7 = {
@@ -90,10 +91,10 @@ var discordHeal = /*#__PURE__*/function () {
               embeds: _context5.t2,
               components: _context5.t9
             };
-            _context5.next = 32;
+            _context5.next = 33;
             return _context5.t0.send.call(_context5.t0, _context5.t10);
 
-          case 32:
+          case 33:
             embedMessage = _context5.sent;
             collector = embedMessage.createMessageComponentCollector({// filter: ({ user: discordUser }) => discordUser.id === userCurrentCharacter.user.user_id,
             });
@@ -134,7 +135,7 @@ var discordHeal = /*#__PURE__*/function () {
 
                         _context4.t0 = interaction;
                         _context4.next = 11;
-                        return (0, _messages.declineHealMessage)(userCurrentCharacter.user.user_id);
+                        return (0, _messages.resetStatsDeclinedMessage)(userCurrentCharacter.user.user_id, 'Reset Stats');
 
                       case 11:
                         _context4.t1 = _context4.sent;
@@ -167,7 +168,7 @@ var discordHeal = /*#__PURE__*/function () {
                                     isolationLevel: _sequelize.Transaction.ISOLATION_LEVELS.SERIALIZABLE
                                   }, /*#__PURE__*/function () {
                                     var _ref4 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(t) {
-                                      var findWallet, userToUpdate;
+                                      var findWallet, userCharacterToReset, totalStatsCostUser;
                                       return _regenerator["default"].wrap(function _callee$(_context) {
                                         while (1) {
                                           switch (_context.prev = _context.next) {
@@ -183,17 +184,25 @@ var discordHeal = /*#__PURE__*/function () {
 
                                             case 2:
                                               findWallet = _context.sent;
+                                              _context.next = 5;
+                                              return (0, _character.fetchUserCurrentCharacter)(userCurrentCharacter.user.user_id, // user discord id
+                                              false // Need inventory?
+                                              );
 
-                                              if (!(findWallet.available < 10000000)) {
-                                                _context.next = 14;
+                                            case 5:
+                                              userCharacterToReset = _context.sent;
+                                              totalStatsCostUser = (userCharacterToReset.stats.strength + userCharacterToReset.stats.dexterity + userCharacterToReset.stats.vitality + userCharacterToReset.stats.energy) * 0.1 * 1e8;
+
+                                              if (!(findWallet.available < totalStatsCostUser)) {
+                                                _context.next = 18;
                                                 break;
                                               }
 
                                               _context.t0 = interaction;
-                                              _context.next = 7;
-                                              return (0, _messages.insufficientBalanceMessage)(userCurrentCharacter.user.user_id, 'Heal');
+                                              _context.next = 11;
+                                              return (0, _messages.insufficientBalanceMessage)(userCharacterToReset.user.user_id, 'Reset Stats');
 
-                                            case 7:
+                                            case 11:
                                               _context.t1 = _context.sent;
                                               _context.t2 = [_context.t1];
                                               _context.t3 = [];
@@ -201,72 +210,45 @@ var discordHeal = /*#__PURE__*/function () {
                                                 embeds: _context.t2,
                                                 components: _context.t3
                                               };
-                                              _context.next = 13;
+                                              _context.next = 17;
                                               return _context.t0.editReply.call(_context.t0, _context.t4);
 
-                                            case 13:
+                                            case 17:
                                               return _context.abrupt("return");
 
-                                            case 14:
-                                              _context.next = 16;
-                                              return findWallet.update({
-                                                available: findWallet.available - 10000000
-                                              }, {
-                                                lock: t.LOCK.UPDATE,
-                                                transaction: t
-                                              });
-
-                                            case 16:
-                                              _context.next = 18;
-                                              return _models["default"].UserClass.findOne({
-                                                where: {
-                                                  userId: userCurrentCharacter.user.id,
-                                                  classId: userCurrentCharacter.user.currentClassId
-                                                },
-                                                include: [{
-                                                  model: _models["default"].condition,
-                                                  as: 'condition'
-                                                }, {
-                                                  model: _models["default"]["class"],
-                                                  as: 'class'
-                                                }, {
-                                                  model: _models["default"].stats,
-                                                  as: 'stats'
-                                                }],
-                                                lock: t.LOCK.UPDATE,
-                                                transaction: t
-                                              });
-
                                             case 18:
-                                              userToUpdate = _context.sent;
-                                              _context.next = 21;
-                                              return userToUpdate.condition.update({
-                                                life: userToUpdate["class"].life + userToUpdate.stats.life,
-                                                mana: userToUpdate["class"].mana + userToUpdate.stats.mana
+                                              _context.next = 20;
+                                              return userCharacterToReset.stats.update({
+                                                strength: 0,
+                                                dexterity: 0,
+                                                vitality: 0,
+                                                energy: 0,
+                                                life: 0,
+                                                mana: 0,
+                                                stamina: 0
                                               }, {
                                                 lock: t.LOCK.UPDATE,
                                                 transaction: t
                                               });
 
-                                            case 21:
-                                              _context.t5 = interaction;
-                                              _context.t6 = "<@".concat(userCurrentCharacter.user.user_id, ">");
-                                              _context.next = 25;
-                                              return (0, _messages.healCompleteMessage)(userCurrentCharacter.user.user_id);
+                                            case 20:
+                                              _context.next = 22;
+                                              return findWallet.update({
+                                                available: findWallet.available - totalStatsCostUser
+                                              }, {
+                                                lock: t.LOCK.UPDATE,
+                                                transaction: t
+                                              });
 
-                                            case 25:
-                                              _context.t7 = _context.sent;
-                                              _context.t8 = [_context.t7];
-                                              _context.t9 = [];
-                                              _context.t10 = {
-                                                content: _context.t6,
-                                                embeds: _context.t8,
-                                                components: _context.t9
-                                              };
-                                              _context.next = 31;
-                                              return _context.t5.editReply.call(_context.t5, _context.t10);
+                                            case 22:
+                                              _context.next = 24;
+                                              return interaction.editReply({
+                                                content: "<@".concat(userCurrentCharacter.user.user_id, ">"),
+                                                embeds: [(0, _messages.resetStatsCompletemessage)(userCurrentCharacter.user.user_id)],
+                                                components: []
+                                              });
 
-                                            case 31:
+                                            case 24:
                                             case "end":
                                               return _context.stop();
                                           }
@@ -287,7 +269,7 @@ var discordHeal = /*#__PURE__*/function () {
                                               _context2.prev = 1;
                                               _context2.next = 4;
                                               return _models["default"].error.create({
-                                                type: 'Heal',
+                                                type: 'ClassSelection',
                                                 error: "".concat(err)
                                               });
 
@@ -341,7 +323,7 @@ var discordHeal = /*#__PURE__*/function () {
               };
             }());
 
-          case 35:
+          case 36:
           case "end":
             return _context5.stop();
         }
@@ -349,9 +331,9 @@ var discordHeal = /*#__PURE__*/function () {
     }, _callee5);
   }));
 
-  return function discordHeal(_x, _x2, _x3, _x4) {
+  return function discordResetStats(_x, _x2, _x3, _x4) {
     return _ref.apply(this, arguments);
   };
 }();
 
-exports.discordHeal = discordHeal;
+exports.discordResetStats = discordResetStats;
