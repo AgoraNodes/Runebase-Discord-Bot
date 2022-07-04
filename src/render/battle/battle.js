@@ -171,7 +171,7 @@ export const renderBattleGif = async (
   );
 
   imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-  palette = quantize(imageData.data, 256);
+  palette = quantize(imageData.data, 256, { format: 'rgb333' });
   imageIndex = applyPalette(imageData.data, palette);
   gif.writeFrame(
     imageIndex,
@@ -242,7 +242,7 @@ export const renderBattleGif = async (
   );
 
   imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-  palette = quantize(imageData.data, 256);
+  palette = quantize(imageData.data, 256, { format: 'rgb333' });
   imageIndex = applyPalette(imageData.data, palette);
   gif.writeFrame(
     imageIndex,
@@ -306,7 +306,7 @@ export const renderBattleGif = async (
   );
 
   imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-  palette = quantize(imageData.data, 256);
+  palette = quantize(imageData.data, 256, { format: 'rgb333' });
   imageIndex = applyPalette(imageData.data, palette);
   gif.writeFrame(
     imageIndex,
@@ -368,7 +368,7 @@ export const renderBattleGif = async (
   );
 
   imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-  palette = quantize(imageData.data, 256);
+  palette = quantize(imageData.data, 256, { format: 'rgb333' });
   imageIndex = applyPalette(imageData.data, palette);
   gif.writeFrame(
     imageIndex,
@@ -423,7 +423,7 @@ export const renderBattleGif = async (
     );
 
     imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-    palette = quantize(imageData.data, 256);
+    palette = quantize(imageData.data, 256, { format: 'rgb333' });
     imageIndex = applyPalette(imageData.data, palette);
     gif.writeFrame(
       imageIndex,
@@ -487,7 +487,7 @@ export const renderBattleGif = async (
     );
 
     imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-    palette = quantize(imageData.data, 256);
+    palette = quantize(imageData.data, 256, { format: 'rgb333' });
     imageIndex = applyPalette(imageData.data, palette);
     gif.writeFrame(
       imageIndex,
@@ -547,7 +547,7 @@ export const renderBattleGif = async (
     );
 
     imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-    palette = quantize(imageData.data, 256);
+    palette = quantize(imageData.data, 256, { format: 'rgb333' });
     imageIndex = applyPalette(imageData.data, palette);
     gif.writeFrame(
       imageIndex,
@@ -606,7 +606,7 @@ export const renderBattleGif = async (
     );
 
     imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-    palette = quantize(imageData.data, 256);
+    palette = quantize(imageData.data, 256, { format: 'rgb333' });
     imageIndex = applyPalette(imageData.data, palette);
     gif.writeFrame(
       imageIndex,
@@ -657,7 +657,7 @@ export const renderBattleGif = async (
     );
 
     imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-    palette = quantize(imageData.data, 256);
+    palette = quantize(imageData.data, 256, { format: 'rgb333' });
     imageIndex = applyPalette(imageData.data, palette);
     gif.writeFrame(
       imageIndex,
@@ -672,7 +672,7 @@ export const renderBattleGif = async (
   }
 
   gif.finish();
-  const bytes = gif.bytes();
+  const bytes = gif.bytesView();
   const finalImage = Buffer.from(bytes);
   return finalImage;
 };
