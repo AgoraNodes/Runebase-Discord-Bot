@@ -192,7 +192,11 @@ export const discordBattle = async (
     default: mySkill.id === userCurrentSelectedSkills.selectedSecondarySkillId,
   }));
 
-  if (!currentSelectedMonster || (currentSelectedMonster && currentSelectedMonster.currentHp < 1)) {
+  if (
+    !currentSelectedMonster
+    || (currentSelectedMonster && currentSelectedMonster.currentHp < 1)
+    || battle.id !== currentSelectedMonster.battleId
+  ) {
     currentSelectedMonster = battle.BattleMonsters.find((element) => element.currentHp > 0);
   }
 
@@ -357,6 +361,13 @@ ${newLootC.length > 0 ? `__found ${newLootC.length} ${newLootC.length === 1 ? `i
     if (interaction.user.id !== userCurrentCharacter.user.user_id) {
       await interaction.reply({
         content: `<@${interaction.user.id}>, These buttons aren't for you!`,
+        ephemeral: true,
+      });
+      return;
+    }
+    if (battle.userClassId !== userCurrentCharacter.id) {
+      await interaction.reply({
+        content: `<@${interaction.user.id}>, This battle belongs to a different character!`,
         ephemeral: true,
       });
       return;

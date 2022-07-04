@@ -268,7 +268,7 @@ var discordBattle = /*#__PURE__*/function () {
               };
             });
 
-            if (!currentSelectedMonster || currentSelectedMonster && currentSelectedMonster.currentHp < 1) {
+            if (!currentSelectedMonster || currentSelectedMonster && currentSelectedMonster.currentHp < 1 || battle.id !== currentSelectedMonster.battleId) {
               currentSelectedMonster = battle.BattleMonsters.find(function (element) {
                 return element.currentHp > 0;
               });
@@ -727,40 +727,55 @@ var discordBattle = /*#__PURE__*/function () {
                         return _context11.abrupt("return");
 
                       case 10:
+                        if (!(battle.userClassId !== userCurrentCharacter.id)) {
+                          _context11.next = 14;
+                          break;
+                        }
+
+                        _context11.next = 13;
+                        return interaction.reply({
+                          content: "<@".concat(interaction.user.id, ">, This battle belongs to a different character!"),
+                          ephemeral: true
+                        });
+
+                      case 13:
+                        return _context11.abrupt("return");
+
+                      case 14:
                         if (!(interaction.isButton() && !interaction.customId.startsWith('lootItem:'))) {
-                          _context11.next = 15;
+                          _context11.next = 19;
                           break;
                         }
 
                         if (currentSelectedMonster) {
-                          _context11.next = 15;
+                          _context11.next = 19;
                           break;
                         }
 
-                        _context11.next = 14;
+                        _context11.next = 18;
                         return interaction.reply({
                           content: "<@".concat(interaction.user.id, ">, You need to select a monster to attack!"),
                           ephemeral: true
                         });
 
-                      case 14:
+                      case 18:
                         return _context11.abrupt("return");
 
-                      case 15:
+                      case 19:
                         if (!interaction.isSelectMenu()) {
-                          _context11.next = 20;
+                          _context11.next = 24;
                           break;
                         }
 
                         if (!(interaction.customId === 'select-mob')) {
-                          _context11.next = 20;
+                          _context11.next = 24;
                           break;
                         }
 
-                        _context11.next = 19;
+                        _context11.next = 23;
                         return interaction.deferUpdate();
 
-                      case 19:
+                      case 23:
                         if (interaction.values[0].startsWith('selectMonster:')) {
                           newSelectedId = Number(interaction.values[0].replace('selectMonster:', ''));
                           selectMonsterMap = battle.BattleMonsters.reduce(function (filtered, battleMonster, index) {
@@ -781,8 +796,8 @@ var discordBattle = /*#__PURE__*/function () {
                           });
                         }
 
-                      case 20:
-                        _context11.next = 22;
+                      case 24:
+                        _context11.next = 26;
                         return queue.add( /*#__PURE__*/(0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee9() {
                           return _regenerator["default"].wrap(function _callee9$(_context9) {
                             while (1) {
@@ -1419,7 +1434,7 @@ var discordBattle = /*#__PURE__*/function () {
                           };
                         }());
 
-                      case 22:
+                      case 26:
                       case "end":
                         return _context11.stop();
                     }
