@@ -17,7 +17,7 @@ var _canvas = require("canvas");
 
 var _path = _interopRequireDefault(require("path"));
 
-var _gif = _interopRequireDefault(require("gif.node"));
+var _gifenc = require("gifenc");
 
 var _loadPlayer = require("./load/loadPlayer");
 
@@ -58,6 +58,9 @@ var renderInitBattleGif = /*#__PURE__*/function () {
         playerImage,
         hpOrbs,
         mpOrbs,
+        imageData,
+        palette,
+        index,
         _iterator,
         _step,
         _loop,
@@ -68,6 +71,7 @@ var renderInitBattleGif = /*#__PURE__*/function () {
         _iterator2,
         _step2,
         _loop2,
+        bytes,
         finalImage,
         _args = arguments;
 
@@ -148,15 +152,7 @@ var renderInitBattleGif = /*#__PURE__*/function () {
             console.log('initBattle 4');
             canvas = (0, _canvas.createCanvas)(650, 300);
             ctx = canvas.getContext('2d');
-            gif = new _gif["default"]({
-              workers: 50,
-              worker: 50,
-              quality: 30,
-              debug: false,
-              width: canvas.width,
-              height: canvas.height,
-              repeat: -1
-            });
+            gif = (0, _gifenc.GIFEncoder)();
             (0, _drawBackground.drawBackground)(ctx, canvas, backgroundImage);
             playerPosition = (0, _drawPlayer.drawPlayer)(ctx, // Ctx drawing canvas
             playerImage, // image array of player images
@@ -198,20 +194,18 @@ var renderInitBattleGif = /*#__PURE__*/function () {
             (0, _drawBattleScreenTools.drawBattleScreenTools)(ctx, // pass canvas ctx
             mainSkill, secondarySkill, hpOrbs[0], mpOrbs[0]);
             (0, _drawBattleLog.drawBattleLog)(ctx, battle);
-            gif.addFrame(ctx.getImageData(0, 0, canvas.width, canvas.height), {
-              delay: 200
+            imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+            palette = (0, _gifenc.quantize)(imageData.data, 256);
+            index = (0, _gifenc.applyPalette)(imageData.data, palette);
+            gif.writeFrame(index, canvas.width, canvas.height, {
+              palette: palette
             });
-            gif.render();
-            _context.next = 29;
-            return new Promise(function (resolve, reject) {
-              gif.on('finished', resolve);
-            });
-
-          case 29:
-            finalImage = _context.sent;
+            gif.finish();
+            bytes = gif.bytes();
+            finalImage = Buffer.from(bytes);
             return _context.abrupt("return", finalImage);
 
-          case 31:
+          case 33:
           case "end":
             return _context.stop();
         }

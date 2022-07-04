@@ -17,7 +17,7 @@ var _canvas = require("canvas");
 
 var _path = _interopRequireDefault(require("path"));
 
-var _gif = _interopRequireDefault(require("gif.node"));
+var _gifenc = require("gifenc");
 
 var _loadPlayer = require("./load/loadPlayer");
 
@@ -60,6 +60,9 @@ var renderBattleGif = /*#__PURE__*/function () {
         playerImage,
         hpOrbs,
         mpOrbs,
+        imageData,
+        palette,
+        imageIndex,
         _iterator,
         _step,
         _loop,
@@ -99,6 +102,7 @@ var renderBattleGif = /*#__PURE__*/function () {
         _iterator11,
         _step11,
         _loop10,
+        bytes,
         finalImage,
         _args = arguments;
 
@@ -179,15 +183,7 @@ var renderBattleGif = /*#__PURE__*/function () {
           case 16:
             canvas = (0, _canvas.createCanvas)(650, 300);
             ctx = canvas.getContext('2d');
-            gif = new _gif["default"]({
-              workers: 50,
-              worker: 50,
-              quality: 30,
-              debug: false,
-              width: canvas.width,
-              height: canvas.height,
-              repeat: -1
-            });
+            gif = (0, _gifenc.GIFEncoder)();
             console.log('Render Frame #1');
             (0, _drawBackground.drawBackground)(ctx, canvas, backgroundImage);
             playerPosition[0] = (0, _drawPlayer.drawPlayer)(ctx, // Ctx drawing canvas
@@ -230,8 +226,13 @@ var renderBattleGif = /*#__PURE__*/function () {
             (0, _drawBattleScreenTools.drawBattleScreenTools)(ctx, // pass canvas ctx
             mainSkill, secondarySkill, hpOrbs[0], mpOrbs[0]);
             (0, _drawBattleLog.drawBattleLog)(ctx, battle);
-            gif.addFrame(ctx.getImageData(0, 0, canvas.width, canvas.height), {
-              delay: 600
+            imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+            palette = (0, _gifenc.quantize)(imageData.data, 256);
+            imageIndex = (0, _gifenc.applyPalette)(imageData.data, palette);
+            gif.writeFrame(imageIndex, canvas.width, canvas.height, {
+              palette: palette,
+              delay: 600,
+              repeat: -1
             });
             console.log('Render Frame #2');
             (0, _drawBackground.drawBackground)(ctx, canvas, backgroundImage);
@@ -286,8 +287,13 @@ var renderBattleGif = /*#__PURE__*/function () {
             ctx.lineWidth = 1;
             ctx.font = 'bold 13px "HeartWarming"';
             ctx.strokeText(monsterInfo[0].userDamage, findAttackedEnemyByUser.x, findAttackedEnemyByUser.y - 20, 50);
-            gif.addFrame(ctx.getImageData(0, 0, canvas.width, canvas.height), {
-              delay: 200
+            imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+            palette = (0, _gifenc.quantize)(imageData.data, 256);
+            imageIndex = (0, _gifenc.applyPalette)(imageData.data, palette);
+            gif.writeFrame(imageIndex, canvas.width, canvas.height, {
+              palette: palette,
+              delay: 200,
+              repeat: -1
             });
             console.log('Render Frame #3');
             (0, _drawBackground.drawBackground)(ctx, canvas, backgroundImage);
@@ -333,8 +339,13 @@ var renderBattleGif = /*#__PURE__*/function () {
             ctx.lineWidth = 1;
             ctx.font = 'bold 13px "HeartWarming"';
             ctx.strokeText(monsterInfo[0].userDamage, findAttackedEnemyByUser.x, findAttackedEnemyByUser.y - 20, 50);
-            gif.addFrame(ctx.getImageData(0, 0, canvas.width, canvas.height), {
-              delay: 200
+            imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+            palette = (0, _gifenc.quantize)(imageData.data, 256);
+            imageIndex = (0, _gifenc.applyPalette)(imageData.data, palette);
+            gif.writeFrame(imageIndex, canvas.width, canvas.height, {
+              palette: palette,
+              delay: 600,
+              repeat: -1
             });
             console.log('Render Frame #4');
             (0, _drawBackground.drawBackground)(ctx, canvas, backgroundImage);
@@ -380,8 +391,13 @@ var renderBattleGif = /*#__PURE__*/function () {
             ctx.lineWidth = 1;
             ctx.font = 'bold 13px "HeartWarming"';
             ctx.strokeText(monsterInfo[0].userDamage, findAttackedEnemyByUser.x, findAttackedEnemyByUser.y - 20, 50);
-            gif.addFrame(ctx.getImageData(0, 0, canvas.width, canvas.height), {
-              delay: 400
+            imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+            palette = (0, _gifenc.quantize)(imageData.data, 256);
+            imageIndex = (0, _gifenc.applyPalette)(imageData.data, palette);
+            gif.writeFrame(imageIndex, canvas.width, canvas.height, {
+              palette: palette,
+              delay: 400,
+              repeat: -1
             }); // eslint-disable-next-line no-restricted-syntax
 
             _iterator6 = _createForOfIteratorHelper(battleInfoArray.entries());
@@ -430,8 +446,13 @@ var renderBattleGif = /*#__PURE__*/function () {
 
                 (0, _drawBattleScreenTools.drawBattleScreenTools)(ctx, mainSkill, secondarySkill, hpOrbs[index + 1], mpOrbs[1]);
                 (0, _drawBattleLog.drawBattleLog)(ctx, battle);
-                gif.addFrame(ctx.getImageData(0, 0, canvas.width, canvas.height), {
-                  delay: 400
+                imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                palette = (0, _gifenc.quantize)(imageData.data, 256);
+                imageIndex = (0, _gifenc.applyPalette)(imageData.data, palette);
+                gif.writeFrame(imageIndex, canvas.width, canvas.height, {
+                  palette: palette,
+                  delay: 400,
+                  repeat: -1
                 });
                 console.log('Render Frame #6');
                 (0, _drawBackground.drawBackground)(ctx, canvas, backgroundImage);
@@ -480,8 +501,13 @@ var renderBattleGif = /*#__PURE__*/function () {
                 ctx.lineWidth = 1;
                 ctx.font = 'bold 13px "HeartWarming"';
                 ctx.strokeText(battleInfo.damage, playerPosition[0].x, playerPosition[0].y - 20, 50);
-                gif.addFrame(ctx.getImageData(0, 0, canvas.width, canvas.height), {
-                  delay: 200
+                imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                palette = (0, _gifenc.quantize)(imageData.data, 256);
+                imageIndex = (0, _gifenc.applyPalette)(imageData.data, palette);
+                gif.writeFrame(imageIndex, canvas.width, canvas.height, {
+                  palette: palette,
+                  delay: 200,
+                  repeat: -1
                 });
                 console.log('Render Frame #7');
                 (0, _drawBackground.drawBackground)(ctx, canvas, backgroundImage);
@@ -527,8 +553,13 @@ var renderBattleGif = /*#__PURE__*/function () {
                 ctx.lineWidth = 1;
                 ctx.font = 'bold 13px "HeartWarming"';
                 ctx.strokeText(battleInfo.damage, playerPosition[0].x, playerPosition[0].y - 20, 50);
-                gif.addFrame(ctx.getImageData(0, 0, canvas.width, canvas.height), {
-                  delay: 200
+                imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                palette = (0, _gifenc.quantize)(imageData.data, 256);
+                imageIndex = (0, _gifenc.applyPalette)(imageData.data, palette);
+                gif.writeFrame(imageIndex, canvas.width, canvas.height, {
+                  palette: palette,
+                  delay: 200,
+                  repeat: -1
                 });
                 console.log('Render Frame #8');
                 (0, _drawBackground.drawBackground)(ctx, canvas, backgroundImage);
@@ -574,8 +605,13 @@ var renderBattleGif = /*#__PURE__*/function () {
                 ctx.lineWidth = 1;
                 ctx.font = 'bold 13px "HeartWarming"';
                 ctx.strokeText(battleInfo.damage, playerPosition[0].x, playerPosition[0].y - 20, 50);
-                gif.addFrame(ctx.getImageData(0, 0, canvas.width, canvas.height), {
-                  delay: 200
+                imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                palette = (0, _gifenc.quantize)(imageData.data, 256);
+                imageIndex = (0, _gifenc.applyPalette)(imageData.data, palette);
+                gif.writeFrame(imageIndex, canvas.width, canvas.height, {
+                  palette: palette,
+                  delay: 200,
+                  repeat: -1
                 });
                 console.log('Render Frame #9');
                 (0, _drawBackground.drawBackground)(ctx, canvas, backgroundImage);
@@ -618,8 +654,13 @@ var renderBattleGif = /*#__PURE__*/function () {
 
                 (0, _drawBattleScreenTools.drawBattleScreenTools)(ctx, mainSkill, secondarySkill, hpOrbs[index + 1], mpOrbs[1]);
                 (0, _drawBattleLog.drawBattleLog)(ctx, battle);
-                gif.addFrame(ctx.getImageData(0, 0, canvas.width, canvas.height), {
-                  delay: 300
+                imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                palette = (0, _gifenc.quantize)(imageData.data, 256);
+                imageIndex = (0, _gifenc.applyPalette)(imageData.data, palette);
+                gif.writeFrame(imageIndex, canvas.width, canvas.height, {
+                  palette: palette,
+                  delay: 300,
+                  repeat: -1
                 });
               }
             } catch (err) {
@@ -628,18 +669,12 @@ var renderBattleGif = /*#__PURE__*/function () {
               _iterator6.f();
             }
 
-            gif.render();
-            _context.next = 70;
-            return new Promise(function (resolve, reject) {
-              console.log('Resolving Gif render');
-              gif.on('finished', resolve);
-            });
-
-          case 70:
-            finalImage = _context.sent;
+            gif.finish();
+            bytes = gif.bytes();
+            finalImage = Buffer.from(bytes);
             return _context.abrupt("return", finalImage);
 
-          case 72:
+          case 83:
           case "end":
             return _context.stop();
         }

@@ -5,7 +5,11 @@ import {
   registerFont,
 } from 'canvas';
 import path from 'path';
-import GIF from 'gif.node';
+import {
+  GIFEncoder,
+  quantize,
+  applyPalette,
+} from 'gifenc';
 
 import { loadPlayer } from './load/loadPlayer';
 import { loadEnemy } from './load/loadEnemy';
@@ -38,6 +42,9 @@ export const renderInitBattleGif = async (
   let playerImage;
   let hpOrbs;
   let mpOrbs;
+  let imageData;
+  let palette;
+  let index;
 
   loadPromises.push(
     new Promise((resolve, reject) => {
@@ -121,16 +128,7 @@ export const renderInitBattleGif = async (
 
   const canvas = createCanvas(650, 300);
   const ctx = canvas.getContext('2d');
-
-  const gif = new GIF({
-    workers: 50,
-    worker: 50,
-    quality: 30,
-    debug: false,
-    width: canvas.width,
-    height: canvas.height,
-    repeat: -1,
-  });
+  const gif = GIFEncoder();
 
   drawBackground(
     ctx,
@@ -173,14 +171,18 @@ export const renderInitBattleGif = async (
     battle,
   );
 
-  gif.addFrame(ctx.getImageData(0, 0, canvas.width, canvas.height), {
-    delay: 200,
-  });
+  imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+  palette = quantize(imageData.data, 256);
+  index = applyPalette(imageData.data, palette);
+  gif.writeFrame(
+    index,
+    canvas.width,
+    canvas.height,
+    { palette },
+  );
 
-  gif.render();
-
-  const finalImage = await new Promise((resolve, reject) => {
-    gif.on('finished', resolve);
-  });
+  gif.finish();
+  const bytes = gif.bytes();
+  const finalImage = Buffer.from(bytes);
   return finalImage;
 };

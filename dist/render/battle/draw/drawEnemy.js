@@ -37,11 +37,7 @@ var drawEnemy = function drawEnemy(ctx, monster, isSelected, enemyFrame) {
   var y = 0; // XP Bar
 
   ctx.lineJoin = 'round';
-  var currentMonsterHp = updatedMonsterState ? updatedMonsterState.currentMonsterHp : monster.currentHp; // console.log('sdqdfqsdqsd');
-  // console.log(monster.currentHp);
-  // console.log(updatedMonsterState);
-  // console.log(currentMonsterHp);
-
+  var currentMonsterHp = updatedMonsterState ? updatedMonsterState.currentMonsterHp : monster.currentHp;
   var hpPercentage = currentMonsterHp / monster.maxHp;
 
   if (hpPercentage < 0) {

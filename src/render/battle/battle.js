@@ -5,7 +5,11 @@ import {
   registerFont,
 } from 'canvas';
 import path from 'path';
-import GIF from 'gif.node';
+import {
+  GIFEncoder,
+  quantize,
+  applyPalette,
+} from 'gifenc';
 
 import { loadPlayer } from './load/loadPlayer';
 import { loadEnemy } from './load/loadEnemy';
@@ -40,6 +44,9 @@ export const renderBattleGif = async (
   let playerImage;
   let hpOrbs;
   let mpOrbs;
+  let imageData;
+  let palette;
+  let imageIndex;
 
   loadPromises.push(
     new Promise((resolve, reject) => {
@@ -121,16 +128,7 @@ export const renderBattleGif = async (
 
   const canvas = createCanvas(650, 300);
   const ctx = canvas.getContext('2d');
-
-  const gif = new GIF({
-    workers: 50,
-    worker: 50,
-    quality: 30,
-    debug: false,
-    width: canvas.width,
-    height: canvas.height,
-    repeat: -1,
-  });
+  const gif = GIFEncoder();
 
   console.log('Render Frame #1');
   drawBackground(
@@ -171,10 +169,20 @@ export const renderBattleGif = async (
     ctx,
     battle,
   );
-  gif.addFrame(ctx.getImageData(0, 0, canvas.width, canvas.height), {
 
-    delay: 600,
-  });
+  imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+  palette = quantize(imageData.data, 256);
+  imageIndex = applyPalette(imageData.data, palette);
+  gif.writeFrame(
+    imageIndex,
+    canvas.width,
+    canvas.height,
+    {
+      palette,
+      delay: 600,
+      repeat: -1,
+    },
+  );
 
   console.log('Render Frame #2');
   drawBackground(
@@ -232,10 +240,20 @@ export const renderBattleGif = async (
     findAttackedEnemyByUser.y - 20,
     50,
   );
-  gif.addFrame(ctx.getImageData(0, 0, canvas.width, canvas.height), {
 
-    delay: 200,
-  });
+  imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+  palette = quantize(imageData.data, 256);
+  imageIndex = applyPalette(imageData.data, palette);
+  gif.writeFrame(
+    imageIndex,
+    canvas.width,
+    canvas.height,
+    {
+      palette,
+      delay: 200,
+      repeat: -1,
+    },
+  );
 
   console.log('Render Frame #3');
   drawBackground(
@@ -286,10 +304,20 @@ export const renderBattleGif = async (
     findAttackedEnemyByUser.y - 20,
     50,
   );
-  gif.addFrame(ctx.getImageData(0, 0, canvas.width, canvas.height), {
 
-    delay: 200,
-  });
+  imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+  palette = quantize(imageData.data, 256);
+  imageIndex = applyPalette(imageData.data, palette);
+  gif.writeFrame(
+    imageIndex,
+    canvas.width,
+    canvas.height,
+    {
+      palette,
+      delay: 600,
+      repeat: -1,
+    },
+  );
 
   console.log('Render Frame #4');
   drawBackground(
@@ -338,10 +366,20 @@ export const renderBattleGif = async (
     findAttackedEnemyByUser.y - 20,
     50,
   );
-  gif.addFrame(ctx.getImageData(0, 0, canvas.width, canvas.height), {
 
-    delay: 400,
-  });
+  imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+  palette = quantize(imageData.data, 256);
+  imageIndex = applyPalette(imageData.data, palette);
+  gif.writeFrame(
+    imageIndex,
+    canvas.width,
+    canvas.height,
+    {
+      palette,
+      delay: 400,
+      repeat: -1,
+    },
+  );
 
   // eslint-disable-next-line no-restricted-syntax
   for (const [index, battleInfo] of battleInfoArray.entries()) {
@@ -383,10 +421,21 @@ export const renderBattleGif = async (
       ctx,
       battle,
     );
-    gif.addFrame(ctx.getImageData(0, 0, canvas.width, canvas.height), {
 
-      delay: 400,
-    });
+    imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    palette = quantize(imageData.data, 256);
+    imageIndex = applyPalette(imageData.data, palette);
+    gif.writeFrame(
+      imageIndex,
+      canvas.width,
+      canvas.height,
+      {
+        palette,
+        delay: 400,
+        repeat: -1,
+      },
+    );
+
     console.log('Render Frame #6');
     drawBackground(
       ctx,
@@ -436,10 +485,20 @@ export const renderBattleGif = async (
       playerPosition[0].y - 20,
       50,
     );
-    gif.addFrame(ctx.getImageData(0, 0, canvas.width, canvas.height), {
 
-      delay: 200,
-    });
+    imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    palette = quantize(imageData.data, 256);
+    imageIndex = applyPalette(imageData.data, palette);
+    gif.writeFrame(
+      imageIndex,
+      canvas.width,
+      canvas.height,
+      {
+        palette,
+        delay: 200,
+        repeat: -1,
+      },
+    );
 
     console.log('Render Frame #7');
     drawBackground(
@@ -486,10 +545,20 @@ export const renderBattleGif = async (
       playerPosition[0].y - 20,
       50,
     );
-    gif.addFrame(ctx.getImageData(0, 0, canvas.width, canvas.height), {
 
-      delay: 200,
-    });
+    imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    palette = quantize(imageData.data, 256);
+    imageIndex = applyPalette(imageData.data, palette);
+    gif.writeFrame(
+      imageIndex,
+      canvas.width,
+      canvas.height,
+      {
+        palette,
+        delay: 200,
+        repeat: -1,
+      },
+    );
     console.log('Render Frame #8');
     drawBackground(
       ctx,
@@ -535,10 +604,20 @@ export const renderBattleGif = async (
       playerPosition[0].y - 20,
       50,
     );
-    gif.addFrame(ctx.getImageData(0, 0, canvas.width, canvas.height), {
 
-      delay: 200,
-    });
+    imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    palette = quantize(imageData.data, 256);
+    imageIndex = applyPalette(imageData.data, palette);
+    gif.writeFrame(
+      imageIndex,
+      canvas.width,
+      canvas.height,
+      {
+        palette,
+        delay: 200,
+        repeat: -1,
+      },
+    );
     console.log('Render Frame #9');
     drawBackground(
       ctx,
@@ -576,16 +655,24 @@ export const renderBattleGif = async (
       ctx,
       battle,
     );
-    gif.addFrame(ctx.getImageData(0, 0, canvas.width, canvas.height), {
 
-      delay: 300,
-    });
+    imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    palette = quantize(imageData.data, 256);
+    imageIndex = applyPalette(imageData.data, palette);
+    gif.writeFrame(
+      imageIndex,
+      canvas.width,
+      canvas.height,
+      {
+        palette,
+        delay: 300,
+        repeat: -1,
+      },
+    );
   }
 
-  gif.render();
-  const finalImage = await new Promise((resolve, reject) => {
-    console.log('Resolving Gif render');
-    gif.on('finished', resolve);
-  });
+  gif.finish();
+  const bytes = gif.bytes();
+  const finalImage = Buffer.from(bytes);
   return finalImage;
 };
