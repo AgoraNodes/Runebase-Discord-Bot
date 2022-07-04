@@ -11,6 +11,8 @@ const commands = [
   new SlashCommandBuilder().setName('pickclass').setDescription('Select a new class'),
   new SlashCommandBuilder().setName('stats').setDescription('Select stats (attributes) for your class'),
   new SlashCommandBuilder().setName('skills').setDescription('Skill Management'),
+  new SlashCommandBuilder().setName('resetstats').setDescription('Reset your Attributes/Stats'),
+  new SlashCommandBuilder().setName('resetskills').setDescription('Reset your skills'),
   new SlashCommandBuilder().setName('inventory').setDescription('Inventory Management'),
   new SlashCommandBuilder().setName('equipment').setDescription('Equipment Management'),
   new SlashCommandBuilder().setName('battle').setDescription('Battle a monster'),

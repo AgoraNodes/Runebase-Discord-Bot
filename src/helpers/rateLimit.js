@@ -89,6 +89,16 @@ const rateLimiterGenerateStartDagger = new RateLimiterFlexible.default.RateLimit
   duration: 30,
 });
 
+const rateLimiterResetSkills = new RateLimiterFlexible.default.RateLimiterMemory({
+  points: 2,
+  duration: 30,
+});
+
+const rateLimiterResetStats = new RateLimiterFlexible.default.RateLimiterMemory({
+  points: 2,
+  duration: 30,
+});
+
 export const myRateLimiter = async (
   client,
   message,
@@ -176,6 +186,14 @@ export const myRateLimiter = async (
       }
       if (title.toLowerCase() === 'generatestartdagger') {
         await rateLimiterGenerateStartDagger.consume(userId, 1);
+        return false;
+      }
+      if (title.toLowerCase() === 'resetskills') {
+        await rateLimiterResetSkills.consume(userId, 1);
+        return false;
+      }
+      if (title.toLowerCase() === 'resetstats') {
+        await rateLimiterResetStats.consume(userId, 1);
         return false;
       }
 

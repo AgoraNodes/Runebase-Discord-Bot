@@ -26,6 +26,15 @@ import { equipItem } from '../helpers/equipment/equipItem';
 import { fetchUserCurrentCharacter } from "../helpers/character/character";
 import { fetchDiscordUserIdFromMessageOrInteraction } from '../helpers/client/fetchDiscordUserIdFromMessageOrInteraction';
 import { fetchDiscordChannel } from '../helpers/client/fetchDiscordChannel';
+import {
+  generateBackButton,
+  generateForwardButton,
+  generateExitInventoryButton,
+  generateDestroyItemButton,
+  generateDestroyNoButton,
+  generateEquipItemButton,
+  generateDestroyYesButton,
+} from '../buttons';
 
 export const discordShowInventory = async (
   discordClient,
@@ -55,36 +64,11 @@ export const discordShowInventory = async (
     return;
   }
 
-  const exitInventoryId = 'exitInventory';
-  const backId = 'back';
-  const forwardId = 'forward';
-
-  const backButton = new MessageButton({
-    style: 'SECONDARY',
-    label: 'Back',
-    emoji: '⬅️',
-    customId: backId,
-  });
-
-  const forwardButton = new MessageButton({
-    style: 'SECONDARY',
-    label: 'Next',
-    emoji: '➡️',
-    customId: forwardId,
-  });
-
-  const generateExitInventoryButton = async () => new MessageButton({
-    style: 'SECONDARY',
-    label: `Exit Inventory`,
-    emoji: '❌',
-    customId: exitInventoryId,
-  });
-
   await registerFont(path.join(__dirname, '../assets/fonts/', 'Heart_warming.otf'), { family: 'HeartWarming' });
 
   const generateConfirmDestroyItemImage = async (
-    currentUserCharacter,
     start,
+    currentUserCharacter,
   ) => {
     const current = currentUserCharacter.inventory.items.slice(start, start + 1);
 
@@ -311,51 +295,6 @@ export const discordShowInventory = async (
     }).setDisabled(true);
   };
 
-  const generateEquipItemButton = async (start) => {
-    const current = userCurrentCharacter.inventory.items.slice(start, start + 1);
-    const equipItemId = `Equip:${current[0].id}`;
-    return new MessageButton({
-      style: 'SECONDARY',
-      label: `Equip ${current[0].name}`,
-      emoji: '⛏️',
-      customId: equipItemId,
-    });
-  };
-
-  const generateDestroyYesButton = async (start) => {
-    const current = userCurrentCharacter.inventory.items.slice(start, start + 1);
-    const destroyYesButtonId = `ConfirmDestroy:${current[0].id}`;
-    return new MessageButton({
-      style: 'SECONDARY',
-      label: `Yes, destroy ${current[0].name}`,
-      emoji: '🚮',
-      customId: destroyYesButtonId,
-    });
-  };
-
-  const generateDestroyNoButton = async (start) => {
-    const destroyNoButtonId = `cancelDestroy`;
-    return new MessageButton({
-      style: 'SECONDARY',
-      label: `No, go back`,
-      emoji: '⬅️',
-      customId: destroyNoButtonId,
-    });
-  };
-
-  const generateDestroyItemButton = async (start) => {
-    const current = userCurrentCharacter.inventory.items.slice(start, start + 1);
-    const destroyItemId = `Destroy:${current[0].id}`;
-    return new MessageButton({
-      style: 'SECONDARY',
-      label: `Destroy ${current[0].name}`,
-      emoji: '❌',
-      customId: destroyItemId,
-    });
-  };
-
-  // console.log(userCurrentCharacter.inventory.items.length);
-
   const row = new MessageActionRow();
 
   if (
@@ -399,8 +338,14 @@ export const discordShowInventory = async (
             }),
             new MessageActionRow({
               components: [
-                await generateEquipItemButton(0),
-                await generateDestroyItemButton(0),
+                await generateEquipItemButton(
+                  0,
+                  userCurrentCharacter,
+                ),
+                await generateDestroyItemButton(
+                  0,
+                  userCurrentCharacter,
+                ),
               ],
             }),
           ] : []
@@ -409,7 +354,7 @@ export const discordShowInventory = async (
         !canFitOnOnePage ? [
           new MessageActionRow({
             components: [
-              forwardButton,
+              generateForwardButton(),
             ],
           }),
         ] : []
@@ -487,8 +432,8 @@ export const discordShowInventory = async (
           ...(
             userCurrentCharacter.inventory.items.length > 0 ? [
               await generateConfirmDestroyItemImage(
-                userCurrentCharacter,
                 currentIndex,
+                userCurrentCharacter,
               ),
             ] : [
               await generateEmptyInventoryImage(),
@@ -498,7 +443,10 @@ export const discordShowInventory = async (
         components: [
           new MessageActionRow({
             components: [
-              await generateDestroyYesButton(currentIndex),
+              await generateDestroyYesButton(
+                currentIndex,
+                userCurrentCharacter,
+              ),
             ],
           }),
           new MessageActionRow({
@@ -527,7 +475,7 @@ export const discordShowInventory = async (
       }
     }
     // Cancel class selection
-    if (interaction.customId === exitInventoryId) {
+    if (interaction.customId === 'exitInventory') {
       await interaction.editReply({
         files: [
           await generateExitInventoryImage(),
@@ -537,10 +485,10 @@ export const discordShowInventory = async (
       return;
     }
     if (
-      interaction.customId === backId
-      || interaction.customId === forwardId
+      interaction.customId === 'back'
+      || interaction.customId === 'forward'
     ) {
-      interaction.customId === backId ? (currentIndex -= 1) : (currentIndex += 1);
+      interaction.customId === 'back' ? (currentIndex -= 1) : (currentIndex += 1);
     }
 
     await interaction.editReply({
@@ -576,16 +524,22 @@ export const discordShowInventory = async (
           userCurrentCharacter.inventory.items.length > 0 ? [
             new MessageActionRow({
               components: [
-                await generateEquipItemButton(currentIndex),
-                await generateDestroyItemButton(currentIndex),
+                await generateEquipItemButton(
+                  currentIndex,
+                  userCurrentCharacter,
+                ),
+                await generateDestroyItemButton(
+                  currentIndex,
+                  userCurrentCharacter,
+                ),
               ],
             }),
           ] : []
         ),
         new MessageActionRow({
           components: [
-            ...(currentIndex ? [backButton] : []),
-            ...(currentIndex + 1 < userCurrentCharacter.inventory.items.length ? [forwardButton] : []),
+            ...(currentIndex ? [generateBackButton()] : []),
+            ...(currentIndex + 1 < userCurrentCharacter.inventory.items.length ? [generateForwardButton()] : []),
           ],
         }),
         new MessageActionRow({

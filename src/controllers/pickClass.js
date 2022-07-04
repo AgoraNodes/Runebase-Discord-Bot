@@ -17,6 +17,12 @@ import { fetchDiscordChannel } from '../helpers/client/fetchDiscordChannel';
 import { renderPickClassImage } from '../render/pickClass/pickClass';
 import { renderClassPicked } from '../render/pickClass/classPicked';
 import { renderCancelClassPicked } from '../render/pickClass/cancelClassPick';
+import {
+  generateBackButton,
+  generateForwardButton,
+  generateCancelPickClassButton,
+  generatePickClassButton,
+} from '../buttons';
 
 export const discordPickClass = async (
   discordClient,
@@ -42,7 +48,7 @@ export const discordPickClass = async (
   if (!user) return;
 
   const activity = [];
-  let CurrentClassSelectionId;
+
   const classes = await db.class.findAll({
     include: [
       {
@@ -56,42 +62,6 @@ export const discordPickClass = async (
     discordClient,
     message,
   );
-
-  const backId = 'back';
-  const forwardId = 'forward';
-  const pickClassId = 'pickClass';
-  const cancelPickClassId = 'cancelClass';
-  const backButton = new MessageButton({
-    style: 'SECONDARY',
-    label: 'Back',
-    emoji: '⬅️',
-    customId: backId,
-  });
-  const forwardButton = new MessageButton({
-    style: 'SECONDARY',
-    label: 'Forward',
-    emoji: '➡️',
-    customId: forwardId,
-  });
-
-  const generatePickClassButton = async (start) => {
-    const current = classes.slice(start, start + 1);
-    CurrentClassSelectionId = current[0].id;
-    console.log(current);
-    return new MessageButton({
-      style: 'SECONDARY',
-      label: `Pick ${current[0].name}`,
-      emoji: '⛏️',
-      customId: pickClassId,
-    });
-  };
-
-  const generateCancelPickClassButton = async () => new MessageButton({
-    style: 'SECONDARY',
-    label: `Cancel class selection`,
-    emoji: '❌',
-    customId: cancelPickClassId,
-  });
 
   const canFitOnOnePage = classes.length <= 1;
   const embedMessage = await discordChannel.send({
@@ -107,11 +77,14 @@ export const discordPickClass = async (
       : [
         new MessageActionRow({
           components: [
-            await generatePickClassButton(0),
+            await generatePickClassButton(
+              0,
+              classes,
+            ),
             await generateCancelPickClassButton(),
           ],
         }),
-        new MessageActionRow({ components: [forwardButton] }),
+        new MessageActionRow({ components: [generateForwardButton()] }),
       ],
   });
 
@@ -121,7 +94,8 @@ export const discordPickClass = async (
 
   let currentIndex = 0;
   collector.on('collect', async (interaction) => {
-    if (interaction.customId === pickClassId) {
+    if (interaction.customId.startsWith('pickClass:')) {
+      const CurrentClassSelectionId = Number(interaction.customId.replace("pickClass:", ""));
       await queue.add(async () => {
         await db.sequelize.transaction({
           isolationLevel: Transaction.ISOLATION_LEVELS.SERIALIZABLE,
@@ -392,7 +366,7 @@ export const discordPickClass = async (
       return;
     }
     // Cancel class selection
-    if (interaction.customId === cancelPickClassId) {
+    if (interaction.customId === 'cancelClass') {
       await interaction.update({
         files: [
           await renderCancelClassPicked(
@@ -404,7 +378,7 @@ export const discordPickClass = async (
       return;
     }
     // Increase/decrease index
-    interaction.customId === backId ? (currentIndex -= 1) : (currentIndex += 1);
+    interaction.customId === 'back' ? (currentIndex -= 1) : (currentIndex += 1);
 
     // Load another character
     await interaction.update({
@@ -418,16 +392,19 @@ export const discordPickClass = async (
       components: [
         new MessageActionRow({
           components: [
-            await generatePickClassButton(currentIndex),
+            await generatePickClassButton(
+              currentIndex,
+              classes,
+            ),
             await generateCancelPickClassButton(),
           ],
         }),
         new MessageActionRow({
           components: [
             // back button if it isn't the start
-            ...(currentIndex ? [backButton] : []),
+            ...(currentIndex ? [generateBackButton()] : []),
             // forward button if it isn't the end
-            ...(currentIndex + 1 < classes.length ? [forwardButton] : []),
+            ...(currentIndex + 1 < classes.length ? [generateForwardButton()] : []),
           ],
         }),
       ],

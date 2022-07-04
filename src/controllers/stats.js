@@ -32,6 +32,13 @@ import { fetchUserCurrentCharacter } from "../helpers/character/character";
 import { fetchDiscordUserIdFromMessageOrInteraction } from '../helpers/client/fetchDiscordUserIdFromMessageOrInteraction';
 import { fetchDiscordChannel } from '../helpers/client/fetchDiscordChannel';
 import { calculateCharacterStats } from '../helpers/stats/calculateCharacterStats';
+import {
+  generateAddStrengthButton,
+  generateAddDexterityButton,
+  generateAddVitalityButton,
+  generateAddEnergyButton,
+  generateCancelStatsPickButton,
+} from '../buttons';
 
 export const discordStats = async (
   discordClient,
@@ -65,43 +72,6 @@ export const discordStats = async (
   const {
     unspedAttributes,
   } = await calculateCharacterStats(userCurrentCharacter);
-
-  const strengthButtonId = 'strength';
-  const dexterityButtonId = 'dexterity';
-  const vitalityButtonId = 'vitality';
-  const energyButtonId = 'energy';
-  const cancelStatsPickId = 'cancelStatsPick';
-
-  const strengthButton = new MessageButton({
-    style: 'SECONDARY',
-    label: 'Strength ➕',
-    emoji: '💪',
-    customId: strengthButtonId,
-  });
-  const dexterityButton = new MessageButton({
-    style: 'SECONDARY',
-    label: 'Dexterity ➕',
-    emoji: '🏃‍♂️',
-    customId: dexterityButtonId,
-  });
-  const vitalityButton = new MessageButton({
-    style: 'SECONDARY',
-    label: 'Vitality ➕',
-    emoji: '❤️',
-    customId: vitalityButtonId,
-  });
-  const energyButton = new MessageButton({
-    style: 'SECONDARY',
-    label: 'Energy ➕',
-    emoji: '🧙',
-    customId: energyButtonId,
-  });
-  const cancelStatsPickButton = new MessageButton({
-    style: 'SECONDARY',
-    label: 'Cancel Stats Selection',
-    emoji: '❌',
-    customId: cancelStatsPickId,
-  });
 
   const generateCancelClassPicked = async () => {
     const canvas = createCanvas(500, 100);
@@ -144,19 +114,19 @@ export const discordStats = async (
     components: [
       ...(calc ? [new MessageActionRow({
         components: [
-          strengthButton,
-          dexterityButton,
+          generateAddStrengthButton(),
+          generateAddDexterityButton(),
         ],
       })] : []),
       ...(calc ? [new MessageActionRow({
         components: [
-          vitalityButton,
-          energyButton,
+          generateAddVitalityButton(),
+          generateAddEnergyButton(),
         ],
       })] : []),
       new MessageActionRow({
         components: [
-          cancelStatsPickButton,
+          generateCancelStatsPickButton(),
         ],
       }),
     ],
@@ -183,7 +153,7 @@ export const discordStats = async (
       ],
       components: [],
     });
-    if (interaction.customId === strengthButtonId) {
+    if (interaction.customId === 'strength') {
       [
         updatedUser,
         cannotSpend,
@@ -194,7 +164,7 @@ export const discordStats = async (
         queue,
       );
     }
-    if (interaction.customId === dexterityButtonId) {
+    if (interaction.customId === 'dexterity') {
       [
         updatedUser,
         cannotSpend,
@@ -205,7 +175,7 @@ export const discordStats = async (
         queue,
       );
     }
-    if (interaction.customId === vitalityButtonId) {
+    if (interaction.customId === 'vitality') {
       [
         updatedUser,
         cannotSpend,
@@ -216,7 +186,7 @@ export const discordStats = async (
         queue,
       );
     }
-    if (interaction.customId === energyButtonId) {
+    if (interaction.customId === 'energy') {
       [
         updatedUser,
         cannotSpend,
@@ -228,10 +198,10 @@ export const discordStats = async (
       );
     }
     if (
-      interaction.customId === strengthButtonId
-      || interaction.customId === dexterityButtonId
-      || interaction.customId === vitalityButtonId
-      || interaction.customId === energyButtonId
+      interaction.customId === 'strength'
+      || interaction.customId === 'dexterity'
+      || interaction.customId === 'vitality'
+      || interaction.customId === 'energy'
     ) {
       const newCalc = (
         updatedUser.stats.strength
@@ -254,26 +224,26 @@ export const discordStats = async (
         components: [
           ...(newCalc ? [new MessageActionRow({
             components: [
-              strengthButton,
-              dexterityButton,
+              generateAddStrengthButton(),
+              generateAddDexterityButton(),
             ],
           })] : []),
           ...(newCalc ? [new MessageActionRow({
             components: [
-              vitalityButton,
-              energyButton,
+              generateAddVitalityButton(),
+              generateAddEnergyButton(),
             ],
           })] : []),
           new MessageActionRow({
             components: [
-              cancelStatsPickButton,
+              generateCancelStatsPickButton(),
             ],
           }),
         ],
       });
     }
     // Cancel class selection
-    if (interaction.customId === cancelStatsPickId) {
+    if (interaction.customId === 'cancelStatsPick') {
       await interaction.editReply({
         files: [
           await generateCancelClassPicked(),

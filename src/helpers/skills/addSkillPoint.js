@@ -42,6 +42,9 @@ export const addSkillPoint = async (
         lock: t.LOCK.UPDATE,
         transaction: t,
       });
+      console.log(userCurrentCharacter.id);
+      console.log(sumOfSkills);
+      console.log('sumOfSkills');
 
       if (!findUserRank) {
         failAddSkillReason = 'Unable to add skills, user has no rank!';

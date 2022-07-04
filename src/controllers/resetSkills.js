@@ -1,6 +1,7 @@
 /* eslint-disable import/prefer-default-export */
 import {
   Transaction,
+  Op,
 } from "sequelize";
 import {
   MessageActionRow,
@@ -16,13 +17,13 @@ import {
   generateDeclineButton,
 } from '../buttons';
 import {
-  confirmationHealMessage,
+  skillConfirmationMessage,
   insufficientBalanceMessage,
-  declineHealMessage,
-  healCompleteMessage,
+  declineResetSkillsMessage,
+  resetSkillCompleteMessage,
 } from '../messages';
 
-export const discordHeal = async (
+export const discordResetSkills = async (
   discordClient,
   message,
   io,
@@ -49,11 +50,32 @@ export const discordHeal = async (
     },
   });
 
+  const userSkills = await db.UserClassSkill.findAll({
+    where: {
+      UserClassId: userCurrentCharacter.id,
+    },
+    include: [
+      {
+        model: db.skill,
+        as: 'skill',
+        where: {
+          name: {
+            [Op.not]: 'Attack',
+          },
+        },
+      },
+    ],
+  });
+
+  const sumSkillPoints = userSkills.reduce((accumulator, object) => accumulator + object.points, 0);
+  const totalSkillsCost = sumSkillPoints * 1;
+
   const embedMessage = await discordChannel.send({
     embeds: [
-      await confirmationHealMessage(
-        userCurrentCharacter.user.user_id,
+      await skillConfirmationMessage(
+        userId,
         userWallet.available,
+        totalSkillsCost,
       ),
     ],
     components: [
@@ -84,7 +106,7 @@ export const discordHeal = async (
       if (interaction.customId === 'decline') {
         await interaction.editReply({
           embeds: [
-            await declineHealMessage(
+            await declineResetSkillsMessage(
               userCurrentCharacter.user.user_id,
             ),
           ],
@@ -105,58 +127,61 @@ export const discordHeal = async (
               lock: t.LOCK.UPDATE,
               transaction: t,
             });
-            if (findWallet.available < 10000000) {
-              await interaction.editReply({
-                embeds: [
-                  await insufficientBalanceMessage(
-                    userCurrentCharacter.user.user_id,
-                    'Heal',
-                  ),
-                ],
-                components: [
-                ],
-              });
-              return;
-            }
-            await findWallet.update({
-              available: findWallet.available - 10000000,
-            }, {
-              lock: t.LOCK.UPDATE,
-              transaction: t,
-            });
-            const userToUpdate = await db.UserClass.findOne({
+            const userSkills = await db.UserClassSkill.findAll({
               where: {
-                userId: userCurrentCharacter.user.id,
-                classId: userCurrentCharacter.user.currentClassId,
+                UserClassId: userCurrentCharacter.id,
               },
               include: [
                 {
-                  model: db.condition,
-                  as: 'condition',
-                },
-                {
-                  model: db.class,
-                  as: 'class',
-                },
-                {
-                  model: db.stats,
-                  as: 'stats',
+                  model: db.skill,
+                  as: 'skill',
+                  where: {
+                    name: {
+                      [Op.not]: 'Attack',
+                    },
+                  },
                 },
               ],
               lock: t.LOCK.UPDATE,
               transaction: t,
             });
-            await userToUpdate.condition.update({
-              life: userToUpdate.class.life + userToUpdate.stats.life,
-              mana: userToUpdate.class.mana + userToUpdate.stats.mana,
-            }, {
-              lock: t.LOCK.UPDATE,
-              transaction: t,
-            });
+            console.log(userSkills);
+            const sumResetSkillPoints = userSkills.reduce((accumulator, object) => accumulator + object.points, 0);
+            const resetCost = (sumResetSkillPoints * 1) * 1e8;
+            if (userSkills.length > 0) {
+              if (findWallet.available < resetCost) {
+                await interaction.editReply({
+                  embeds: [
+                    await insufficientBalanceMessage(
+                      userCurrentCharacter.user.user_id,
+                      'Reset Skills',
+                    ),
+                  ],
+                  components: [
+                  ],
+                });
+                return;
+              }
+              await findWallet.update({
+                available: findWallet.available - resetCost,
+              }, {
+                lock: t.LOCK.UPDATE,
+                transaction: t,
+              });
+              // eslint-disable-next-line no-restricted-syntax
+              for (const userSkill of userSkills) {
+                // eslint-disable-next-line no-await-in-loop
+                await userSkill.destroy({
+                  lock: t.LOCK.UPDATE,
+                  transaction: t,
+                });
+              }
+            }
+
             await interaction.editReply({
               content: `<@${userCurrentCharacter.user.user_id}>`,
               embeds: [
-                await healCompleteMessage(
+                await resetSkillCompleteMessage(
                   userCurrentCharacter.user.user_id,
                 ),
               ],
@@ -167,7 +192,7 @@ export const discordHeal = async (
             console.log(err);
             try {
               await db.error.create({
-                type: 'Heal',
+                type: 'ClassSelection',
                 error: `${err}`,
               });
             } catch (e) {

@@ -27,6 +27,8 @@ import { discordBattle } from '../controllers/battle';
 import { discordHeal } from '../controllers/heal';
 import { discordGrantExp } from '../controllers/grantExp';
 import { discordStartDagger } from '../controllers/generateStartDagger';
+import { discordResetStats } from '../controllers/resetStats';
+import { discordResetSkills } from '../controllers/resetSkills';
 
 import { discordExpTest } from '../controllers/expTest';
 import { myRateLimiter } from '../helpers/rateLimit';
@@ -226,6 +228,61 @@ export const discordRouter = async (
             console.log(e);
           });
         }
+
+        if (commandName === 'resetstats') {
+          await interaction.deferReply().catch((e) => {
+            console.log(e);
+          });
+          const limited = await myRateLimiter(
+            discordClient,
+            interaction,
+            'ResetStats',
+          );
+          if (limited) {
+            await interaction.editReply('rate limited').catch((e) => {
+              console.log(e);
+            });
+            return;
+          }
+
+          await discordResetStats(
+            discordClient,
+            interaction,
+            io,
+            queue,
+          );
+          await interaction.editReply('\u200b').catch((e) => {
+            console.log(e);
+          });
+        }
+
+        if (commandName === 'resetskills') {
+          await interaction.deferReply().catch((e) => {
+            console.log(e);
+          });
+          const limited = await myRateLimiter(
+            discordClient,
+            interaction,
+            'ResetSkills',
+          );
+          if (limited) {
+            await interaction.editReply('rate limited').catch((e) => {
+              console.log(e);
+            });
+            return;
+          }
+
+          await discordResetSkills(
+            discordClient,
+            interaction,
+            io,
+            queue,
+          );
+          await interaction.editReply('\u200b').catch((e) => {
+            console.log(e);
+          });
+        }
+
         if (commandName === 'myrank') {
           await interaction.deferReply().catch((e) => {
             console.log(e);
@@ -1113,6 +1170,38 @@ export const discordRouter = async (
           queue,
         );
       });
+    }
+
+    if (filteredMessageDiscord[1] && filteredMessageDiscord[1].toLowerCase() === 'resetstats') {
+      const limited = await myRateLimiter(
+        discordClient,
+        message,
+        'ResetStats',
+      );
+      if (limited) return;
+
+      await discordResetStats(
+        discordClient,
+        message,
+        io,
+        queue,
+      );
+    }
+
+    if (filteredMessageDiscord[1] && filteredMessageDiscord[1].toLowerCase() === 'resetskills') {
+      const limited = await myRateLimiter(
+        discordClient,
+        message,
+        'ResetSkills',
+      );
+      if (limited) return;
+
+      await discordResetSkills(
+        discordClient,
+        message,
+        io,
+        queue,
+      );
     }
 
     if (filteredMessageDiscord[1] && filteredMessageDiscord[1].toLowerCase() === 'grantexp') {

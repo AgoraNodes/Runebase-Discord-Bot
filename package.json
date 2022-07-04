@@ -1,6 +1,6 @@
 {
   "name": "runebase-discord-bot",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "description": "Bot for Runebase Discord",
   "scripts": {
     "dev": "nodemon --exec babel-node --max-old-space-size=8192 src/index.js",
@@ -56,7 +56,7 @@
     "cookie-parser": "^1.4.6",
     "cors": "^2.7.1",
     "csurf": "^1.11.0",
-    "discord-api-types": "^0.36.0",
+    "discord-api-types": "^0.36.1",
     "discord.js": "^13.8.1",
     "dotenv": "^16.0.1",
     "express": "^4.18.1",

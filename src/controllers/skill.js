@@ -21,6 +21,10 @@ import { addSkillPoint } from '../helpers/skills/addSkillPoint';
 import { renderSkillTreeImage } from "../render/skills/skillTree";
 import { renderSkillDescriptionImage } from '../render/skills/skillDescription';
 import { renderCancelSkillPick } from '../render/skills/cancelSkillPick';
+import {
+  generateCancelSkillButton,
+  generateAddSkillButton,
+} from '../buttons';
 
 export const discordSkills = async (
   discordClient,
@@ -52,8 +56,6 @@ export const discordSkills = async (
     });
     return;
   }
-
-  const cancelSkillPickId = 'cancelSkillPick';
 
   await registerFont(path.join(__dirname, '../assets/fonts/', 'Heart_warming.otf'), { family: 'HeartWarming' });
 
@@ -129,23 +131,6 @@ export const discordSkills = async (
     return new MessageAttachment(canvas.toBuffer(), 'skillTree.png');
   };
 
-  const generateCancelSkill = async () => new MessageButton({
-    style: 'SECONDARY',
-    label: `Cancel skill selection`,
-    emoji: '❌',
-    customId: cancelSkillPickId,
-  });
-
-  const generateAddSkillButton = async (mySelectedSkill) => {
-    const addSkillId = `addSkill:${mySelectedSkill.id}`;
-    return new MessageButton({
-      style: 'SECONDARY',
-      label: `Add Skillpoint to ${mySelectedSkill.name}`,
-      emoji: '➕',
-      customId: addSkillId,
-    });
-  };
-
   const skillTreeMap = userCurrentCharacter.class.skillTrees.map((skilltree, index) => {
     console.log(index);
     console.log('index');
@@ -198,7 +183,7 @@ export const discordSkills = async (
 
         new MessageActionRow({
           components: [
-            await generateCancelSkill(),
+            await generateCancelSkillButton(),
           ],
         }),
       ],
@@ -247,7 +232,7 @@ export const discordSkills = async (
           queue,
         );
       }
-      if (interaction.customId === cancelSkillPickId) {
+      if (interaction.customId === 'cancelSkillPick') {
         await interaction.editReply({
           files: [
             await renderCancelSkillPick(userCurrentCharacter),
@@ -341,7 +326,7 @@ export const discordSkills = async (
         }),
         new MessageActionRow({
           components: [
-            await generateCancelSkill(),
+            await generateCancelSkillButton(),
           ],
         }),
       ],

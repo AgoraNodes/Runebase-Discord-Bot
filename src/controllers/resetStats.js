@@ -12,17 +12,17 @@ import { fetchUserCurrentCharacter } from "../helpers/character/character";
 import { fetchDiscordUserIdFromMessageOrInteraction } from '../helpers/client/fetchDiscordUserIdFromMessageOrInteraction';
 import { fetchDiscordChannel } from '../helpers/client/fetchDiscordChannel';
 import {
+  resetStatsCompletemessage,
+  insufficientBalanceMessage,
+  resetStatsDeclinedMessage,
+  resetStatsConfirmationMessage,
+} from '../messages';
+import {
   generateAcceptButton,
   generateDeclineButton,
 } from '../buttons';
-import {
-  confirmationHealMessage,
-  insufficientBalanceMessage,
-  declineHealMessage,
-  healCompleteMessage,
-} from '../messages';
 
-export const discordHeal = async (
+export const discordResetStats = async (
   discordClient,
   message,
   io,
@@ -49,11 +49,17 @@ export const discordHeal = async (
     },
   });
 
+  const totalStatsCost = (userCurrentCharacter.stats.strength
+    + userCurrentCharacter.stats.dexterity
+    + userCurrentCharacter.stats.vitality
+    + userCurrentCharacter.stats.energy) * 0.1;
+
   const embedMessage = await discordChannel.send({
     embeds: [
-      await confirmationHealMessage(
+      await resetStatsConfirmationMessage(
         userCurrentCharacter.user.user_id,
         userWallet.available,
+        totalStatsCost,
       ),
     ],
     components: [
@@ -84,8 +90,9 @@ export const discordHeal = async (
       if (interaction.customId === 'decline') {
         await interaction.editReply({
           embeds: [
-            await declineHealMessage(
+            await resetStatsDeclinedMessage(
               userCurrentCharacter.user.user_id,
+              'Reset Stats',
             ),
           ],
           components: [
@@ -105,12 +112,20 @@ export const discordHeal = async (
               lock: t.LOCK.UPDATE,
               transaction: t,
             });
-            if (findWallet.available < 10000000) {
+            const userCharacterToReset = await fetchUserCurrentCharacter(
+              userCurrentCharacter.user.user_id, // user discord id
+              false, // Need inventory?
+            );
+            const totalStatsCostUser = ((userCharacterToReset.stats.strength
+              + userCharacterToReset.stats.dexterity
+              + userCharacterToReset.stats.vitality
+              + userCharacterToReset.stats.energy) * 0.1) * 1e8;
+            if (findWallet.available < totalStatsCostUser) {
               await interaction.editReply({
                 embeds: [
                   await insufficientBalanceMessage(
-                    userCurrentCharacter.user.user_id,
-                    'Heal',
+                    userCharacterToReset.user.user_id,
+                    'Reset Stats',
                   ),
                 ],
                 components: [
@@ -118,45 +133,29 @@ export const discordHeal = async (
               });
               return;
             }
+            await userCharacterToReset.stats.update({
+              strength: 0,
+              dexterity: 0,
+              vitality: 0,
+              energy: 0,
+              life: 0,
+              mana: 0,
+              stamina: 0,
+            }, {
+              lock: t.LOCK.UPDATE,
+              transaction: t,
+            });
             await findWallet.update({
-              available: findWallet.available - 10000000,
+              available: findWallet.available - totalStatsCostUser,
             }, {
               lock: t.LOCK.UPDATE,
               transaction: t,
             });
-            const userToUpdate = await db.UserClass.findOne({
-              where: {
-                userId: userCurrentCharacter.user.id,
-                classId: userCurrentCharacter.user.currentClassId,
-              },
-              include: [
-                {
-                  model: db.condition,
-                  as: 'condition',
-                },
-                {
-                  model: db.class,
-                  as: 'class',
-                },
-                {
-                  model: db.stats,
-                  as: 'stats',
-                },
-              ],
-              lock: t.LOCK.UPDATE,
-              transaction: t,
-            });
-            await userToUpdate.condition.update({
-              life: userToUpdate.class.life + userToUpdate.stats.life,
-              mana: userToUpdate.class.mana + userToUpdate.stats.mana,
-            }, {
-              lock: t.LOCK.UPDATE,
-              transaction: t,
-            });
+
             await interaction.editReply({
               content: `<@${userCurrentCharacter.user.user_id}>`,
               embeds: [
-                await healCompleteMessage(
+                resetStatsCompletemessage(
                   userCurrentCharacter.user.user_id,
                 ),
               ],
@@ -167,7 +166,7 @@ export const discordHeal = async (
             console.log(err);
             try {
               await db.error.create({
-                type: 'Heal',
+                type: 'ClassSelection',
                 error: `${err}`,
               });
             } catch (e) {

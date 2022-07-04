@@ -653,6 +653,61 @@ export const invalidAmountMessage = (
   return result;
 };
 
+export const confirmationHealMessage = (
+  userId,
+  available,
+) => {
+  const result = new MessageEmbed()
+    .setColor(settings.bot.color)
+    .setTitle('Heal')
+    .setDescription(`<@${userId}>, Healing costs 0.1 RUNES. 
+
+Available Balance: **${available / 1e8} RUNES**
+Total Cost: **0.1 RUNES**
+    
+Are you sure you want to heal?`)
+    .setTimestamp()
+    .setFooter({
+      text: `${settings.bot.name} v${pjson.version}`,
+      iconURL: settings.bot.logo,
+    });
+
+  return result;
+};
+
+export const healCompleteMessage = (
+  userId,
+) => {
+  const result = new MessageEmbed()
+    .setColor(settings.bot.color)
+    .setTitle('Heal')
+    .setDescription(`💋 Freyja has kissed <@${userId}>. 💋
+<@${userId}> is now Healed!`)
+    .setTimestamp()
+    .setFooter({
+      text: `${settings.bot.name} v${pjson.version}`,
+      iconURL: settings.bot.logo,
+    });
+
+  return result;
+};
+
+export const declineHealMessage = (
+  userId,
+) => {
+  const result = new MessageEmbed()
+    .setColor(settings.bot.color)
+    .setTitle('Heal')
+    .setDescription(`<@${userId}>, declined heal`)
+    .setTimestamp()
+    .setFooter({
+      text: `${settings.bot.name} v${pjson.version}`,
+      iconURL: settings.bot.logo,
+    });
+
+  return result;
+};
+
 export const insufficientBalanceMessage = (
   userId,
   title,
@@ -660,7 +715,102 @@ export const insufficientBalanceMessage = (
   const result = new MessageEmbed()
     .setColor(settings.bot.color)
     .setTitle(title)
-    .setDescription(`<@${userId}>, Insufficient balance`)
+    .setDescription(`<@${userId}>, you have Insufficient balance`)
+    .setTimestamp()
+    .setFooter({
+      text: `${settings.bot.name} v${pjson.version}`,
+      iconURL: settings.bot.logo,
+    });
+
+  return result;
+};
+
+export const resetSkillCompleteMessage = (
+  userId,
+) => {
+  const result = new MessageEmbed()
+    .setColor(settings.bot.color)
+    .setTitle('Reset Skills')
+    .setDescription(`<@${userId}>, Your skills have been reset!`)
+    .setTimestamp()
+    .setFooter({
+      text: `${settings.bot.name} v${pjson.version}`,
+      iconURL: settings.bot.logo,
+    });
+
+  return result;
+};
+
+export const skillConfirmationMessage = (
+  userId,
+  available,
+  totalSkillsCost,
+) => {
+  const result = new MessageEmbed()
+    .setColor(settings.bot.color)
+    .setTitle('Reset Skills')
+    .setDescription(`<@${userId}>, Resetting your skills costs 1 RUNES for each skill point.
+
+Available Balance: **${available / 1e8} RUNES**
+Total cost: **${totalSkillsCost} RUNES**
+    
+Are you sure you want to reset your skills?`)
+    .setTimestamp()
+    .setFooter({
+      text: `${settings.bot.name} v${pjson.version}`,
+      iconURL: settings.bot.logo,
+    });
+
+  return result;
+};
+
+export const declineResetSkillsMessage = (
+  userId,
+) => {
+  const result = new MessageEmbed()
+    .setColor(settings.bot.color)
+    .setTitle('Reset Skills')
+    .setDescription(`<@${userId}>, declined reset skills`)
+    .setTimestamp()
+    .setFooter({
+      text: `${settings.bot.name} v${pjson.version}`,
+      iconURL: settings.bot.logo,
+    });
+
+  return result;
+};
+
+export const resetStatsDeclinedMessage = (
+  userId,
+  title,
+) => {
+  const result = new MessageEmbed()
+    .setColor(settings.bot.color)
+    .setTitle('Reset Stats')
+    .setDescription(`<@${userId}>, declined reset stats`)
+    .setTimestamp()
+    .setFooter({
+      text: `${settings.bot.name} v${pjson.version}`,
+      iconURL: settings.bot.logo,
+    });
+
+  return result;
+};
+
+export const resetStatsConfirmationMessage = (
+  userId,
+  available,
+  totalStatsCost,
+) => {
+  const result = new MessageEmbed()
+    .setColor(settings.bot.color)
+    .setTitle('Reset Stats')
+    .setDescription(`<@${userId}>, Resetting your stats costs 0.1 RUNES for each attribute.
+
+Available Balance: **${available / 1e8} RUNES**
+Total cost: **${totalStatsCost} RUNES**
+    
+Are you sure you want to reset your stats?`)
     .setTimestamp()
     .setFooter({
       text: `${settings.bot.name} v${pjson.version}`,
@@ -775,6 +925,22 @@ export const featureDisabledGlobalMessage = (name) => {
   return result;
 };
 
+export const resetStatsCompletemessage = (
+  userId,
+) => {
+  const result = new MessageEmbed()
+    .setColor(settings.bot.color)
+    .setTitle('Reset Stats')
+    .setDescription(`<@${userId}>, Your stats have been reset!`)
+    .setTimestamp()
+    .setFooter({
+      text: `${settings.bot.name} v${pjson.version}`,
+      iconURL: settings.bot.logo,
+    });
+
+  return result;
+};
+
 export const helpMessage = (withdraw) => {
   const result = new MessageEmbed()
     .setColor(settings.bot.color)
@@ -801,6 +967,22 @@ Iventory management
 \`/equipment\`
 \`${settings.bot.command} equipment\`
 Equipment management
+
+\`/skills\`
+\`${settings.bot.command} skills\`
+Skill management
+
+\`/heal\`
+\`${settings.bot.command} heal\`
+Heal your character
+
+\`/resetskills\`
+\`${settings.bot.command} resetskills\`
+Reset your skills trees
+
+\`/resetstats\`
+\`${settings.bot.command} resetstats\`
+reset your attributes/stats
 
 \`/myrank\`
 \`${settings.bot.command} myrank\`
