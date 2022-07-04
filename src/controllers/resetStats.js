@@ -2,6 +2,7 @@
 import {
   Transaction,
 } from "sequelize";
+import BigNumber from "bignumber.js";
 import {
   MessageActionRow,
   MessageButton,
@@ -49,10 +50,22 @@ export const discordResetStats = async (
     },
   });
 
-  const totalStatsCost = (userCurrentCharacter.stats.strength
-    + userCurrentCharacter.stats.dexterity
-    + userCurrentCharacter.stats.vitality
-    + userCurrentCharacter.stats.energy) * 0.1;
+  // const totalStatsCost = (new BigNumber((userCurrentCharacter.stats.strength
+  //   + userCurrentCharacter.stats.dexterity
+  //   + userCurrentCharacter.stats.vitality
+  //   + userCurrentCharacter.stats.energy))).multiply(0.1);
+
+  const totalStatsCost = (
+    new BigNumber(
+      userCurrentCharacter.stats.strength,
+    ).plus(
+      userCurrentCharacter.stats.dexterity,
+    ).plus(
+      userCurrentCharacter.stats.vitality,
+    ).plus(
+      userCurrentCharacter.stats.energy,
+    )
+  ).multipliedBy(0.1);
 
   const embedMessage = await discordChannel.send({
     embeds: [
@@ -116,10 +129,24 @@ export const discordResetStats = async (
               userCurrentCharacter.user.user_id, // user discord id
               false, // Need inventory?
             );
-            const totalStatsCostUser = ((userCharacterToReset.stats.strength
-              + userCharacterToReset.stats.dexterity
-              + userCharacterToReset.stats.vitality
-              + userCharacterToReset.stats.energy) * 0.1) * 1e8;
+
+            const totalStatsCostUser = ((((
+              new BigNumber(
+                userCharacterToReset.stats.strength,
+              ).plus(
+                userCharacterToReset.stats.dexterity,
+              ).plus(
+                userCharacterToReset.stats.vitality,
+              ).plus(
+                userCharacterToReset.stats.energy,
+              )
+            ).multipliedBy(0.1)
+            ).multipliedBy(1e8)
+            ).dp(0)
+            ).toNumber();
+
+            console.log(totalStatsCostUser);
+            console.log('totalCostNumber');
             if (findWallet.available < totalStatsCostUser) {
               await interaction.editReply({
                 embeds: [
@@ -133,7 +160,7 @@ export const discordResetStats = async (
               });
               return;
             }
-            await userCharacterToReset.stats.update({
+            const updatedCharacterStats = await userCharacterToReset.stats.update({
               strength: 0,
               dexterity: 0,
               vitality: 0,
@@ -145,12 +172,34 @@ export const discordResetStats = async (
               lock: t.LOCK.UPDATE,
               transaction: t,
             });
+            console.log(userCharacterToReset);
+            console.log(updatedCharacterStats);
+            console.log('updatedCharacterStats');
+
             await findWallet.update({
               available: findWallet.available - totalStatsCostUser,
             }, {
               lock: t.LOCK.UPDATE,
               transaction: t,
             });
+            const maxStamina = userCharacterToReset.user.currentClass.stamina + userCharacterToReset.stats.stamina;
+            const maxHp = userCharacterToReset.user.currentClass.life + userCharacterToReset.stats.life;
+            const maxMp = userCharacterToReset.user.currentClass.mana + userCharacterToReset.stats.mana;
+            if (userCharacterToReset.condition.mana > maxMp) {
+              await userCharacterToReset.condition.update({
+                mana: maxMp,
+              });
+            }
+            if (userCharacterToReset.condition.life > maxHp) {
+              await userCharacterToReset.condition.update({
+                life: maxHp,
+              });
+            }
+            if (userCharacterToReset.condition.stamina > maxStamina) {
+              await userCharacterToReset.condition.update({
+                stamina: maxStamina,
+              });
+            }
 
             await interaction.editReply({
               content: `<@${userCurrentCharacter.user.user_id}>`,
