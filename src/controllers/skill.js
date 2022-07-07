@@ -1,25 +1,15 @@
 /* eslint-disable import/prefer-default-export */
 import {
-  createCanvas,
-  loadImage,
-  registerFont,
-} from 'canvas';
-import {
   MessageActionRow,
-  MessageButton,
-  MessageAttachment,
   MessageSelectMenu,
   MessageEmbed,
 } from 'discord.js';
-
-import path from 'path';
 import { fetchUserCurrentCharacter } from "../helpers/character/character";
 import { fetchDiscordUserIdFromMessageOrInteraction } from '../helpers/client/fetchDiscordUserIdFromMessageOrInteraction';
 import { fetchDiscordChannel } from '../helpers/client/fetchDiscordChannel';
 import { addSkillPoint } from '../helpers/skills/addSkillPoint';
 
-import { renderSkillTreeImage } from "../render/skills/skillTree";
-import { renderSkillDescriptionImage } from '../render/skills/skillDescription';
+import { renderSkillScreen } from "../render/skills";
 import { renderCancelSkillPick } from '../render/skills/cancelSkillPick';
 import {
   generateCancelSkillButton,
@@ -57,80 +47,6 @@ export const discordSkills = async (
     return;
   }
 
-  await registerFont(path.join(__dirname, '../assets/fonts/', 'Heart_warming.otf'), { family: 'HeartWarming' });
-
-  const generateSkillTreeImage = async (
-    userCharacter,
-    skillTree,
-    skillTreeIndex,
-    selectedSkill,
-    failReason,
-  ) => {
-    const skillTreeImageBuffer = await renderSkillTreeImage(
-      userCharacter,
-      skillTree,
-      skillTreeIndex,
-      selectedSkill,
-    );
-    const skillTreeImage = await loadImage(skillTreeImageBuffer);
-
-    const skillDescriptionImageBuffer = await renderSkillDescriptionImage(
-      userCharacter,
-      skillTree,
-      skillTreeIndex,
-      selectedSkill,
-    );
-    const skillDescriptionImage = await loadImage(skillDescriptionImageBuffer);
-
-    const failReasonHeight = failReason ? 25 : 0;
-
-    const canvas = createCanvas(
-      skillTreeImage.width + skillDescriptionImage.width,
-      skillTreeImage.height + failReasonHeight,
-    );
-    const ctx = canvas.getContext('2d');
-
-    ctx.drawImage(
-      skillTreeImage,
-      0,
-      0,
-      skillTreeImage.width,
-      skillTreeImage.height,
-    );
-
-    if (selectedSkill) {
-      ctx.drawImage(
-        skillDescriptionImage,
-        skillTreeImage.width,
-        0,
-        skillDescriptionImage.width,
-        skillDescriptionImage.height,
-      );
-    }
-
-    if (failReason) {
-      ctx.font = 'bold 15px "HeartWarming"';
-      ctx.fillStyle = "red";
-      ctx.strokeStyle = 'black';
-      ctx.lineWidth = 3;
-      ctx.textAlign = "center";
-      ctx.strokeText(
-        failReason,
-        skillTreeImage.width / 2,
-        skillTreeImage.height + 15,
-        skillTreeImage.width,
-      );
-      ctx.fillText(
-        failReason,
-        skillTreeImage.width / 2,
-        skillTreeImage.height + 15,
-        skillTreeImage.width,
-      );
-    }
-
-    return new MessageAttachment(canvas.toBuffer(), 'skillTree.png');
-  };
-
   const skillTreeMap = userCurrentCharacter.class.skillTrees.map((skilltree, index) => {
     console.log(index);
     console.log('index');
@@ -152,7 +68,7 @@ export const discordSkills = async (
 
   const embedMessage = await discordChannel.send({
     files: [
-      await generateSkillTreeImage(
+      await renderSkillScreen(
         userCurrentCharacter,
         userCurrentCharacter.class.skillTrees[0],
         0, // skillTreeIndex
@@ -285,7 +201,7 @@ export const discordSkills = async (
     await interaction.editReply({
       embeds: [],
       files: [
-        await generateSkillTreeImage(
+        await renderSkillScreen(
           userCurrentCharacter,
           userCurrentCharacter.class.skillTrees[skillTreeIndex],
           skillTreeIndex,

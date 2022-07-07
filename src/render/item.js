@@ -1,7 +1,6 @@
 import {
   createCanvas,
   loadImage,
-  registerFont,
 } from 'canvas';
 import path from 'path';
 import { generateModifierStringArray } from "../helpers/items/generateModifierStringArray";
@@ -65,7 +64,6 @@ export const renderItemImage = async (
     + classSpecificHeight
     + extraThrowingJavelinHeight;
 
-  await registerFont(path.join(__dirname, '../assets/fonts/', 'Heart_warming.otf'), { family: 'HeartWarming' });
   const itemImage = await loadImage(path.join(__dirname, `../assets/images/items/${newItem.itemBase.itemFamily.itemType.name}/${newItem.itemBase.itemFamily.name}`, `${newItem.itemBase.name}.png`));
   const canvas = createCanvas(
     200,

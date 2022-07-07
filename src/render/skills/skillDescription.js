@@ -10,7 +10,6 @@ import {
 } from 'canvas';
 import path from 'path';
 import _ from 'lodash';
-import { renderGrayScaleIcon } from './grayScaleIcon';
 
 function printAtWordWrap(context, text, x, y, lineHeight, fitWidth) {
   fitWidth = fitWidth || 0;
@@ -44,8 +43,8 @@ export const renderSkillDescriptionImage = async (
   skillTreeIndex,
   selectedSkill,
 ) => {
-  const skillTreeMenuImage = await loadImage(path.join(__dirname, `../../assets/images/skilltree/`, `skillTreeMenu.png`));
-  const skillTreeImage = await loadImage(path.join(__dirname, `../../assets/images/skilltree/`, `skilltree${skillTreeIndex}.png`));
+  console.log(selectedSkill);
+  console.log('selectedSkill');
   const canvas = createCanvas(
     345,
     457,
@@ -88,6 +87,11 @@ export const renderSkillDescriptionImage = async (
     70,
     345,
   );
+
+  ctx.lineWidth = "3";
+  ctx.strokeStyle = "black";
+  ctx.shadowBlur = 0;
+  ctx.shadowColor = "none";
 
   ctx.strokeText(
     'skill modifier table goes here',

@@ -2,7 +2,6 @@
 import {
   createCanvas,
   loadImage,
-  registerFont,
 } from 'canvas';
 import path from 'path';
 import {
@@ -20,8 +19,6 @@ import { drawBattleLog } from './draw/drawBattleLog';
 import { drawBattleScreenTools } from './draw/drawBattleScreenTools';
 import { drawPlayer } from "./draw/drawPlayer";
 import { drawEnemy } from './draw/drawEnemy';
-
-registerFont(path.join(__dirname, '../../assets/fonts/', 'Heart_warming.otf'), { family: 'HeartWarming' });
 
 export const renderBattleGif = async (
   currentUser,

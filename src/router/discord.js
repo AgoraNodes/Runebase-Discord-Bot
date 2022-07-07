@@ -1,12 +1,9 @@
 import { config } from "dotenv";
 import { updateDiscordChannel } from '../controllers/channel';
 import { updateDiscordGroup } from '../controllers/group';
-import { discordHelp } from '../controllers/help';
-
-import { discordAccount } from '../controllers/account';
-
+import { discordFeatureSettings } from '../controllers/featureSetting';
 import { createUpdateDiscordUser, updateDiscordLastSeen } from '../controllers/user';
-import { preWithdraw } from '../helpers/withdraw/preWithdraw';
+import { discordHelp } from '../controllers/help';
 import { discordMyRank } from '../controllers/myrank';
 import { discordRanks } from '../controllers/ranks';
 import { discordDeposit } from '../controllers/deposit';
@@ -29,12 +26,13 @@ import { discordGrantExp } from '../controllers/grantExp';
 import { discordStartDagger } from '../controllers/generateStartDagger';
 import { discordResetStats } from '../controllers/resetStats';
 import { discordResetSkills } from '../controllers/resetSkills';
-
-import { discordExpTest } from '../controllers/expTest';
-import { myRateLimiter } from '../helpers/rateLimit';
-import { discordFeatureSettings } from '../controllers/featureSetting';
-import { isMaintenanceOrDisabled } from '../helpers/isMaintenanceOrDisabled';
 import { discordSkills } from '../controllers/skill';
+
+import { discordAccount } from '../controllers/account';
+
+import { myRateLimiter } from '../helpers/rateLimit';
+import { preWithdraw } from '../helpers/withdraw/preWithdraw';
+import { isMaintenanceOrDisabled } from '../helpers/isMaintenanceOrDisabled';
 
 import settings from '../config/settings';
 

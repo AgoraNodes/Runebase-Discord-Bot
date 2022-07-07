@@ -1,8 +1,6 @@
 import {
   createCanvas,
-  registerFont,
 } from 'canvas';
-import path from 'path';
 import _ from 'lodash';
 import {
   MessageAttachment,
@@ -12,7 +10,6 @@ export const renderBattleComplete = async (
   currentCharacter,
   battle,
 ) => {
-  await registerFont(path.join(__dirname, '../../assets/fonts/', 'Heart_warming.otf'), { family: 'HeartWarming' });
   const canvas = createCanvas(1400, 300);
   const ctx = canvas.getContext('2d');
 

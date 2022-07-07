@@ -1,7 +1,6 @@
 import {
   createCanvas,
   loadImage,
-  registerFont,
 } from 'canvas';
 import path from 'path';
 import _ from 'lodash';
@@ -40,7 +39,7 @@ export const renderPickClassImage = async (
   classes,
   user,
 ) => {
-  await registerFont(path.join(__dirname, '../../assets/fonts/', 'Heart_warming.otf'), { family: 'HeartWarming' });
+  // await registerFont(path.join(__dirname, '../../assets/fonts/', 'Heart_warming.otf'), { family: 'HeartWarming' });
   const current = classes.slice(start, start + 1);
   const canvas = createCanvas(1400, 1050);
   const ctx = canvas.getContext('2d');

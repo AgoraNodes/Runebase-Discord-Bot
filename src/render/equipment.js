@@ -1,14 +1,12 @@
 import {
   createCanvas,
   loadImage,
-  registerFont,
 } from 'canvas';
 import path from 'path';
 
 export const renderEquipmentImage = async (
   userCurrentCharacter,
 ) => {
-  await registerFont(path.join(__dirname, '../assets/fonts/', 'Heart_warming.otf'), { family: 'HeartWarming' });
   const equipmentBackground = await loadImage(path.join(__dirname, '../assets/images/equipment', `background.png`));
   const canvas = createCanvas(equipmentBackground.width, equipmentBackground.height);
   const ctx = canvas.getContext('2d');

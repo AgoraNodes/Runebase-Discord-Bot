@@ -21,6 +21,8 @@ import cookieParser from 'cookie-parser';
 import { createClient as createRedisClient } from 'redis';
 import socketIo from 'socket.io';
 import csurf from 'csurf';
+import path from 'path';
+import { registerFont } from 'canvas';
 import db from "./models";
 import { router } from "./router";
 import { dashboardRouter } from "./dashboard/router";
@@ -36,6 +38,7 @@ import { processWithdrawals } from "./services/processWithdrawals";
 import settings from './config/settings';
 
 Object.freeze(Object.prototype);
+registerFont(path.join(__dirname, './assets/fonts/', 'Heart_warming.otf'), { family: 'HeartWarming' });
 
 config();
 

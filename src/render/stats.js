@@ -6,7 +6,6 @@ import {
 import {
   createCanvas,
   loadImage,
-  registerFont,
 } from 'canvas';
 import path from 'path';
 // import db from '../models';
@@ -39,7 +38,6 @@ export const renderStatsImage = async (
     LR,
     CR,
   } = await calculateCharacterStats(currentUser);
-  await registerFont(path.join(__dirname, '../assets/fonts/', 'Heart_warming.otf'), { family: 'HeartWarming' });
 
   const canvas = createCanvas(960, 1400);
   const ctx = canvas.getContext('2d');

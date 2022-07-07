@@ -5,9 +5,6 @@ import {
 export const renderGrayScaleIcon = async (
   icon,
 ) => {
-  console.log('icon');
-  console.log(icon);
-  console.log(icon.width);
   const canvas = createCanvas(
     icon.width,
     icon.height,

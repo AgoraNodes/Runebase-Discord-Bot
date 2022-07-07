@@ -1,8 +1,6 @@
 import {
   createCanvas,
-  registerFont,
 } from 'canvas';
-import path from 'path';
 import _ from 'lodash';
 import {
   MessageAttachment,
@@ -11,7 +9,6 @@ import {
 export const renderCancelClassPicked = async (
   user,
 ) => {
-  await registerFont(path.join(__dirname, '../assets/fonts/', 'Heart_warming.otf'), { family: 'HeartWarming' });
   const canvas = createCanvas(500, 100);
   const ctx = canvas.getContext('2d');
 
