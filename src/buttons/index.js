@@ -217,3 +217,40 @@ export const generateDestroyYesButton = (
 
   return result;
 };
+
+export const generateMainSkillButton = (
+  mySelectedSkill,
+) => {
+  const result = new MessageButton({
+    style: 'SECONDARY',
+    label: `${mySelectedSkill.skill.name}`,
+    // emoji: '➕',
+    customId: `attackMain:${mySelectedSkill.id}`,
+  });
+
+  return result;
+};
+
+export const generateSecondarySkillButton = (
+  mySelectedSkill,
+) => {
+  const result = new MessageButton({
+    style: 'SECONDARY',
+    label: `${mySelectedSkill.skill.name}`,
+    // emoji: '➕',
+    customId: `attackSecondary:${mySelectedSkill.id}`,
+  });
+
+  return result;
+};
+
+export const generateHealButton = () => {
+  const result = new MessageButton({
+    style: 'SECONDARY',
+    label: `Heal`,
+    emoji: '<a:heal:994509319573876786>',
+    customId: 'Heal',
+  });
+
+  return result;
+};

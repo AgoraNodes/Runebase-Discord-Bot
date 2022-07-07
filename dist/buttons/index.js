@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.generatePickClassButton = exports.generateForwardButton = exports.generateExitInventoryButton = exports.generateEquipItemButton = exports.generateDestroyYesButton = exports.generateDestroyNoButton = exports.generateDestroyItemButton = exports.generateDeclineButton = exports.generateCancelStatsPickButton = exports.generateCancelSkillButton = exports.generateCancelPickClassButton = exports.generateBackButton = exports.generateAddVitalityButton = exports.generateAddStrengthButton = exports.generateAddSkillButton = exports.generateAddEnergyButton = exports.generateAddDexterityButton = exports.generateAcceptButton = void 0;
+exports.generateSecondarySkillButton = exports.generatePickClassButton = exports.generateMainSkillButton = exports.generateHealButton = exports.generateForwardButton = exports.generateExitInventoryButton = exports.generateEquipItemButton = exports.generateDestroyYesButton = exports.generateDestroyNoButton = exports.generateDestroyItemButton = exports.generateDeclineButton = exports.generateCancelStatsPickButton = exports.generateCancelSkillButton = exports.generateCancelPickClassButton = exports.generateBackButton = exports.generateAddVitalityButton = exports.generateAddStrengthButton = exports.generateAddSkillButton = exports.generateAddEnergyButton = exports.generateAddDexterityButton = exports.generateAcceptButton = void 0;
 
 var _discord = require("discord.js");
 
@@ -230,3 +230,39 @@ var generateDestroyYesButton = function generateDestroyYesButton(start, userCurr
 };
 
 exports.generateDestroyYesButton = generateDestroyYesButton;
+
+var generateMainSkillButton = function generateMainSkillButton(mySelectedSkill) {
+  var result = new _discord.MessageButton({
+    style: 'SECONDARY',
+    label: "".concat(mySelectedSkill.skill.name),
+    // emoji: '➕',
+    customId: "attackMain:".concat(mySelectedSkill.id)
+  });
+  return result;
+};
+
+exports.generateMainSkillButton = generateMainSkillButton;
+
+var generateSecondarySkillButton = function generateSecondarySkillButton(mySelectedSkill) {
+  var result = new _discord.MessageButton({
+    style: 'SECONDARY',
+    label: "".concat(mySelectedSkill.skill.name),
+    // emoji: '➕',
+    customId: "attackSecondary:".concat(mySelectedSkill.id)
+  });
+  return result;
+};
+
+exports.generateSecondarySkillButton = generateSecondarySkillButton;
+
+var generateHealButton = function generateHealButton() {
+  var result = new _discord.MessageButton({
+    style: 'SECONDARY',
+    label: "Heal",
+    emoji: '<a:heal:994509319573876786>',
+    customId: 'Heal'
+  });
+  return result;
+};
+
+exports.generateHealButton = generateHealButton;

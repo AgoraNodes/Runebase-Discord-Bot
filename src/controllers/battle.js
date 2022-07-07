@@ -26,6 +26,18 @@ import { randomIntFromInterval } from "../helpers/utils";
 import { gainExp } from '../helpers/client/experience';
 import { generateLoot } from '../helpers/items/generateLoot';
 import { renderItemImage } from "../render/item";
+import {
+  generateMainSkillButton,
+  generateSecondarySkillButton,
+  generateHealButton,
+  generateAcceptButton,
+  generateDeclineButton,
+} from '../buttons';
+import {
+  confirmationHealMessage,
+  insufficientBalanceMessage,
+  healCompleteMessage,
+} from '../messages';
 
 let currentSelectedMonster;
 
@@ -88,10 +100,17 @@ export const discordBattle = async (
   await userCurrentCharacter.condition.update({
     stamina: userCurrentCharacter.condition.stamina - 20,
   });
+
   userCurrentCharacter = await fetchUserCurrentCharacter(
     userId, // user discord id
     false, // Need inventory?
   );
+
+  const userWallet = await db.wallet.findOne({
+    where: {
+      userId: userCurrentCharacter.user.id,
+    },
+  });
 
   let battle = await db.battle.findOne({
     where: {
@@ -130,7 +149,7 @@ export const discordBattle = async (
         name: 'Zombie',
       },
     });
-    const randomAmountOfMobs = randomIntFromInterval(3, 4);
+    const randomAmountOfMobs = randomIntFromInterval(1, 4);
     const mobPromises = [];
     for (let i = 0; i < randomAmountOfMobs; i += 1) {
       const randomMonsterHp = randomIntFromInterval(monster.minHp, monster.maxHp);
@@ -213,27 +232,8 @@ export const discordBattle = async (
     return filtered;
   }, []);
 
-  const generateMainSkillButton = async (mySelectedSkill) => {
-    const addSkillId = `attackMain:${mySelectedSkill.id}`;
-    return new MessageButton({
-      style: 'SECONDARY',
-      label: `${mySelectedSkill.skill.name}`,
-      // emoji: '➕',
-      customId: addSkillId,
-    });
-  };
-
-  const generateSecondarySkillButton = async (mySelectedSkill) => {
-    const addSkillId = `attackSecondary:${mySelectedSkill.id}`;
-    return new MessageButton({
-      style: 'SECONDARY',
-      label: `${mySelectedSkill.skill.name}`,
-      // emoji: '➕',
-      customId: addSkillId,
-    });
-  };
-
   const embedMessage = await discordChannel.send({
+    content: `<@${userCurrentCharacter.user.user_id}>`,
     files: [
       new MessageAttachment(
         await renderInitBattleGif(
@@ -254,6 +254,9 @@ export const discordBattle = async (
             userCurrentSelectedSkills.selectedMainSkill,
           ),
           await generateSecondarySkillButton(
+            userCurrentSelectedSkills.selectedSecondarySkill,
+          ),
+          await generateHealButton(
             userCurrentSelectedSkills.selectedSecondarySkill,
           ),
         ],
@@ -322,7 +325,7 @@ export const discordBattle = async (
     return lootButtonArray;
   };
 
-  const loadingEmbed = new MessageEmbed()
+  const loadingBattleMoveEmbed = new MessageEmbed()
     .setTitle('Battle')
     .setDescription(`${userCurrentCharacter.user.username}, Your next move is calculating..`);
 
@@ -375,7 +378,7 @@ ${newLootC.length > 0 ? `__found ${newLootC.length} ${newLootC.length === 1 ? `i
       });
       return;
     }
-    if (interaction.isButton() && !interaction.customId.startsWith('lootItem:')) {
+    if (interaction.isButton() && (!interaction.customId.startsWith('lootItem:') || interaction.customId !== 'Heal')) {
       if (!currentSelectedMonster) {
         await interaction.reply({
           content: `<@${interaction.user.id}>, You need to select a monster to attack!`,
@@ -384,6 +387,267 @@ ${newLootC.length > 0 ? `__found ${newLootC.length} ${newLootC.length === 1 ? `i
         return;
       }
     }
+    // Heal Handling
+    if (interaction.isButton() && interaction.customId === 'Heal') {
+      await interaction.deferUpdate();
+      console.log(userWallet);
+      await interaction.editReply({
+        content: `<@${userCurrentCharacter.user.user_id}>`,
+        embeds: [
+          await confirmationHealMessage(
+            userCurrentCharacter.user.user_id,
+            userWallet.available,
+          ),
+        ],
+        components: [
+          new MessageActionRow({
+            components: [
+              await generateAcceptButton(),
+              await generateDeclineButton(),
+            ],
+          }),
+        ],
+      });
+      return;
+    }
+    if (interaction.customId === 'decline') {
+      await interaction.deferUpdate();
+      await interaction.editReply({
+        content: `<@${userCurrentCharacter.user.user_id}>`,
+        embeds: [],
+        components: [
+          new MessageActionRow({
+            components: [
+              await generateMainSkillButton(
+                userCurrentSelectedSkills.selectedMainSkill,
+              ),
+              await generateSecondarySkillButton(
+                userCurrentSelectedSkills.selectedSecondarySkill,
+              ),
+              await generateHealButton(
+                userCurrentSelectedSkills.selectedSecondarySkill,
+              ),
+            ],
+          }),
+          ...(selectMonsterMap && selectMonsterMap.length > 0 ? [
+            new MessageActionRow({
+              components: [
+                new MessageSelectMenu({
+                  type: 'SELECT_MENU',
+                  customId: 'select-mob',
+                  options: selectMonsterMap,
+                }),
+              ],
+            }),
+          ] : []),
+          new MessageActionRow({
+            components: [
+              new MessageSelectMenu({
+                type: 'SELECT_MENU',
+                customId: 'select-mainSkill',
+                options: mainSkillMap,
+              }),
+            ],
+          }),
+          new MessageActionRow({
+            components: [
+              new MessageSelectMenu({
+                type: 'SELECT_MENU',
+                customId: 'select-secondarySkill',
+                options: secondarySkillMap,
+              }),
+            ],
+          }),
+        ],
+      });
+      return;
+    }
+    if (interaction.customId === 'accept') {
+      await interaction.deferUpdate();
+      await queue.add(async () => {
+        await db.sequelize.transaction({
+          isolationLevel: Transaction.ISOLATION_LEVELS.SERIALIZABLE,
+        }, async (t) => {
+          const findWallet = await db.wallet.findOne({
+            where: {
+              userId: userCurrentCharacter.user.id,
+            },
+            lock: t.LOCK.UPDATE,
+            transaction: t,
+          });
+          if (findWallet.available < 10000000) {
+            await interaction.editReply({
+              content: `<@${userCurrentCharacter.user.user_id}>`,
+              embeds: [
+                await insufficientBalanceMessage(
+                  userCurrentCharacter.user.user_id,
+                  'Heal',
+                ),
+              ],
+              components: [
+                new MessageActionRow({
+                  components: [
+                    await generateMainSkillButton(
+                      userCurrentSelectedSkills.selectedMainSkill,
+                    ),
+                    await generateSecondarySkillButton(
+                      userCurrentSelectedSkills.selectedSecondarySkill,
+                    ),
+                    await generateHealButton(
+                      userCurrentSelectedSkills.selectedSecondarySkill,
+                    ),
+                  ],
+                }),
+                ...(selectMonsterMap && selectMonsterMap.length > 0 ? [
+                  new MessageActionRow({
+                    components: [
+                      new MessageSelectMenu({
+                        type: 'SELECT_MENU',
+                        customId: 'select-mob',
+                        options: selectMonsterMap,
+                      }),
+                    ],
+                  }),
+                ] : []),
+                new MessageActionRow({
+                  components: [
+                    new MessageSelectMenu({
+                      type: 'SELECT_MENU',
+                      customId: 'select-mainSkill',
+                      options: mainSkillMap,
+                    }),
+                  ],
+                }),
+                new MessageActionRow({
+                  components: [
+                    new MessageSelectMenu({
+                      type: 'SELECT_MENU',
+                      customId: 'select-secondarySkill',
+                      options: secondarySkillMap,
+                    }),
+                  ],
+                }),
+              ],
+            });
+            return;
+          }
+          await userWallet.update({
+            available: findWallet.available - 10000000,
+          }, {
+            lock: t.LOCK.UPDATE,
+            transaction: t,
+          });
+          const userToUpdate = await db.UserClass.findOne({
+            where: {
+              userId: userCurrentCharacter.user.id,
+              classId: userCurrentCharacter.user.currentClassId,
+            },
+            include: [
+              {
+                model: db.condition,
+                as: 'condition',
+              },
+              {
+                model: db.class,
+                as: 'class',
+              },
+              {
+                model: db.stats,
+                as: 'stats',
+              },
+            ],
+            lock: t.LOCK.UPDATE,
+            transaction: t,
+          });
+          await userCurrentCharacter.condition.update({
+            life: userToUpdate.class.life + userToUpdate.stats.life,
+            mana: userToUpdate.class.mana + userToUpdate.stats.mana,
+          }, {
+            lock: t.LOCK.UPDATE,
+            transaction: t,
+          });
+          await interaction.editReply({
+            files: [
+              new MessageAttachment(
+                await renderInitBattleGif(
+                  userCurrentCharacter,
+                  userCurrentSelectedSkills,
+                  battle,
+                  battle,
+                  userCurrentCharacter,
+                  currentSelectedMonster,
+                ),
+                'battle.gif',
+              ),
+            ],
+            components: [
+              new MessageActionRow({
+                components: [
+                  await generateMainSkillButton(
+                    userCurrentSelectedSkills.selectedMainSkill,
+                  ),
+                  await generateSecondarySkillButton(
+                    userCurrentSelectedSkills.selectedSecondarySkill,
+                  ),
+                  await generateHealButton(
+                    userCurrentSelectedSkills.selectedSecondarySkill,
+                  ),
+                ],
+              }),
+              ...(selectMonsterMap && selectMonsterMap.length > 0 ? [
+                new MessageActionRow({
+                  components: [
+                    new MessageSelectMenu({
+                      type: 'SELECT_MENU',
+                      customId: 'select-mob',
+                      options: selectMonsterMap,
+                    }),
+                  ],
+                }),
+              ] : []),
+              new MessageActionRow({
+                components: [
+                  new MessageSelectMenu({
+                    type: 'SELECT_MENU',
+                    customId: 'select-mainSkill',
+                    options: mainSkillMap,
+                  }),
+                ],
+              }),
+              new MessageActionRow({
+                components: [
+                  new MessageSelectMenu({
+                    type: 'SELECT_MENU',
+                    customId: 'select-secondarySkill',
+                    options: secondarySkillMap,
+                  }),
+                ],
+              }),
+            ],
+            // embeds: [
+            //   await healCompleteMessage(
+            //     userCurrentCharacter.user.user_id,
+            //   ),
+            // ],
+            embeds: [],
+            content: `<@${userCurrentCharacter.user.user_id}>, you are now healed!`,
+          });
+        }).catch(async (err) => {
+          console.log(err);
+          try {
+            await db.error.create({
+              type: 'Heal',
+              error: `${err}`,
+            });
+          } catch (e) {
+            console.log(e);
+            // logger.error(`Error Discord: ${e}`);
+          }
+        });
+      });
+      return;
+    }
+    // End Heal handling
     if (interaction.isSelectMenu()) {
       if (interaction.customId === 'select-mob') {
         await interaction.deferUpdate();
@@ -458,6 +722,7 @@ ${newLootC.length > 0 ? `__found ${newLootC.length} ${newLootC.length === 1 ? `i
             });
             newLoot = newLoot.filter((data) => data.id !== itemId);
             await interaction.editReply({
+              content: `<@${userCurrentCharacter.user.user_id}>`,
               files: [
                 await renderBattleComplete(
                   userCurrentCharacter,
@@ -484,8 +749,9 @@ ${newLootC.length > 0 ? `__found ${newLootC.length} ${newLootC.length === 1 ? `i
             t,
           );
           await interaction.editReply({
+            content: `<@${userCurrentCharacter.user.user_id}>`,
             embeds: [
-              loadingEmbed,
+              loadingBattleMoveEmbed,
             ],
             components: [],
           });
@@ -548,6 +814,7 @@ ${newLootC.length > 0 ? `__found ${newLootC.length} ${newLootC.length === 1 ? `i
           }
           if (battle.complete) {
             await interaction.editReply({
+              content: `<@${userCurrentCharacter.user.user_id}>`,
               embeds: [],
               files: [
                 new MessageAttachment(
@@ -583,6 +850,7 @@ ${newLootC.length > 0 ? `__found ${newLootC.length} ${newLootC.length === 1 ? `i
               return filtered;
             }, []);
             await interaction.editReply({
+              content: `<@${userCurrentCharacter.user.user_id}>`,
               embeds: [],
               files: [
                 new MessageAttachment(
@@ -606,6 +874,9 @@ ${newLootC.length > 0 ? `__found ${newLootC.length} ${newLootC.length === 1 ? `i
                       userCurrentSelectedSkills.selectedMainSkill,
                     ),
                     await generateSecondarySkillButton(
+                      userCurrentSelectedSkills.selectedSecondarySkill,
+                    ),
+                    await generateHealButton(
                       userCurrentSelectedSkills.selectedSecondarySkill,
                     ),
                   ],
@@ -646,6 +917,7 @@ ${newLootC.length > 0 ? `__found ${newLootC.length} ${newLootC.length === 1 ? `i
           if (userCurrentCharacter.condition.life < 1) {
             setTimeout(async () => {
               await interaction.editReply({
+                content: `<@${userCurrentCharacter.user.user_id}>`,
                 embeds: [],
                 files: [
                   await renderUserDied(
@@ -659,6 +931,7 @@ ${newLootC.length > 0 ? `__found ${newLootC.length} ${newLootC.length === 1 ? `i
           if (battle.complete) {
             setTimeout(async () => {
               await interaction.editReply({
+                content: `<@${userCurrentCharacter.user.user_id}>`,
                 embeds: [
                   await battleCompleteEmbed(
                     userCurrentCharacter,
@@ -717,6 +990,7 @@ ${newLootC.length > 0 ? `__found ${newLootC.length} ${newLootC.length === 1 ? `i
           }
 
           await interaction.editReply({
+            content: `<@${userCurrentCharacter.user.user_id}>`,
             embeds: [],
             files: [
               new MessageAttachment(
@@ -740,6 +1014,9 @@ ${newLootC.length > 0 ? `__found ${newLootC.length} ${newLootC.length === 1 ? `i
                     userCurrentSelectedSkills.selectedMainSkill,
                   ),
                   await generateSecondarySkillButton(
+                    userCurrentSelectedSkills.selectedSecondarySkill,
+                  ),
+                  await generateHealButton(
                     userCurrentSelectedSkills.selectedSecondarySkill,
                   ),
                 ],

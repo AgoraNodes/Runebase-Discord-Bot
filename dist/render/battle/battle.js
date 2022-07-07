@@ -227,7 +227,9 @@ var renderBattleGif = /*#__PURE__*/function () {
             mainSkill, secondarySkill, hpOrbs[0], mpOrbs[0]);
             (0, _drawBattleLog.drawBattleLog)(ctx, battle);
             imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-            palette = (0, _gifenc.quantize)(imageData.data, 256);
+            palette = (0, _gifenc.quantize)(imageData.data, 256, {
+              format: 'rgb333'
+            });
             imageIndex = (0, _gifenc.applyPalette)(imageData.data, palette);
             gif.writeFrame(imageIndex, canvas.width, canvas.height, {
               palette: palette,
@@ -288,7 +290,9 @@ var renderBattleGif = /*#__PURE__*/function () {
             ctx.font = 'bold 13px "HeartWarming"';
             ctx.strokeText(monsterInfo[0].userDamage, findAttackedEnemyByUser.x, findAttackedEnemyByUser.y - 20, 50);
             imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-            palette = (0, _gifenc.quantize)(imageData.data, 256);
+            palette = (0, _gifenc.quantize)(imageData.data, 256, {
+              format: 'rgb333'
+            });
             imageIndex = (0, _gifenc.applyPalette)(imageData.data, palette);
             gif.writeFrame(imageIndex, canvas.width, canvas.height, {
               palette: palette,
@@ -340,7 +344,9 @@ var renderBattleGif = /*#__PURE__*/function () {
             ctx.font = 'bold 13px "HeartWarming"';
             ctx.strokeText(monsterInfo[0].userDamage, findAttackedEnemyByUser.x, findAttackedEnemyByUser.y - 20, 50);
             imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-            palette = (0, _gifenc.quantize)(imageData.data, 256);
+            palette = (0, _gifenc.quantize)(imageData.data, 256, {
+              format: 'rgb333'
+            });
             imageIndex = (0, _gifenc.applyPalette)(imageData.data, palette);
             gif.writeFrame(imageIndex, canvas.width, canvas.height, {
               palette: palette,
@@ -392,7 +398,9 @@ var renderBattleGif = /*#__PURE__*/function () {
             ctx.font = 'bold 13px "HeartWarming"';
             ctx.strokeText(monsterInfo[0].userDamage, findAttackedEnemyByUser.x, findAttackedEnemyByUser.y - 20, 50);
             imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-            palette = (0, _gifenc.quantize)(imageData.data, 256);
+            palette = (0, _gifenc.quantize)(imageData.data, 256, {
+              format: 'rgb333'
+            });
             imageIndex = (0, _gifenc.applyPalette)(imageData.data, palette);
             gif.writeFrame(imageIndex, canvas.width, canvas.height, {
               palette: palette,
@@ -447,7 +455,9 @@ var renderBattleGif = /*#__PURE__*/function () {
                 (0, _drawBattleScreenTools.drawBattleScreenTools)(ctx, mainSkill, secondarySkill, hpOrbs[index + 1], mpOrbs[1]);
                 (0, _drawBattleLog.drawBattleLog)(ctx, battle);
                 imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-                palette = (0, _gifenc.quantize)(imageData.data, 256);
+                palette = (0, _gifenc.quantize)(imageData.data, 256, {
+                  format: 'rgb333'
+                });
                 imageIndex = (0, _gifenc.applyPalette)(imageData.data, palette);
                 gif.writeFrame(imageIndex, canvas.width, canvas.height, {
                   palette: palette,
@@ -502,7 +512,9 @@ var renderBattleGif = /*#__PURE__*/function () {
                 ctx.font = 'bold 13px "HeartWarming"';
                 ctx.strokeText(battleInfo.damage, playerPosition[0].x, playerPosition[0].y - 20, 50);
                 imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-                palette = (0, _gifenc.quantize)(imageData.data, 256);
+                palette = (0, _gifenc.quantize)(imageData.data, 256, {
+                  format: 'rgb333'
+                });
                 imageIndex = (0, _gifenc.applyPalette)(imageData.data, palette);
                 gif.writeFrame(imageIndex, canvas.width, canvas.height, {
                   palette: palette,
@@ -554,7 +566,9 @@ var renderBattleGif = /*#__PURE__*/function () {
                 ctx.font = 'bold 13px "HeartWarming"';
                 ctx.strokeText(battleInfo.damage, playerPosition[0].x, playerPosition[0].y - 20, 50);
                 imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-                palette = (0, _gifenc.quantize)(imageData.data, 256);
+                palette = (0, _gifenc.quantize)(imageData.data, 256, {
+                  format: 'rgb333'
+                });
                 imageIndex = (0, _gifenc.applyPalette)(imageData.data, palette);
                 gif.writeFrame(imageIndex, canvas.width, canvas.height, {
                   palette: palette,
@@ -606,7 +620,9 @@ var renderBattleGif = /*#__PURE__*/function () {
                 ctx.font = 'bold 13px "HeartWarming"';
                 ctx.strokeText(battleInfo.damage, playerPosition[0].x, playerPosition[0].y - 20, 50);
                 imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-                palette = (0, _gifenc.quantize)(imageData.data, 256);
+                palette = (0, _gifenc.quantize)(imageData.data, 256, {
+                  format: 'rgb333'
+                });
                 imageIndex = (0, _gifenc.applyPalette)(imageData.data, palette);
                 gif.writeFrame(imageIndex, canvas.width, canvas.height, {
                   palette: palette,
@@ -655,7 +671,9 @@ var renderBattleGif = /*#__PURE__*/function () {
                 (0, _drawBattleScreenTools.drawBattleScreenTools)(ctx, mainSkill, secondarySkill, hpOrbs[index + 1], mpOrbs[1]);
                 (0, _drawBattleLog.drawBattleLog)(ctx, battle);
                 imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-                palette = (0, _gifenc.quantize)(imageData.data, 256);
+                palette = (0, _gifenc.quantize)(imageData.data, 256, {
+                  format: 'rgb333'
+                });
                 imageIndex = (0, _gifenc.applyPalette)(imageData.data, palette);
                 gif.writeFrame(imageIndex, canvas.width, canvas.height, {
                   palette: palette,
@@ -670,7 +688,7 @@ var renderBattleGif = /*#__PURE__*/function () {
             }
 
             gif.finish();
-            bytes = gif.bytes();
+            bytes = gif.bytesView();
             finalImage = Buffer.from(bytes);
             return _context.abrupt("return", finalImage);
 

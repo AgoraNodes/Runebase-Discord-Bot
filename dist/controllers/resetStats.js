@@ -13,6 +13,8 @@ var _asyncToGenerator2 = _interopRequireDefault(require("@babel/runtime/helpers/
 
 var _sequelize = require("sequelize");
 
+var _bignumber = _interopRequireDefault(require("bignumber.js"));
+
 var _discord = require("discord.js");
 
 var _models = _interopRequireDefault(require("../models"));
@@ -62,7 +64,11 @@ var discordResetStats = /*#__PURE__*/function () {
 
           case 12:
             userWallet = _context5.sent;
-            totalStatsCost = (userCurrentCharacter.stats.strength + userCurrentCharacter.stats.dexterity + userCurrentCharacter.stats.vitality + userCurrentCharacter.stats.energy) * 0.1;
+            // const totalStatsCost = (new BigNumber((userCurrentCharacter.stats.strength
+            //   + userCurrentCharacter.stats.dexterity
+            //   + userCurrentCharacter.stats.vitality
+            //   + userCurrentCharacter.stats.energy))).multiply(0.1);
+            totalStatsCost = new _bignumber["default"](userCurrentCharacter.stats.strength).plus(userCurrentCharacter.stats.dexterity).plus(userCurrentCharacter.stats.vitality).plus(userCurrentCharacter.stats.energy).multipliedBy(0.1);
             _context5.t0 = discordChannel;
             _context5.next = 17;
             return (0, _messages.resetStatsConfirmationMessage)(userCurrentCharacter.user.user_id, userWallet.available, totalStatsCost);
@@ -168,7 +174,7 @@ var discordResetStats = /*#__PURE__*/function () {
                                     isolationLevel: _sequelize.Transaction.ISOLATION_LEVELS.SERIALIZABLE
                                   }, /*#__PURE__*/function () {
                                     var _ref4 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(t) {
-                                      var findWallet, userCharacterToReset, totalStatsCostUser;
+                                      var findWallet, userCharacterToReset, totalStatsCostUser, updatedCharacterStats, maxStamina, maxHp, maxMp;
                                       return _regenerator["default"].wrap(function _callee$(_context) {
                                         while (1) {
                                           switch (_context.prev = _context.next) {
@@ -191,18 +197,20 @@ var discordResetStats = /*#__PURE__*/function () {
 
                                             case 5:
                                               userCharacterToReset = _context.sent;
-                                              totalStatsCostUser = (userCharacterToReset.stats.strength + userCharacterToReset.stats.dexterity + userCharacterToReset.stats.vitality + userCharacterToReset.stats.energy) * 0.1 * 1e8;
+                                              totalStatsCostUser = new _bignumber["default"](userCharacterToReset.stats.strength).plus(userCharacterToReset.stats.dexterity).plus(userCharacterToReset.stats.vitality).plus(userCharacterToReset.stats.energy).multipliedBy(0.1).multipliedBy(1e8).dp(0).toNumber();
+                                              console.log(totalStatsCostUser);
+                                              console.log('totalCostNumber');
 
                                               if (!(findWallet.available < totalStatsCostUser)) {
-                                                _context.next = 18;
+                                                _context.next = 20;
                                                 break;
                                               }
 
                                               _context.t0 = interaction;
-                                              _context.next = 11;
+                                              _context.next = 13;
                                               return (0, _messages.insufficientBalanceMessage)(userCharacterToReset.user.user_id, 'Reset Stats');
 
-                                            case 11:
+                                            case 13:
                                               _context.t1 = _context.sent;
                                               _context.t2 = [_context.t1];
                                               _context.t3 = [];
@@ -210,14 +218,14 @@ var discordResetStats = /*#__PURE__*/function () {
                                                 embeds: _context.t2,
                                                 components: _context.t3
                                               };
-                                              _context.next = 17;
+                                              _context.next = 19;
                                               return _context.t0.editReply.call(_context.t0, _context.t4);
 
-                                            case 17:
+                                            case 19:
                                               return _context.abrupt("return");
 
-                                            case 18:
-                                              _context.next = 20;
+                                            case 20:
+                                              _context.next = 22;
                                               return userCharacterToReset.stats.update({
                                                 strength: 0,
                                                 dexterity: 0,
@@ -231,8 +239,12 @@ var discordResetStats = /*#__PURE__*/function () {
                                                 transaction: t
                                               });
 
-                                            case 20:
-                                              _context.next = 22;
+                                            case 22:
+                                              updatedCharacterStats = _context.sent;
+                                              console.log(userCharacterToReset);
+                                              console.log(updatedCharacterStats);
+                                              console.log('updatedCharacterStats');
+                                              _context.next = 28;
                                               return findWallet.update({
                                                 available: findWallet.available - totalStatsCostUser
                                               }, {
@@ -240,15 +252,52 @@ var discordResetStats = /*#__PURE__*/function () {
                                                 transaction: t
                                               });
 
-                                            case 22:
-                                              _context.next = 24;
+                                            case 28:
+                                              maxStamina = userCharacterToReset.user.currentClass.stamina + userCharacterToReset.stats.stamina;
+                                              maxHp = userCharacterToReset.user.currentClass.life + userCharacterToReset.stats.life;
+                                              maxMp = userCharacterToReset.user.currentClass.mana + userCharacterToReset.stats.mana;
+
+                                              if (!(userCharacterToReset.condition.mana > maxMp)) {
+                                                _context.next = 34;
+                                                break;
+                                              }
+
+                                              _context.next = 34;
+                                              return userCharacterToReset.condition.update({
+                                                mana: maxMp
+                                              });
+
+                                            case 34:
+                                              if (!(userCharacterToReset.condition.life > maxHp)) {
+                                                _context.next = 37;
+                                                break;
+                                              }
+
+                                              _context.next = 37;
+                                              return userCharacterToReset.condition.update({
+                                                life: maxHp
+                                              });
+
+                                            case 37:
+                                              if (!(userCharacterToReset.condition.stamina > maxStamina)) {
+                                                _context.next = 40;
+                                                break;
+                                              }
+
+                                              _context.next = 40;
+                                              return userCharacterToReset.condition.update({
+                                                stamina: maxStamina
+                                              });
+
+                                            case 40:
+                                              _context.next = 42;
                                               return interaction.editReply({
                                                 content: "<@".concat(userCurrentCharacter.user.user_id, ">"),
                                                 embeds: [(0, _messages.resetStatsCompletemessage)(userCurrentCharacter.user.user_id)],
                                                 components: []
                                               });
 
-                                            case 24:
+                                            case 42:
                                             case "end":
                                               return _context.stop();
                                           }
