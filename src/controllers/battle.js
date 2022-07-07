@@ -1,3 +1,4 @@
+/* eslint-disable no-restricted-syntax */
 /* eslint-disable import/prefer-default-export */
 import {
   Transaction,
@@ -191,9 +192,8 @@ export const discordBattle = async (
     });
   }
 
-  const mainSkillMap = userCurrentSelectedSkills.UserClassSkills.map((
+  let mainSkillMap = userCurrentSelectedSkills.UserClassSkills.map((
     mySkill,
-    index,
   ) => ({
     placeholder: 'pick a skill',
     label: `Main Skill: ${mySkill.skill.name}`,
@@ -201,9 +201,8 @@ export const discordBattle = async (
     default: mySkill.id === userCurrentSelectedSkills.selectedMainSkillId,
   }));
 
-  const secondarySkillMap = userCurrentSelectedSkills.UserClassSkills.map((
+  let secondarySkillMap = userCurrentSelectedSkills.UserClassSkills.map((
     mySkill,
-    index,
   ) => ({
     placeholder: 'pick a skill',
     label: `Secondary Skill: ${mySkill.skill.name}`,
@@ -256,9 +255,7 @@ export const discordBattle = async (
           await generateSecondarySkillButton(
             userCurrentSelectedSkills.selectedSecondarySkill,
           ),
-          await generateHealButton(
-            userCurrentSelectedSkills.selectedSecondarySkill,
-          ),
+          await generateHealButton(),
         ],
       }),
       ...(selectMonsterMap && selectMonsterMap.length > 0 ? [
@@ -295,7 +292,6 @@ export const discordBattle = async (
 
   const generateLootImagesArray = async (theLoot) => {
     const lootArray = [];
-    // eslint-disable-next-line no-restricted-syntax
     for await (const looot of theLoot) {
       lootArray.push(
         new MessageAttachment(
@@ -309,7 +305,6 @@ export const discordBattle = async (
 
   const generateLootItemButtonArray = async (theLoot) => {
     const lootButtonArray = [];
-    // eslint-disable-next-line no-restricted-syntax
     for await (const looot of theLoot) {
       console.log(looot);
       const addLootId = `lootItem:${looot.id}`;
@@ -335,7 +330,6 @@ export const discordBattle = async (
     newLootC,
   ) => {
     let itemString = '';
-    // eslint-disable-next-line no-restricted-syntax
     for await (const looot of newLootC) {
       itemString += `\n- **${looot.name}** [${looot.itemQuality.name}]`;
     }
@@ -410,7 +404,7 @@ ${newLootC.length > 0 ? `__found ${newLootC.length} ${newLootC.length === 1 ? `i
       });
       return;
     }
-    if (interaction.customId === 'decline') {
+    if (interaction.isButton() && interaction.customId === 'decline') {
       await interaction.deferUpdate();
       await interaction.editReply({
         content: `<@${userCurrentCharacter.user.user_id}>`,
@@ -424,9 +418,7 @@ ${newLootC.length > 0 ? `__found ${newLootC.length} ${newLootC.length === 1 ? `i
               await generateSecondarySkillButton(
                 userCurrentSelectedSkills.selectedSecondarySkill,
               ),
-              await generateHealButton(
-                userCurrentSelectedSkills.selectedSecondarySkill,
-              ),
+              await generateHealButton(),
             ],
           }),
           ...(selectMonsterMap && selectMonsterMap.length > 0 ? [
@@ -462,7 +454,7 @@ ${newLootC.length > 0 ? `__found ${newLootC.length} ${newLootC.length === 1 ? `i
       });
       return;
     }
-    if (interaction.customId === 'accept') {
+    if (interaction.isButton() && interaction.customId === 'accept') {
       await interaction.deferUpdate();
       await queue.add(async () => {
         await db.sequelize.transaction({
@@ -493,9 +485,7 @@ ${newLootC.length > 0 ? `__found ${newLootC.length} ${newLootC.length === 1 ? `i
                     await generateSecondarySkillButton(
                       userCurrentSelectedSkills.selectedSecondarySkill,
                     ),
-                    await generateHealButton(
-                      userCurrentSelectedSkills.selectedSecondarySkill,
-                    ),
+                    await generateHealButton(),
                   ],
                 }),
                 ...(selectMonsterMap && selectMonsterMap.length > 0 ? [
@@ -589,9 +579,7 @@ ${newLootC.length > 0 ? `__found ${newLootC.length} ${newLootC.length === 1 ? `i
                   await generateSecondarySkillButton(
                     userCurrentSelectedSkills.selectedSecondarySkill,
                   ),
-                  await generateHealButton(
-                    userCurrentSelectedSkills.selectedSecondarySkill,
-                  ),
+                  await generateHealButton(),
                 ],
               }),
               ...(selectMonsterMap && selectMonsterMap.length > 0 ? [
@@ -624,11 +612,6 @@ ${newLootC.length > 0 ? `__found ${newLootC.length} ${newLootC.length === 1 ? `i
                 ],
               }),
             ],
-            // embeds: [
-            //   await healCompleteMessage(
-            //     userCurrentCharacter.user.user_id,
-            //   ),
-            // ],
             embeds: [],
             content: `<@${userCurrentCharacter.user.user_id}>, you are now healed!`,
           });
@@ -641,7 +624,6 @@ ${newLootC.length > 0 ? `__found ${newLootC.length} ${newLootC.length === 1 ? `i
             });
           } catch (e) {
             console.log(e);
-            // logger.error(`Error Discord: ${e}`);
           }
         });
       });
@@ -876,9 +858,7 @@ ${newLootC.length > 0 ? `__found ${newLootC.length} ${newLootC.length === 1 ? `i
                     await generateSecondarySkillButton(
                       userCurrentSelectedSkills.selectedSecondarySkill,
                     ),
-                    await generateHealButton(
-                      userCurrentSelectedSkills.selectedSecondarySkill,
-                    ),
+                    await generateHealButton(),
                   ],
                 }),
                 ...(selectMonsterMap && selectMonsterMap.length > 0 ? [
@@ -975,6 +955,7 @@ ${newLootC.length > 0 ? `__found ${newLootC.length} ${newLootC.length === 1 ? `i
                 t, // t, transaction
               );
             }
+            console.log('selecting new main skill');
           }
           if (interaction.customId === 'select-secondarySkill') {
             await interaction.deferUpdate();
@@ -988,6 +969,24 @@ ${newLootC.length > 0 ? `__found ${newLootC.length} ${newLootC.length === 1 ? `i
               );
             }
           }
+
+          mainSkillMap = userCurrentSelectedSkills.UserClassSkills.map((
+            mySkill,
+          ) => ({
+            placeholder: 'pick a skill',
+            label: `Main Skill: ${mySkill.skill.name}`,
+            value: `mainSkill:${mySkill.id}`,
+            default: mySkill.id === userCurrentSelectedSkills.selectedMainSkillId,
+          }));
+
+          secondarySkillMap = userCurrentSelectedSkills.UserClassSkills.map((
+            mySkill,
+          ) => ({
+            placeholder: 'pick a skill',
+            label: `Secondary Skill: ${mySkill.skill.name}`,
+            value: `secondarySkill:${mySkill.id}`,
+            default: mySkill.id === userCurrentSelectedSkills.selectedSecondarySkillId,
+          }));
 
           await interaction.editReply({
             content: `<@${userCurrentCharacter.user.user_id}>`,
@@ -1016,9 +1015,7 @@ ${newLootC.length > 0 ? `__found ${newLootC.length} ${newLootC.length === 1 ? `i
                   await generateSecondarySkillButton(
                     userCurrentSelectedSkills.selectedSecondarySkill,
                   ),
-                  await generateHealButton(
-                    userCurrentSelectedSkills.selectedSecondarySkill,
-                  ),
+                  await generateHealButton(),
                 ],
               }),
               ...(selectMonsterMap && selectMonsterMap.length > 0 ? [

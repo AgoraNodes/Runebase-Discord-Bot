@@ -146,6 +146,29 @@ export const discordResetSkills = async (
               transaction: t,
             });
             console.log(userSkills);
+            const attackSkill = await db.UserClassSkill.findOne({
+              where: {
+                UserClassId: userCurrentCharacter.id,
+              },
+              include: [
+                {
+                  model: db.skill,
+                  as: 'skill',
+                  where: {
+                    name: 'Attack',
+                  },
+                },
+              ],
+              lock: t.LOCK.UPDATE,
+              transaction: t,
+            });
+            await userCurrentCharacter.update({
+              selectedMainSkillId: attackSkill.id,
+              selectedSecondarySkillId: attackSkill.id,
+            }, {
+              lock: t.LOCK.UPDATE,
+              transaction: t,
+            });
             const sumResetSkillPoints = userSkills.reduce((accumulator, object) => accumulator + object.points, 0);
             const resetCost = (sumResetSkillPoints * 1) * 1e8;
             if (userSkills.length > 0) {
