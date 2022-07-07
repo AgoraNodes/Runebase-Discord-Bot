@@ -52,15 +52,9 @@ var renderItemImage = /*#__PURE__*/function () {
             extraThrowingJavelinHeight = isThrowing || isJavelin ? 25 : 0;
             totalExtraHeight = levelReqHeight + strengthReqHeight + dexterityReqHeight + shieldAndBootsDamageHeight + extraWeaponsHeight + extraShieldBlockHeight + minusBowHeight + minusRingwHeight + minusAmuletHeight + classSpecificHeight + extraThrowingJavelinHeight;
             _context.next = 25;
-            return (0, _canvas.registerFont)(_path["default"].join(__dirname, '../assets/fonts/', 'Heart_warming.otf'), {
-              family: 'HeartWarming'
-            });
-
-          case 25:
-            _context.next = 27;
             return (0, _canvas.loadImage)(_path["default"].join(__dirname, "../assets/images/items/".concat(newItem.itemBase.itemFamily.itemType.name, "/").concat(newItem.itemBase.itemFamily.name), "".concat(newItem.itemBase.name, ".png")));
 
-          case 27:
+          case 25:
             itemImage = _context.sent;
             canvas = (0, _canvas.createCanvas)(200, itemImage.height + 95 + modifierStringArray.length * 25 + totalExtraHeight);
             ctx = canvas.getContext('2d'); // console.log(newItem.itemBase.name);
@@ -210,14 +204,14 @@ var renderItemImage = /*#__PURE__*/function () {
               ctx.fillText(modifierStringArray[i], 100, itemImage.height + 95 + i * 25 + totalExtraHeight, 200);
             }
 
-            _context.next = 66;
+            _context.next = 64;
             return canvas.toBuffer();
 
-          case 66:
+          case 64:
             finalImage = _context.sent;
             return _context.abrupt("return", finalImage);
 
-          case 68:
+          case 66:
           case "end":
             return _context.stop();
         }

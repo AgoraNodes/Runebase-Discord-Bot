@@ -13,8 +13,6 @@ var _asyncToGenerator2 = _interopRequireDefault(require("@babel/runtime/helpers/
 
 var _canvas = require("canvas");
 
-var _path = _interopRequireDefault(require("path"));
-
 var _lodash = _interopRequireDefault(require("lodash"));
 
 var _discord = require("discord.js");
@@ -26,12 +24,6 @@ var renderCancelClassPicked = /*#__PURE__*/function () {
       while (1) {
         switch (_context.prev = _context.next) {
           case 0:
-            _context.next = 2;
-            return (0, _canvas.registerFont)(_path["default"].join(__dirname, '../assets/fonts/', 'Heart_warming.otf'), {
-              family: 'HeartWarming'
-            });
-
-          case 2:
             canvas = (0, _canvas.createCanvas)(500, 100);
             ctx = canvas.getContext('2d');
             ctx.font = 'bold 30px "HeartWarming"';
@@ -43,7 +35,7 @@ var renderCancelClassPicked = /*#__PURE__*/function () {
             ctx.fillText("".concat(user.username, " canceled class selection"), 250, 60, 500);
             return _context.abrupt("return", new _discord.MessageAttachment(canvas.toBuffer(), 'cancelSelection.png'));
 
-          case 12:
+          case 10:
           case "end":
             return _context.stop();
         }

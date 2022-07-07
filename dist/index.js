@@ -44,6 +44,10 @@ var _socket = _interopRequireDefault(require("socket.io"));
 
 var _csurf = _interopRequireDefault(require("csurf"));
 
+var _path = _interopRequireDefault(require("path"));
+
+var _canvas = require("canvas");
+
 var _models = _interopRequireDefault(require("./models"));
 
 var _router = require("./router");
@@ -72,6 +76,9 @@ var _settings = _interopRequireDefault(require("./config/settings"));
 
 /* eslint-disable import/first */
 Object.freeze(Object.prototype);
+(0, _canvas.registerFont)(_path["default"].join(__dirname, './assets/fonts/', 'Heart_warming.otf'), {
+  family: 'HeartWarming'
+});
 (0, _dotenv.config)();
 
 var checkCSRFRoute = function checkCSRFRoute(req) {

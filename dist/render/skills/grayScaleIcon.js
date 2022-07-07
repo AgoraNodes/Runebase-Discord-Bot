@@ -20,9 +20,6 @@ var renderGrayScaleIcon = /*#__PURE__*/function () {
       while (1) {
         switch (_context.prev = _context.next) {
           case 0:
-            console.log('icon');
-            console.log(icon);
-            console.log(icon.width);
             canvas = (0, _canvas.createCanvas)(icon.width, icon.height);
             ctx = canvas.getContext('2d');
             ctx.drawImage(icon, 0, 0);
@@ -41,14 +38,14 @@ var renderGrayScaleIcon = /*#__PURE__*/function () {
             }
 
             ctx.putImageData(id, 0, 0);
-            _context.next = 13;
+            _context.next = 10;
             return canvas.toBuffer();
 
-          case 13:
+          case 10:
             finalImage = _context.sent;
             return _context.abrupt("return", finalImage);
 
-          case 15:
+          case 12:
           case "end":
             return _context.stop();
         }

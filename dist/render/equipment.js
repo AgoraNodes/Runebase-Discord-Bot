@@ -23,140 +23,134 @@ var renderEquipmentImage = /*#__PURE__*/function () {
         switch (_context.prev = _context.next) {
           case 0:
             _context.next = 2;
-            return (0, _canvas.registerFont)(_path["default"].join(__dirname, '../assets/fonts/', 'Heart_warming.otf'), {
-              family: 'HeartWarming'
-            });
-
-          case 2:
-            _context.next = 4;
             return (0, _canvas.loadImage)(_path["default"].join(__dirname, '../assets/images/equipment', "background.png"));
 
-          case 4:
+          case 2:
             equipmentBackground = _context.sent;
             canvas = (0, _canvas.createCanvas)(equipmentBackground.width, equipmentBackground.height);
             ctx = canvas.getContext('2d');
             ctx.drawImage(equipmentBackground, 0, 0, equipmentBackground.width, equipmentBackground.height);
 
             if (!userCurrentCharacter.equipment.helm) {
-              _context.next = 12;
+              _context.next = 10;
               break;
             }
 
-            _context.next = 11;
+            _context.next = 9;
             return (0, _canvas.loadImage)(_path["default"].join(__dirname, "../assets/images/items/".concat(userCurrentCharacter.equipment.helm.itemBase.itemFamily.itemType.name, "/").concat(userCurrentCharacter.equipment.helm.itemBase.itemFamily.name), "".concat(userCurrentCharacter.equipment.helm.itemBase.name, ".png")));
 
-          case 11:
+          case 9:
             helmImage = _context.sent;
 
-          case 12:
+          case 10:
             if (!userCurrentCharacter.equipment.armor) {
-              _context.next = 16;
+              _context.next = 14;
               break;
             }
 
-            _context.next = 15;
+            _context.next = 13;
             return (0, _canvas.loadImage)(_path["default"].join(__dirname, "../assets/images/items/".concat(userCurrentCharacter.equipment.armor.itemBase.itemFamily.itemType.name, "/").concat(userCurrentCharacter.equipment.armor.itemBase.itemFamily.name), "".concat(userCurrentCharacter.equipment.armor.itemBase.name, ".png")));
 
-          case 15:
+          case 13:
             armorImage = _context.sent;
 
-          case 16:
+          case 14:
             if (!userCurrentCharacter.equipment.mainHand) {
-              _context.next = 20;
+              _context.next = 18;
               break;
             }
 
-            _context.next = 19;
+            _context.next = 17;
             return (0, _canvas.loadImage)(_path["default"].join(__dirname, "../assets/images/items/".concat(userCurrentCharacter.equipment.mainHand.itemBase.itemFamily.itemType.name, "/").concat(userCurrentCharacter.equipment.mainHand.itemBase.itemFamily.name), "".concat(userCurrentCharacter.equipment.mainHand.itemBase.name, ".png")));
 
-          case 19:
+          case 17:
             mainHandImage = _context.sent;
 
-          case 20:
+          case 18:
             if (!userCurrentCharacter.equipment.offHand) {
-              _context.next = 24;
+              _context.next = 22;
               break;
             }
 
-            _context.next = 23;
+            _context.next = 21;
             return (0, _canvas.loadImage)(_path["default"].join(__dirname, "../assets/images/items/".concat(userCurrentCharacter.equipment.offHand.itemBase.itemFamily.itemType.name, "/").concat(userCurrentCharacter.equipment.offHand.itemBase.itemFamily.name), "".concat(userCurrentCharacter.equipment.offHand.itemBase.name, ".png")));
 
-          case 23:
+          case 21:
             offHandImage = _context.sent;
 
-          case 24:
+          case 22:
             if (!userCurrentCharacter.equipment.boots) {
-              _context.next = 28;
+              _context.next = 26;
               break;
             }
 
-            _context.next = 27;
+            _context.next = 25;
             return (0, _canvas.loadImage)(_path["default"].join(__dirname, "../assets/images/items/".concat(userCurrentCharacter.equipment.boots.itemBase.itemFamily.itemType.name, "/").concat(userCurrentCharacter.equipment.boots.itemBase.itemFamily.name), "".concat(userCurrentCharacter.equipment.boots.itemBase.name, ".png")));
 
-          case 27:
+          case 25:
             bootsImage = _context.sent;
 
-          case 28:
+          case 26:
             if (!userCurrentCharacter.equipment.gloves) {
-              _context.next = 32;
+              _context.next = 30;
               break;
             }
 
-            _context.next = 31;
+            _context.next = 29;
             return (0, _canvas.loadImage)(_path["default"].join(__dirname, "../assets/images/items/".concat(userCurrentCharacter.equipment.gloves.itemBase.itemFamily.itemType.name, "/").concat(userCurrentCharacter.equipment.gloves.itemBase.itemFamily.name), "".concat(userCurrentCharacter.equipment.gloves.itemBase.name, ".png")));
 
-          case 31:
+          case 29:
             glovesImage = _context.sent;
 
-          case 32:
+          case 30:
             if (!userCurrentCharacter.equipment.belt) {
-              _context.next = 36;
+              _context.next = 34;
               break;
             }
 
-            _context.next = 35;
+            _context.next = 33;
             return (0, _canvas.loadImage)(_path["default"].join(__dirname, "../assets/images/items/".concat(userCurrentCharacter.equipment.belt.itemBase.itemFamily.itemType.name, "/").concat(userCurrentCharacter.equipment.belt.itemBase.itemFamily.name), "".concat(userCurrentCharacter.equipment.belt.itemBase.name, ".png")));
 
-          case 35:
+          case 33:
             beltImage = _context.sent;
 
-          case 36:
+          case 34:
             if (!userCurrentCharacter.equipment.amulet) {
-              _context.next = 40;
+              _context.next = 38;
               break;
             }
 
-            _context.next = 39;
+            _context.next = 37;
             return (0, _canvas.loadImage)(_path["default"].join(__dirname, "../assets/images/items/".concat(userCurrentCharacter.equipment.amulet.itemBase.itemFamily.itemType.name, "/").concat(userCurrentCharacter.equipment.amulet.itemBase.itemFamily.name), "".concat(userCurrentCharacter.equipment.amulet.itemBase.name, ".png")));
 
-          case 39:
+          case 37:
             amuletImage = _context.sent;
 
-          case 40:
+          case 38:
             if (!userCurrentCharacter.equipment.ringSlotOne) {
-              _context.next = 44;
+              _context.next = 42;
               break;
             }
 
-            _context.next = 43;
+            _context.next = 41;
             return (0, _canvas.loadImage)(_path["default"].join(__dirname, "../assets/images/items/".concat(userCurrentCharacter.equipment.ringSlotOne.itemBase.itemFamily.itemType.name, "/").concat(userCurrentCharacter.equipment.ringSlotOne.itemBase.itemFamily.name), "".concat(userCurrentCharacter.equipment.ringSlotOne.itemBase.name, ".png")));
 
-          case 43:
+          case 41:
             ringSlotOneImage = _context.sent;
 
-          case 44:
+          case 42:
             if (!userCurrentCharacter.equipment.ringSlotTwo) {
-              _context.next = 48;
+              _context.next = 46;
               break;
             }
 
-            _context.next = 47;
+            _context.next = 45;
             return (0, _canvas.loadImage)(_path["default"].join(__dirname, "../assets/images/items/".concat(userCurrentCharacter.equipment.ringSlotTwo.itemBase.itemFamily.itemType.name, "/").concat(userCurrentCharacter.equipment.ringSlotTwo.itemBase.itemFamily.name), "".concat(userCurrentCharacter.equipment.ringSlotTwo.itemBase.name, ".png")));
 
-          case 47:
+          case 45:
             ringSlotTwoImage = _context.sent;
 
-          case 48:
+          case 46:
             console.log(userCurrentCharacter.equipment);
 
             if (userCurrentCharacter.equipment.helm) {
@@ -240,14 +234,14 @@ var renderEquipmentImage = /*#__PURE__*/function () {
             }
 
             console.log('after generate equipment');
-            _context.next = 62;
+            _context.next = 60;
             return canvas.toBuffer();
 
-          case 62:
+          case 60:
             finalImage = _context.sent;
             return _context.abrupt("return", finalImage);
 
-          case 64:
+          case 62:
           case "end":
             return _context.stop();
         }

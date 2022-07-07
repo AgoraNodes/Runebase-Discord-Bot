@@ -26,12 +26,6 @@ var renderHealed = /*#__PURE__*/function () {
       while (1) {
         switch (_context.prev = _context.next) {
           case 0:
-            _context.next = 2;
-            return (0, _canvas.registerFont)(_path["default"].join(__dirname, '../../assets/fonts/', 'Heart_warming.otf'), {
-              family: 'HeartWarming'
-            });
-
-          case 2:
             current = classes.slice(start, start + 1);
             canvas = (0, _canvas.createCanvas)(500, 970);
             ctx = canvas.getContext('2d');
@@ -40,10 +34,10 @@ var renderHealed = /*#__PURE__*/function () {
             ctx.strokeStyle = 'black';
             ctx.lineWidth = 3;
             ctx.textAlign = "center";
-            _context.next = 12;
+            _context.next = 10;
             return (0, _canvas.loadImage)(_path["default"].join(__dirname, '../../assets/images/classes', "".concat(current[0].classDescription.image, ".png")));
 
-          case 12:
+          case 10:
             newClassImage = _context.sent;
             ctx.drawImage(newClassImage, 0, 0, 500, 800);
             ctx.strokeText("".concat(user.username), 250, 850, 500);
@@ -52,7 +46,7 @@ var renderHealed = /*#__PURE__*/function () {
             ctx.fillText("picked ".concat(current[0].name, "!"), 250, 920, 500);
             return _context.abrupt("return", new _discord.MessageAttachment(canvas.toBuffer(), 'picked.png'));
 
-          case 19:
+          case 17:
           case "end":
             return _context.stop();
         }

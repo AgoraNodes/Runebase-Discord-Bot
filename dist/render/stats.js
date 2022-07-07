@@ -54,23 +54,17 @@ var renderStatsImage = /*#__PURE__*/function () {
             PR = _yield$calculateChara.PR;
             LR = _yield$calculateChara.LR;
             CR = _yield$calculateChara.CR;
-            _context.next = 26;
-            return (0, _canvas.registerFont)(_path["default"].join(__dirname, '../assets/fonts/', 'Heart_warming.otf'), {
-              family: 'HeartWarming'
-            });
-
-          case 26:
             canvas = (0, _canvas.createCanvas)(960, 1400);
             ctx = canvas.getContext('2d');
-            _context.next = 30;
+            _context.next = 28;
             return (0, _canvas.loadImage)(_path["default"].join(__dirname, '../assets/images', "stats_background.png"));
 
-          case 30:
+          case 28:
             BackgroundImageStats = _context.sent;
-            _context.next = 33;
+            _context.next = 31;
             return (0, _canvas.loadImage)(_path["default"].join(__dirname, '../assets/images', "unspendAttributesBox.png"));
 
-          case 33:
+          case 31:
             unspendAttributesBoxImage = _context.sent;
             ctx.drawImage(BackgroundImageStats, 0, 0, 960, 1300);
 
@@ -222,14 +216,14 @@ var renderStatsImage = /*#__PURE__*/function () {
             ctx.font = 'bold 70px "HeartWarming"';
             ctx.strokeText("".concat(username, "'s ").concat(currentClass, " stats"), 480, 1380, 960);
             ctx.fillText("".concat(username, "'s ").concat(currentClass, " stats"), 480, 1380, 960);
-            _context.next = 137;
+            _context.next = 135;
             return canvas.toBuffer();
 
-          case 137:
+          case 135:
             finalImage = _context.sent;
             return _context.abrupt("return", finalImage);
 
-          case 139:
+          case 137:
           case "end":
             return _context.stop();
         }

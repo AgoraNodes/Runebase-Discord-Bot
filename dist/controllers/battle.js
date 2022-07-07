@@ -264,7 +264,7 @@ var discordBattle = /*#__PURE__*/function () {
             battle = _context13.sent;
 
           case 64:
-            mainSkillMap = userCurrentSelectedSkills.UserClassSkills.map(function (mySkill, index) {
+            mainSkillMap = userCurrentSelectedSkills.UserClassSkills.map(function (mySkill) {
               return {
                 placeholder: 'pick a skill',
                 label: "Main Skill: ".concat(mySkill.skill.name),
@@ -272,7 +272,7 @@ var discordBattle = /*#__PURE__*/function () {
                 "default": mySkill.id === userCurrentSelectedSkills.selectedMainSkillId
               };
             });
-            secondarySkillMap = userCurrentSelectedSkills.UserClassSkills.map(function (mySkill, index) {
+            secondarySkillMap = userCurrentSelectedSkills.UserClassSkills.map(function (mySkill) {
               return {
                 placeholder: 'pick a skill',
                 label: "Secondary Skill: ".concat(mySkill.skill.name),
@@ -322,7 +322,7 @@ var discordBattle = /*#__PURE__*/function () {
           case 82:
             _context13.t18 = _context13.sent;
             _context13.next = 85;
-            return (0, _buttons.generateHealButton)(userCurrentSelectedSkills.selectedSecondarySkill);
+            return (0, _buttons.generateHealButton)();
 
           case 85:
             _context13.t19 = _context13.sent;
@@ -369,8 +369,7 @@ var discordBattle = /*#__PURE__*/function () {
                   while (1) {
                     switch (_context.prev = _context.next) {
                       case 0:
-                        lootArray = []; // eslint-disable-next-line no-restricted-syntax
-
+                        lootArray = [];
                         _iteratorAbruptCompletion = false;
                         _didIteratorError = false;
                         _context.prev = 3;
@@ -466,8 +465,7 @@ var discordBattle = /*#__PURE__*/function () {
                   while (1) {
                     switch (_context2.prev = _context2.next) {
                       case 0:
-                        lootButtonArray = []; // eslint-disable-next-line no-restricted-syntax
-
+                        lootButtonArray = [];
                         _iteratorAbruptCompletion2 = false;
                         _didIteratorError2 = false;
                         _context2.prev = 3;
@@ -562,8 +560,7 @@ var discordBattle = /*#__PURE__*/function () {
                   while (1) {
                     switch (_context3.prev = _context3.next) {
                       case 0:
-                        itemString = ''; // eslint-disable-next-line no-restricted-syntax
-
+                        itemString = '';
                         _iteratorAbruptCompletion3 = false;
                         _didIteratorError3 = false;
                         _context3.prev = 3;
@@ -776,7 +773,7 @@ var discordBattle = /*#__PURE__*/function () {
                         return _context12.abrupt("return");
 
                       case 47:
-                        if (!(interaction.customId === 'decline')) {
+                        if (!(interaction.isButton() && interaction.customId === 'decline')) {
                           _context12.next = 71;
                           break;
                         }
@@ -800,7 +797,7 @@ var discordBattle = /*#__PURE__*/function () {
                       case 59:
                         _context12.t17 = _context12.sent;
                         _context12.next = 62;
-                        return (0, _buttons.generateHealButton)(userCurrentSelectedSkills.selectedSecondarySkill);
+                        return (0, _buttons.generateHealButton)();
 
                       case 62:
                         _context12.t18 = _context12.sent;
@@ -840,7 +837,7 @@ var discordBattle = /*#__PURE__*/function () {
                         return _context12.abrupt("return");
 
                       case 71:
-                        if (!(interaction.customId === 'accept')) {
+                        if (!(interaction.isButton() && interaction.customId === 'accept')) {
                           _context12.next = 77;
                           break;
                         }
@@ -902,7 +899,7 @@ var discordBattle = /*#__PURE__*/function () {
                                             case 16:
                                               _context4.t6 = _context4.sent;
                                               _context4.next = 19;
-                                              return (0, _buttons.generateHealButton)(userCurrentSelectedSkills.selectedSecondarySkill);
+                                              return (0, _buttons.generateHealButton)();
 
                                             case 19:
                                               _context4.t7 = _context4.sent;
@@ -1004,7 +1001,7 @@ var discordBattle = /*#__PURE__*/function () {
                                             case 48:
                                               _context4.t20 = _context4.sent;
                                               _context4.next = 51;
-                                              return (0, _buttons.generateHealButton)(userCurrentSelectedSkills.selectedSecondarySkill);
+                                              return (0, _buttons.generateHealButton)();
 
                                             case 51:
                                               _context4.t21 = _context4.sent;
@@ -1075,7 +1072,7 @@ var discordBattle = /*#__PURE__*/function () {
                                             case 6:
                                               _context5.prev = 6;
                                               _context5.t0 = _context5["catch"](1);
-                                              console.log(_context5.t0); // logger.error(`Error Discord: ${e}`);
+                                              console.log(_context5.t0);
 
                                             case 9:
                                             case "end":
@@ -1478,7 +1475,7 @@ var discordBattle = /*#__PURE__*/function () {
                                             case 139:
                                               _context9.t42 = _context9.sent;
                                               _context9.next = 142;
-                                              return (0, _buttons.generateHealButton)(userCurrentSelectedSkills.selectedSecondarySkill);
+                                              return (0, _buttons.generateHealButton)();
 
                                             case 142:
                                               _context9.t43 = _context9.sent;
@@ -1641,12 +1638,12 @@ var discordBattle = /*#__PURE__*/function () {
 
                                             case 153:
                                               if (!interaction.isSelectMenu()) {
-                                                _context9.next = 196;
+                                                _context9.next = 199;
                                                 break;
                                               }
 
                                               if (!(interaction.customId === 'select-mainSkill')) {
-                                                _context9.next = 162;
+                                                _context9.next = 163;
                                                 break;
                                               }
 
@@ -1671,58 +1668,77 @@ var discordBattle = /*#__PURE__*/function () {
                                               userCurrentSelectedSkills = _context9.sent;
 
                                             case 162:
+                                              console.log('selecting new main skill');
+
+                                            case 163:
                                               if (!(interaction.customId === 'select-secondarySkill')) {
-                                                _context9.next = 170;
+                                                _context9.next = 171;
                                                 break;
                                               }
 
-                                              _context9.next = 165;
+                                              _context9.next = 166;
                                               return interaction.deferUpdate();
 
-                                            case 165:
+                                            case 166:
                                               if (!interaction.values[0].startsWith('secondarySkill:')) {
-                                                _context9.next = 170;
+                                                _context9.next = 171;
                                                 break;
                                               }
 
                                               skillId = Number(interaction.values[0].replace('secondarySkill:', ''));
-                                              _context9.next = 169;
+                                              _context9.next = 170;
                                               return (0, _updateSelectedSkills.updateUserCurrentSelectedSkills)(userId, // Discord User id
                                               false, // mainSkill
                                               skillId, // secondary skill
                                               t // t, transaction
                                               );
 
-                                            case 169:
+                                            case 170:
                                               userCurrentSelectedSkills = _context9.sent;
 
-                                            case 170:
+                                            case 171:
+                                              mainSkillMap = userCurrentSelectedSkills.UserClassSkills.map(function (mySkill) {
+                                                return {
+                                                  placeholder: 'pick a skill',
+                                                  label: "Main Skill: ".concat(mySkill.skill.name),
+                                                  value: "mainSkill:".concat(mySkill.id),
+                                                  "default": mySkill.id === userCurrentSelectedSkills.selectedMainSkillId
+                                                };
+                                              });
+                                              secondarySkillMap = userCurrentSelectedSkills.UserClassSkills.map(function (mySkill) {
+                                                return {
+                                                  placeholder: 'pick a skill',
+                                                  label: "Secondary Skill: ".concat(mySkill.skill.name),
+                                                  value: "secondarySkill:".concat(mySkill.id),
+                                                  "default": mySkill.id === userCurrentSelectedSkills.selectedSecondarySkillId
+                                                };
+                                              });
                                               _context9.t49 = interaction;
                                               _context9.t50 = "<@".concat(userCurrentCharacter.user.user_id, ">");
                                               _context9.t51 = [];
                                               _context9.t52 = _discord.MessageAttachment;
-                                              _context9.next = 176;
+                                              _context9.next = 179;
                                               return (0, _initBattle.renderInitBattleGif)(userCurrentCharacter, userCurrentSelectedSkills, battle, previousBattleState, previousUserState, currentSelectedMonster, monsterInfo, userInfo);
 
-                                            case 176:
+                                            case 179:
                                               _context9.t53 = _context9.sent;
                                               _context9.t54 = new _context9.t52(_context9.t53, 'battle.gif');
                                               _context9.t55 = [_context9.t54];
                                               _context9.t56 = _discord.MessageActionRow;
-                                              _context9.next = 182;
+                                              _context9.next = 185;
                                               return (0, _buttons.generateMainSkillButton)(userCurrentSelectedSkills.selectedMainSkill);
 
-                                            case 182:
+                                            case 185:
                                               _context9.t57 = _context9.sent;
-                                              _context9.next = 185;
+                                              _context9.next = 188;
                                               return (0, _buttons.generateSecondarySkillButton)(userCurrentSelectedSkills.selectedSecondarySkill);
 
-                                            case 185:
-                                              _context9.t58 = _context9.sent;
-                                              _context9.next = 188;
-                                              return (0, _buttons.generateHealButton)(userCurrentSelectedSkills.selectedSecondarySkill);
-
                                             case 188:
+                                              _context9.t58 = _context9.sent;
+                                              _context9.next = 191;
+                                              return (0, _buttons.generateHealButton)();
+
+                                            case 191:
                                               _context9.t59 = _context9.sent;
                                               _context9.t60 = [_context9.t57, _context9.t58, _context9.t59];
                                               _context9.t61 = {
@@ -1754,10 +1770,10 @@ var discordBattle = /*#__PURE__*/function () {
                                                 files: _context9.t55,
                                                 components: _context9.t63
                                               };
-                                              _context9.next = 196;
+                                              _context9.next = 199;
                                               return _context9.t49.editReply.call(_context9.t49, _context9.t64);
 
-                                            case 196:
+                                            case 199:
                                             case "end":
                                               return _context9.stop();
                                           }

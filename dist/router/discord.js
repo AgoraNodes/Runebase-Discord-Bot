@@ -19,13 +19,11 @@ var _channel = require("../controllers/channel");
 
 var _group = require("../controllers/group");
 
-var _help = require("../controllers/help");
-
-var _account = require("../controllers/account");
+var _featureSetting = require("../controllers/featureSetting");
 
 var _user = require("../controllers/user");
 
-var _preWithdraw = require("../helpers/withdraw/preWithdraw");
+var _help = require("../controllers/help");
 
 var _myrank = require("../controllers/myrank");
 
@@ -71,15 +69,15 @@ var _resetStats = require("../controllers/resetStats");
 
 var _resetSkills = require("../controllers/resetSkills");
 
-var _expTest = require("../controllers/expTest");
+var _skill = require("../controllers/skill");
+
+var _account = require("../controllers/account");
 
 var _rateLimit = require("../helpers/rateLimit");
 
-var _featureSetting = require("../controllers/featureSetting");
+var _preWithdraw = require("../helpers/withdraw/preWithdraw");
 
 var _isMaintenanceOrDisabled = require("../helpers/isMaintenanceOrDisabled");
-
-var _skill = require("../controllers/skill");
 
 var _settings = _interopRequireDefault(require("../config/settings"));
 

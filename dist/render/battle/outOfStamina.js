@@ -13,8 +13,6 @@ var _asyncToGenerator2 = _interopRequireDefault(require("@babel/runtime/helpers/
 
 var _canvas = require("canvas");
 
-var _path = _interopRequireDefault(require("path"));
-
 var _lodash = _interopRequireDefault(require("lodash"));
 
 var _discord = require("discord.js");
@@ -26,12 +24,6 @@ var renderOutOfStamina = /*#__PURE__*/function () {
       while (1) {
         switch (_context.prev = _context.next) {
           case 0:
-            _context.next = 2;
-            return (0, _canvas.registerFont)(_path["default"].join(__dirname, '../../assets/fonts/', 'Heart_warming.otf'), {
-              family: 'HeartWarming'
-            });
-
-          case 2:
             canvas = (0, _canvas.createCanvas)(1400, 300);
             ctx = canvas.getContext('2d');
             ctx.font = 'bold 68px "HeartWarming"';
@@ -44,7 +36,7 @@ var renderOutOfStamina = /*#__PURE__*/function () {
             ctx.fillText("".concat(currentCharacter.user.username, " you are out of stamina, come back tomorrow"), 700, 150, 1400);
             return _context.abrupt("return", new _discord.MessageAttachment(canvas.toBuffer(), 'outOfStamina.png'));
 
-          case 12:
+          case 10:
           case "end":
             return _context.stop();
         }

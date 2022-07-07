@@ -1,0 +1,16 @@
+[
+  {
+    "name": "Bonk",
+    "description": "Bonk releases a powerful blow that increases damage. Damage and Attack Rating are also increased compared to normal blow; damage is added both as flat amount and percentage (after flat increase).",
+    "initial": {
+      "damage": 1,
+      "damageBonus %": 50,
+      "attackBonus %": 20
+    },
+    "next": {
+      "damage": 1,
+      "damageBonus %": 5,
+      "attackBonus %": 5
+    }
+  }
+]
