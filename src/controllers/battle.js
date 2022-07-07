@@ -372,7 +372,7 @@ ${newLootC.length > 0 ? `__found ${newLootC.length} ${newLootC.length === 1 ? `i
       });
       return;
     }
-    if (interaction.isButton() && (!interaction.customId.startsWith('lootItem:') || interaction.customId !== 'Heal')) {
+    if (interaction.isButton() && !interaction.customId.startsWith('lootItem:') && interaction.customId !== 'Heal') {
       if (!currentSelectedMonster) {
         await interaction.reply({
           content: `<@${interaction.user.id}>, You need to select a monster to attack!`,

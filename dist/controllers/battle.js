@@ -706,7 +706,7 @@ var discordBattle = /*#__PURE__*/function () {
                         return _context12.abrupt("return");
 
                       case 17:
-                        if (!(interaction.isButton() && (!interaction.customId.startsWith('lootItem:') || interaction.customId !== 'Heal'))) {
+                        if (!(interaction.isButton() && !interaction.customId.startsWith('lootItem:') && interaction.customId !== 'Heal')) {
                           _context12.next = 22;
                           break;
                         }
