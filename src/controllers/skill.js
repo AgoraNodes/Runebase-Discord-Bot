@@ -15,6 +15,8 @@ import {
   generateCancelSkillButton,
   generateAddSkillButton,
 } from '../buttons';
+import skills from '../render/skills/skills.json';
+import { skillInfoMessage } from '../messages';
 
 export const discordSkills = async (
   discordClient,
@@ -67,12 +69,14 @@ export const discordSkills = async (
   }));
 
   const embedMessage = await discordChannel.send({
+    content: `<@${userCurrentCharacter.user.user_id}>`,
     files: [
       await renderSkillScreen(
         userCurrentCharacter,
         userCurrentCharacter.class.skillTrees[0],
         0, // skillTreeIndex
         false, // selected skill
+        false, // Skill Info Json
         false, // add skill failReason String
       ),
     ],
@@ -133,6 +137,7 @@ export const discordSkills = async (
     if (interaction.isButton()) {
       if (interaction.customId.startsWith('addSkill:')) {
         await interaction.editReply({
+          content: `<@${userCurrentCharacter.user.user_id}>`,
           embeds: [
             loadingSkillAddEmbed,
           ],
@@ -159,11 +164,11 @@ export const discordSkills = async (
       }
     }
     if (interaction.isSelectMenu()) {
-      // await interaction.editReply({
-      //   embeds: [
-      //     loadingSkillSelectEmbed,
-      //   ],
-      // });
+      await interaction.editReply({
+        embeds: [
+          loadingSkillSelectEmbed,
+        ],
+      });
       if (interaction.customId === 'select-skilltree') {
         if (interaction.values[0].startsWith('skilltree-')) {
           skillTreeIndex = Number(interaction.values[0].replace('skilltree-', ''));
@@ -178,6 +183,7 @@ export const discordSkills = async (
         }
       }
     }
+    const jsonSkillInfo = skills.find((x) => x.name === selectedSkill.name);
 
     const skillTreeMapEdit = userCurrentCharacter.class.skillTrees.map((
       skilltree,
@@ -199,13 +205,20 @@ export const discordSkills = async (
     }));
 
     await interaction.editReply({
-      embeds: [],
+      content: `<@${userCurrentCharacter.user.user_id}>`,
+      embeds: [
+        skillInfoMessage(
+          jsonSkillInfo && jsonSkillInfo.name,
+          jsonSkillInfo && jsonSkillInfo.description,
+        ),
+      ],
       files: [
         await renderSkillScreen(
           userCurrentCharacter,
           userCurrentCharacter.class.skillTrees[skillTreeIndex],
           skillTreeIndex,
           selectedSkill,
+          jsonSkillInfo,
           failAddSkillReason,
         ),
       ],

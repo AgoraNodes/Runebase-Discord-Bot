@@ -8,17 +8,11 @@ import {
   createCanvas,
 } from 'canvas';
 import _ from 'lodash';
-import skills from './skills.json';
 
 export const renderSkillDescriptionImage = async (
-  userCharacter,
-  skillTree,
-  skillTreeIndex,
-  selectedSkill,
+  jsonSkillInfo = false,
+  userHasSkill = false,
 ) => {
-  const jsonSkillInfo = skills.find((x) => x.name === selectedSkill.name);
-  const userHasSkill = userCharacter.UserClassSkills.find((o) => o.skillId === selectedSkill.id);
-
   const canvas = createCanvas(
     350,
     457,
@@ -36,13 +30,13 @@ export const renderSkillDescriptionImage = async (
   ctx.lineWidth = "3";
   ctx.strokeStyle = "red";
   ctx.strokeText(
-    selectedSkill.name,
+    jsonSkillInfo.name,
     canvas.width / 2,
     50,
     345,
   );
   ctx.fillText(
-    selectedSkill.name,
+    jsonSkillInfo.name,
     canvas.width / 2,
     50,
     345,

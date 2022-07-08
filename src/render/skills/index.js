@@ -7,12 +7,14 @@ import {
 } from 'canvas';
 import { renderSkillTreeImage } from "./skillTree";
 import { renderSkillDescriptionImage } from './skillDescription';
+import skills from './skills.json';
 
 export const renderSkillScreen = async (
   userCharacter,
   skillTree,
   skillTreeIndex,
   selectedSkill,
+  jsonSkillInfo,
   failReason,
 ) => {
   const skillTreeImageBuffer = await renderSkillTreeImage(
@@ -21,14 +23,14 @@ export const renderSkillScreen = async (
     skillTreeIndex,
     selectedSkill,
   );
-  const skillTreeImage = await loadImage(skillTreeImageBuffer);
 
+  const userHasSkill = userCharacter.UserClassSkills.find((o) => o.skillId === selectedSkill.id);
   const skillDescriptionImageBuffer = await renderSkillDescriptionImage(
-    userCharacter,
-    skillTree,
-    skillTreeIndex,
-    selectedSkill,
+    jsonSkillInfo,
+    userHasSkill,
   );
+
+  const skillTreeImage = await loadImage(skillTreeImageBuffer);
   const skillDescriptionImage = await loadImage(skillDescriptionImageBuffer);
 
   const failReasonHeight = failReason ? 25 : 0;

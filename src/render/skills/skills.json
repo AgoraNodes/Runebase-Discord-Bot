@@ -12,5 +12,137 @@
       "damageBonus %": 5,
       "attackBonus %": 5
     }
+  },
+  {
+    "name": "Swordsman",
+    "description": "Deal Extra damage with Swords",
+    "initial": {
+      "damageBonus %": 28,
+      "attackBonus %": 40,
+      "critcalStrike %": 5
+    },
+    "next": {
+      "damageBonus %": 5,
+      "attackBonus %": 8,
+      "critcalStrike %": 4
+    }
+  },
+  {
+    "name": "Axeman",
+    "description": "Deal Extra damage with Axes",
+    "initial": {
+      "damageBonus %": 28,
+      "attackBonus %": 40,
+      "critcalStrike %": 5
+    },
+    "next": {
+      "damageBonus %": 5,
+      "attackBonus %": 8,
+      "critcalStrike %": 4
+    }
+  },
+  {
+    "name": "Maceman",
+    "description": "Deal Extra damage with Maces",
+    "initial": {
+      "damageBonus %": 28,
+      "attackBonus %": 40,
+      "critcalStrike %": 5
+    },
+    "next": {
+      "damageBonus %": 5,
+      "attackBonus %": 8,
+      "critcalStrike %": 4
+    }
+  },
+  {
+    "name": "Spearman",
+    "description": "Deal Extra damage with Spears",
+    "initial": {
+      "damageBonus %": 28,
+      "attackBonus %": 40,
+      "critcalStrike %": 5
+    },
+    "next": {
+      "damageBonus %": 5,
+      "attackBonus %": 8,
+      "critcalStrike %": 4
+    }
+  },
+  {
+    "name": "Polearm Master",
+    "description": "Deal Extra damage with Polearms & Poleaxes",
+    "initial": {
+      "damageBonus %": 28,
+      "attackBonus %": 40,
+      "critcalStrike %": 5
+    },
+    "next": {
+      "damageBonus %": 5,
+      "attackBonus %": 8,
+      "critcalStrike %": 4
+    }
+  },
+  {
+    "name": "Relieve",
+    "description": "Heal after Winning a battle",
+    "initial": {
+      "heal %": 10
+    },
+    "next": {
+      "heal %": 1
+    }
+  },
+  {
+    "name": "Critical Hit",
+    "description": "Change to Critical Hit the enemy",
+    "initial": {
+      "chance %": 5
+    },
+    "next": {
+      "chance %": 1
+    }
+  },
+  {
+    "name": "Healing Hit",
+    "description": "Receive Healing from hitting enemies",
+    "initial": {
+      "heal %": 1
+    },
+    "next": {
+      "heal %": 0.5
+    }
+  },
+  {
+    "name": "Stun",
+    "description": "Chance to Stun enemies & increased attack damage",
+    "initial": {
+      "damageBonus %": 5,
+      "chance %": 5
+    },
+    "next": {
+      "damageBonus %": 1,
+      "chance %": 2
+    }
+  },
+  {
+    "name": "Retaliate",
+    "description": "Chance to Kick enemy when receiving non-ranged damage",
+    "initial": {
+      "chance %": 5
+    },
+    "next": {
+      "chance %": 2
+    }
+  },
+  {
+    "name": "Critical Kick",
+    "description": "Change to Critical Kick the enemy",
+    "initial": {
+      "chance %": 5
+    },
+    "next": {
+      "chance %": 1
+    }
   }
 ]

@@ -868,6 +868,23 @@ export const unableToWithdrawToSelfMessage = (message) => {
   return result;
 };
 
+export const skillInfoMessage = (
+  name,
+  description,
+) => {
+  const result = new MessageEmbed()
+    .setColor(settings.bot.color)
+    .setTitle(name || 'Skill not found')
+    .setDescription(`${description || 'No skill Info found'}`)
+    .setTimestamp()
+    .setFooter({
+      text: `${settings.bot.name} v${pjson.version}`,
+      iconURL: settings.bot.logo,
+    });
+
+  return result;
+};
+
 export const AccountInfoMessage = () => {
   const result = new MessageEmbed()
     .setColor(settings.bot.color)
