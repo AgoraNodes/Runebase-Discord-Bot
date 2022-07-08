@@ -88,7 +88,7 @@ npx sequelize-cli seed:generate --name demo-jackpot
 revert seed file
 
 ````
-npx sequelize db:seed:undo --seed 20220620172330-add_skill_connection_amazon_test.js
+npx sequelize db:seed:undo --seed 20220708200522-change_barb_skillnames.js
 ````
 
 ## Runebase Node Config
