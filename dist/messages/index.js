@@ -5,7 +5,7 @@ var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefau
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.warnDirectMessage = exports.walletNotFoundMessage = exports.userNotFoundMessage = exports.unableToWithdrawToSelfMessage = exports.timeOutMessage = exports.skillConfirmationMessage = exports.rolledDiceMessage = exports.rollDiceTooFastMessage = exports.reviewMessage = exports.resetStatsDeclinedMessage = exports.resetStatsConfirmationMessage = exports.resetStatsCompletemessage = exports.resetSkillCompleteMessage = exports.priceMessage = exports.minimumMessage = exports.levelUpMessage = exports.invitedNewUserRewardMessage = exports.invalidAmountMessage = exports.invalidAddressMessage = exports.insufficientBalanceMessage = exports.helpMessage = exports.healCompleteMessage = exports.grantRoleExpMessage = exports.gainVoteTopggExpMessage = exports.gainTestExpMessage = exports.gainBattleExpExpMessage = exports.gainActiveTalkerExpMessage = exports.featureDisabledServerMessage = exports.featureDisabledGlobalMessage = exports.featureDisabledChannelMessage = exports.enterWithdrawalAmount = exports.enterWithdrawalAddress = exports.discordWithdrawalConfirmedMessage = exports.discordWithdrawalAcceptedMessage = exports.discordWelcomeMessage = exports.discordUserWithdrawalRejectMessage = exports.discordUserBannedMessage = exports.discordServerBannedMessage = exports.discordLimitSpamMessage = exports.discordIncomingDepositMessage = exports.discordErrorMessage = exports.discordDepositConfirmedMessage = exports.discordChannelBannedMessage = exports.discordBotMaintenanceMessage = exports.discordBotDisabledMessage = exports.depositAddressMessage = exports.declineResetSkillsMessage = exports.declineHealMessage = exports.confirmationHealMessage = exports.coinInfoMessage = exports.cannotSendMessageUser = exports.balanceMessage = exports.alreadyVotedTopGG = exports.NotInDirectMessage = exports.AccountInfoMessage = void 0;
+exports.warnDirectMessage = exports.walletNotFoundMessage = exports.userNotFoundMessage = exports.unableToWithdrawToSelfMessage = exports.timeOutMessage = exports.skillInfoMessage = exports.skillConfirmationMessage = exports.rolledDiceMessage = exports.rollDiceTooFastMessage = exports.reviewMessage = exports.resetStatsDeclinedMessage = exports.resetStatsConfirmationMessage = exports.resetStatsCompletemessage = exports.resetSkillCompleteMessage = exports.priceMessage = exports.minimumMessage = exports.levelUpMessage = exports.invitedNewUserRewardMessage = exports.invalidAmountMessage = exports.invalidAddressMessage = exports.insufficientBalanceMessage = exports.helpMessage = exports.healCompleteMessage = exports.grantRoleExpMessage = exports.gainVoteTopggExpMessage = exports.gainTestExpMessage = exports.gainBattleExpExpMessage = exports.gainActiveTalkerExpMessage = exports.featureDisabledServerMessage = exports.featureDisabledGlobalMessage = exports.featureDisabledChannelMessage = exports.enterWithdrawalAmount = exports.enterWithdrawalAddress = exports.discordWithdrawalConfirmedMessage = exports.discordWithdrawalAcceptedMessage = exports.discordWelcomeMessage = exports.discordUserWithdrawalRejectMessage = exports.discordUserBannedMessage = exports.discordServerBannedMessage = exports.discordLimitSpamMessage = exports.discordIncomingDepositMessage = exports.discordErrorMessage = exports.discordDepositConfirmedMessage = exports.discordChannelBannedMessage = exports.discordBotMaintenanceMessage = exports.discordBotDisabledMessage = exports.depositAddressMessage = exports.declineResetSkillsMessage = exports.declineHealMessage = exports.confirmationHealMessage = exports.coinInfoMessage = exports.cannotSendMessageUser = exports.balanceMessage = exports.alreadyVotedTopGG = exports.NotInDirectMessage = exports.AccountInfoMessage = void 0;
 
 var _discord = require("discord.js");
 
@@ -531,6 +531,16 @@ var unableToWithdrawToSelfMessage = function unableToWithdrawToSelfMessage(messa
 };
 
 exports.unableToWithdrawToSelfMessage = unableToWithdrawToSelfMessage;
+
+var skillInfoMessage = function skillInfoMessage(name, description) {
+  var result = new _discord.MessageEmbed().setColor(_settings["default"].bot.color).setTitle(name || 'Skill not found').setDescription("".concat(description || 'No skill Info found')).setTimestamp().setFooter({
+    text: "".concat(_settings["default"].bot.name, " v").concat(_package["default"].version),
+    iconURL: _settings["default"].bot.logo
+  });
+  return result;
+};
+
+exports.skillInfoMessage = skillInfoMessage;
 
 var AccountInfoMessage = function AccountInfoMessage() {
   var result = new _discord.MessageEmbed().setColor(_settings["default"].bot.color).setTitle('Account Information').setDescription("Shows discord account information").setThumbnail(_settings["default"].bot.logo).setTimestamp().setFooter({

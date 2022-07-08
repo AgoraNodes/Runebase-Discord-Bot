@@ -19,22 +19,21 @@ var _canvas = require("canvas");
 
 var _lodash = _interopRequireDefault(require("lodash"));
 
-var _skills = _interopRequireDefault(require("./skills.json"));
-
 /* eslint-disable no-restricted-syntax */
 var renderSkillDescriptionImage = /*#__PURE__*/function () {
-  var _ref = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(userCharacter, skillTree, skillTreeIndex, selectedSkill) {
-    var jsonSkillInfo, userHasSkill, canvas, ctx, finalImage;
+  var _ref = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee() {
+    var jsonSkillInfo,
+        userHasSkill,
+        canvas,
+        ctx,
+        finalImage,
+        _args = arguments;
     return _regenerator["default"].wrap(function _callee$(_context) {
       while (1) {
         switch (_context.prev = _context.next) {
           case 0:
-            jsonSkillInfo = _skills["default"].find(function (x) {
-              return x.name === selectedSkill.name;
-            });
-            userHasSkill = userCharacter.UserClassSkills.find(function (o) {
-              return o.skillId === selectedSkill.id;
-            });
+            jsonSkillInfo = _args.length > 0 && _args[0] !== undefined ? _args[0] : false;
+            userHasSkill = _args.length > 1 && _args[1] !== undefined ? _args[1] : false;
             canvas = (0, _canvas.createCanvas)(350, 457);
             ctx = canvas.getContext('2d');
             ctx.font = 'bold 25px "HeartWarming"';
@@ -46,8 +45,8 @@ var renderSkillDescriptionImage = /*#__PURE__*/function () {
             ctx.beginPath();
             ctx.lineWidth = "3";
             ctx.strokeStyle = "red";
-            ctx.strokeText(selectedSkill.name, canvas.width / 2, 50, 345);
-            ctx.fillText(selectedSkill.name, canvas.width / 2, 50, 345);
+            ctx.strokeText(jsonSkillInfo.name, canvas.width / 2, 50, 345);
+            ctx.fillText(jsonSkillInfo.name, canvas.width / 2, 50, 345);
             ctx.stroke();
             ctx.lineWidth = "3";
             ctx.strokeStyle = "black";
@@ -101,12 +100,12 @@ var renderSkillDescriptionImage = /*#__PURE__*/function () {
                   }
                 }
 
-                var _loop = function _loop(_x5) {
+                var _loop = function _loop(_x) {
                   ctx.strokeStyle = "black";
                   ctx.lineWidth = "3";
                   ctx.beginPath();
-                  ctx.moveTo(p, 60 + _x5 + p);
-                  ctx.lineTo(345, 60 + _x5 + p);
+                  ctx.moveTo(p, 60 + _x + p);
+                  ctx.lineTo(345, 60 + _x + p);
                   ctx.stroke();
                   ctx.fillStyle = 'white';
                   ctx.lineWidth = "1";
@@ -117,24 +116,24 @@ var renderSkillDescriptionImage = /*#__PURE__*/function () {
                   ctx.stroke();
                   ctx.beginPath();
 
-                  if (_x5 !== 0 && _x5 <= 360) {
-                    ctx.strokeText(_x5 / 18, 19, p + 74 + _x5, 60);
-                    ctx.fillText(_x5 / 18, 19, p + 74 + _x5, 60);
+                  if (_x !== 0 && _x <= 360) {
+                    ctx.strokeText(_x / 18, 19, p + 74 + _x, 60);
+                    ctx.fillText(_x / 18, 19, p + 74 + _x, 60);
                     Object.entries(jsonSkillInfo.initial).forEach(function (_ref4, p) {
                       var _ref5 = (0, _slicedToArray2["default"])(_ref4, 2),
                           key = _ref5[0],
                           value = _ref5[1];
 
-                      ctx.strokeText(value + jsonSkillInfo.next[key] * (_x5 / 18 - 1), 40 + (p + 1) * columnWidth - columnWidth / 2, p + 74 + _x5, columnWidth);
-                      ctx.fillText(value + jsonSkillInfo.next[key] * (_x5 / 18 - 1), 40 + (p + 1) * columnWidth - columnWidth / 2, p + 74 + _x5, columnWidth);
+                      ctx.strokeText(value + jsonSkillInfo.next[key] * (_x / 18 - 1), 40 + (p + 1) * columnWidth - columnWidth / 2, p + 74 + _x, columnWidth);
+                      ctx.fillText(value + jsonSkillInfo.next[key] * (_x / 18 - 1), 40 + (p + 1) * columnWidth - columnWidth / 2, p + 74 + _x, columnWidth);
                     });
                   }
 
                   ctx.stroke();
                 };
 
-                for (var _x5 = 0; _x5 <= bh; _x5 += 18) {
-                  _loop(_x5);
+                for (var _x = 0; _x <= bh; _x += 18) {
+                  _loop(_x);
                 }
               })();
             } else {
@@ -167,7 +166,7 @@ var renderSkillDescriptionImage = /*#__PURE__*/function () {
     }, _callee);
   }));
 
-  return function renderSkillDescriptionImage(_x, _x2, _x3, _x4) {
+  return function renderSkillDescriptionImage() {
     return _ref.apply(this, arguments);
   };
 }();

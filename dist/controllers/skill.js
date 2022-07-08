@@ -31,6 +31,10 @@ var _cancelSkillPick = require("../render/skills/cancelSkillPick");
 
 var _buttons = require("../buttons");
 
+var _skills2 = _interopRequireDefault(require("../render/skills/skills.json"));
+
+var _messages = require("../messages");
+
 /* eslint-disable import/prefer-default-export */
 var discordSkills = /*#__PURE__*/function () {
   var _ref = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee2(discordClient, message, setting, io, queue) {
@@ -89,49 +93,52 @@ var discordSkills = /*#__PURE__*/function () {
               };
             });
             _context2.t0 = discordChannel;
-            _context2.next = 18;
+            _context2.t1 = "<@".concat(userCurrentCharacter.user.user_id, ">");
+            _context2.next = 19;
             return (0, _skills.renderSkillScreen)(userCurrentCharacter, userCurrentCharacter["class"].skillTrees[0], 0, // skillTreeIndex
             false, // selected skill
+            false, // Skill Info Json
             false // add skill failReason String
             );
 
-          case 18:
-            _context2.t1 = _context2.sent;
-            _context2.t2 = [_context2.t1];
-            _context2.t3 = new _discord.MessageActionRow({
+          case 19:
+            _context2.t2 = _context2.sent;
+            _context2.t3 = [_context2.t2];
+            _context2.t4 = new _discord.MessageActionRow({
               components: [new _discord.MessageSelectMenu({
                 type: 'SELECT_MENU',
                 customId: 'select-skilltree',
                 options: skillTreeMap
               })]
             });
-            _context2.t4 = new _discord.MessageActionRow({
+            _context2.t5 = new _discord.MessageActionRow({
               components: [new _discord.MessageSelectMenu({
                 type: 'SELECT_MENU',
                 customId: 'select-skill',
                 options: skillMap
               })]
             });
-            _context2.t5 = _discord.MessageActionRow;
-            _context2.next = 25;
+            _context2.t6 = _discord.MessageActionRow;
+            _context2.next = 26;
             return (0, _buttons.generateCancelSkillButton)();
 
-          case 25:
-            _context2.t6 = _context2.sent;
-            _context2.t7 = [_context2.t6];
-            _context2.t8 = {
-              components: _context2.t7
+          case 26:
+            _context2.t7 = _context2.sent;
+            _context2.t8 = [_context2.t7];
+            _context2.t9 = {
+              components: _context2.t8
             };
-            _context2.t9 = new _context2.t5(_context2.t8);
-            _context2.t10 = [_context2.t3, _context2.t4, _context2.t9];
-            _context2.t11 = {
-              files: _context2.t2,
-              components: _context2.t10
+            _context2.t10 = new _context2.t6(_context2.t9);
+            _context2.t11 = [_context2.t4, _context2.t5, _context2.t10];
+            _context2.t12 = {
+              content: _context2.t1,
+              files: _context2.t3,
+              components: _context2.t11
             };
-            _context2.next = 33;
-            return _context2.t0.send.call(_context2.t0, _context2.t11);
+            _context2.next = 34;
+            return _context2.t0.send.call(_context2.t0, _context2.t12);
 
-          case 33:
+          case 34:
             embedMessage = _context2.sent;
             loadingSkillAddEmbed = new _discord.MessageEmbed().setTitle('Adding Skill Point').setDescription("".concat(userCurrentCharacter.user.username, ", Loading.."));
             loadingSkillSelectEmbed = new _discord.MessageEmbed().setTitle('Selecting Skill').setDescription("".concat(userCurrentCharacter.user.username, ", Loading.."));
@@ -140,7 +147,7 @@ var discordSkills = /*#__PURE__*/function () {
             skillTreeIndex = 0;
             collector.on('collect', /*#__PURE__*/function () {
               var _ref2 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(interaction) {
-                var failAddSkillReason, skillToAddId, _yield$addSkillPoint, _yield$addSkillPoint2, skillTreeMapEdit, skillMapEdit;
+                var failAddSkillReason, skillToAddId, _yield$addSkillPoint, _yield$addSkillPoint2, jsonSkillInfo, skillTreeMapEdit, skillMapEdit;
 
                 return _regenerator["default"].wrap(function _callee$(_context) {
                   while (1) {
@@ -177,6 +184,7 @@ var discordSkills = /*#__PURE__*/function () {
 
                         _context.next = 10;
                         return interaction.editReply({
+                          content: "<@".concat(userCurrentCharacter.user.user_id, ">"),
                           embeds: [loadingSkillAddEmbed]
                         });
 
@@ -216,28 +224,36 @@ var discordSkills = /*#__PURE__*/function () {
                         return _context.abrupt("return");
 
                       case 28:
-                        if (interaction.isSelectMenu()) {
-                          // await interaction.editReply({
-                          //   embeds: [
-                          //     loadingSkillSelectEmbed,
-                          //   ],
-                          // });
-                          if (interaction.customId === 'select-skilltree') {
-                            if (interaction.values[0].startsWith('skilltree-')) {
-                              skillTreeIndex = Number(interaction.values[0].replace('skilltree-', ''));
-                              selectedSkill = false;
-                              skillIndex = false;
-                            }
-                          }
+                        if (!interaction.isSelectMenu()) {
+                          _context.next = 33;
+                          break;
+                        }
 
-                          if (interaction.customId === 'select-skill') {
-                            if (interaction.values[0].startsWith('skill-')) {
-                              skillIndex = Number(interaction.values[0].replace('skill-', ''));
-                              selectedSkill = userCurrentCharacter["class"].skillTrees[Number(skillTreeIndex)].skills[Number(skillIndex)];
-                            }
+                        _context.next = 31;
+                        return interaction.editReply({
+                          embeds: [loadingSkillSelectEmbed]
+                        });
+
+                      case 31:
+                        if (interaction.customId === 'select-skilltree') {
+                          if (interaction.values[0].startsWith('skilltree-')) {
+                            skillTreeIndex = Number(interaction.values[0].replace('skilltree-', ''));
+                            selectedSkill = false;
+                            skillIndex = false;
                           }
                         }
 
+                        if (interaction.customId === 'select-skill') {
+                          if (interaction.values[0].startsWith('skill-')) {
+                            skillIndex = Number(interaction.values[0].replace('skill-', ''));
+                            selectedSkill = userCurrentCharacter["class"].skillTrees[Number(skillTreeIndex)].skills[Number(skillIndex)];
+                          }
+                        }
+
+                      case 33:
+                        jsonSkillInfo = _skills2["default"].find(function (x) {
+                          return x.name === selectedSkill.name;
+                        });
                         skillTreeMapEdit = userCurrentCharacter["class"].skillTrees.map(function (skilltree, index) {
                           return {
                             label: skilltree.name,
@@ -254,78 +270,80 @@ var discordSkills = /*#__PURE__*/function () {
                           };
                         });
                         _context.t5 = interaction;
-                        _context.t6 = [];
-                        _context.next = 35;
-                        return (0, _skills.renderSkillScreen)(userCurrentCharacter, userCurrentCharacter["class"].skillTrees[skillTreeIndex], skillTreeIndex, selectedSkill, failAddSkillReason);
+                        _context.t6 = "<@".concat(userCurrentCharacter.user.user_id, ">");
+                        _context.t7 = [(0, _messages.skillInfoMessage)(jsonSkillInfo && jsonSkillInfo.name, jsonSkillInfo && jsonSkillInfo.description)];
+                        _context.next = 41;
+                        return (0, _skills.renderSkillScreen)(userCurrentCharacter, userCurrentCharacter["class"].skillTrees[skillTreeIndex], skillTreeIndex, selectedSkill, jsonSkillInfo, failAddSkillReason);
 
-                      case 35:
-                        _context.t7 = _context.sent;
-                        _context.t8 = [_context.t7];
-                        _context.t9 = [];
-                        _context.t10 = _toConsumableArray2["default"];
+                      case 41:
+                        _context.t8 = _context.sent;
+                        _context.t9 = [_context.t8];
+                        _context.t10 = [];
+                        _context.t11 = _toConsumableArray2["default"];
 
                         if (!selectedSkill) {
-                          _context.next = 50;
+                          _context.next = 56;
                           break;
                         }
 
-                        _context.t12 = _discord.MessageActionRow;
-                        _context.next = 43;
+                        _context.t13 = _discord.MessageActionRow;
+                        _context.next = 49;
                         return (0, _buttons.generateAddSkillButton)(selectedSkill);
 
-                      case 43:
-                        _context.t13 = _context.sent;
-                        _context.t14 = [_context.t13];
-                        _context.t15 = {
-                          components: _context.t14
+                      case 49:
+                        _context.t14 = _context.sent;
+                        _context.t15 = [_context.t14];
+                        _context.t16 = {
+                          components: _context.t15
                         };
-                        _context.t16 = new _context.t12(_context.t15);
-                        _context.t11 = [_context.t16];
-                        _context.next = 51;
+                        _context.t17 = new _context.t13(_context.t16);
+                        _context.t12 = [_context.t17];
+                        _context.next = 57;
                         break;
 
-                      case 50:
-                        _context.t11 = [];
+                      case 56:
+                        _context.t12 = [];
 
-                      case 51:
-                        _context.t17 = _context.t11;
-                        _context.t18 = (0, _context.t10)(_context.t17);
-                        _context.t19 = new _discord.MessageActionRow({
+                      case 57:
+                        _context.t18 = _context.t12;
+                        _context.t19 = (0, _context.t11)(_context.t18);
+                        _context.t20 = new _discord.MessageActionRow({
                           components: [new _discord.MessageSelectMenu({
                             type: 'SELECT_MENU',
                             customId: 'select-skilltree',
                             options: skillTreeMapEdit
                           })]
                         });
-                        _context.t20 = new _discord.MessageActionRow({
+                        _context.t21 = new _discord.MessageActionRow({
                           components: [new _discord.MessageSelectMenu({
                             type: 'SELECT_MENU',
                             customId: 'select-skill',
                             options: skillMapEdit
                           })]
                         });
-                        _context.t21 = _discord.MessageActionRow;
-                        _context.next = 58;
+                        _context.t22 = _discord.MessageActionRow;
+                        _context.next = 64;
                         return (0, _buttons.generateCancelSkillButton)();
 
-                      case 58:
-                        _context.t22 = _context.sent;
-                        _context.t23 = [_context.t22];
-                        _context.t24 = {
-                          components: _context.t23
+                      case 64:
+                        _context.t23 = _context.sent;
+                        _context.t24 = [_context.t23];
+                        _context.t25 = {
+                          components: _context.t24
                         };
-                        _context.t25 = new _context.t21(_context.t24);
-                        _context.t26 = [_context.t19, _context.t20, _context.t25];
-                        _context.t27 = _context.t9.concat.call(_context.t9, _context.t18, _context.t26);
-                        _context.t28 = {
-                          embeds: _context.t6,
-                          files: _context.t8,
-                          components: _context.t27
+                        _context.t26 = new _context.t22(_context.t25);
+                        _context.t27 = [_context.t20, _context.t21, _context.t26];
+                        _context.t28 = _context.t10.concat.call(_context.t10, _context.t19, _context.t27);
+                        _context.t29 = {
+                          content: _context.t6,
+                          embeds: _context.t7,
+                          files: _context.t9,
+                          components: _context.t28
                         };
-                        _context.next = 67;
-                        return _context.t5.editReply.call(_context.t5, _context.t28);
+                        _context.next = 73;
+                        return _context.t5.editReply.call(_context.t5, _context.t29);
 
-                      case 67:
+                      case 73:
                       case "end":
                         return _context.stop();
                     }
@@ -338,7 +356,7 @@ var discordSkills = /*#__PURE__*/function () {
               };
             }());
 
-          case 39:
+          case 40:
           case "end":
             return _context2.stop();
         }
