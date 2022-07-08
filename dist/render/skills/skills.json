@@ -144,5 +144,93 @@
     "next": {
       "chance %": 1
     }
+  },
+  {
+    "name": "Wound",
+    "description": "Wound the enemy, bleed over time (% weapon damage)",
+    "initial": {
+      "damage %": 50,
+      "rounds": 2
+    },
+    "next": {
+      "damage %": 5,
+      "rounds": 0.2
+    }
+  },
+  {
+    "name": "Double Swing",
+    "description": "Double Weapon damage + damage increase",
+    "initial": {
+      "damage %": 100,
+      "DamageBonus": 2
+    },
+    "next": {
+      "damage %": 0,
+      "DamageBonus": 2
+    }
+  },
+  {
+    "name": "Parry",
+    "description": "Gives chance to parry incoming monster attacks",
+    "initial": {
+      "parry %": 5
+    },
+    "next": {
+      "parry %": 1
+    }
+  },
+  {
+    "name": "Though Skin",
+    "description": "Increase overall armor value %",
+    "initial": {
+      "armorBonus %": 50
+    },
+    "next": {
+      "armorBonus %": 5
+    }
+  },
+  {
+    "name": "Resistance",
+    "description": "Increase all resistance",
+    "initial": {
+      "resistance %": 2
+    },
+    "next": {
+      "resistance %": 2
+    }
+  },
+  {
+    "name": "Cleave",
+    "description": "Hit all monsters with % weapon damage",
+    "initial": {
+      "damage %": 50
+    },
+    "next": {
+      "damage %": 5
+    }
+  },
+  {
+    "name": "Howl",
+    "description": "Reduce all enemies armor by %",
+    "initial": {
+      "reducedArmor %": 10,
+      "rounds": 2
+    },
+    "next": {
+      "reducedArmor %": 2,
+      "rounds": 0.2
+    }
+  },
+  {
+    "name": "Screech",
+    "description": "Chance to stun enemies %",
+    "initial": {
+      "chance": 10,
+      "rounds": 2
+    },
+    "next": {
+      "chance": 2,
+      "rounds": 0.2
+    }
   }
 ]

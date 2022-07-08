@@ -884,6 +884,36 @@ export const skillInfoMessage = (
 
   return result;
 };
+export const loadingSkillAddEmbed = (
+  username,
+) => {
+  const result = new MessageEmbed()
+    .setColor(settings.bot.color)
+    .setTitle('Adding Skill Point')
+    .setDescription(`${username}, Adding skill..`)
+    .setTimestamp()
+    .setFooter({
+      text: `${settings.bot.name} v${pjson.version}`,
+      iconURL: settings.bot.logo,
+    });
+
+  return result;
+};
+export const loadingSkillSelectEmbed = (
+  username,
+) => {
+  const result = new MessageEmbed()
+    .setColor(settings.bot.color)
+    .setTitle('Selecting Skill')
+    .setDescription(`${username}, Loading skill selection..`)
+    .setTimestamp()
+    .setFooter({
+      text: `${settings.bot.name} v${pjson.version}`,
+      iconURL: settings.bot.logo,
+    });
+
+  return result;
+};
 
 export const AccountInfoMessage = () => {
   const result = new MessageEmbed()

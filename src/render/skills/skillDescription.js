@@ -167,14 +167,21 @@ export const renderSkillDescriptionImage = async (
         );
 
         Object.entries(jsonSkillInfo.initial).forEach(([key, value], p) => {
+          let skillValue;
+          if (key === 'rounds') {
+            skillValue = Math.round(value + (jsonSkillInfo.next[key] * ((x / 18) - 1)));
+          } else {
+            skillValue = value + (jsonSkillInfo.next[key] * ((x / 18) - 1));
+          }
+
           ctx.strokeText(
-            value + (jsonSkillInfo.next[key] * ((x / 18) - 1)),
+            skillValue,
             40 + ((p + 1) * columnWidth) - (columnWidth / 2),
             p + 74 + x,
             columnWidth,
           );
           ctx.fillText(
-            value + (jsonSkillInfo.next[key] * ((x / 18) - 1)),
+            skillValue,
             40 + ((p + 1) * columnWidth) - (columnWidth / 2),
             p + 74 + x,
             columnWidth,

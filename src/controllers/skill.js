@@ -16,7 +16,11 @@ import {
   generateAddSkillButton,
 } from '../buttons';
 import skills from '../render/skills/skills.json';
-import { skillInfoMessage } from '../messages';
+import {
+  skillInfoMessage,
+  loadingSkillAddEmbed,
+  loadingSkillSelectEmbed,
+} from '../messages';
 
 export const discordSkills = async (
   discordClient,
@@ -109,17 +113,7 @@ export const discordSkills = async (
       ],
   });
 
-  const loadingSkillAddEmbed = new MessageEmbed()
-    .setTitle('Adding Skill Point')
-    .setDescription(`${userCurrentCharacter.user.username}, Loading..`);
-
-  const loadingSkillSelectEmbed = new MessageEmbed()
-    .setTitle('Selecting Skill')
-    .setDescription(`${userCurrentCharacter.user.username}, Loading..`);
-
-  const collector = embedMessage.createMessageComponentCollector({
-    // filter: ({ user: discordUser }) => discordUser.id === userCurrentCharacter.user.user_id,
-  });
+  const collector = embedMessage.createMessageComponentCollector({});
 
   let skillTreeIndex = 0;
   let skillIndex;
@@ -139,7 +133,9 @@ export const discordSkills = async (
         await interaction.editReply({
           content: `<@${userCurrentCharacter.user.user_id}>`,
           embeds: [
-            loadingSkillAddEmbed,
+            await loadingSkillAddEmbed(
+              userCurrentCharacter.user.username,
+            ),
           ],
         });
         const skillToAddId = Number(interaction.customId.replace("addSkill:", ""));
@@ -155,6 +151,7 @@ export const discordSkills = async (
       }
       if (interaction.customId === 'cancelSkillPick') {
         await interaction.editReply({
+          embeds: [],
           files: [
             await renderCancelSkillPick(userCurrentCharacter),
           ],
@@ -166,7 +163,9 @@ export const discordSkills = async (
     if (interaction.isSelectMenu()) {
       await interaction.editReply({
         embeds: [
-          loadingSkillSelectEmbed,
+          await loadingSkillSelectEmbed(
+            userCurrentCharacter.user.username,
+          ),
         ],
       });
       if (interaction.customId === 'select-skilltree') {
@@ -207,9 +206,14 @@ export const discordSkills = async (
     await interaction.editReply({
       content: `<@${userCurrentCharacter.user.user_id}>`,
       embeds: [
-        skillInfoMessage(
-          jsonSkillInfo && jsonSkillInfo.name,
-          jsonSkillInfo && jsonSkillInfo.description,
+        ...(jsonSkillInfo
+          ? [
+            skillInfoMessage(
+              jsonSkillInfo && jsonSkillInfo.name,
+              jsonSkillInfo && jsonSkillInfo.description,
+            ),
+          ]
+          : []
         ),
       ],
       files: [

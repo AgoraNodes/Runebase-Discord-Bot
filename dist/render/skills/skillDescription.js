@@ -124,8 +124,16 @@ var renderSkillDescriptionImage = /*#__PURE__*/function () {
                           key = _ref5[0],
                           value = _ref5[1];
 
-                      ctx.strokeText(value + jsonSkillInfo.next[key] * (_x / 18 - 1), 40 + (p + 1) * columnWidth - columnWidth / 2, p + 74 + _x, columnWidth);
-                      ctx.fillText(value + jsonSkillInfo.next[key] * (_x / 18 - 1), 40 + (p + 1) * columnWidth - columnWidth / 2, p + 74 + _x, columnWidth);
+                      var skillValue;
+
+                      if (key === 'rounds') {
+                        skillValue = Math.round(value + jsonSkillInfo.next[key] * (_x / 18 - 1));
+                      } else {
+                        skillValue = value + jsonSkillInfo.next[key] * (_x / 18 - 1);
+                      }
+
+                      ctx.strokeText(skillValue, 40 + (p + 1) * columnWidth - columnWidth / 2, p + 74 + _x, columnWidth);
+                      ctx.fillText(skillValue, 40 + (p + 1) * columnWidth - columnWidth / 2, p + 74 + _x, columnWidth);
                     });
                   }
 
