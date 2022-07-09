@@ -70,7 +70,7 @@ export const discordStats = async (
     return;
   }
   const {
-    unspedAttributes,
+    unspendAttributes,
   } = await calculateCharacterStats(userCurrentCharacter);
 
   const generateCancelClassPicked = async () => {
@@ -99,7 +99,7 @@ export const discordStats = async (
   //   + userCurrentCharacter.stats.vitality
   //   + userCurrentCharacter.stats.energy
   // ) < (userCurrentCharacter.user.ranks[0].id * 5);
-  const calc = unspedAttributes > 0;
+  const calc = unspendAttributes > 0;
 
   const embedMessage = await discordChannel.send({
     files: [

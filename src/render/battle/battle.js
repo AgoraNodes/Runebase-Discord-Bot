@@ -35,6 +35,7 @@ export const renderBattleGif = async (
   const playerPosition = [];
   const enemies = [];
   const loadPromises = [];
+  const { battleLogs } = previousBattleState;
   let mainSkill;
   let secondarySkill;
   let backgroundImage;
@@ -164,7 +165,7 @@ export const renderBattleGif = async (
   );
   drawBattleLog(
     ctx,
-    battle,
+    battleLogs,
   );
 
   imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
@@ -225,9 +226,10 @@ export const renderBattleGif = async (
     hpOrbs[0],
     mpOrbs[0],
   );
+
   drawBattleLog(
     ctx,
-    battle,
+    battleLogs,
   );
   ctx.lineWidth = 1;
   ctx.font = 'bold 13px "HeartWarming"';
@@ -291,7 +293,7 @@ export const renderBattleGif = async (
 
   drawBattleLog(
     ctx,
-    battle,
+    battleLogs,
   );
   ctx.lineWidth = 1;
   ctx.font = 'bold 13px "HeartWarming"';
@@ -353,7 +355,7 @@ export const renderBattleGif = async (
   );
   drawBattleLog(
     ctx,
-    battle,
+    battleLogs,
   );
   ctx.lineWidth = 1;
   ctx.font = 'bold 13px "HeartWarming"';
@@ -416,7 +418,7 @@ export const renderBattleGif = async (
     );
     drawBattleLog(
       ctx,
-      battle,
+      battleLogs,
     );
 
     imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
@@ -468,9 +470,14 @@ export const renderBattleGif = async (
       hpOrbs[index + 1],
       mpOrbs[1],
     );
+    console.log(battleInfo);
+    console.log('battleInfo');
+    battleLogs.unshift({
+      log: battleInfo.log,
+    });
     drawBattleLog(
       ctx,
-      battle,
+      battleLogs,
     );
     ctx.lineWidth = 1;
     ctx.font = 'bold 13px "HeartWarming"';
@@ -543,7 +550,7 @@ export const renderBattleGif = async (
     );
     drawBattleLog(
       ctx,
-      battle,
+      battleLogs,
     );
     ctx.lineWidth = 1;
     ctx.font = 'bold 13px "HeartWarming"';
@@ -615,7 +622,7 @@ export const renderBattleGif = async (
     );
     drawBattleLog(
       ctx,
-      battle,
+      battleLogs,
     );
     ctx.lineWidth = 1;
     ctx.font = 'bold 13px "HeartWarming"';
@@ -687,7 +694,7 @@ export const renderBattleGif = async (
     );
     drawBattleLog(
       ctx,
-      battle,
+      battleLogs,
     );
 
     imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);

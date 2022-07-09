@@ -72,6 +72,7 @@ export const processBattleMove = async (
       currentMonsterHp: monsterToUpdate.currentHp - randomAttackDamage,
       currentUserMp: newUserMp,
       died: false,
+      newDebuff: false,
     });
   } else {
     await db.battleLog.create({
@@ -100,6 +101,12 @@ export const processBattleMove = async (
       {
         model: db.monster,
         as: 'monster',
+        include: [
+          {
+            model: db.monsterAttack,
+            as: 'monsterAttacks',
+          },
+        ],
       },
     ],
     lock: t.LOCK.UPDATE,
@@ -125,8 +132,22 @@ export const processBattleMove = async (
     for await (const remainingMonster of allRemainingBattleMonster) {
       if (currentUserHp > 0) {
         // TODO: pick random moster attack type instead of regular attack
-        const randomMonsterAttackDamage = randomIntFromInterval(remainingMonster.monster.minDamage, remainingMonster.monster.maxDamage); // Get Random Monster Damage
-        const randomMonsterAttackRating = randomIntFromInterval(remainingMonster.monster.minAr, remainingMonster.monster.maxAr); // Get Random Monster Damage
+        let pickedMonsterAttack = remainingMonster.monster.monsterAttacks.find((x) => x.defaultAttack === true);
+        const nonDefaultMonsterAttacks = remainingMonster.monster.monsterAttacks.filter((filterAttack) => filterAttack.defaultAttack === false);
+        console.log(nonDefaultMonsterAttacks);
+        // Pick a non-default monster attack based on chance
+        let roll = Math.random();
+        for (let i = 0, len = nonDefaultMonsterAttacks.length; i < len; ++i) {
+          const { chance } = nonDefaultMonsterAttacks[i];
+          console.log(chance);
+          if (roll < (chance / 100)) {
+            pickedMonsterAttack = nonDefaultMonsterAttacks[i];
+            break;
+          }
+          roll -= chance;
+        }
+        const randomMonsterAttackDamage = randomIntFromInterval(pickedMonsterAttack.minDmg, pickedMonsterAttack.maxDmg); // Get Random Monster Damage
+        const randomMonsterAttackRating = randomIntFromInterval(pickedMonsterAttack.minAr, pickedMonsterAttack.maxAr); // Get Random Monster Damage
 
         // Chance To Hit = 200% * {AR / (AR + DR)} * {Alvl / (Alvl + Dlvl)}
         // AR = Attacker's Attack Rating
@@ -147,10 +168,11 @@ export const processBattleMove = async (
             attackType: 'Missed',
             damage: 0,
             currentHp: currentUserHp,
+            log: `${remainingMonster.monster.name} ${pickedMonsterAttack.name} missed ${userCurrentCharacter.user.username}`,
           });
           await db.battleLog.create({
             battleId: battle.id,
-            log: `${remainingMonster.monster.name} attack missed ${userCurrentCharacter.user.username}`,
+            log: `${remainingMonster.monster.name} ${pickedMonsterAttack.name} missed ${userCurrentCharacter.user.username}`,
           }, {
             lock: t.LOCK.UPDATE,
             transaction: t,
@@ -161,10 +183,11 @@ export const processBattleMove = async (
             attackType: 'Blocked',
             damage: 0,
             currentHp: currentUserHp,
+            log: `${userCurrentCharacter.user.username} blocked ${remainingMonster.monster.name} ${pickedMonsterAttack.name}`,
           });
           await db.battleLog.create({
             battleId: battle.id,
-            log: `${userCurrentCharacter.user.username} blocked ${remainingMonster.monster.name} attack`,
+            log: `${userCurrentCharacter.user.username} blocked ${remainingMonster.monster.name} ${pickedMonsterAttack.name}`,
           }, {
             lock: t.LOCK.UPDATE,
             transaction: t,
@@ -175,11 +198,12 @@ export const processBattleMove = async (
             attackType: 'Parried',
             damage: 0,
             currentHp: currentUserHp,
+            log: `${userCurrentCharacter.user.username} parried ${remainingMonster.monster.name} ${pickedMonsterAttack.name}`,
           });
 
           await db.battleLog.create({
             battleId: battle.id,
-            log: `${userCurrentCharacter.user.username} parried ${remainingMonster.monster.name} attack`,
+            log: `${userCurrentCharacter.user.username} parried ${remainingMonster.monster.name} ${pickedMonsterAttack.name}`,
           }, {
             lock: t.LOCK.UPDATE,
             transaction: t,
@@ -189,16 +213,17 @@ export const processBattleMove = async (
           // TODO Create Kick Damage calculation in statscalculations
           battleInfoArray.push({
             monsterId: remainingMonster.id,
-            attackType: 'Attack',
+            attackType: pickedMonsterAttack.name,
             damage: randomMonsterAttackDamage,
             currentHp: currentUserHp - randomMonsterAttackDamage,
+            log: `${remainingMonster.monster.name} used ${pickedMonsterAttack.name} on ${userCurrentCharacter.user.username} for ${randomMonsterAttackDamage} damage`,
           });
           totalDamageByMonsters += randomMonsterAttackDamage;
           currentUserHp -= randomMonsterAttackDamage;
 
           await db.battleLog.create({
             battleId: battle.id,
-            log: `${remainingMonster.monster.name} used attack on ${userCurrentCharacter.user.username} for ${randomMonsterAttackDamage} damage`,
+            log: `${remainingMonster.monster.name} used ${pickedMonsterAttack.name} on ${userCurrentCharacter.user.username} for ${randomMonsterAttackDamage} damage`,
           }, {
             lock: t.LOCK.UPDATE,
             transaction: t,

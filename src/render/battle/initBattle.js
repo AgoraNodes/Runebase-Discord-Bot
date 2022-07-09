@@ -33,6 +33,7 @@ export const renderInitBattleGif = async (
   const zone = 'den';
   const enemies = [];
   const loadPromises = [];
+  const { battleLogs } = previousBattleState;
   let mainSkill;
   let secondarySkill;
   let backgroundImage;
@@ -165,7 +166,7 @@ export const renderInitBattleGif = async (
 
   drawBattleLog(
     ctx,
-    battle,
+    battleLogs,
   );
 
   imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);

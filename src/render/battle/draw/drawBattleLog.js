@@ -1,6 +1,6 @@
 export const drawBattleLog = (
   ctx,
-  battle,
+  battleLogs,
 ) => {
   ctx.fillStyle = 'white';
   ctx.fillRect(
@@ -24,9 +24,9 @@ export const drawBattleLog = (
   );
   ctx.font = 'normal 15px serif';
   ctx.fillStyle = 'black';
-  for (let i = 0; i < battle.battleLogs.length; i++) {
+  for (let i = 0; i < battleLogs.length; i++) {
     ctx.fillText(
-      battle.battleLogs[i].log,
+      battleLogs[i].log,
       430,
       17 + ((i + 1) * 20),
       210,

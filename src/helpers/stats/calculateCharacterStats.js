@@ -34,7 +34,7 @@ export const calculateCharacterStats = async (
     + currentCharacter.stats.dexterity
     + currentCharacter.stats.vitality
     + currentCharacter.stats.energy;
-  const AttributesToSpend = (userCurrentRank.id * 5) - countedSpendAttributes;
+  const unspendAttributes = (userCurrentRank.id * 5) - countedSpendAttributes;
   let FR = 0;
   let PR = 0;
   let LR = 0;
@@ -125,7 +125,7 @@ export const calculateCharacterStats = async (
   );
 
   // calculate Skill damage
-  const skillOne = await calculateSkillDamage(
+  const attackOne = await calculateSkillDamage(
     currentCharacter,
     selectedSkills.selectedMainSkill,
     regularAttack,
@@ -133,7 +133,7 @@ export const calculateCharacterStats = async (
   );
 
   // calculate Skill damage
-  const skillTwo = await calculateSkillDamage(
+  const attackTwo = await calculateSkillDamage(
     currentCharacter,
     selectedSkills.selectedSecondarySkill,
     regularAttack,
@@ -146,7 +146,7 @@ export const calculateCharacterStats = async (
     lvl: userCurrentRank.id,
     exp: currentCharacter.user.exp,
     expNext: nextRankExp,
-    unspedAttributes: AttributesToSpend,
+    unspendAttributes,
     strength,
     dexterity,
     vitality,
@@ -169,20 +169,8 @@ export const calculateCharacterStats = async (
     PR,
     LR,
     CR,
-    attackOne: {
-      name: skillOne.name,
-      min: skillOne.min,
-      max: skillOne.max,
-      ar: skillOne.ar,
-      cost: skillOne.cost,
-    },
-    attackTwo: {
-      name: skillTwo.name,
-      min: skillTwo.min,
-      max: skillTwo.max,
-      ar: skillTwo.ar,
-      cost: skillTwo.cost,
-    },
+    attackOne,
+    attackTwo,
     regularAttack,
   };
 };

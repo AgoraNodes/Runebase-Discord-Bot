@@ -22,7 +22,7 @@ module.exports = (sequelize, DataTypes) => {
   const DamageTypeModel = sequelize.define('damageType', modelDefinition, modelOptions);
 
   DamageTypeModel.associate = (model) => {
-    DamageTypeModel.hasMany(model.monster);
+    DamageTypeModel.hasMany(model.monsterAttack);
   };
 
   return DamageTypeModel;

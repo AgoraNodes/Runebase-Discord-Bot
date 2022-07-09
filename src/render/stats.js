@@ -16,7 +16,7 @@ export const renderStatsImage = async (
   cannotSpendWarning,
 ) => {
   const {
-    unspedAttributes,
+    unspendAttributes,
     username,
     currentClass,
     lvl,
@@ -45,7 +45,7 @@ export const renderStatsImage = async (
   const unspendAttributesBoxImage = await loadImage(path.join(__dirname, '../assets/images', `unspendAttributesBox.png`));
   ctx.drawImage(BackgroundImageStats, 0, 0, 960, 1300);
 
-  if (unspedAttributes > 0) {
+  if (unspendAttributes > 0) {
     ctx.drawImage(unspendAttributesBoxImage, 10, 1070, 495, 82);
 
     ctx.fillStyle = "red";
@@ -60,8 +60,8 @@ export const renderStatsImage = async (
 
     ctx.fillStyle = "#ccc";
     ctx.font = 'bold 45px "HeartWarming"';
-    ctx.strokeText(unspedAttributes, 410, 1125, 540);
-    ctx.fillText(unspedAttributes, 410, 1125, 540);
+    ctx.strokeText(unspendAttributes, 410, 1125, 540);
+    ctx.fillText(unspendAttributes, 410, 1125, 540);
   }
 
   ctx.fillStyle = "#ccc";

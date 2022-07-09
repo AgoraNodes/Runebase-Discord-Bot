@@ -1,10 +1,5 @@
 /* eslint-disable no-restricted-syntax */
 import {
-  Sequelize,
-  Transaction,
-  Op,
-} from "sequelize";
-import {
   createCanvas,
 } from 'canvas';
 import _ from 'lodash';
