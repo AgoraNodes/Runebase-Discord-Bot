@@ -58,7 +58,6 @@ export const processBattleMove = async (
     lock: t.LOCK.UPDATE,
     transaction: t,
   });
-  console.log('2');
   const monsterInfo = [];
 
   const createBattleLog = await db.battleLog.create({
@@ -119,7 +118,7 @@ export const processBattleMove = async (
       transaction: t,
     });
   }
-  console.log('3');
+
   const battleInfoArray = [];
 
   if (allRemainingBattleMonster) {
@@ -129,23 +128,61 @@ export const processBattleMove = async (
     for await (const remainingMonster of allRemainingBattleMonster) {
       if (currentUserHp > 0) {
         // TODO: pick random moster attack type instead of regular attack
-        const randomMonsterAttackDamage = randomIntFromInterval(remainingMonster.monster.minDamage, remainingMonster.monster.maxDamage);
-        battleInfoArray.push({
-          monsterId: remainingMonster.id,
-          attackType: 'Attack',
-          damage: randomMonsterAttackDamage,
-          currentHp: currentUserHp - randomMonsterAttackDamage,
-        });
-        totalDamageByMonsters += randomMonsterAttackDamage;
-        currentUserHp -= randomMonsterAttackDamage;
+        const randomMonsterAttackDamage = randomIntFromInterval(remainingMonster.monster.minDamage, remainingMonster.monster.maxDamage); // Get Random Monster Damage
 
-        await db.battleLog.create({
-          battleId: battle.id,
-          log: `${remainingMonster.monster.name} used attack on ${userCurrentCharacter.user.username} for ${randomMonsterAttackDamage} damage`,
-        }, {
-          lock: t.LOCK.UPDATE,
-          transaction: t,
-        });
+        const isBlocked = Math.random() < Number(block) / 100; // Did We block the attack?
+        const isParried = Math.random() < Number(regularAttack.parry) / 100; // Did We parry the attack?
+
+        if (isBlocked) {
+          battleInfoArray.push({
+            monsterId: remainingMonster.id,
+            attackType: 'Blocked',
+            damage: 0,
+            currentHp: currentUserHp,
+          });
+          await db.battleLog.create({
+            battleId: battle.id,
+            log: `${userCurrentCharacter.user.username} blocked ${remainingMonster.monster.name} attack`,
+          }, {
+            lock: t.LOCK.UPDATE,
+            transaction: t,
+          });
+        } else if (isParried) {
+          battleInfoArray.push({
+            monsterId: remainingMonster.id,
+            attackType: 'Parried',
+            damage: 0,
+            currentHp: currentUserHp,
+          });
+
+          await db.battleLog.create({
+            battleId: battle.id,
+            log: `${userCurrentCharacter.user.username} parried ${remainingMonster.monster.name} attack`,
+          }, {
+            lock: t.LOCK.UPDATE,
+            transaction: t,
+          });
+        } else {
+          // TODO Check if we counter attack (retaliate)
+          // TODO Create Kick Damage calculation in statscalculations
+          battleInfoArray.push({
+            monsterId: remainingMonster.id,
+            attackType: 'Attack',
+            damage: randomMonsterAttackDamage,
+            currentHp: currentUserHp - randomMonsterAttackDamage,
+          });
+          totalDamageByMonsters += randomMonsterAttackDamage;
+          currentUserHp -= randomMonsterAttackDamage;
+
+          await db.battleLog.create({
+            battleId: battle.id,
+            log: `${remainingMonster.monster.name} used attack on ${userCurrentCharacter.user.username} for ${randomMonsterAttackDamage} damage`,
+          }, {
+            lock: t.LOCK.UPDATE,
+            transaction: t,
+          });
+        }
+
         if (currentUserHp < 1) {
           await db.battleLog.create({
             battleId: battle.id,
@@ -164,7 +201,7 @@ export const processBattleMove = async (
       transaction: t,
     });
   }
-  console.log('4');
+
   const updatedBattle = await db.battle.findOne({
     where: {
       id: battle.id,
@@ -193,8 +230,6 @@ export const processBattleMove = async (
     lock: t.LOCK.UPDATE,
     transaction: t,
   });
-
-  console.log('done processing battle moves');
 
   return [
     userCurrentCharacter,
