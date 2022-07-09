@@ -5,14 +5,10 @@ import {
 } from "sequelize";
 import db from '../../models';
 import logger from "../logger";
-import {
-  cannotSendMessageUser,
-  discordErrorMessage,
-} from '../../messages';
+import { fetchUserCurrentCharacter } from "../character/character";
 
 export const addVitality = async (
-  userId,
-  discordChannel,
+  currentUserCharacter,
   io,
   queue,
 ) => {
@@ -24,7 +20,7 @@ export const addVitality = async (
     }, async (t) => {
       const user = await db.user.findOne({
         where: {
-          id: userId,
+          id: currentUserCharacter.user.id,
         },
         include: [
           {
@@ -115,7 +111,7 @@ export const addVitality = async (
 
       const preActivity = await db.activity.create({
         type: 'addVitality_s',
-        earnerId: userId,
+        earnerId: currentUserCharacter.user.id,
       }, {
         lock: t.LOCK.UPDATE,
         transaction: t,
@@ -145,28 +141,6 @@ export const addVitality = async (
       } catch (e) {
         logger.error(`Error Discord: ${e}`);
       }
-      if (err.code && err.code === 50007) {
-        await discordChannel.send({
-          embeds: [
-            cannotSendMessageUser(
-              "addVitality",
-              message,
-            ),
-          ],
-        }).catch((e) => {
-          console.log(e);
-        });
-      } else {
-        await discordChannel.send({
-          embeds: [
-            discordErrorMessage(
-              "addVitality",
-            ),
-          ],
-        }).catch((e) => {
-          console.log(e);
-        });
-      }
     });
     if (activity.length > 0) {
       io.to('admin').emit('updateActivity', {
@@ -175,49 +149,10 @@ export const addVitality = async (
     }
   });
 
-  const myUpdatedUser = await db.UserClass.findOne({
-    where: {
-      classId: {
-        [Op.col]: 'user.currentClassId',
-      },
-    },
-    include: [
-      {
-        model: db.user,
-        as: 'user',
-        where: {
-          id: userId,
-        },
-        include: [
-          {
-            model: db.class,
-            as: 'currentClass',
-          },
-          {
-            model: db.rank,
-            as: 'ranks',
-          },
-        ],
-      },
-      {
-        model: db.stats,
-        as: 'stats',
-      },
-      {
-        model: db.condition,
-        as: 'condition',
-      },
-      {
-        model: db.equipment,
-        as: 'equipment',
-      },
-      {
-        model: db.class,
-        as: 'class',
-      },
-    ],
-  });
-
+  const myUpdatedUser = await fetchUserCurrentCharacter(
+    currentUserCharacter.user.user_id, // user discord id
+    false, // Need inventory?
+  );
   return [
     myUpdatedUser,
     cannotSpend,

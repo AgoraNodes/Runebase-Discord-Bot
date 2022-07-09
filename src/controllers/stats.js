@@ -59,7 +59,7 @@ export const discordStats = async (
 
   const userCurrentCharacter = await fetchUserCurrentCharacter(
     userId, // user discord id
-    true, // Need inventory?
+    false, // Need inventory?
   );
 
   if (!userCurrentCharacter) {
@@ -158,8 +158,7 @@ export const discordStats = async (
         updatedUser,
         cannotSpend,
       ] = await addStrength(
-        userCurrentCharacter.user.id,
-        discordChannel,
+        userCurrentCharacter,
         io,
         queue,
       );
@@ -169,8 +168,7 @@ export const discordStats = async (
         updatedUser,
         cannotSpend,
       ] = await addDexterity(
-        userCurrentCharacter.user.id,
-        discordChannel,
+        userCurrentCharacter,
         io,
         queue,
       );
@@ -180,8 +178,7 @@ export const discordStats = async (
         updatedUser,
         cannotSpend,
       ] = await addVitality(
-        userCurrentCharacter.user.id,
-        discordChannel,
+        userCurrentCharacter,
         io,
         queue,
       );
@@ -191,8 +188,7 @@ export const discordStats = async (
         updatedUser,
         cannotSpend,
       ] = await addEnergy(
-        userCurrentCharacter.user.id,
-        discordChannel,
+        userCurrentCharacter,
         io,
         queue,
       );
@@ -210,6 +206,7 @@ export const discordStats = async (
         + updatedUser.stats.energy
       ) < (updatedUser.user.ranks[0].id * 5);
 
+      console.log('before reply RenderStats');
       await interaction.editReply({
         embeds: [],
         files: [
