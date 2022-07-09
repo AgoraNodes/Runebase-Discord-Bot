@@ -176,11 +176,11 @@
     "description": "Double Weapon damage + damage increase",
     "initial": {
       "damage %": 100,
-      "DamageBonus": 2
+      "attackBonus": 15
     },
     "next": {
       "damage %": 0,
-      "DamageBonus": 2
+      "attackBonus": 5
     }
   },
   {
@@ -312,11 +312,11 @@
     "description": "Double Throw Weapon damage + damage increase",
     "initial": {
       "damage %": 100,
-      "DamageBonus": 2
+      "attackBonus": 15
     },
     "next": {
       "damage %": 0,
-      "DamageBonus": 2
+      "attackBonus": 5
     }
   },
   {
