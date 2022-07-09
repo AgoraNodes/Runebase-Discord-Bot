@@ -39,6 +39,7 @@ import {
   insufficientBalanceMessage,
   healCompleteMessage,
 } from '../messages';
+import skillEmoji from "../config/skillEmoji";
 
 let currentSelectedMonster;
 
@@ -192,23 +193,39 @@ export const discordBattle = async (
     });
   }
 
-  let mainSkillMap = userCurrentSelectedSkills.UserClassSkills.map((
-    mySkill,
-  ) => ({
-    placeholder: 'pick a skill',
-    label: `Main Skill: ${mySkill.skill.name}`,
-    value: `mainSkill:${mySkill.id}`,
-    default: mySkill.id === userCurrentSelectedSkills.selectedMainSkillId,
-  }));
+  let mainSkillMap = userCurrentSelectedSkills.UserClassSkills.reduce((filtered, mySkill) => {
+    if (!mySkill.skill.passive) {
+      const emoji = skillEmoji.find((a) => a.name === mySkill.skill.name);
+      const mapped = {
+        placeholder: 'pick a skill',
+        label: `Main Skill: ${mySkill.skill.name}`,
+        value: `mainSkill:${mySkill.id}`,
+        default: mySkill.id === userCurrentSelectedSkills.selectedMainSkillId,
+        ...(emoji ? {
+          emoji: emoji.emoji,
+        } : false),
+      };
+      filtered.push(mapped);
+    }
+    return filtered;
+  }, []);
 
-  let secondarySkillMap = userCurrentSelectedSkills.UserClassSkills.map((
-    mySkill,
-  ) => ({
-    placeholder: 'pick a skill',
-    label: `Secondary Skill: ${mySkill.skill.name}`,
-    value: `secondarySkill:${mySkill.id}`,
-    default: mySkill.id === userCurrentSelectedSkills.selectedSecondarySkillId,
-  }));
+  let secondarySkillMap = userCurrentSelectedSkills.UserClassSkills.reduce((filtered, mySkill) => {
+    if (!mySkill.skill.passive) {
+      const emoji = skillEmoji.find((a) => a.name === mySkill.skill.name);
+      const mapped = {
+        placeholder: 'pick a skill',
+        label: `Secondary Skill: ${mySkill.skill.name}`,
+        value: `secondarySkill:${mySkill.id}`,
+        default: mySkill.id === userCurrentSelectedSkills.selectedSecondarySkillId,
+        ...(emoji ? {
+          emoji: emoji.emoji,
+        } : false),
+      };
+      filtered.push(mapped);
+    }
+    return filtered;
+  }, []);
 
   if (
     !currentSelectedMonster
@@ -970,23 +987,31 @@ ${newLootC.length > 0 ? `__found ${newLootC.length} ${newLootC.length === 1 ? `i
             }
           }
 
-          mainSkillMap = userCurrentSelectedSkills.UserClassSkills.map((
-            mySkill,
-          ) => ({
-            placeholder: 'pick a skill',
-            label: `Main Skill: ${mySkill.skill.name}`,
-            value: `mainSkill:${mySkill.id}`,
-            default: mySkill.id === userCurrentSelectedSkills.selectedMainSkillId,
-          }));
+          mainSkillMap = userCurrentSelectedSkills.UserClassSkills.reduce((filtered, mySkill) => {
+            if (!mySkill.skill.passive) {
+              const mapped = {
+                placeholder: 'pick a skill',
+                label: `Main Skill: ${mySkill.skill.name}`,
+                value: `mainSkill:${mySkill.id}`,
+                default: mySkill.id === userCurrentSelectedSkills.selectedMainSkillId,
+              };
+              filtered.push(mapped);
+            }
+            return filtered;
+          }, []);
 
-          secondarySkillMap = userCurrentSelectedSkills.UserClassSkills.map((
-            mySkill,
-          ) => ({
-            placeholder: 'pick a skill',
-            label: `Secondary Skill: ${mySkill.skill.name}`,
-            value: `secondarySkill:${mySkill.id}`,
-            default: mySkill.id === userCurrentSelectedSkills.selectedSecondarySkillId,
-          }));
+          secondarySkillMap = userCurrentSelectedSkills.UserClassSkills.reduce((filtered, mySkill) => {
+            if (!mySkill.skill.passive) {
+              const mapped = {
+                placeholder: 'pick a skill',
+                label: `Secondary Skill: ${mySkill.skill.name}`,
+                value: `secondarySkill:${mySkill.id}`,
+                default: mySkill.id === userCurrentSelectedSkills.selectedSecondarySkillId,
+              };
+              filtered.push(mapped);
+            }
+            return filtered;
+          }, []);
 
           await interaction.editReply({
             content: `<@${userCurrentCharacter.user.user_id}>`,

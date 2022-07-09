@@ -1,4 +1,5 @@
 import { MessageButton } from "discord.js";
+import skillEmoji from "../config/skillEmoji";
 
 export const generateAcceptButton = () => {
   const result = new MessageButton({
@@ -221,11 +222,17 @@ export const generateDestroyYesButton = (
 export const generateMainSkillButton = (
   mySelectedSkill,
 ) => {
+  const emoji = skillEmoji.find((a) => a.name === mySelectedSkill.skill.name);
+  console.log(emoji);
+  console.log('emoji');
   const result = new MessageButton({
     style: 'SECONDARY',
     label: `${mySelectedSkill.skill.name}`,
-    // emoji: '➕',
+    // emoji: emoji ? emoji.emoji : '',
     customId: `attackMain:${mySelectedSkill.id}`,
+    ...(emoji ? {
+      emoji: emoji.emoji,
+    } : false),
   });
 
   return result;
@@ -234,11 +241,15 @@ export const generateMainSkillButton = (
 export const generateSecondarySkillButton = (
   mySelectedSkill,
 ) => {
+  const emoji = skillEmoji.find((a) => a.name === mySelectedSkill.skill.name);
   const result = new MessageButton({
     style: 'SECONDARY',
     label: `${mySelectedSkill.skill.name}`,
     // emoji: '➕',
     customId: `attackSecondary:${mySelectedSkill.id}`,
+    ...(emoji ? {
+      emoji: emoji.emoji,
+    } : false),
   });
 
   return result;

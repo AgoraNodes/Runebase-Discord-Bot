@@ -23,6 +23,10 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.TINYINT,
       allowNull: false,
     },
+    passive: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+    },
   };
 
   // 2: The model options.
