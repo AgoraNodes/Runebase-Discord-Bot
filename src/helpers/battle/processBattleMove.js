@@ -3,8 +3,8 @@ import {
 } from 'sequelize';
 import db from '../../models';
 import { calculateCharacterStats } from '../stats/calculateCharacterStats';
-import { fetchUserCurrentSelectedSkills } from "../character/selectedSkills";
-import { calculateSkillDamage } from "../skills/calculateSkillDamage";
+// import { fetchUserCurrentSelectedSkills } from "../character/selectedSkills";
+// import { calculateSkillDamage } from "../stats/calculateSkills";
 import { randomIntFromInterval } from "../utils";
 
 export const processBattleMove = async (
@@ -19,8 +19,9 @@ export const processBattleMove = async (
   const sumExp = battle.BattleMonsters.reduce((accumulator, object) => accumulator + object.monster.exp, 0);
   // const isAnyMobAlive = battle.BattleMonsters.find((element) => element.currentHp > 0);
   console.log('1');
-  const unitUsedMove = "Attack";
+  // const unitUsedMove = "Attack";
   const {
+    lvl,
     attackOne,
     attackTwo,
     regularAttack,
@@ -44,6 +45,8 @@ export const processBattleMove = async (
       useAttack = regularAttack;
     }
   }
+  const newUserMp = userCurrentCharacter.condition.mana - useAttack.cost;
+
   const randomAttackDamage = randomIntFromInterval(useAttack.min, useAttack.max);
   const monsterToUpdate = battle.BattleMonsters.find((element) => element.id === currentSelectedMonster.id);
   const updatedMonster = await monsterToUpdate.decrement('currentHp', {
@@ -51,16 +54,10 @@ export const processBattleMove = async (
     lock: t.LOCK.UPDATE,
     transaction: t,
   });
-  const newUserMp = userCurrentCharacter.condition.mana - useAttack.cost;
-  await userCurrentCharacter.condition.update({
-    mana: newUserMp,
-  }, {
-    lock: t.LOCK.UPDATE,
-    transaction: t,
-  });
+
   const monsterInfo = [];
 
-  const createBattleLog = await db.battleLog.create({
+  await db.battleLog.create({
     battleId: battle.id,
     log: `${userCurrentCharacter.user.username} used ${useAttack.name} on ${monsterToUpdate.monster.name} for ${randomAttackDamage} damage`,
   }, {
@@ -129,11 +126,36 @@ export const processBattleMove = async (
       if (currentUserHp > 0) {
         // TODO: pick random moster attack type instead of regular attack
         const randomMonsterAttackDamage = randomIntFromInterval(remainingMonster.monster.minDamage, remainingMonster.monster.maxDamage); // Get Random Monster Damage
+        const randomMonsterAttackRating = randomIntFromInterval(remainingMonster.monster.minAr, remainingMonster.monster.maxAr); // Get Random Monster Damage
+
+        // Chance To Hit = 200% * {AR / (AR + DR)} * {Alvl / (Alvl + Dlvl)}
+        // AR = Attacker's Attack Rating
+        // DR = Defender's Defense rating
+        // Alvl = Attacker's level
+        // Dlvl = Defender's level
+        const monsterHitChance = (200 * (randomMonsterAttackRating / (randomMonsterAttackRating + defense)) * (remainingMonster.monster.level / (remainingMonster.monster.level + lvl))) * 100;
+        console.log(monsterHitChance);
+        console.log('monsterHitChance');
 
         const isBlocked = Math.random() < Number(block) / 100; // Did We block the attack?
         const isParried = Math.random() < Number(regularAttack.parry) / 100; // Did We parry the attack?
+        const isNotMissed = Math.random() < Number(monsterHitChance) / 100; // Did Monster hit user?
 
-        if (isBlocked) {
+        if (!isNotMissed) {
+          battleInfoArray.push({
+            monsterId: remainingMonster.id,
+            attackType: 'Missed',
+            damage: 0,
+            currentHp: currentUserHp,
+          });
+          await db.battleLog.create({
+            battleId: battle.id,
+            log: `${remainingMonster.monster.name} attack missed ${userCurrentCharacter.user.username}`,
+          }, {
+            lock: t.LOCK.UPDATE,
+            transaction: t,
+          });
+        } else if (isBlocked) {
           battleInfoArray.push({
             monsterId: remainingMonster.id,
             attackType: 'Blocked',
@@ -196,6 +218,7 @@ export const processBattleMove = async (
     }
     await userCurrentCharacter.condition.update({
       life: userCurrentCharacter.condition.life - totalDamageByMonsters,
+      mana: newUserMp,
     }, {
       lock: t.LOCK.UPDATE,
       transaction: t,

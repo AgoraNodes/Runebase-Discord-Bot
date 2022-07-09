@@ -206,7 +206,6 @@ export const discordStats = async (
         + updatedUser.stats.energy
       ) < (updatedUser.user.ranks[0].id * 5);
 
-      console.log('before reply RenderStats');
       await interaction.editReply({
         embeds: [],
         files: [
