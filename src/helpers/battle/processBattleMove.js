@@ -25,6 +25,7 @@ export const processBattleMove = async (
     attackTwo,
     regularAttack,
     block,
+    defense,
   } = await calculateCharacterStats(
     userCurrentCharacter,
   );
@@ -127,9 +128,11 @@ export const processBattleMove = async (
     // eslint-disable-next-line no-restricted-syntax
     for await (const remainingMonster of allRemainingBattleMonster) {
       if (currentUserHp > 0) {
+        // TODO: pick random moster attack type instead of regular attack
         const randomMonsterAttackDamage = randomIntFromInterval(remainingMonster.monster.minDamage, remainingMonster.monster.maxDamage);
         battleInfoArray.push({
           monsterId: remainingMonster.id,
+          attackType: 'Attack',
           damage: randomMonsterAttackDamage,
           currentHp: currentUserHp - randomMonsterAttackDamage,
         });

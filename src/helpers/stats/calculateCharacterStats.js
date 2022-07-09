@@ -6,6 +6,7 @@ import {
 import db from '../../models';
 import { calculateSkillDamage } from "../skills/calculateSkillDamage";
 import { fetchUserCurrentSelectedSkills } from "../character/selectedSkills";
+import calculatePassives from "./calculatePassives";
 
 export const calculateCharacterStats = async (
   currentCharacter,
@@ -27,10 +28,12 @@ export const calculateCharacterStats = async (
       }]
     ),
   });
+  let FR = 0;
+  let PR = 0;
+  let LR = 0;
+  let CR = 0;
 
   const userCurrentRank = currentCharacter.user.ranks[0] ? currentCharacter.user.ranks[0] : { id: 0, expNeeded: nextRank.expNeeded };
-  console.log(userCurrentRank);
-  console.log('userCurrentRank');
   const nextRankExp = nextRank && nextRank.expNeeded ? nextRank.expNeeded : userCurrentRank.expNeeded;
 
   const countedSpendAttributes = currentCharacter.stats.strength
@@ -40,11 +43,8 @@ export const calculateCharacterStats = async (
   const AttributesToSpend = (userCurrentRank.id * 5) - countedSpendAttributes;
 
   const strength = currentCharacter.user.currentClass.strength + currentCharacter.stats.strength;
-
   const dexterity = currentCharacter.user.currentClass.dexterity + currentCharacter.stats.dexterity;
-
   const vitality = currentCharacter.user.currentClass.vitality + currentCharacter.stats.vitality;
-
   const energy = currentCharacter.user.currentClass.energy + currentCharacter.stats.energy;
 
   // Calculate by skill in later version, instead of just weapon damage
@@ -61,7 +61,6 @@ export const calculateCharacterStats = async (
     : 2;
 
   const attackOneAr = currentCharacter.user.currentClass.attackRating + (currentCharacter.stats.dexterity * 5);
-
   const attackTwoAr = currentCharacter.user.currentClass.attackRating + (currentCharacter.stats.dexterity * 5);
 
   let block = 0;
@@ -106,6 +105,38 @@ export const calculateCharacterStats = async (
     }
   });
 
+  let regularAttack = {
+    name: 'Attack',
+    min: currentCharacter.equipment.mainHand ? currentCharacter.equipment.mainHand.minDamage : 1,
+    max: currentCharacter.equipment.mainHand ? currentCharacter.equipment.mainHand.maxDamage : 2,
+    minThrow: currentCharacter.equipment.mainHand && currentCharacter.equipment.mainHand.minThrowDamage ? currentCharacter.equipment.mainHand.minThrowDamage : 0,
+    maxThrow: currentCharacter.equipment.mainHand && currentCharacter.equipment.mainHand.maxThrowDamage ? currentCharacter.equipment.mainHand.maxThrowDamage : 0,
+    ar: currentCharacter.user.currentClass.attackRating + (currentCharacter.stats.dexterity * 5),
+    crit: 0,
+    stun: 0,
+    parry: 0,
+    lifeSteal: 0,
+    manaSteal: 0,
+    cost: 0,
+  };
+  // Add Passive Skill stats
+  [
+    defense,
+    regularAttack,
+    FR,
+    PR,
+    LR,
+    CR,
+  ] = await calculatePassives(
+    currentCharacter,
+    defense,
+    regularAttack,
+    FR,
+    PR,
+    LR,
+    CR,
+  );
+  //
   const selectedSkills = await fetchUserCurrentSelectedSkills(
     currentCharacter.user.user_id,
     t,
@@ -115,11 +146,7 @@ export const calculateCharacterStats = async (
   const skillOne = await calculateSkillDamage(
     currentCharacter,
     selectedSkills.selectedMainSkill,
-    {
-      min: attackOneMin,
-      max: attackOnemax,
-      ar: attackOneAr,
-    },
+    regularAttack,
     t,
   );
 
@@ -127,11 +154,7 @@ export const calculateCharacterStats = async (
   const skillTwo = await calculateSkillDamage(
     currentCharacter,
     selectedSkills.selectedSecondarySkill,
-    {
-      min: attackOneMin,
-      max: attackOnemax,
-      ar: attackOneAr,
-    },
+    regularAttack,
     t,
   );
 
@@ -160,10 +183,10 @@ export const calculateCharacterStats = async (
       current: currentMp,
       max: maxMp,
     },
-    FR: 0,
-    PR: 0,
-    LR: 0,
-    CR: 0,
+    FR,
+    PR,
+    LR,
+    CR,
     attackOne: {
       name: skillOne.name,
       min: skillOne.min,
@@ -178,12 +201,6 @@ export const calculateCharacterStats = async (
       ar: skillTwo.ar,
       cost: skillTwo.cost,
     },
-    regularAttack: {
-      name: 'Attack',
-      min: attackOneMin,
-      max: attackOnemax,
-      ar: attackOneAr,
-      cost: 0,
-    },
+    regularAttack,
   };
 };
