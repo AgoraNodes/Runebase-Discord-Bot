@@ -461,7 +461,6 @@ export const renderBattleGif = async (
         );
       }
     }
-    console.log('draw screenTools');
     drawBattleScreenTools(
       ctx,
       mainSkill,
@@ -469,19 +468,31 @@ export const renderBattleGif = async (
       hpOrbs[index + 1],
       mpOrbs[1],
     );
-    console.log('draw battleLog');
     drawBattleLog(
       ctx,
       battle,
     );
     ctx.lineWidth = 1;
     ctx.font = 'bold 13px "HeartWarming"';
-    ctx.strokeText(
-      battleInfo.damage,
-      playerPosition[0].x,
-      playerPosition[0].y - 20,
-      50,
-    );
+    if (
+      battleInfo.attackType === 'Blocked'
+      || battleInfo.attackType === 'Parried'
+      || battleInfo.attackType === 'Missed'
+    ) {
+      ctx.strokeText(
+        battleInfo.attackType,
+        playerPosition[0].x,
+        playerPosition[0].y - 20,
+        50,
+      );
+    } else {
+      ctx.strokeText(
+        battleInfo.damage,
+        playerPosition[0].x,
+        playerPosition[0].y - 20,
+        50,
+      );
+    }
 
     imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
     palette = quantize(imageData.data, 256, { format: 'rgb333' });
@@ -536,12 +547,25 @@ export const renderBattleGif = async (
     );
     ctx.lineWidth = 1;
     ctx.font = 'bold 13px "HeartWarming"';
-    ctx.strokeText(
-      battleInfo.damage,
-      playerPosition[0].x,
-      playerPosition[0].y - 20,
-      50,
-    );
+    if (
+      battleInfo.attackType === 'Blocked'
+      || battleInfo.attackType === 'Parried'
+      || battleInfo.attackType === 'Missed'
+    ) {
+      ctx.strokeText(
+        battleInfo.attackType,
+        playerPosition[0].x,
+        playerPosition[0].y - 20,
+        50,
+      );
+    } else {
+      ctx.strokeText(
+        battleInfo.damage,
+        playerPosition[0].x,
+        playerPosition[0].y - 20,
+        50,
+      );
+    }
 
     imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
     palette = quantize(imageData.data, 256, { format: 'rgb333' });
@@ -595,12 +619,25 @@ export const renderBattleGif = async (
     );
     ctx.lineWidth = 1;
     ctx.font = 'bold 13px "HeartWarming"';
-    ctx.strokeText(
-      battleInfo.damage,
-      playerPosition[0].x,
-      playerPosition[0].y - 20,
-      50,
-    );
+    if (
+      battleInfo.attackType === 'Blocked'
+      || battleInfo.attackType === 'Parried'
+      || battleInfo.attackType === 'Missed'
+    ) {
+      ctx.strokeText(
+        battleInfo.attackType,
+        playerPosition[0].x,
+        playerPosition[0].y - 20,
+        50,
+      );
+    } else {
+      ctx.strokeText(
+        battleInfo.damage,
+        playerPosition[0].x,
+        playerPosition[0].y - 20,
+        50,
+      );
+    }
 
     imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
     palette = quantize(imageData.data, 256, { format: 'rgb333' });

@@ -4,7 +4,7 @@ import {
   Op,
 } from "sequelize";
 import db from '../../models';
-import { calculateSkillDamage } from "../skills/calculateSkillDamage";
+import { calculateSkillDamage } from "./calculateSkills";
 import { fetchUserCurrentSelectedSkills } from "../character/selectedSkills";
 import calculatePassives from "./calculatePassives";
 
@@ -28,43 +28,25 @@ export const calculateCharacterStats = async (
       }]
     ),
   });
-  let FR = 0;
-  let PR = 0;
-  let LR = 0;
-  let CR = 0;
-
   const userCurrentRank = currentCharacter.user.ranks[0] ? currentCharacter.user.ranks[0] : { id: 0, expNeeded: nextRank.expNeeded };
   const nextRankExp = nextRank && nextRank.expNeeded ? nextRank.expNeeded : userCurrentRank.expNeeded;
-
   const countedSpendAttributes = currentCharacter.stats.strength
     + currentCharacter.stats.dexterity
     + currentCharacter.stats.vitality
     + currentCharacter.stats.energy;
   const AttributesToSpend = (userCurrentRank.id * 5) - countedSpendAttributes;
+  let FR = 0;
+  let PR = 0;
+  let LR = 0;
+  let CR = 0;
+  let block = 0;
+  let defense = 0;
 
   const strength = currentCharacter.user.currentClass.strength + currentCharacter.stats.strength;
   const dexterity = currentCharacter.user.currentClass.dexterity + currentCharacter.stats.dexterity;
   const vitality = currentCharacter.user.currentClass.vitality + currentCharacter.stats.vitality;
   const energy = currentCharacter.user.currentClass.energy + currentCharacter.stats.energy;
 
-  // Calculate by skill in later version, instead of just weapon damage
-  const attackOneMin = (
-    currentCharacter.equipment.mainHand
-  )
-    ? (currentCharacter.equipment.mainHand.minDamage)
-    : 1;
-
-  const attackOnemax = (
-    currentCharacter.equipment.mainHand
-  )
-    ? (currentCharacter.equipment.mainHand.maxDamage)
-    : 2;
-
-  const attackOneAr = currentCharacter.user.currentClass.attackRating + (currentCharacter.stats.dexterity * 5);
-  const attackTwoAr = currentCharacter.user.currentClass.attackRating + (currentCharacter.stats.dexterity * 5);
-
-  let block = 0;
-  let defense = 0;
   if (
     currentCharacter.equipment.offHand
     && currentCharacter.equipment.offHand.itemBase.itemFamily.itemType.name === 'Shields'

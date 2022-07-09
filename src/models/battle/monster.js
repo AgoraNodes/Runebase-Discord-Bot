@@ -43,6 +43,16 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.SMALLINT,
       allowNull: false,
     },
+    minAr: {
+      type: DataTypes.INTEGER,
+      defaultValue: 8,
+      allowNull: false,
+    },
+    maxAr: {
+      type: DataTypes.INTEGER,
+      defaultValue: 20,
+      allowNull: false,
+    },
     FR: {
       type: DataTypes.SMALLINT,
       allowNull: false,
