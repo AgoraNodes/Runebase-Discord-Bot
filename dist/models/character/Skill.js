@@ -24,6 +24,10 @@ module.exports = function (sequelize, DataTypes) {
     column: {
       type: DataTypes.TINYINT,
       allowNull: false
+    },
+    passive: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false
     }
   }; // 2: The model options.
 

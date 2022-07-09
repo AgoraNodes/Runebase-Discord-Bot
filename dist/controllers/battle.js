@@ -13,6 +13,8 @@ var _slicedToArray2 = _interopRequireDefault(require("@babel/runtime/helpers/sli
 
 var _toConsumableArray2 = _interopRequireDefault(require("@babel/runtime/helpers/toConsumableArray"));
 
+var _defineProperty2 = _interopRequireDefault(require("@babel/runtime/helpers/defineProperty"));
+
 var _asyncToGenerator2 = _interopRequireDefault(require("@babel/runtime/helpers/asyncToGenerator"));
 
 var _sequelize = require("sequelize");
@@ -54,6 +56,12 @@ var _item = require("../render/item");
 var _buttons = require("../buttons");
 
 var _messages = require("../messages");
+
+var _skillEmoji = _interopRequireDefault(require("../config/skillEmoji"));
+
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { (0, _defineProperty2["default"])(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
 
 function _asyncIterator(iterable) { var method, async, sync, retry = 2; for ("undefined" != typeof Symbol && (async = Symbol.asyncIterator, sync = Symbol.iterator); retry--;) { if (async && null != (method = iterable[async])) return method.call(iterable); if (sync && null != (method = iterable[sync])) return new AsyncFromSyncIterator(method.call(iterable)); async = "@@asyncIterator", sync = "@@iterator"; } throw new TypeError("Object is not async iterable"); }
 
@@ -264,22 +272,46 @@ var discordBattle = /*#__PURE__*/function () {
             battle = _context13.sent;
 
           case 64:
-            mainSkillMap = userCurrentSelectedSkills.UserClassSkills.map(function (mySkill) {
-              return {
-                placeholder: 'pick a skill',
-                label: "Main Skill: ".concat(mySkill.skill.name),
-                value: "mainSkill:".concat(mySkill.id),
-                "default": mySkill.id === userCurrentSelectedSkills.selectedMainSkillId
-              };
-            });
-            secondarySkillMap = userCurrentSelectedSkills.UserClassSkills.map(function (mySkill) {
-              return {
-                placeholder: 'pick a skill',
-                label: "Secondary Skill: ".concat(mySkill.skill.name),
-                value: "secondarySkill:".concat(mySkill.id),
-                "default": mySkill.id === userCurrentSelectedSkills.selectedSecondarySkillId
-              };
-            });
+            mainSkillMap = userCurrentSelectedSkills.UserClassSkills.reduce(function (filtered, mySkill) {
+              if (!mySkill.skill.passive) {
+                var emoji = _skillEmoji["default"].find(function (a) {
+                  return a.name === mySkill.skill.name;
+                });
+
+                var mapped = _objectSpread({
+                  placeholder: 'pick a skill',
+                  label: "Main Skill: ".concat(mySkill.skill.name),
+                  value: "mainSkill:".concat(mySkill.id),
+                  "default": mySkill.id === userCurrentSelectedSkills.selectedMainSkillId
+                }, emoji ? {
+                  emoji: emoji.emoji
+                } : false);
+
+                filtered.push(mapped);
+              }
+
+              return filtered;
+            }, []);
+            secondarySkillMap = userCurrentSelectedSkills.UserClassSkills.reduce(function (filtered, mySkill) {
+              if (!mySkill.skill.passive) {
+                var emoji = _skillEmoji["default"].find(function (a) {
+                  return a.name === mySkill.skill.name;
+                });
+
+                var mapped = _objectSpread({
+                  placeholder: 'pick a skill',
+                  label: "Secondary Skill: ".concat(mySkill.skill.name),
+                  value: "secondarySkill:".concat(mySkill.id),
+                  "default": mySkill.id === userCurrentSelectedSkills.selectedSecondarySkillId
+                }, emoji ? {
+                  emoji: emoji.emoji
+                } : false);
+
+                filtered.push(mapped);
+              }
+
+              return filtered;
+            }, []);
 
             if (!currentSelectedMonster || currentSelectedMonster && currentSelectedMonster.currentHp < 1 || battle.id !== currentSelectedMonster.battleId) {
               currentSelectedMonster = battle.BattleMonsters.find(function (element) {
@@ -1697,22 +1729,32 @@ var discordBattle = /*#__PURE__*/function () {
                                               userCurrentSelectedSkills = _context9.sent;
 
                                             case 171:
-                                              mainSkillMap = userCurrentSelectedSkills.UserClassSkills.map(function (mySkill) {
-                                                return {
-                                                  placeholder: 'pick a skill',
-                                                  label: "Main Skill: ".concat(mySkill.skill.name),
-                                                  value: "mainSkill:".concat(mySkill.id),
-                                                  "default": mySkill.id === userCurrentSelectedSkills.selectedMainSkillId
-                                                };
-                                              });
-                                              secondarySkillMap = userCurrentSelectedSkills.UserClassSkills.map(function (mySkill) {
-                                                return {
-                                                  placeholder: 'pick a skill',
-                                                  label: "Secondary Skill: ".concat(mySkill.skill.name),
-                                                  value: "secondarySkill:".concat(mySkill.id),
-                                                  "default": mySkill.id === userCurrentSelectedSkills.selectedSecondarySkillId
-                                                };
-                                              });
+                                              mainSkillMap = userCurrentSelectedSkills.UserClassSkills.reduce(function (filtered, mySkill) {
+                                                if (!mySkill.skill.passive) {
+                                                  var mapped = {
+                                                    placeholder: 'pick a skill',
+                                                    label: "Main Skill: ".concat(mySkill.skill.name),
+                                                    value: "mainSkill:".concat(mySkill.id),
+                                                    "default": mySkill.id === userCurrentSelectedSkills.selectedMainSkillId
+                                                  };
+                                                  filtered.push(mapped);
+                                                }
+
+                                                return filtered;
+                                              }, []);
+                                              secondarySkillMap = userCurrentSelectedSkills.UserClassSkills.reduce(function (filtered, mySkill) {
+                                                if (!mySkill.skill.passive) {
+                                                  var mapped = {
+                                                    placeholder: 'pick a skill',
+                                                    label: "Secondary Skill: ".concat(mySkill.skill.name),
+                                                    value: "secondarySkill:".concat(mySkill.id),
+                                                    "default": mySkill.id === userCurrentSelectedSkills.selectedSecondarySkillId
+                                                  };
+                                                  filtered.push(mapped);
+                                                }
+
+                                                return filtered;
+                                              }, []);
                                               _context9.t49 = interaction;
                                               _context9.t50 = "<@".concat(userCurrentCharacter.user.user_id, ">");
                                               _context9.t51 = [];
