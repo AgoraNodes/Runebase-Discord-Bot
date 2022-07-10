@@ -268,17 +268,7 @@ export const renderBattleGif = async (
 
   battleLogs.unshift(...monsterInfo[0].battleLogs);
 
-  console.log(BattleMonsters);
-  console.log('before battle monster update');
-  BattleMonsters = BattleMonsters.map((obj) => monsterInfo[0].monstersToUpdate.find((o) => {
-    console.log(o.id);
-    console.log(obj.id);
-    console.log('map battlemonsters');
-    return o.id === obj.id;
-  }) || obj);
-
-  console.log(BattleMonsters);
-  console.log('after battle monster update');
+  BattleMonsters = BattleMonsters.map((obj) => monsterInfo[0].monstersToUpdate.find((o) => o.id === obj.id) || obj);
 
   drawBattleLog(
     ctx,

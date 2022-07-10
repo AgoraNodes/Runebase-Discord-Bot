@@ -67,7 +67,7 @@ export const drawEnemy = (
     console.log(debuff);
     ctx.drawImage(
       debuffImages[debuff.name][0],
-      (x - 6) + (i * 5), // x position
+      (x - 6) + (i * 17), // x position
       y - 17, // y position
       debuffImages[debuff.name][0].width / 4,
       debuffImages[debuff.name][0].height / 4,
@@ -77,7 +77,7 @@ export const drawEnemy = (
     ctx.fillStyle = "red";
     ctx.fillText(
       debuff.rounds,
-      (x - 6) + (i * 5), // x position
+      (x - 6) + (i * 17), // x position
       y - 17, // y position
       50,
     );

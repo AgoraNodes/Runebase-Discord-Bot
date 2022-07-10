@@ -10,6 +10,7 @@ export const calculateBarbSkillDamage = (
     const newAttackRating = newAttack.ar + Math.round(((newAttack.ar / 100) * (20 + ((skillToCalculate.points - 1) * 5))));
     newAttack = {
       name: skillToCalculate.skill.name,
+      attackType: 'Physical',
       min: newMinDamage,
       max: newMaxDamage,
       minThrow: newAttack.minThrow,
@@ -30,6 +31,7 @@ export const calculateBarbSkillDamage = (
     const newStun = newAttack.stun + 5 + ((skillToCalculate.points - 1) * 1);
     newAttack = {
       name: skillToCalculate.skill.name,
+      attackType: 'Physical',
       min: newMinDamage,
       max: newMaxDamage,
       minThrow: newAttack.minThrow,
@@ -50,6 +52,7 @@ export const calculateBarbSkillDamage = (
     const newAttackRating = newAttack.ar + Math.round(((newAttack.ar / 100) * (40 + ((skillToCalculate.points - 1) * 5))));
     newAttack = {
       name: skillToCalculate.skill.name,
+      attackType: 'Physical',
       min: newMinDamage,
       max: newMaxDamage,
       minThrow: newAttack.minThrow,
@@ -67,9 +70,10 @@ export const calculateBarbSkillDamage = (
   if (skillToCalculate.skill.name === "Wound") {
     const newMinDamage = (newAttack.min / 100) * (50 + ((skillToCalculate.points - 1) * 5));
     const newMaxDamage = (newAttack.max / 100) * (50 + ((skillToCalculate.points - 1) * 5));
-    const rounds = 2 + (0.2 * (skillToCalculate.point - 1));
+    const rounds = 2 + (0.2 * (skillToCalculate.points - 1));
     newAttack = {
       name: skillToCalculate.skill.name,
+      attackType: 'Physical',
       min: newMinDamage,
       max: newMaxDamage,
       minThrow: newAttack.minThrow,
@@ -82,6 +86,9 @@ export const calculateBarbSkillDamage = (
       manaSteal: newAttack.manaSteal,
       cost: 2,
       rounds: Math.round(rounds),
+      ranged: false,
+      debuff: true,
+      aoe: false,
     };
   }
 
@@ -89,6 +96,7 @@ export const calculateBarbSkillDamage = (
     const newAttackRating = newAttack.ar + Math.round(((newAttack.ar / 100) * (15 + ((skillToCalculate.points - 1) * 5))));
     newAttack = {
       name: skillToCalculate.skill.name,
+      attackType: 'Physical',
       min: newAttack.min * 2,
       max: newAttack.max * 2,
       minThrow: newAttack.minThrow,
@@ -107,6 +115,7 @@ export const calculateBarbSkillDamage = (
     const newAttackRating = newAttack.ar + Math.round(((newAttack.ar / 100) * (15 + ((skillToCalculate.points - 1) * 5))));
     newAttack = {
       name: skillToCalculate.skill.name,
+      attackType: 'Physical',
       min: newAttack.min,
       max: newAttack.max,
       minThrow: newAttack.minThrow * 2,
@@ -122,11 +131,13 @@ export const calculateBarbSkillDamage = (
       throw: true,
     };
   }
+
   if (skillToCalculate.skill.name === "Howl") {
     const reducedArmor = 10 + ((skillToCalculate.points - 1) * 2);
     const debuffRounds = 2 + ((skillToCalculate.points - 1) * 0.2);
     newAttack = {
       name: skillToCalculate.skill.name,
+      attackType: 'Magic',
       min: null,
       max: null,
       reducedArmor: Math.round(reducedArmor),
@@ -136,6 +147,29 @@ export const calculateBarbSkillDamage = (
       debuff: true,
       aoe: true,
       rounds: Math.round(debuffRounds),
+    };
+  }
+
+  if (skillToCalculate.skill.name === "Cleave") {
+    const newMinDamage = (newAttack.min / 100) * (50 + ((skillToCalculate.points - 1) * 5));
+    const newMaxDamage = (newAttack.max / 100) * (50 + ((skillToCalculate.points - 1) * 5));
+    newAttack = {
+      name: skillToCalculate.skill.name,
+      attackType: 'Physical',
+      min: newMinDamage,
+      max: newMaxDamage,
+      minThrow: newAttack.minThrow,
+      maxThrow: newAttack.maxThrow,
+      ar: newAttack.ar,
+      crit: newAttack.crit,
+      stun: newAttack.stun,
+      parry: newAttack.parry,
+      lifeSteal: newAttack.lifeSteal,
+      manaSteal: newAttack.manaSteal,
+      cost: 2,
+      ranged: false,
+      debuff: false,
+      aoe: true,
     };
   }
 

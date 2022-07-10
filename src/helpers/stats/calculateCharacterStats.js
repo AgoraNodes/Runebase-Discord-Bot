@@ -89,6 +89,7 @@ export const calculateCharacterStats = async (
 
   let regularAttack = {
     name: 'Attack',
+    attackType: 'Physical',
     min: currentCharacter.equipment.mainHand ? currentCharacter.equipment.mainHand.minDamage : 1,
     max: currentCharacter.equipment.mainHand ? currentCharacter.equipment.mainHand.maxDamage : 2,
     minThrow: currentCharacter.equipment.mainHand && currentCharacter.equipment.mainHand.minThrowDamage ? currentCharacter.equipment.mainHand.minThrowDamage : 0,
