@@ -134,6 +134,10 @@ export const discordBattle = async (
         as: 'BattleMonsters',
         include: [
           {
+            model: db.debuff,
+            as: 'debuffs',
+          },
+          {
             model: db.monster,
             as: 'monster',
           },
@@ -183,6 +187,10 @@ export const discordBattle = async (
           model: db.BattleMonster,
           as: 'BattleMonsters',
           include: [
+            {
+              model: db.debuff,
+              as: 'debuffs',
+            },
             {
               model: db.monster,
               as: 'monster',

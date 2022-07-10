@@ -122,6 +122,22 @@ export const calculateBarbSkillDamage = (
       throw: true,
     };
   }
+  if (skillToCalculate.skill.name === "Howl") {
+    const reducedArmor = 10 + ((skillToCalculate.points - 1) * 2);
+    const debuffRounds = 2 + ((skillToCalculate.points - 1) * 0.2);
+    newAttack = {
+      name: skillToCalculate.skill.name,
+      min: null,
+      max: null,
+      reducedArmor: Math.round(reducedArmor),
+      stun: false,
+      cost: 2,
+      ranged: true,
+      debuff: true,
+      aoe: true,
+      rounds: Math.round(debuffRounds),
+    };
+  }
 
   return newAttack;
 };

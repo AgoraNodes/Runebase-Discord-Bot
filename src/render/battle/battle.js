@@ -13,6 +13,7 @@ import {
 import { loadPlayer } from './load/loadPlayer';
 import { loadEnemy } from './load/loadEnemy';
 import { loadOrbs } from './load/loadOrbs';
+import { loadDebuff } from './load/loadDebuff';
 
 import { drawBackground } from './draw/drawBackground';
 import { drawBattleLog } from './draw/drawBattleLog';
@@ -34,7 +35,9 @@ export const renderBattleGif = async (
   const enemyPosition = [];
   const playerPosition = [];
   const enemies = [];
+  const debuffImages = [];
   const loadPromises = [];
+  let { BattleMonsters } = previousBattleState;
   const { battleLogs } = previousBattleState;
   let mainSkill;
   let secondarySkill;
@@ -92,7 +95,28 @@ export const renderBattleGif = async (
     }),
   );
 
-  for (const [i, battleMonster] of previousBattleState.BattleMonsters.entries()) {
+  for (const [i, monsterInfoA] of monsterInfo.entries()) {
+    for (const [i, monsterToUpdateA] of monsterInfoA.monstersToUpdate.entries()) {
+      for (const [i, debuff] of monsterToUpdateA.debuffs.entries()) {
+        loadPromises.push(
+          new Promise((resolve, reject) => {
+            if (!debuffImages[debuff.name]) {
+              loadDebuff(
+                debuff.name,
+              ).then((image) => {
+                debuffImages[debuff.name] = image;
+                resolve();
+              });
+            } else {
+              resolve();
+            }
+          }),
+        );
+      }
+    }
+  }
+
+  for (const [i, battleMonster] of BattleMonsters.entries()) {
     loadPromises.push(
       new Promise((resolve, reject) => {
         loadEnemy(
@@ -103,6 +127,22 @@ export const renderBattleGif = async (
         });
       }),
     );
+    for (const [i, debuff] of battleMonster.debuffs.entries()) {
+      loadPromises.push(
+        new Promise((resolve, reject) => {
+          if (!debuffImages[debuff.name]) {
+            loadDebuff(
+              debuff.name,
+            ).then((image) => {
+              debuffImages[debuff.name] = image;
+              resolve();
+            });
+          } else {
+            resolve();
+          }
+        }),
+      );
+    }
   }
 
   loadPromises.push(
@@ -141,13 +181,14 @@ export const renderBattleGif = async (
     false, // user attacking [false || enemyImagePosition]
   );
 
-  for (const [i, battleMonster] of previousBattleState.BattleMonsters.entries()) {
+  for (const [i, battleMonster] of BattleMonsters.entries()) {
     if (battleMonster.currentHp > 0) {
       enemyPosition[i] = drawEnemy(
         ctx, // CTX
-        previousBattleState.BattleMonsters.find((element) => element.id === battleMonster.id), // MonsterState
+        BattleMonsters.find((element) => element.id === battleMonster.id), // MonsterState
         currentSelectedMonster && currentSelectedMonster.id === battleMonster.id, // is current Monster selected?
         enemies[battleMonster.id], // Enemy Image
+        debuffImages,
         false, // Moved To user?
         0, // Enemy Image Frame Shown
         playerPosition, // PlayerCords
@@ -189,14 +230,15 @@ export const renderBattleGif = async (
     backgroundImage,
   );
 
-  for (const [i, battleMonster] of previousBattleState.BattleMonsters.entries()) {
+  for (const [i, battleMonster] of BattleMonsters.entries()) {
     if (battleMonster.currentHp > 0) {
       // const findUpdatedMonsterState = monsterInfo.find((element) => element.monsterId === battleMonster.id);
       enemyPosition[i] = drawEnemy(
         ctx, // CTX
-        previousBattleState.BattleMonsters.find((element) => element.id === battleMonster.id), // MonsterState
+        BattleMonsters.find((element) => element.id === battleMonster.id), // MonsterState
         currentSelectedMonster && currentSelectedMonster.id === battleMonster.id, // is current Monster selected?
         enemies[battleMonster.id], // Enemy Image
+        debuffImages,
         false, // Moved To user?
         0, // Enemy Image Frame Shown
         playerPosition, // PlayerCords
@@ -205,9 +247,6 @@ export const renderBattleGif = async (
       );
     }
   }
-
-  console.log(enemyPosition);
-  console.log('find enemy position before');
 
   const findAttackedEnemyByUser = enemyPosition.find((element) => element && element.id === monsterInfo[0].monsterId);
   console.log('find enemy position after');
@@ -227,18 +266,38 @@ export const renderBattleGif = async (
     mpOrbs[0],
   );
 
+  battleLogs.unshift(...monsterInfo[0].battleLogs);
+
+  console.log(BattleMonsters);
+  console.log('before battle monster update');
+  BattleMonsters = BattleMonsters.map((obj) => monsterInfo[0].monstersToUpdate.find((o) => {
+    console.log(o.id);
+    console.log(obj.id);
+    console.log('map battlemonsters');
+    return o.id === obj.id;
+  }) || obj);
+
+  console.log(BattleMonsters);
+  console.log('after battle monster update');
+
   drawBattleLog(
     ctx,
     battleLogs,
   );
   ctx.lineWidth = 1;
   ctx.font = 'bold 13px "HeartWarming"';
-  ctx.strokeText(
-    monsterInfo[0].userDamage,
-    findAttackedEnemyByUser.x,
-    findAttackedEnemyByUser.y - 20,
-    50,
-  );
+  console.log('before looping monsters');
+  for (const monsterToUpdate of monsterInfo[0].monstersToUpdate) {
+    console.log(monsterToUpdate);
+    console.log(enemyPosition);
+    const monsterToUpdatePosition = enemyPosition.find((element) => element && element.id === monsterToUpdate.id);
+    ctx.strokeText(
+      monsterToUpdate.userDamage,
+      monsterToUpdatePosition.x,
+      monsterToUpdatePosition.y - 20,
+      50,
+    );
+  }
 
   imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
   palette = quantize(imageData.data, 256, { format: 'rgb333' });
@@ -261,13 +320,16 @@ export const renderBattleGif = async (
     backgroundImage,
   );
 
-  for (const [i, battleMonster] of battle.BattleMonsters.entries()) {
+  for (const [i, battleMonster] of BattleMonsters.entries()) {
+    console.log(i);
+    console.log('-');
     if (battleMonster.currentHp > 0) {
       enemyPosition[i] = drawEnemy(
         ctx, // CTX
-        battle.BattleMonsters.find((element) => element.id === battleMonster.id), // MonsterState
+        BattleMonsters.find((element) => element.id === battleMonster.id), // MonsterState
         currentSelectedMonster && currentSelectedMonster.id === battleMonster.id, // is current Monster selected?
         enemies[battleMonster.id], // Enemy Image
+        debuffImages,
         false, // Moved To user?
         0, // Enemy Image Frame Shown
         playerPosition, // PlayerCords
@@ -297,12 +359,15 @@ export const renderBattleGif = async (
   );
   ctx.lineWidth = 1;
   ctx.font = 'bold 13px "HeartWarming"';
-  ctx.strokeText(
-    monsterInfo[0].userDamage,
-    findAttackedEnemyByUser.x,
-    findAttackedEnemyByUser.y - 20,
-    50,
-  );
+  for (const monsterToUpdate of monsterInfo[0].monstersToUpdate) {
+    const monsterToUpdatePosition = enemyPosition.find((element) => element && element.id === monsterToUpdate.id);
+    ctx.strokeText(
+      monsterToUpdate.userDamage,
+      monsterToUpdatePosition.x,
+      monsterToUpdatePosition.y - 20,
+      50,
+    );
+  }
 
   imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
   palette = quantize(imageData.data, 256, { format: 'rgb333' });
@@ -331,13 +396,14 @@ export const renderBattleGif = async (
     false, // user attacking [false || enemyImagePosition]
   );
 
-  for (const [i, battleMonster] of battle.BattleMonsters.entries()) {
+  for (const [i, battleMonster] of BattleMonsters.entries()) {
     if (battleMonster.currentHp > 0) {
       enemyPosition[i] = drawEnemy(
         ctx, // CTX
-        battle.BattleMonsters.find((element) => element.id === battleMonster.id), // MonsterState
+        BattleMonsters.find((element) => element.id === battleMonster.id), // MonsterState
         currentSelectedMonster && currentSelectedMonster.id === battleMonster.id, // is current Monster selected?
         enemies[battleMonster.id], // Enemy Image
+        debuffImages,
         false, // Moved To user?
         0, // Enemy Image Frame Shown
         playerPosition, // PlayerCords
@@ -359,12 +425,15 @@ export const renderBattleGif = async (
   );
   ctx.lineWidth = 1;
   ctx.font = 'bold 13px "HeartWarming"';
-  ctx.strokeText(
-    monsterInfo[0].userDamage,
-    findAttackedEnemyByUser.x,
-    findAttackedEnemyByUser.y - 20,
-    50,
-  );
+  for (const monsterToUpdate of monsterInfo[0].monstersToUpdate) {
+    const monsterToUpdatePosition = enemyPosition.find((element) => element && element.id === monsterToUpdate.id);
+    ctx.strokeText(
+      monsterToUpdate.userDamage,
+      monsterToUpdatePosition.x,
+      monsterToUpdatePosition.y - 20,
+      50,
+    );
+  }
 
   imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
   palette = quantize(imageData.data, 256, { format: 'rgb333' });
@@ -395,13 +464,14 @@ export const renderBattleGif = async (
       false, // user attacking [false || enemyImagePosition]
     );
 
-    for (const [i, battleMonster] of battle.BattleMonsters.entries()) {
+    for (const [i, battleMonster] of BattleMonsters.entries()) {
       if (battleMonster.currentHp > 0) {
         enemyPosition[i] = drawEnemy(
           ctx, // CTX
-          battle.BattleMonsters.find((element) => element.id === battleMonster.id), // MonsterState
+          BattleMonsters.find((element) => element.id === battleMonster.id), // MonsterState
           currentSelectedMonster && currentSelectedMonster.id === battleMonster.id, // is current Monster selected?
           enemies[battleMonster.id], // Enemy Image
+          debuffImages,
           battleMonster.id === battleInfo.monsterId, // Moved To user?
           battleMonster.id === battleInfo.monsterId ? 0 : 0, // Enemy Image Frame Shown
           playerPosition[0], // PlayerCords
@@ -449,13 +519,14 @@ export const renderBattleGif = async (
       0, // number of image in the array to show
       false, // user attacking [false || enemyImagePosition]
     );
-    for (const [i, battleMonster] of battle.BattleMonsters.entries()) {
+    for (const [i, battleMonster] of BattleMonsters.entries()) {
       if (battleMonster.currentHp > 0) {
         enemyPosition[i] = drawEnemy(
           ctx, // CTX
-          battle.BattleMonsters.find((element) => element.id === battleMonster.id), // MonsterState
+          BattleMonsters.find((element) => element.id === battleMonster.id), // MonsterState
           currentSelectedMonster && currentSelectedMonster.id === battleMonster.id, // is current Monster selected?
           enemies[battleMonster.id], // Enemy Image
+          debuffImages,
           battleMonster.id === battleInfo.monsterId, // Moved To user?
           battleMonster.id === battleInfo.monsterId ? 1 : 0, // Enemy Image Frame Shown
           playerPosition[0], // PlayerCords
@@ -472,9 +543,7 @@ export const renderBattleGif = async (
     );
     console.log(battleInfo);
     console.log('battleInfo');
-    battleLogs.unshift({
-      log: battleInfo.log,
-    });
+    battleLogs.unshift(...battleInfo.battleLogs);
     drawBattleLog(
       ctx,
       battleLogs,
@@ -527,13 +596,14 @@ export const renderBattleGif = async (
       0, // number of image in the array to show
       false, // user attacking [false || enemyImagePosition]
     );
-    for (const [i, battleMonster] of battle.BattleMonsters.entries()) {
+    for (const [i, battleMonster] of BattleMonsters.entries()) {
       if (battleMonster.currentHp > 0) {
         enemyPosition[i] = drawEnemy(
           ctx, // CTX
-          battle.BattleMonsters.find((element) => element.id === battleMonster.id), // MonsterState
+          BattleMonsters.find((element) => element.id === battleMonster.id), // MonsterState
           currentSelectedMonster && currentSelectedMonster.id === battleMonster.id, // is current Monster selected?
           enemies[battleMonster.id], // Enemy Image
+          debuffImages,
           battleMonster.id === battleInfo.monsterId, // Moved To user?
           battleMonster.id === battleInfo.monsterId ? 2 : 0, // Enemy Image Frame Shown
           playerPosition[0], // PlayerCords
@@ -599,13 +669,14 @@ export const renderBattleGif = async (
       0, // number of image in the array to show
       false, // user attacking [false || enemyImagePosition]
     );
-    for (const [i, battleMonster] of battle.BattleMonsters.entries()) {
+    for (const [i, battleMonster] of BattleMonsters.entries()) {
       if (battleMonster.currentHp > 0) {
         enemyPosition[i] = drawEnemy(
           ctx, // CTX
-          battle.BattleMonsters.find((element) => element.id === battleMonster.id), // MonsterState
+          BattleMonsters.find((element) => element.id === battleMonster.id), // MonsterState
           currentSelectedMonster && currentSelectedMonster.id === battleMonster.id, // is current Monster selected?
           enemies[battleMonster.id], // Enemy Image
+          debuffImages,
           battleMonster.id === battleInfo.monsterId, // Moved To user?
           battleMonster.id === battleInfo.monsterId ? 0 : 0, // Enemy Image Frame Shown
           playerPosition[0], // PlayerCords
@@ -671,13 +742,14 @@ export const renderBattleGif = async (
       0, // number of image in the array to show
       false, // user attacking [false || enemyImagePosition]
     );
-    for (const [i, battleMonster] of battle.BattleMonsters.entries()) {
+    for (const [i, battleMonster] of BattleMonsters.entries()) {
       if (battleMonster.currentHp > 0) {
         enemyPosition[i] = drawEnemy(
           ctx, // CTX
-          battle.BattleMonsters.find((element) => element.id === battleMonster.id), // MonsterState
+          BattleMonsters.find((element) => element.id === battleMonster.id), // MonsterState
           currentSelectedMonster && currentSelectedMonster.id === battleMonster.id, // is current Monster selected?
           enemies[battleMonster.id], // Enemy Image
+          debuffImages,
           false, // Moved To user?
           0, // Enemy Image Frame Shown
           playerPosition[0], // PlayerCords

@@ -26,6 +26,7 @@ module.exports = (sequelize, DataTypes) => {
   const BattleMonsterModel = sequelize.define('BattleMonster', modelDefinition, modelOptions);
 
   BattleMonsterModel.associate = (model) => {
+    BattleMonsterModel.hasMany(model.debuff);
     BattleMonsterModel.belongsTo(model.battle);
     BattleMonsterModel.belongsTo(model.monster);
   };

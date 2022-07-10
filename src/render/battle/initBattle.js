@@ -13,6 +13,7 @@ import {
 import { loadPlayer } from './load/loadPlayer';
 import { loadEnemy } from './load/loadEnemy';
 import { loadOrbs } from './load/loadOrbs';
+import { loadDebuff } from './load/loadDebuff';
 
 import { drawBackground } from "./draw/drawBackground";
 import { drawBattleLog } from './draw/drawBattleLog';
@@ -33,6 +34,7 @@ export const renderInitBattleGif = async (
   const zone = 'den';
   const enemies = [];
   const loadPromises = [];
+  const debuffImages = [];
   const { battleLogs } = previousBattleState;
   let mainSkill;
   let secondarySkill;
@@ -102,6 +104,22 @@ export const renderInitBattleGif = async (
         });
       }),
     );
+    for (const [i, debuff] of battleMonster.debuffs.entries()) {
+      loadPromises.push(
+        new Promise((resolve, reject) => {
+          if (!debuffImages[debuff.name]) {
+            loadDebuff(
+              debuff.name,
+            ).then((image) => {
+              debuffImages[debuff.name] = image;
+              resolve();
+            });
+          } else {
+            resolve();
+          }
+        }),
+      );
+    }
   }
 
   loadPromises.push(
@@ -148,6 +166,7 @@ export const renderInitBattleGif = async (
         previousBattleState.BattleMonsters.find((element) => element.id === battleMonster.id), // MonsterState
         currentSelectedMonster.id === battleMonster.id, // is current Monster selected?
         enemies[battleMonster.id], // Enemy Image
+        debuffImages,
         false, // Moved To user?
         0, // Enemy Image Frame Shown
         playerPosition, // PlayerCords
