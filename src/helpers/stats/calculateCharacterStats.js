@@ -7,6 +7,7 @@ import db from '../../models';
 import { calculateSkillDamage } from "./calculateSkills";
 import { fetchUserCurrentSelectedSkills } from "../character/selectedSkills";
 import calculatePassives from "./calculatePassives";
+import calculateBuffs from "./calculateBuffs";
 
 export const calculateCharacterStats = async (
   currentCharacter,
@@ -55,15 +56,8 @@ export const calculateCharacterStats = async (
     const blocking = (shieldBlock * (dexterity - 15)) / (userCurrentRank.id * 2);
     block = blocking > 50 ? 50 : blocking;
   }
-
-  const maxHp = currentCharacter.user.currentClass.life + currentCharacter.stats.life;
-  const currentHp = currentCharacter.condition.life;
-
   const maxStamina = currentCharacter.user.currentClass.stamina + currentCharacter.stats.stamina;
   const currentStaminaPoints = currentCharacter.condition.stamina;
-
-  const maxMp = currentCharacter.user.currentClass.mana + currentCharacter.stats.mana;
-  const currentMp = currentCharacter.condition.mana;
 
   defense += currentCharacter.user.currentClass.defense;
 
@@ -87,18 +81,8 @@ export const calculateCharacterStats = async (
     }
   });
 
-  let kick = {
-    name: 'Kick',
-    attackType: 'Physical',
-    min: 1,
-    max: 2,
-    ar: currentCharacter.user.currentClass.attackRating + (currentCharacter.stats.dexterity * 5),
-    crit: 0,
-    cost: 0,
-  };
-
-  if (currentCharacter.equipment.boots) {
-    kick = {
+  const kick = currentCharacter.equipment.boots
+    ? {
       name: 'Kick',
       attackType: 'Physical',
       min: currentCharacter.equipment.boots.minDamage,
@@ -106,8 +90,16 @@ export const calculateCharacterStats = async (
       ar: currentCharacter.user.currentClass.attackRating + (currentCharacter.stats.dexterity * 5),
       crit: 0,
       cost: 0,
+    }
+    : {
+      name: 'Kick',
+      attackType: 'Physical',
+      min: 1,
+      max: 2,
+      ar: currentCharacter.user.currentClass.attackRating + (currentCharacter.stats.dexterity * 5),
+      crit: 0,
+      cost: 0,
     };
-  }
 
   let regularAttack = {
     name: 'Attack',
@@ -124,6 +116,7 @@ export const calculateCharacterStats = async (
     manaSteal: 0,
     cost: 0,
   };
+
   // Add Passive Skill stats
   [
     defense,
@@ -141,12 +134,33 @@ export const calculateCharacterStats = async (
     LR,
     CR,
   );
-  //
+
+  let currentHp = currentCharacter.condition.life;
+  let maxHp = currentCharacter.user.currentClass.life + currentCharacter.stats.life;
+  const currentMp = currentCharacter.condition.mana;
+  const maxMp = currentCharacter.user.currentClass.mana + currentCharacter.stats.mana;
+
+  console.log('before calculating buffs');
+  // Calculate Buffs
+  [
+    defense,
+    regularAttack,
+    currentHp,
+    maxHp,
+  ] = await calculateBuffs(
+    currentCharacter,
+    defense,
+    regularAttack,
+    currentHp,
+    maxHp,
+  );
+  console.log('after calculating buffs');
+  // Fetch Selected Skills
   const selectedSkills = await fetchUserCurrentSelectedSkills(
     currentCharacter.user.user_id,
     t,
   );
-
+  console.log('after skill selection');
   // calculate Skill damage
   const attackOne = await calculateSkillDamage(
     currentCharacter,
@@ -154,7 +168,7 @@ export const calculateCharacterStats = async (
     regularAttack,
     t,
   );
-
+  console.log('after main skill damage');
   // calculate Skill damage
   const attackTwo = await calculateSkillDamage(
     currentCharacter,
@@ -163,6 +177,8 @@ export const calculateCharacterStats = async (
     t,
   );
 
+  console.log('done calculating character stats');
+  // TODO: APPLY CAPS BEFORE APPLYING THEM TO FINAL RETURN
   return {
     username: currentCharacter.user.username,
     currentClass: currentCharacter.user.currentClass.name,

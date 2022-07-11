@@ -3,6 +3,7 @@
 import db from '../../../models';
 import { randomIntFromInterval } from "../../utils";
 import isFailedAttack from './isFailedAttack';
+import calculateCritDamage from '../utils/calculateCritDamage';
 
 const userApplyAttackSingle = async (
   userCurrentCharacter, // UserCharacter
@@ -43,7 +44,11 @@ const userApplyAttackSingle = async (
     t,
   );
 
-  const randomAttackDamage = randomIntFromInterval(useAttack.min, useAttack.max); // Random attack damage between min-max
+  let randomAttackDamage = randomIntFromInterval(useAttack.min, useAttack.max); // Random attack damage between min-max
+  randomAttackDamage = calculateCritDamage(
+    randomAttackDamage,
+    useAttack.crit,
+  );
   // TODO: Apply Damage reductions? based on attackType (useAttack.attackType)
 
   if (!attackFailed) {

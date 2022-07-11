@@ -2,6 +2,7 @@ export const calculateBarbSkillDamage = (
   skillToCalculate,
   attack,
 ) => {
+  console.log('start calculating barb skills');
   let newAttack = attack;
 
   if (skillToCalculate.skill.name === "Bonk") {
@@ -150,6 +151,20 @@ export const calculateBarbSkillDamage = (
     };
   }
 
+  if (skillToCalculate.skill.name === "Strategic Shout") {
+    const attackBonus = 40 + ((skillToCalculate.points - 1) * 5);
+    const buffRounds = 2 + ((skillToCalculate.points - 1) * 0.2);
+    newAttack = {
+      name: skillToCalculate.skill.name,
+      attackType: 'Magic',
+      attackBonus: Math.round(attackBonus),
+      cost: 2,
+      ranged: true,
+      buff: true,
+      rounds: Math.round(buffRounds),
+    };
+  }
+
   if (skillToCalculate.skill.name === "Cleave") {
     const newMinDamage = (newAttack.min / 100) * (50 + ((skillToCalculate.points - 1) * 5));
     const newMaxDamage = (newAttack.max / 100) * (50 + ((skillToCalculate.points - 1) * 5));
@@ -173,5 +188,6 @@ export const calculateBarbSkillDamage = (
     };
   }
 
+  console.log('done calculating barb attacks');
   return newAttack;
 };

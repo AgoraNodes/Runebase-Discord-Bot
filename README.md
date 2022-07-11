@@ -66,7 +66,7 @@ npx sequelize-cli migration:generate --name Sleet-table
 
 undo single migration
 ````
-npx sequelize-cli db:migrate:undo --name 20220709235447-create_debuff_table.js
+npx sequelize-cli db:migrate:undo --name 20220711135610-add_buff_table.js
 
 ````
 

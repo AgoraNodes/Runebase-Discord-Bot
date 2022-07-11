@@ -35,6 +35,16 @@ export const fetchUserCurrentCharacter = async (
     ),
     include: [
       {
+        model: db.buff,
+        as: 'buffs',
+        separate: true,
+      },
+      {
+        model: db.debuff,
+        as: 'debuffs',
+        separate: true,
+      },
+      {
         model: db.UserClassSkill,
         as: 'UserClassSkills',
         include: [

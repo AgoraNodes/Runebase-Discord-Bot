@@ -15,7 +15,7 @@ import {
   generateCancelSkillButton,
   generateAddSkillButton,
 } from '../buttons';
-import skills from '../render/skills/skills.json';
+import skills from '../render/skills/skillInfo';
 import {
   skillInfoMessage,
   loadingSkillAddEmbed,

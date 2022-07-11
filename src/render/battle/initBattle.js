@@ -14,12 +14,14 @@ import { loadPlayer } from './load/loadPlayer';
 import { loadEnemy } from './load/loadEnemy';
 import { loadOrbs } from './load/loadOrbs';
 import { loadDebuff } from './load/loadDebuff';
+import { loadBuff } from './load/loadBuff';
 
 import { drawBackground } from "./draw/drawBackground";
 import { drawBattleLog } from './draw/drawBattleLog';
 import { drawBattleScreenTools } from './draw/drawBattleScreenTools';
 import { drawPlayer } from "./draw/drawPlayer";
 import { drawEnemy } from './draw/drawEnemy';
+import { drawUserBuffs } from './draw/drawUserBuffs';
 
 export const renderInitBattleGif = async (
   currentUser,
@@ -37,6 +39,7 @@ export const renderInitBattleGif = async (
   const enemies = [];
   const loadPromises = [];
   const debuffImages = [];
+  const buffImages = [];
   const { battleLogs } = previousBattleState;
   let mainSkill;
   let secondarySkill;
@@ -94,7 +97,24 @@ export const renderInitBattleGif = async (
     }),
   );
 
-  console.log('initBattle 1');
+  for (const [i, buff] of currentUser.buffs.entries()) {
+    loadPromises.push(
+      new Promise((resolve, reject) => {
+        if (!buffImages[buff.name]) {
+          loadBuff(
+            buff.name,
+          ).then((image) => {
+            buffImages[buff.name] = image;
+            resolve();
+          });
+        } else {
+          resolve();
+        }
+      }),
+    );
+  }
+
+  // console.log('initBattle 1');
   for (const [i, battleMonster] of battle.BattleMonsters.entries()) {
     loadPromises.push(
       new Promise((resolve, reject) => {
@@ -114,6 +134,22 @@ export const renderInitBattleGif = async (
               debuff.name,
             ).then((image) => {
               debuffImages[debuff.name] = image;
+              resolve();
+            });
+          } else {
+            resolve();
+          }
+        }),
+      );
+    }
+    for (const [i, buff] of battleMonster.buffs.entries()) {
+      loadPromises.push(
+        new Promise((resolve, reject) => {
+          if (!debuffImages[buff.name]) {
+            loadBuff(
+              buff.name,
+            ).then((image) => {
+              buffImages[buff.name] = image;
               resolve();
             });
           } else {
@@ -142,7 +178,7 @@ export const renderInitBattleGif = async (
   );
 
   await Promise.all(loadPromises);
-  console.log('initBattle 4');
+  // console.log('initBattle 4');
 
   const canvas = createCanvas(650, 300);
   const ctx = canvas.getContext('2d');
@@ -159,6 +195,12 @@ export const renderInitBattleGif = async (
     playerImage, // image array of player images
     0, // number of image in the array to show
     false, // user attacking [false || enemyImagePosition]
+  );
+
+  drawUserBuffs(
+    ctx, // Ctx drawing canvas
+    currentUser, // User Object
+    buffImages, // image array of player images
   );
 
   for (const [i, battleMonster] of battle.BattleMonsters.entries()) {

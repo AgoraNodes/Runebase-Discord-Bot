@@ -11,18 +11,23 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    minDmg: {
+    damageBonus: {
       type: DataTypes.INTEGER,
     },
-    maxDmg: {
+    attackBonus: {
       type: DataTypes.INTEGER,
     },
-    reducedArmor: {
+    defenseBonus: {
       type: DataTypes.INTEGER,
     },
-    stun: {
-      type: DataTypes.BOOLEAN,
-      defaultValue: false,
+    parryBonus: {
+      type: DataTypes.INTEGER,
+    },
+    lifeBonus: {
+      type: DataTypes.INTEGER,
+    },
+    critBonus: {
+      type: DataTypes.INTEGER,
     },
     chance: {
       type: DataTypes.INTEGER,
@@ -46,12 +51,12 @@ module.exports = (sequelize, DataTypes) => {
   };
 
   // 3: Define the Wallet model.
-  const DebuffModel = sequelize.define('debuff', modelDefinition, modelOptions);
+  const BuffModel = sequelize.define('buff', modelDefinition, modelOptions);
 
-  DebuffModel.associate = (model) => {
-    DebuffModel.belongsTo(model.UserClass);
-    DebuffModel.belongsTo(model.BattleMonster);
+  BuffModel.associate = (model) => {
+    BuffModel.belongsTo(model.UserClass);
+    BuffModel.belongsTo(model.BattleMonster);
   };
 
-  return DebuffModel;
+  return BuffModel;
 };

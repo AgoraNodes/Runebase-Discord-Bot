@@ -7,7 +7,7 @@ import {
 } from 'canvas';
 import { renderSkillTreeImage } from "./skillTree";
 import { renderSkillDescriptionImage } from './skillDescription';
-import skills from './skills.json';
+// import skills from './skills.json';
 
 export const renderSkillScreen = async (
   userCharacter,
