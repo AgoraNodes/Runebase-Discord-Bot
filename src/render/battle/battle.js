@@ -25,16 +25,18 @@ import { drawUserBuffs } from './draw/drawUserBuffs';
 
 export const renderBattleGif = async (
   currentUser,
+  initialUserState,
   userCurrentSelectedSkills,
   battle,
   previousBattleState,
   previousUserState,
-  currentSelectedMonster,
-  battleInfoArray = false,
-  monsterInfo = false,
-  retaliationInfoArray = false,
-  debuffDamageInfoArray = false,
+  currentSelectedMonster, // Selected monster
+  battleInfoArray = false, // Enemies attacking the user
+  stageOneInfoArray = false, // User Attacking Enemy
+  retaliationInfoArray = false, // User Retaliating
+  debuffDamageInfoArray = false, // Applying Debuff damage on enemies
 ) => {
+  const userState = initialUserState;
   const zone = 'den';
   const enemyPosition = [];
   const playerPosition = [];
@@ -92,7 +94,7 @@ export const renderBattleGif = async (
   loadPromises.push(
     new Promise((resolve, reject) => {
       loadPlayer(
-        currentUser.class.name,
+        userState.class.name,
       ).then((image) => {
         playerImage = image;
         resolve();
@@ -100,7 +102,7 @@ export const renderBattleGif = async (
     }),
   );
 
-  for (const [i, buff] of currentUser.buffs.entries()) {
+  for (const [i, buff] of userState.buffs.entries()) {
     loadPromises.push(
       new Promise((resolve, reject) => {
         if (!buffImages[buff.name]) {
@@ -117,7 +119,7 @@ export const renderBattleGif = async (
     );
   }
 
-  for (const [i, monsterInfoA] of monsterInfo.entries()) {
+  for (const [i, monsterInfoA] of stageOneInfoArray.entries()) {
     for (const [i, monsterToUpdateA] of monsterInfoA.monstersToUpdate.entries()) {
       for (const [i, debuff] of monsterToUpdateA.debuffs.entries()) {
         loadPromises.push(
@@ -170,9 +172,9 @@ export const renderBattleGif = async (
   loadPromises.push(
     new Promise((resolve, reject) => {
       loadOrbs(
-        previousUserState,
+        userState,
+        stageOneInfoArray,
         battleInfoArray,
-        monsterInfo,
       ).then(([
         hpOrbsReturn,
         mpOrbsReturn,
@@ -199,7 +201,7 @@ export const renderBattleGif = async (
 
   drawUserBuffs(
     ctx, // Ctx drawing canvas
-    currentUser, // User Object
+    userState, // User Object
     buffImages, // image array of player images
   );
 
@@ -233,6 +235,7 @@ export const renderBattleGif = async (
     hpOrbs[0],
     mpOrbs[0],
   );
+
   drawBattleLog(
     ctx,
     battleLogs,
@@ -279,11 +282,11 @@ export const renderBattleGif = async (
 
   drawUserBuffs(
     ctx, // Ctx drawing canvas
-    currentUser, // User Object
+    userState, // User Object
     buffImages, // image array of player images
   );
 
-  const findAttackedEnemyByUser = enemyPosition.find((element) => element && element.id === monsterInfo[0].monsterId);
+  const findAttackedEnemyByUser = enemyPosition.find((element) => element && element.id === stageOneInfoArray[0].monsterId);
   // console.log('find enemy position after');
   // console.log(findAttackedEnemyByUser);
   playerPosition[0] = drawPlayer(
@@ -301,9 +304,9 @@ export const renderBattleGif = async (
     mpOrbs[0],
   );
 
-  battleLogs.unshift(...monsterInfo[0].battleLogs);
+  battleLogs.unshift(...stageOneInfoArray[0].battleLogs);
 
-  BattleMonsters = BattleMonsters.map((obj) => monsterInfo[0].monstersToUpdate.find((o) => o.id === obj.id) || obj);
+  BattleMonsters = BattleMonsters.map((obj) => stageOneInfoArray[0].monstersToUpdate.find((o) => o.id === obj.id) || obj);
 
   drawBattleLog(
     ctx,
@@ -312,7 +315,7 @@ export const renderBattleGif = async (
   ctx.lineWidth = 1;
   ctx.font = 'bold 13px "HeartWarming"';
   console.log('before looping monsters');
-  for (const monsterToUpdate of monsterInfo[0].monstersToUpdate) {
+  for (const monsterToUpdate of stageOneInfoArray[0].monstersToUpdate) {
     // console.log(monsterToUpdate);
     // console.log(enemyPosition);
     const monsterToUpdatePosition = enemyPosition.find((element) => element && element.id === monsterToUpdate.id);
@@ -365,7 +368,7 @@ export const renderBattleGif = async (
 
   drawUserBuffs(
     ctx, // Ctx drawing canvas
-    currentUser, // User Object
+    userState, // User Object
     buffImages, // image array of player images
   );
 
@@ -378,7 +381,7 @@ export const renderBattleGif = async (
 
   drawUserBuffs(
     ctx, // Ctx drawing canvas
-    currentUser, // User Object
+    userState, // User Object
     buffImages, // image array of player images
   );
 
@@ -396,7 +399,7 @@ export const renderBattleGif = async (
   );
   ctx.lineWidth = 1;
   ctx.font = 'bold 13px "HeartWarming"';
-  for (const monsterToUpdate of monsterInfo[0].monstersToUpdate) {
+  for (const monsterToUpdate of stageOneInfoArray[0].monstersToUpdate) {
     const monsterToUpdatePosition = enemyPosition.find((element) => element && element.id === monsterToUpdate.id);
     ctx.strokeText(
       monsterToUpdate.userDamage,
@@ -429,7 +432,7 @@ export const renderBattleGif = async (
 
   drawUserBuffs(
     ctx, // Ctx drawing canvas
-    currentUser, // User Object
+    userState, // User Object
     buffImages, // image array of player images
   );
 
@@ -469,7 +472,7 @@ export const renderBattleGif = async (
   );
   ctx.lineWidth = 1;
   ctx.font = 'bold 13px "HeartWarming"';
-  for (const monsterToUpdate of monsterInfo[0].monstersToUpdate) {
+  for (const monsterToUpdate of stageOneInfoArray[0].monstersToUpdate) {
     const monsterToUpdatePosition = enemyPosition.find((element) => element && element.id === monsterToUpdate.id);
     ctx.strokeText(
       monsterToUpdate.userDamage,
@@ -504,7 +507,7 @@ export const renderBattleGif = async (
 
     drawUserBuffs(
       ctx, // Ctx drawing canvas
-      currentUser, // User Object
+      userState, // User Object
       buffImages, // image array of player images
     );
 
@@ -565,7 +568,7 @@ export const renderBattleGif = async (
 
     drawUserBuffs(
       ctx, // Ctx drawing canvas
-      currentUser, // User Object
+      userState, // User Object
       buffImages, // image array of player images
     );
 
@@ -650,7 +653,7 @@ export const renderBattleGif = async (
 
     drawUserBuffs(
       ctx, // Ctx drawing canvas
-      currentUser, // User Object
+      userState, // User Object
       buffImages, // image array of player images
     );
 
@@ -730,7 +733,7 @@ export const renderBattleGif = async (
 
     drawUserBuffs(
       ctx, // Ctx drawing canvas
-      currentUser, // User Object
+      userState, // User Object
       buffImages, // image array of player images
     );
 
@@ -810,7 +813,7 @@ export const renderBattleGif = async (
 
     drawUserBuffs(
       ctx, // Ctx drawing canvas
-      currentUser, // User Object
+      userState, // User Object
       buffImages, // image array of player images
     );
 
@@ -872,7 +875,7 @@ export const renderBattleGif = async (
 
       drawUserBuffs(
         ctx, // Ctx drawing canvas
-        currentUser, // User Object
+        userState, // User Object
         buffImages, // image array of player images
       );
 
@@ -951,11 +954,11 @@ export const renderBattleGif = async (
 
       drawUserBuffs(
         ctx, // Ctx drawing canvas
-        currentUser, // User Object
+        userState, // User Object
         buffImages, // image array of player images
       );
 
-      const findAttackedEnemyByUser = enemyPosition.find((element) => element && element.id === monsterInfo[0].monsterId);
+      const findAttackedEnemyByUser = enemyPosition.find((element) => element && element.id === stageOneInfoArray[0].monsterId);
       // console.log('find enemy position after');
       // console.log(findAttackedEnemyByUser);
       playerPosition[0] = drawPlayer(
@@ -1035,7 +1038,7 @@ export const renderBattleGif = async (
 
       drawUserBuffs(
         ctx, // Ctx drawing canvas
-        currentUser, // User Object
+        userState, // User Object
         buffImages, // image array of player images
       );
 
@@ -1093,7 +1096,7 @@ export const renderBattleGif = async (
 
       drawUserBuffs(
         ctx, // Ctx drawing canvas
-        currentUser, // User Object
+        userState, // User Object
         buffImages, // image array of player images
       );
 
@@ -1166,7 +1169,7 @@ export const renderBattleGif = async (
 
       drawUserBuffs(
         ctx, // Ctx drawing canvas
-        currentUser, // User Object
+        userState, // User Object
         buffImages, // image array of player images
       );
 
@@ -1231,7 +1234,7 @@ export const renderBattleGif = async (
       );
       drawUserBuffs(
         ctx, // Ctx drawing canvas
-        currentUser, // User Object
+        userState, // User Object
         buffImages, // image array of player images
       );
       playerPosition[0] = drawPlayer(
@@ -1309,7 +1312,7 @@ export const renderBattleGif = async (
 
       drawUserBuffs(
         ctx, // Ctx drawing canvas
-        currentUser, // User Object
+        userState, // User Object
         buffImages, // image array of player images
       );
 
@@ -1396,7 +1399,7 @@ export const renderBattleGif = async (
 
       drawUserBuffs(
         ctx, // Ctx drawing canvas
-        currentUser, // User Object
+        userState, // User Object
         buffImages, // image array of player images
       );
 
@@ -1454,7 +1457,7 @@ export const renderBattleGif = async (
 
       drawUserBuffs(
         ctx, // Ctx drawing canvas
-        currentUser, // User Object
+        userState, // User Object
         buffImages, // image array of player images
       );
 
@@ -1524,9 +1527,10 @@ export const renderBattleGif = async (
         canvas,
         backgroundImage,
       );
+
       drawUserBuffs(
         ctx, // Ctx drawing canvas
-        currentUser, // User Object
+        userState, // User Object
         buffImages, // image array of player images
       );
 
