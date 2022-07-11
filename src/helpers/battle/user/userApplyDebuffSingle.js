@@ -4,13 +4,14 @@ import db from '../../../models';
 
 const userApplyDebuffSingle = async (
   userCurrentCharacter,
-  monsterInfoArray,
+  userState,
+  stageOneInfoArray,
   battle,
   useAttack,
   selectedMonster,
   t,
 ) => {
-  const userBattleLogs = [];
+  const battleLogs = [];
   const updatedMonster = JSON.parse(JSON.stringify(selectedMonster));
   // Apply ALL Single Unit Debuffs here
 
@@ -39,7 +40,7 @@ const userApplyDebuffSingle = async (
     updatedMonster.debuffs.unshift(
       JSON.parse(JSON.stringify(createDebuff)),
     );
-    userBattleLogs.unshift({
+    battleLogs.unshift({
       log: `${userCurrentCharacter.user.username} used ${useAttack.name} on ${selectedMonster.monster.name}`,
     });
     await db.battleLog.create({
@@ -51,7 +52,9 @@ const userApplyDebuffSingle = async (
     });
   }
 
-  monsterInfoArray.push({
+  userState.mp.current -= useAttack.cost;
+
+  stageOneInfoArray.push({
     monsterId: updatedMonster.id,
     monstersToUpdate: [
       {
@@ -62,13 +65,14 @@ const userApplyDebuffSingle = async (
         attackType: useAttack.name,
       },
     ],
-    battleLogs: userBattleLogs,
-    currentUserMp: userCurrentCharacter.condition.mana - useAttack.cost,
-    ranged: false,
+    useAttack,
+    battleLogs,
+    userState,
   });
 
   return [
-    monsterInfoArray,
+    stageOneInfoArray,
+    userState,
   ];
 };
 

@@ -4,7 +4,8 @@ import db from '../../../models';
 
 const userApplyBuffSingle = async (
   userCurrentCharacter,
-  monsterInfoArray,
+  userState,
+  stageOneInfoArray,
   battle,
   useAttack,
   selectedMonster,
@@ -12,7 +13,7 @@ const userApplyBuffSingle = async (
 ) => {
   console.log('start apply buff');
   const battleLogs = [];
-  const userCharacter = JSON.parse(JSON.stringify(userCurrentCharacter));
+
   const updatedMonster = JSON.parse(JSON.stringify(selectedMonster));
   const existingBuff = userCurrentCharacter.buffs.find((x) => x.name === useAttack.name);
 
@@ -21,13 +22,13 @@ const userApplyBuffSingle = async (
       lock: t.LOCK.UPDATE,
       transaction: t,
     });
-    const index = userCharacter.buffs.findIndex((o) => o.id === existingBuff.id);
-    if (index !== -1) userCharacter.buffs.splice(index, 1);
+    const index = userState.buffs.findIndex((o) => o.id === existingBuff.id);
+    if (index !== -1) userState.buffs.splice(index, 1);
   }
 
   const createBuff = await db.buff.create({
     name: useAttack.name,
-    UserClassId: userCharacter.id,
+    UserClassId: userState.id,
     damageBonus: useAttack.damageBonus ? useAttack.damageBonus : null,
     attackBonus: useAttack.attackBonus ? useAttack.attackBonus : null,
     defenseBonus: useAttack.defenseBonus ? useAttack.defenseBonus : null,
@@ -40,34 +41,34 @@ const userApplyBuffSingle = async (
     lock: t.LOCK.UPDATE,
     transaction: t,
   });
-  userCharacter.buffs.unshift(
+  userState.buffs.unshift(
     JSON.parse(JSON.stringify(createBuff)),
   );
 
   const createBattleLog = await db.battleLog.create({
     battleId: battle.id,
-    log: `${userCurrentCharacter.user.username} used ${useAttack.name} on ${selectedMonster.monster.name}`,
+    log: `${userState.user.username} used ${useAttack.name} on ${selectedMonster.monster.name}`,
   }, {
     lock: t.LOCK.UPDATE,
     transaction: t,
   });
 
-  battleLogs.unshift(JSON.parse(JSON.stringify(createBattleLog.log)));
+  battleLogs.unshift(JSON.parse(JSON.stringify(createBattleLog)));
 
-  userCharacter.condition.mana -= useAttack.cost;
+  userState.mp.current -= useAttack.cost;
 
-  monsterInfoArray.push({
+  stageOneInfoArray.push({
     monsterId: updatedMonster.id,
     monstersToUpdate: [],
     useAttack,
     battleLogs,
-    userCharacter,
-    currentUserMp: userCurrentCharacter.condition.mana - useAttack.cost,
+    userState,
   });
 
   console.log('done applying buff');
   return [
-    monsterInfoArray,
+    stageOneInfoArray,
+    userState,
   ];
 };
 

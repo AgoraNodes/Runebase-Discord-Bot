@@ -25,6 +25,7 @@ import { drawUserBuffs } from './draw/drawUserBuffs';
 
 export const renderInitBattleGif = async (
   currentUser,
+  initialUserState,
   userCurrentSelectedSkills,
   battle,
   previousBattleState,
@@ -51,6 +52,7 @@ export const renderInitBattleGif = async (
   let palette;
   let index;
 
+  console.log('1');
   loadPromises.push(
     new Promise((resolve, reject) => {
       loadImage(path.join(
@@ -63,7 +65,7 @@ export const renderInitBattleGif = async (
       });
     }),
   );
-
+  console.log('2');
   loadPromises.push(
     new Promise((resolve, reject) => {
       loadImage(path.join(
@@ -76,7 +78,7 @@ export const renderInitBattleGif = async (
       });
     }),
   );
-
+  console.log('3');
   loadPromises.push(
     new Promise((resolve, reject) => {
       loadImage(path.join(__dirname, `../../assets/images/battle/background`, `${zone}.png`)).then((image) => {
@@ -85,7 +87,7 @@ export const renderInitBattleGif = async (
       });
     }),
   );
-
+  console.log('4');
   loadPromises.push(
     new Promise((resolve, reject) => {
       loadPlayer(
@@ -96,7 +98,7 @@ export const renderInitBattleGif = async (
       });
     }),
   );
-
+  console.log('5');
   for (const [i, buff] of currentUser.buffs.entries()) {
     loadPromises.push(
       new Promise((resolve, reject) => {
@@ -113,7 +115,7 @@ export const renderInitBattleGif = async (
       }),
     );
   }
-
+  console.log('6');
   // console.log('initBattle 1');
   for (const [i, battleMonster] of battle.BattleMonsters.entries()) {
     loadPromises.push(
@@ -126,6 +128,7 @@ export const renderInitBattleGif = async (
         });
       }),
     );
+    console.log('7');
     for (const [i, debuff] of battleMonster.debuffs.entries()) {
       loadPromises.push(
         new Promise((resolve, reject) => {
@@ -142,6 +145,7 @@ export const renderInitBattleGif = async (
         }),
       );
     }
+    console.log('8');
     for (const [i, buff] of battleMonster.buffs.entries()) {
       loadPromises.push(
         new Promise((resolve, reject) => {
@@ -159,11 +163,11 @@ export const renderInitBattleGif = async (
       );
     }
   }
-
+  console.log('9');
   loadPromises.push(
     new Promise((resolve, reject) => {
       loadOrbs(
-        previousUserState,
+        initialUserState,
         battleInfoArray,
         monsterInfo,
       ).then(([
@@ -176,7 +180,7 @@ export const renderInitBattleGif = async (
       });
     }),
   );
-
+  console.log('10');
   await Promise.all(loadPromises);
   // console.log('initBattle 4');
 

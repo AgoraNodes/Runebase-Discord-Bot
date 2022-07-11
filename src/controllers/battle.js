@@ -23,6 +23,7 @@ import { fetchDiscordChannel } from '../helpers/client/fetchDiscordChannel';
 import { processBattleMove } from '../helpers/battle/processBattleMove';
 import { renderBattleComplete } from '../render/battle/battleComplete';
 import { randomIntFromInterval } from "../helpers/utils";
+import { calculateCharacterStats } from '../helpers/stats/calculateCharacterStats';
 
 import { gainExp } from '../helpers/client/experience';
 import { generateLoot } from '../helpers/items/generateLoot';
@@ -264,12 +265,23 @@ export const discordBattle = async (
     return filtered;
   }, []);
 
+  const {
+    hp,
+    mp,
+  } = await calculateCharacterStats(
+    userCurrentCharacter,
+  );
+  let myInitialUserState = JSON.parse(JSON.stringify(userCurrentCharacter));
+  myInitialUserState.hp = hp;
+  myInitialUserState.mp = mp;
+
   const embedMessage = await discordChannel.send({
     content: `<@${userCurrentCharacter.user.user_id}>`,
     files: [
       new MessageAttachment(
         await renderInitBattleGif(
           userCurrentCharacter,
+          myInitialUserState,
           userCurrentSelectedSkills,
           battle,
           battle,
@@ -589,11 +601,23 @@ ${newLootC.length > 0 ? `__found ${newLootC.length} ${newLootC.length === 1 ? `i
             lock: t.LOCK.UPDATE,
             transaction: t,
           });
+
+          const {
+            hp,
+            mp,
+          } = await calculateCharacterStats(
+            userCurrentCharacter,
+          );
+          myInitialUserState = JSON.parse(JSON.stringify(userCurrentCharacter));
+          myInitialUserState.hp = hp;
+          myInitialUserState.mp = mp;
+
           await interaction.editReply({
             files: [
               new MessageAttachment(
                 await renderInitBattleGif(
                   userCurrentCharacter,
+                  myInitialUserState,
                   userCurrentSelectedSkills,
                   battle,
                   battle,
@@ -691,10 +715,11 @@ ${newLootC.length > 0 ? `__found ${newLootC.length} ${newLootC.length === 1 ? `i
         isolationLevel: Transaction.ISOLATION_LEVELS.SERIALIZABLE,
       }, async (t) => {
         let attackUsed;
-        let retaliationInfoArray;
-        let battleInfoArray;
-        let monsterInfoArray;
-        let debuffDamageInfoArray;
+        let initialUserState;
+        let stageOneInfoArray;
+        let stageTwoInfoArray;
+        let stageThreeInfoArray;
+        let stageFourInfoArray;
         let sumExp = 0;
 
         let previousBattleState = battle;
@@ -794,11 +819,12 @@ ${newLootC.length > 0 ? `__found ${newLootC.length} ${newLootC.length === 1 ? `i
           if (!battle.complete) {
             [
               userCurrentCharacter,
+              initialUserState,
               battle,
-              battleInfoArray,
-              monsterInfoArray,
-              retaliationInfoArray,
-              debuffDamageInfoArray,
+              stageOneInfoArray,
+              stageTwoInfoArray,
+              stageThreeInfoArray,
+              stageFourInfoArray,
               sumExp,
             ] = await processBattleMove(
               userCurrentCharacter,
@@ -838,15 +864,16 @@ ${newLootC.length > 0 ? `__found ${newLootC.length} ${newLootC.length === 1 ? `i
                 new MessageAttachment(
                   await renderBattleGif(
                     userCurrentCharacter,
+                    initialUserState,
                     userCurrentSelectedSkills,
                     battle,
                     previousBattleState,
                     previousUserState,
                     currentSelectedMonster,
-                    battleInfoArray,
-                    monsterInfoArray,
-                    retaliationInfoArray,
-                    debuffDamageInfoArray,
+                    stageTwoInfoArray,
+                    stageOneInfoArray,
+                    stageThreeInfoArray,
+                    stageFourInfoArray,
                   ),
                   'battle.gif',
                 ),
@@ -876,15 +903,16 @@ ${newLootC.length > 0 ? `__found ${newLootC.length} ${newLootC.length === 1 ? `i
                 new MessageAttachment(
                   await renderBattleGif(
                     userCurrentCharacter,
+                    initialUserState,
                     userCurrentSelectedSkills,
                     battle,
                     previousBattleState,
                     previousUserState,
                     currentSelectedMonster,
-                    battleInfoArray,
-                    monsterInfoArray,
-                    retaliationInfoArray,
-                    debuffDamageInfoArray,
+                    stageTwoInfoArray,
+                    stageOneInfoArray,
+                    stageThreeInfoArray,
+                    stageFourInfoArray,
                   ),
                   'battle.gif',
                 ),
@@ -1036,6 +1064,16 @@ ${newLootC.length > 0 ? `__found ${newLootC.length} ${newLootC.length === 1 ? `i
             return filtered;
           }, []);
 
+          const {
+            hp,
+            mp,
+          } = await calculateCharacterStats(
+            userCurrentCharacter,
+          );
+          myInitialUserState = JSON.parse(JSON.stringify(userCurrentCharacter));
+          myInitialUserState.hp = hp;
+          myInitialUserState.mp = mp;
+
           await interaction.editReply({
             content: `<@${userCurrentCharacter.user.user_id}>`,
             embeds: [],
@@ -1043,12 +1081,13 @@ ${newLootC.length > 0 ? `__found ${newLootC.length} ${newLootC.length === 1 ? `i
               new MessageAttachment(
                 await renderInitBattleGif(
                   userCurrentCharacter,
+                  myInitialUserState,
                   userCurrentSelectedSkills,
                   battle,
                   previousBattleState,
                   previousUserState,
                   currentSelectedMonster,
-                  monsterInfoArray,
+                  stageOneInfoArray,
                 ),
                 'battle.gif',
               ),

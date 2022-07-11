@@ -12,7 +12,7 @@ const monstersApplyAttack = async (
   block, // users Block
   defense, // Users defense
   regularAttack, // Users Regular Attack
-  battleInfoArray, // Array to fill with battle info
+  stageTwoInfoArray, // Array to fill with battle info
   battle, // battle database record
   allRemainingBattleMonster, // Which attack is used by user
   t, // database transaction
@@ -102,12 +102,12 @@ const monstersApplyAttack = async (
       }
     }
 
-    battleInfoArray.push(individualBattleObject);
+    stageTwoInfoArray.push(individualBattleObject);
   }
 
   return [
     totalDamageByMonsters,
-    battleInfoArray,
+    stageTwoInfoArray,
     retaliationArray,
   ];
 };

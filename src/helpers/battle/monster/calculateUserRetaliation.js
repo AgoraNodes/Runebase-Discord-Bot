@@ -10,10 +10,7 @@ const calculateUserRetaliation = (
     // const barbRetaliationChance = 100;
 
     if (barbRetaliation) {
-      console.log(Math.random());
-      console.log(barbRetaliationChance / 100);
       const didWeRetaliate = Math.random() < Number(barbRetaliationChance) / 100;
-      console.log(didWeRetaliate);
       if (didWeRetaliate) {
         retaliate.push({
           monsterId,

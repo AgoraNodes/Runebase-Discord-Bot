@@ -8,7 +8,7 @@ const userApplyRetliation = async (
   userCurrentCharacter,
   battle,
   retaliationArray,
-  retaliationInfoArray,
+  stageThreeInfoArray,
   allRemainingBattleMonster,
   attackUsed,
   lvl,
@@ -78,11 +78,11 @@ const userApplyRetliation = async (
         currentUserMp: userCurrentCharacter.condition.mana,
         ranged: false,
       };
-      retaliationInfoArray.push(individualBattleObject);
+      stageThreeInfoArray.push(individualBattleObject);
     }
   }
   return [
-    retaliationInfoArray,
+    stageThreeInfoArray,
   ];
 };
 export default userApplyRetliation;

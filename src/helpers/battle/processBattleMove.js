@@ -18,6 +18,7 @@ import userApplyDebuffDamage from './user/userApplyDebuffDamage';
 import countDownBuffsAndDebuffs from './utils/countDownBuffsAndDebuffs';
 import userApplyBuffSingle from './user/userApplyBuffSingle';
 import selectAttack from './utils/selectAttack';
+import removeNewTagFromBuffsAndDebuffs from './utils/removeNewTagFromBuffsAndDebuffs';
 
 // TODO: Make code more readable by moving monster/user updates in their own designated function
 // TODO: APPLY BUFFS TO USER CHARACTER
@@ -39,9 +40,12 @@ export const processBattleMove = async (
     block,
     defense,
     kick,
+    hp,
+    mp,
   } = await calculateCharacterStats(
     userCurrentCharacter,
   );
+  console.log('start processing battle Move after stats calc');
   const useAttack = selectAttack(
     userCurrentCharacter,
     attackUsed,
@@ -49,40 +53,37 @@ export const processBattleMove = async (
     attackTwo,
     regularAttack,
   );
-
-  // Remove new tag from existing debuffs
-  for (const monsterToRemoveNewDebuffTag of battle.BattleMonsters) {
-    if (monsterToRemoveNewDebuffTag.debuffs.length > 0) {
-      for (const debuffToCountDown of monsterToRemoveNewDebuffTag.debuffs) {
-        if (debuffToCountDown.new) {
-          await debuffToCountDown.update({
-            new: false,
-          }, {
-            lock: t.LOCK.UPDATE,
-            transaction: t,
-          });
-        }
-      }
-    }
-  }
-
+  console.log(2);
+  await removeNewTagFromBuffsAndDebuffs(
+    userCurrentCharacter,
+    battle.BattleMonsters,
+    t,
+  );
+  console.log(3);
   let retaliationArray = [];
-  let retaliationInfoArray = [];
-  let monsterInfoArray = [];
-  let battleInfoArray = [];
-  let debuffDamageInfoArray = [];
-
+  let stageOneInfoArray = [];
+  let stageTwoInfoArray = [];
+  let stageThreeInfoArray = [];
+  let stageFourInfoArray = [];
+  let userState = JSON.parse(JSON.stringify(userCurrentCharacter));
+  userState.hp = hp;
+  userState.mp = mp;
+  const initialUserState = userState;
+  console.log(userState);
   const selectedMonster = battle.BattleMonsters.find((element) => element.id === currentSelectedMonster.id);
 
+  // Stage One
   if (
     useAttack.buff
     && !useAttack.aoe
   ) {
     [
-      monsterInfoArray,
+      stageOneInfoArray,
+      userState,
     ] = await userApplyBuffSingle(
       userCurrentCharacter,
-      monsterInfoArray,
+      userState,
+      stageOneInfoArray,
       battle,
       useAttack,
       selectedMonster,
@@ -93,10 +94,12 @@ export const processBattleMove = async (
     && useAttack.aoe
   ) {
     [
-      monsterInfoArray,
+      stageOneInfoArray,
+      userState,
     ] = await userApplyDebuffAoE(
       userCurrentCharacter,
-      monsterInfoArray,
+      userState,
+      stageOneInfoArray,
       battle,
       useAttack,
       selectedMonster,
@@ -107,10 +110,12 @@ export const processBattleMove = async (
     && !useAttack.aoe
   ) {
     [
-      monsterInfoArray,
+      stageOneInfoArray,
+      userState,
     ] = await userApplyDebuffSingle(
       userCurrentCharacter,
-      monsterInfoArray,
+      userState,
+      stageOneInfoArray,
       battle,
       useAttack,
       selectedMonster,
@@ -121,11 +126,13 @@ export const processBattleMove = async (
     && useAttack.aoe
   ) {
     [
-      monsterInfoArray,
+      stageOneInfoArray,
+      userState,
     ] = await userApplyAttackAoE(
       userCurrentCharacter, // UserCharacter
+      userState,
       lvl, // Users Level
-      monsterInfoArray, // Array to fill with battle info
+      stageOneInfoArray, // Array to fill with battle info
       battle, // battle database record
       useAttack, // Which attack is used by user
       selectedMonster, // which Monster do we have selected?
@@ -133,11 +140,13 @@ export const processBattleMove = async (
     );
   } else {
     [
-      monsterInfoArray,
+      stageOneInfoArray,
+      userState,
     ] = await userApplyAttackSingle(
       userCurrentCharacter, // UserCharacter
+      userState,
       lvl, // Users Level
-      monsterInfoArray, // Array to fill with battle info
+      stageOneInfoArray, // Array to fill with battle info
       battle, // battle database record
       useAttack, // Which attack is used by user
       selectedMonster, // which Monster do we have selected?
@@ -145,6 +154,7 @@ export const processBattleMove = async (
     );
   }
 
+  // Stage Two
   console.log('before processing battle moves');
   // Process Monster Moves/Attacks
   const allRemainingBattleMonster = await db.BattleMonster.findAll({
@@ -189,7 +199,7 @@ export const processBattleMove = async (
   if (allRemainingBattleMonster) {
     [
       totalDamageByMonsters,
-      battleInfoArray,
+      stageTwoInfoArray,
       retaliationArray,
     ] = await monstersApplyAttack(
       userCurrentCharacter, // UserCharacter
@@ -197,21 +207,22 @@ export const processBattleMove = async (
       block, // users Block
       defense, // Users defense
       regularAttack, // Users Regular Attack
-      battleInfoArray, // Array to fill with battle info
+      stageTwoInfoArray, // Array to fill with battle info
       battle, // battle database record
       allRemainingBattleMonster, // Which attack is used by user
       t, // database transaction
     );
   }
 
+  // Stage Three
   if (retaliationArray.length > 0) {
     [
-      retaliationInfoArray,
+      stageThreeInfoArray,
     ] = await userApplyRetliation(
       userCurrentCharacter,
       battle,
       retaliationArray,
-      retaliationInfoArray,
+      stageThreeInfoArray,
       allRemainingBattleMonster,
       kick,
       lvl,
@@ -238,14 +249,15 @@ export const processBattleMove = async (
     transaction: t,
   });
 
+  // Stage Four
   // Apply debuff damage
   if (findAllMonsterToCountDownDebuff.length > 0) {
     [
-      debuffDamageInfoArray,
+      stageFourInfoArray,
     ] = await userApplyDebuffDamage(
       userCurrentCharacter,
       battle,
-      debuffDamageInfoArray,
+      stageFourInfoArray,
       findAllMonsterToCountDownDebuff,
       t,
     );
@@ -253,6 +265,7 @@ export const processBattleMove = async (
 
   await countDownBuffsAndDebuffs(
     findAllMonsterToCountDownDebuff,
+    userCurrentCharacter,
     t,
   );
 
@@ -304,11 +317,12 @@ export const processBattleMove = async (
   console.log('done processing moves');
   return [
     userCurrentCharacter,
+    initialUserState,
     updatedBattle,
-    battleInfoArray,
-    monsterInfoArray,
-    retaliationInfoArray,
-    debuffDamageInfoArray,
+    stageOneInfoArray,
+    stageTwoInfoArray,
+    stageThreeInfoArray,
+    stageFourInfoArray,
     sumExp,
   ];
 };

@@ -8,9 +8,9 @@ import { renderMpOrb } from '../../orbs/mp';
 import { calculateCharacterStats } from '../../../helpers/stats/calculateCharacterStats';
 
 export const loadOrbs = async (
-  previousUserState,
+  initialUserState,
+  stageOneInfoArray,
   battleInfoArray,
-  monsterInfo,
 ) => {
   const promises = [];
   const bufferPromises = [];
@@ -18,16 +18,27 @@ export const loadOrbs = async (
   const mpOrbsBuffer = [];
   const hpOrbs = [];
   const mpOrbs = [];
-  const {
-    hp,
-    mp,
-  } = await calculateCharacterStats(previousUserState);
+
+  console.log(initialUserState);
+  console.log('processing orbs');
+  console.log('processing orbs');
+  console.log('processing orbs');
+  console.log('processing orbs');
+  console.log('processing orbs');
+  console.log('processing orbs');
+  console.log('processing orbs');
+  console.log('processing orbs');
+  console.log('processing orbs');
+  console.log('processing orbs');
+  console.log('processing orbs');
+  console.log('processing orbs');
+  console.log('processing orbs');
 
   bufferPromises.push(
     new Promise((resolve, reject) => {
       renderHpOrb(
-        hp.current,
-        hp.max,
+        initialUserState.hp.current,
+        initialUserState.hp.max,
       ).then((buffer) => {
         hpOrbsBuffer[0] = buffer;
         resolve();
@@ -38,8 +49,8 @@ export const loadOrbs = async (
   bufferPromises.push(
     new Promise((resolve, reject) => {
       renderMpOrb(
-        mp.current,
-        mp.max,
+        initialUserState.mp.current,
+        initialUserState.mp.max,
       ).then((buffer) => {
         mpOrbsBuffer[0] = buffer;
         resolve();
@@ -47,28 +58,13 @@ export const loadOrbs = async (
     }),
   );
 
-  if (battleInfoArray) {
-    for (const [index, info] of battleInfoArray.entries()) {
-      bufferPromises.push(
-        new Promise((resolve, reject) => {
-          renderHpOrb(
-            info.currentHp,
-            hp.max,
-          ).then((buffer) => {
-            hpOrbsBuffer[index + 1] = buffer;
-            resolve();
-          });
-        }),
-      );
-    }
-  }
-  if (monsterInfo) {
-    for (const [index, info] of monsterInfo.entries()) {
+  if (stageOneInfoArray) {
+    for (const [index, info] of stageOneInfoArray.entries()) {
       bufferPromises.push(
         new Promise((resolve, reject) => {
           renderMpOrb(
-            info.currentUserMp,
-            mp.max,
+            info.userState.mp.current,
+            info.userState.mp.max,
           ).then((buffer) => {
             mpOrbsBuffer[index + 1] = buffer;
             resolve();
@@ -77,6 +73,23 @@ export const loadOrbs = async (
       );
     }
   }
+
+  if (battleInfoArray) {
+    for (const [index, info] of battleInfoArray.entries()) {
+      bufferPromises.push(
+        new Promise((resolve, reject) => {
+          renderHpOrb(
+            info.currentHp,
+            initialUserState.hp.max,
+          ).then((buffer) => {
+            hpOrbsBuffer[index + 1] = buffer;
+            resolve();
+          });
+        }),
+      );
+    }
+  }
+
   await Promise.all(bufferPromises);
 
   for (const [index, buffer] of hpOrbsBuffer.entries()) {

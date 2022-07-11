@@ -7,14 +7,15 @@ import calculateCritDamage from '../utils/calculateCritDamage';
 
 const userApplyAttackSingle = async (
   userCurrentCharacter, // UserCharacter
+  userState,
   lvl, // Users Level
-  monsterInfoArray, // Array to fill with battle info
+  stageOneInfoArray, // Array to fill with battle info
   battle, // battle database record
   useAttack, // Which attack is used by user
   selectedMonster, // which Monster do we have selected?
   t, // database transaction
 ) => {
-  let userBattleLogs = [];
+  let battleLogs = [];
   let updatedMonstersArray = [];
   let attackFailed = true;
   // APPLY USER Single MONSTER attack
@@ -30,7 +31,7 @@ const userApplyAttackSingle = async (
   }
 
   [
-    userBattleLogs,
+    battleLogs,
     updatedMonstersArray,
     attackFailed,
   ] = await isFailedAttack(
@@ -38,7 +39,7 @@ const userApplyAttackSingle = async (
     lvl,
     useAttack,
     battle,
-    userBattleLogs,
+    battleLogs,
     updatedMonster,
     updatedMonstersArray,
     t,
@@ -61,20 +62,24 @@ const userApplyAttackSingle = async (
     updatedMonster.currentHp -= randomAttackDamage;
 
     // Generate Battle log
-    await db.battleLog.create({
+    const createBattleLog = await db.battleLog.create({
       battleId: battle.id,
-      log: `${userCurrentCharacter.user.username} used ${useAttack.name} on ${selectedMonster.monster.name} for ${randomAttackDamage} damage`,
+      log: `${userState.user.username} used ${useAttack.name} on ${selectedMonster.monster.name} for ${randomAttackDamage} damage`,
     }, {
       lock: t.LOCK.UPDATE,
       transaction: t,
     });
-    userBattleLogs.unshift({
-      log: `${userCurrentCharacter.user.username} used ${useAttack.name} on ${selectedMonster.monster.name} for ${randomAttackDamage} damage`,
-    });
+    battleLogs.unshift(JSON.parse(JSON.stringify(createBattleLog)));
+
     if (updatedMonster.currentHp < 1) {
-      userBattleLogs.unshift({
-        log: `${userCurrentCharacter.user.username} killed ${selectedMonster.monster.name}`,
+      const createKillLog = await db.battleLog.create({
+        battleId: battle.id,
+        log: `${userState.user.username} killed ${selectedMonster.monster.name}`,
+      }, {
+        lock: t.LOCK.UPDATE,
+        transaction: t,
       });
+      battleLogs.unshift(JSON.parse(JSON.stringify(createKillLog)));
     }
     updatedMonstersArray.push(
       {
@@ -87,16 +92,19 @@ const userApplyAttackSingle = async (
     );
   }
 
-  monsterInfoArray.push({
+  userState.mp.current -= useAttack.cost;
+
+  stageOneInfoArray.push({
     monsterId: updatedMonster.id,
     monstersToUpdate: updatedMonstersArray,
-    battleLogs: userBattleLogs,
-    currentUserMp: userCurrentCharacter.condition.mana - useAttack.cost,
-    ranged: false,
+    useAttack,
+    battleLogs,
+    userState,
   });
 
   return [
-    monsterInfoArray,
+    stageOneInfoArray,
+    userState,
   ];
 };
 

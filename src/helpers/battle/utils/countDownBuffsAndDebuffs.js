@@ -2,27 +2,47 @@
 /* eslint-disable no-restricted-syntax */
 const countDownBuffsAndDebuffs = async (
   findAllMonsterToCountDownDebuff,
+  userCurrentCharacter,
   t,
 ) => {
   // Count Down Debuffs
   for (const monsterToCountDownDebuff of findAllMonsterToCountDownDebuff) {
     if (monsterToCountDownDebuff.debuffs.length > 0) {
-      for (const debuffToCountDown of monsterToCountDownDebuff.debuffs) {
+      for (const monsterDebuff of monsterToCountDownDebuff.debuffs) {
         if (
-          debuffToCountDown.rounds >= 1
-          && !debuffToCountDown.new
+          monsterDebuff.rounds >= 1
+          && !monsterDebuff.new
         ) {
-          await debuffToCountDown.decrement('rounds', {
+          await monsterDebuff.decrement('rounds', {
             by: 1,
             lock: t.LOCK.UPDATE,
             transaction: t,
           });
-        } else if (debuffToCountDown.rounds < 1) {
-          await debuffToCountDown.destroy({
+        } else if (monsterDebuff.rounds < 1) {
+          await monsterDebuff.destroy({
             lock: t.LOCK.UPDATE,
             transaction: t,
           });
         }
+      }
+    }
+  }
+  if (userCurrentCharacter.buffs.length > 0) {
+    for (const userBuff of userCurrentCharacter.buffs) {
+      if (
+        userBuff.rounds >= 1
+        && !userBuff.new
+      ) {
+        await userBuff.decrement('rounds', {
+          by: 1,
+          lock: t.LOCK.UPDATE,
+          transaction: t,
+        });
+      } else if (userBuff.rounds < 1) {
+        await userBuff.destroy({
+          lock: t.LOCK.UPDATE,
+          transaction: t,
+        });
       }
     }
   }

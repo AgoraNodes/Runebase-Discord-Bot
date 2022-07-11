@@ -4,13 +4,14 @@ import db from '../../../models';
 
 const userApplyDebuffAoE = async (
   userCurrentCharacter,
-  monsterInfoArray,
+  userState,
+  stageOneInfoArray,
   battle,
   useAttack,
   selectedMonster,
   t,
 ) => {
-  const userBattleLogs = [];
+  const battleLogs = [];
   const updatedMonstersArray = [];
   // Apply ALL AOE Debuffs here
   for (const battleMonster of battle.BattleMonsters) {
@@ -37,7 +38,6 @@ const userApplyDebuffAoE = async (
       });
       BattleMonsterToUpdate.debuffs.unshift(
         JSON.parse(JSON.stringify(createDebuff)),
-        // createDebuff.dataValues,
       );
       updatedMonstersArray.push({
         ...BattleMonsterToUpdate,
@@ -46,32 +46,30 @@ const userApplyDebuffAoE = async (
         // died: !(battleMonster.currentHp > 0),
         attackType: useAttack.name,
       });
-      userBattleLogs.unshift({
-        log: `${userCurrentCharacter.user.username} used ${useAttack.name} on ${selectedMonster.monster.name}`,
-      });
-      await db.battleLog.create({
+      const createBattleLog = await db.battleLog.create({
         battleId: battle.id,
-        log: `${userCurrentCharacter.user.username} used ${useAttack.name} on ${selectedMonster.monster.name}`,
+        log: `${userState.user.username} used ${useAttack.name} on ${selectedMonster.monster.name}`,
       }, {
         lock: t.LOCK.UPDATE,
         transaction: t,
       });
+      battleLogs.unshift(JSON.parse(JSON.stringify(createBattleLog)));
     }
   }
 
-  monsterInfoArray.push({
+  userState.mp.current -= useAttack.cost;
+
+  stageOneInfoArray.push({
     monsterId: selectedMonster.id,
-    // userDamage: useAttack.name,
     monstersToUpdate: updatedMonstersArray,
-    // currentMonsterHp: selectedMonster.currentHp - randomAttackDamage,
-    battleLogs: userBattleLogs,
-    currentUserMp: userCurrentCharacter.condition.mana - useAttack.cost,
-    // died: false,
-    ranged: true,
+    useAttack,
+    battleLogs,
+    userState,
   });
 
   return [
-    monsterInfoArray,
+    stageOneInfoArray,
+    userState,
   ];
 };
 

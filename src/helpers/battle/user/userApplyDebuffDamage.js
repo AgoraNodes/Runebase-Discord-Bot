@@ -7,7 +7,7 @@ import db from '../../../models';
 const userApplyDebuffDamage = async (
   userCurrentCharacter,
   battle,
-  debuffDamageInfoArray,
+  stageFourInfoArray,
   findAllMonsterToCountDownDebuff,
   t,
 ) => {
@@ -34,22 +34,25 @@ const userApplyDebuffDamage = async (
             });
             console.log('debuff 4');
             // Generate Battle log
-            await db.battleLog.create({
+            const createBattleLog = await db.battleLog.create({
               battleId: battle.id,
               log: `${updatedMonster.monster.name} suffers from ${debuffToCountDown.name} for ${randomAttackDamage} damage`,
             }, {
               lock: t.LOCK.UPDATE,
               transaction: t,
             });
-            console.log('debuff 5');
-            battleLogs.unshift({
-              log: `${updatedMonster.monster.name} suffers from ${debuffToCountDown.name} for ${randomAttackDamage} damage`,
-            });
+            battleLogs.unshift(JSON.parse(JSON.stringify(createBattleLog)));
+
             console.log('debuff 6');
             if (updatedMonster.currentHp < 1) {
-              battleLogs.unshift({
+              const createKillLog = await db.battleLog.create({
+                battleId: battle.id,
                 log: `${userCurrentCharacter.user.username} killed ${updatedMonster.monster.name}`,
+              }, {
+                lock: t.LOCK.UPDATE,
+                transaction: t,
               });
+              battleLogs.unshift(JSON.parse(JSON.stringify(createKillLog)));
             }
             console.log('debuff 7');
             updatedMonster.currentHp -= randomAttackDamage;
@@ -60,7 +63,7 @@ const userApplyDebuffDamage = async (
               // died: !(updatedMonster.currentHp > 0),
               attackType: debuffToCountDown.name,
             });
-            debuffDamageInfoArray.push({
+            stageFourInfoArray.push({
               monsterId: updatedMonster.id,
               monstersToUpdate: updatedMonstersArray,
               battleLogs,
@@ -73,7 +76,7 @@ const userApplyDebuffDamage = async (
     }
   }
   return [
-    debuffDamageInfoArray,
+    stageFourInfoArray,
   ];
 };
 export default userApplyDebuffDamage;
