@@ -30,6 +30,8 @@ export const renderBattleGif = async (
   currentSelectedMonster,
   battleInfoArray = false,
   monsterInfo = false,
+  retaliationInfoArray = false,
+  debuffDamageInfoArray = false,
 ) => {
   const zone = 'den';
   const enemyPosition = [];
@@ -249,8 +251,8 @@ export const renderBattleGif = async (
   }
 
   const findAttackedEnemyByUser = enemyPosition.find((element) => element && element.id === monsterInfo[0].monsterId);
-  console.log('find enemy position after');
-  console.log(findAttackedEnemyByUser);
+  // console.log('find enemy position after');
+  // console.log(findAttackedEnemyByUser);
   playerPosition[0] = drawPlayer(
     ctx, // Ctx drawing canvas
     playerImage, // image array of player images
@@ -278,8 +280,8 @@ export const renderBattleGif = async (
   ctx.font = 'bold 13px "HeartWarming"';
   console.log('before looping monsters');
   for (const monsterToUpdate of monsterInfo[0].monstersToUpdate) {
-    console.log(monsterToUpdate);
-    console.log(enemyPosition);
+    // console.log(monsterToUpdate);
+    // console.log(enemyPosition);
     const monsterToUpdatePosition = enemyPosition.find((element) => element && element.id === monsterToUpdate.id);
     ctx.strokeText(
       monsterToUpdate.userDamage,
@@ -311,8 +313,8 @@ export const renderBattleGif = async (
   );
 
   for (const [i, battleMonster] of BattleMonsters.entries()) {
-    console.log(i);
-    console.log('-');
+    // console.log(i);
+    // console.log('-');
     if (battleMonster.currentHp > 0) {
       enemyPosition[i] = drawEnemy(
         ctx, // CTX
@@ -531,8 +533,8 @@ export const renderBattleGif = async (
       hpOrbs[index + 1],
       mpOrbs[1],
     );
-    console.log(battleInfo);
-    console.log('battleInfo');
+    // console.log(battleInfo);
+    // console.log('battleInfo');
     battleLogs.unshift(...battleInfo.battleLogs);
     drawBattleLog(
       ctx,
@@ -774,6 +776,666 @@ export const renderBattleGif = async (
     );
   }
 
+  if (retaliationInfoArray && retaliationInfoArray.length > 0) {
+    for (const [index, retaliationInfo] of retaliationInfoArray.entries()) {
+      drawBackground(
+        ctx,
+        canvas,
+        backgroundImage,
+      );
+      playerPosition[0] = drawPlayer(
+        ctx, // Ctx drawing canvas
+        playerImage, // image array of player images
+        0, // number of image in the array to show
+        false, // user attacking [false || enemyImagePosition]
+      );
+      for (const [i, battleMonster] of BattleMonsters.entries()) {
+        if (battleMonster.currentHp > 0) {
+          enemyPosition[i] = drawEnemy(
+            ctx, // CTX
+            BattleMonsters.find((element) => element.id === battleMonster.id), // MonsterState
+            currentSelectedMonster && currentSelectedMonster.id === battleMonster.id, // is current Monster selected?
+            enemies[battleMonster.id], // Enemy Image
+            debuffImages,
+            false, // Moved To user?
+            0, // Enemy Image Frame Shown
+            playerPosition, // PlayerCords
+            i, // Index
+          );
+        }
+      }
+
+      drawBattleScreenTools(
+        ctx, // pass canvas ctx
+        mainSkill,
+        secondarySkill,
+        hpOrbs[hpOrbs.length - 1],
+        mpOrbs[mpOrbs.length - 1],
+      );
+      drawBattleLog(
+        ctx,
+        battleLogs,
+      );
+
+      imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+      palette = quantize(imageData.data, 256, { format: 'rgb333' });
+      imageIndex = applyPalette(imageData.data, palette);
+      gif.writeFrame(
+        imageIndex,
+        canvas.width,
+        canvas.height,
+        {
+          palette,
+          delay: 600,
+          repeat: -1,
+        },
+      );
+
+      console.log('Render Frame #2');
+      drawBackground(
+        ctx,
+        canvas,
+        backgroundImage,
+      );
+
+      for (const [i, battleMonster] of BattleMonsters.entries()) {
+        if (battleMonster.currentHp > 0) {
+          // const findUpdatedMonsterState = monsterInfo.find((element) => element.monsterId === battleMonster.id);
+          enemyPosition[i] = drawEnemy(
+            ctx, // CTX
+            BattleMonsters.find((element) => element.id === battleMonster.id), // MonsterState
+            currentSelectedMonster && currentSelectedMonster.id === battleMonster.id, // is current Monster selected?
+            enemies[battleMonster.id], // Enemy Image
+            debuffImages,
+            false, // Moved To user?
+            0, // Enemy Image Frame Shown
+            playerPosition, // PlayerCords
+            i, // Index
+            // findUpdatedMonsterState,
+          );
+        }
+      }
+
+      const findAttackedEnemyByUser = enemyPosition.find((element) => element && element.id === monsterInfo[0].monsterId);
+      // console.log('find enemy position after');
+      // console.log(findAttackedEnemyByUser);
+      playerPosition[0] = drawPlayer(
+        ctx, // Ctx drawing canvas
+        playerImage, // image array of player images
+        0, // number of image in the array to show
+        findAttackedEnemyByUser, // user attacking [false || enemyImagePosition]
+      );
+
+      drawBattleScreenTools(
+        ctx,
+        mainSkill,
+        secondarySkill,
+        hpOrbs[hpOrbs.length - 1],
+        mpOrbs[mpOrbs.length - 1],
+      );
+
+      battleLogs.unshift(...retaliationInfo.battleLogs);
+
+      BattleMonsters = BattleMonsters.map((obj) => retaliationInfo.monstersToUpdate.find((o) => o.id === obj.id) || obj);
+
+      drawBattleLog(
+        ctx,
+        battleLogs,
+      );
+      ctx.lineWidth = 1;
+      ctx.font = 'bold 13px "HeartWarming"';
+      // console.log('before looping monsters');
+      for (const monsterToUpdate of retaliationInfo.monstersToUpdate) {
+        // console.log(monsterToUpdate);
+        // console.log(enemyPosition);
+        const monsterToUpdatePosition = enemyPosition.find((element) => element && element.id === monsterToUpdate.id);
+        ctx.strokeText(
+          monsterToUpdate.userDamage,
+          monsterToUpdatePosition.x,
+          monsterToUpdatePosition.y - 20,
+          50,
+        );
+      }
+
+      imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+      palette = quantize(imageData.data, 256, { format: 'rgb333' });
+      imageIndex = applyPalette(imageData.data, palette);
+      gif.writeFrame(
+        imageIndex,
+        canvas.width,
+        canvas.height,
+        {
+          palette,
+          delay: 200,
+          repeat: -1,
+        },
+      );
+
+      console.log('Render Frame #3');
+      drawBackground(
+        ctx,
+        canvas,
+        backgroundImage,
+      );
+
+      for (const [i, battleMonster] of BattleMonsters.entries()) {
+        if (battleMonster.currentHp > 0) {
+          enemyPosition[i] = drawEnemy(
+            ctx, // CTX
+            BattleMonsters.find((element) => element.id === battleMonster.id), // MonsterState
+            currentSelectedMonster && currentSelectedMonster.id === battleMonster.id, // is current Monster selected?
+            enemies[battleMonster.id], // Enemy Image
+            debuffImages,
+            false, // Moved To user?
+            0, // Enemy Image Frame Shown
+            playerPosition, // PlayerCords
+            i, // Index
+          );
+        }
+      }
+
+      playerPosition[0] = drawPlayer(
+        ctx, // Ctx drawing canvas
+        playerImage, // image array of player images
+        0, // number of image in the array to show
+        findAttackedEnemyByUser, // user attacking [false || enemyImagePosition]
+      );
+
+      drawBattleScreenTools(
+        ctx,
+        mainSkill,
+        secondarySkill,
+        hpOrbs[hpOrbs.length - 1],
+        mpOrbs[mpOrbs.length - 1],
+      );
+
+      drawBattleLog(
+        ctx,
+        battleLogs,
+      );
+      ctx.lineWidth = 1;
+      ctx.font = 'bold 13px "HeartWarming"';
+      for (const monsterToUpdate of retaliationInfo.monstersToUpdate) {
+        const monsterToUpdatePosition = enemyPosition.find((element) => element && element.id === monsterToUpdate.id);
+        ctx.strokeText(
+          monsterToUpdate.userDamage,
+          monsterToUpdatePosition.x,
+          monsterToUpdatePosition.y - 20,
+          50,
+        );
+      }
+
+      imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+      palette = quantize(imageData.data, 256, { format: 'rgb333' });
+      imageIndex = applyPalette(imageData.data, palette);
+      gif.writeFrame(
+        imageIndex,
+        canvas.width,
+        canvas.height,
+        {
+          palette,
+          delay: 600,
+          repeat: -1,
+        },
+      );
+
+      console.log('Render Frame #4');
+      drawBackground(
+        ctx,
+        canvas,
+        backgroundImage,
+      );
+      playerPosition[0] = drawPlayer(
+        ctx, // Ctx drawing canvas
+        playerImage, // image array of player images
+        0, // number of image in the array to show
+        false, // user attacking [false || enemyImagePosition]
+      );
+
+      for (const [i, battleMonster] of BattleMonsters.entries()) {
+        if (battleMonster.currentHp > 0) {
+          enemyPosition[i] = drawEnemy(
+            ctx, // CTX
+            BattleMonsters.find((element) => element.id === battleMonster.id), // MonsterState
+            currentSelectedMonster && currentSelectedMonster.id === battleMonster.id, // is current Monster selected?
+            enemies[battleMonster.id], // Enemy Image
+            debuffImages,
+            false, // Moved To user?
+            0, // Enemy Image Frame Shown
+            playerPosition, // PlayerCords
+            i, // Index
+          );
+        }
+      }
+
+      drawBattleScreenTools(
+        ctx,
+        mainSkill,
+        secondarySkill,
+        hpOrbs[hpOrbs.length - 1],
+        mpOrbs[mpOrbs.length - 1],
+      );
+      drawBattleLog(
+        ctx,
+        battleLogs,
+      );
+      ctx.lineWidth = 1;
+      ctx.font = 'bold 13px "HeartWarming"';
+      for (const monsterToUpdate of retaliationInfo.monstersToUpdate) {
+        const monsterToUpdatePosition = enemyPosition.find((element) => element && element.id === monsterToUpdate.id);
+        ctx.strokeText(
+          monsterToUpdate.userDamage,
+          monsterToUpdatePosition.x,
+          monsterToUpdatePosition.y - 20,
+          50,
+        );
+      }
+
+      imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+      palette = quantize(imageData.data, 256, { format: 'rgb333' });
+      imageIndex = applyPalette(imageData.data, palette);
+      gif.writeFrame(
+        imageIndex,
+        canvas.width,
+        canvas.height,
+        {
+          palette,
+          delay: 400,
+          repeat: -1,
+        },
+      );
+
+      console.log('Render Frame #4');
+      drawBackground(
+        ctx,
+        canvas,
+        backgroundImage,
+      );
+      playerPosition[0] = drawPlayer(
+        ctx, // Ctx drawing canvas
+        playerImage, // image array of player images
+        0, // number of image in the array to show
+        false, // user attacking [false || enemyImagePosition]
+      );
+
+      for (const [i, battleMonster] of BattleMonsters.entries()) {
+        if (battleMonster.currentHp > 0) {
+          enemyPosition[i] = drawEnemy(
+            ctx, // CTX
+            BattleMonsters.find((element) => element.id === battleMonster.id), // MonsterState
+            currentSelectedMonster && currentSelectedMonster.id === battleMonster.id, // is current Monster selected?
+            enemies[battleMonster.id], // Enemy Image
+            debuffImages,
+            false, // Moved To user?
+            0, // Enemy Image Frame Shown
+            playerPosition, // PlayerCords
+            i, // Index
+          );
+        }
+      }
+
+      drawBattleScreenTools(
+        ctx,
+        mainSkill,
+        secondarySkill,
+        hpOrbs[hpOrbs.length - 1],
+        mpOrbs[mpOrbs.length - 1],
+      );
+      drawBattleLog(
+        ctx,
+        battleLogs,
+      );
+
+      imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+      palette = quantize(imageData.data, 256, { format: 'rgb333' });
+      imageIndex = applyPalette(imageData.data, palette);
+      gif.writeFrame(
+        imageIndex,
+        canvas.width,
+        canvas.height,
+        {
+          palette,
+          delay: 400,
+          repeat: -1,
+        },
+      );
+    }
+  }
+
+  // Apply Debuff Damage
+  if (debuffDamageInfoArray && debuffDamageInfoArray.length > 0) {
+    for (const [index, debuffDamageInfo] of debuffDamageInfoArray.entries()) {
+      drawBackground(
+        ctx,
+        canvas,
+        backgroundImage,
+      );
+      playerPosition[0] = drawPlayer(
+        ctx, // Ctx drawing canvas
+        playerImage, // image array of player images
+        0, // number of image in the array to show
+        false, // user attacking [false || enemyImagePosition]
+      );
+      for (const [i, battleMonster] of BattleMonsters.entries()) {
+        if (battleMonster.currentHp > 0) {
+          enemyPosition[i] = drawEnemy(
+            ctx, // CTX
+            BattleMonsters.find((element) => element.id === battleMonster.id), // MonsterState
+            currentSelectedMonster && currentSelectedMonster.id === battleMonster.id, // is current Monster selected?
+            enemies[battleMonster.id], // Enemy Image
+            debuffImages,
+            false, // Moved To user?
+            0, // Enemy Image Frame Shown
+            playerPosition, // PlayerCords
+            i, // Index
+          );
+        }
+      }
+
+      drawBattleScreenTools(
+        ctx, // pass canvas ctx
+        mainSkill,
+        secondarySkill,
+        hpOrbs[hpOrbs.length - 1],
+        mpOrbs[mpOrbs.length - 1],
+      );
+      drawBattleLog(
+        ctx,
+        battleLogs,
+      );
+
+      imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+      palette = quantize(imageData.data, 256, { format: 'rgb333' });
+      imageIndex = applyPalette(imageData.data, palette);
+      gif.writeFrame(
+        imageIndex,
+        canvas.width,
+        canvas.height,
+        {
+          palette,
+          delay: 600,
+          repeat: -1,
+        },
+      );
+
+      console.log('Render Frame #2 - 2');
+      drawBackground(
+        ctx,
+        canvas,
+        backgroundImage,
+      );
+
+      for (const [i, battleMonster] of BattleMonsters.entries()) {
+        if (battleMonster.currentHp > 0) {
+          // const findUpdatedMonsterState = monsterInfo.find((element) => element.monsterId === battleMonster.id);
+          enemyPosition[i] = drawEnemy(
+            ctx, // CTX
+            BattleMonsters.find((element) => element.id === battleMonster.id), // MonsterState
+            currentSelectedMonster && currentSelectedMonster.id === battleMonster.id, // is current Monster selected?
+            enemies[battleMonster.id], // Enemy Image
+            debuffImages,
+            false, // Moved To user?
+            0, // Enemy Image Frame Shown
+            playerPosition, // PlayerCords
+            i, // Index
+            // findUpdatedMonsterState,
+          );
+        }
+      }
+
+      // const findAttackedEnemyByUser = enemyPosition.find((element) => element && element.id === debuffDamageInfo.monsterId);
+      // console.log('find enemy position after');
+      // console.log(findAttackedEnemyByUser);
+      playerPosition[0] = drawPlayer(
+        ctx, // Ctx drawing canvas
+        playerImage, // image array of player images
+        0, // number of image in the array to show
+        false, // user attacking [false || enemyImagePosition]
+      );
+
+      drawBattleScreenTools(
+        ctx,
+        mainSkill,
+        secondarySkill,
+        hpOrbs[hpOrbs.length - 1],
+        mpOrbs[mpOrbs.length - 1],
+      );
+
+      battleLogs.unshift(...debuffDamageInfo.battleLogs);
+
+      BattleMonsters = BattleMonsters.map((obj) => debuffDamageInfo.monstersToUpdate.find((o) => o.id === obj.id) || obj);
+
+      drawBattleLog(
+        ctx,
+        battleLogs,
+      );
+      ctx.lineWidth = 1;
+      ctx.font = 'bold 13px "HeartWarming"';
+      // console.log('before looping monsters');
+      for (const monsterToUpdate of debuffDamageInfo.monstersToUpdate) {
+        console.log(monsterToUpdate);
+        // console.log(monsterToUpdate);
+        // console.log(enemyPosition);
+        const monsterToUpdatePosition = enemyPosition.find((element) => element && element.id === monsterToUpdate.id);
+        console.log(monsterToUpdatePosition);
+        console.log('123');
+        ctx.strokeText(
+          monsterToUpdate.userDamage,
+          monsterToUpdatePosition.x,
+          monsterToUpdatePosition.y - 20,
+          50,
+        );
+      }
+
+      imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+      palette = quantize(imageData.data, 256, { format: 'rgb333' });
+      imageIndex = applyPalette(imageData.data, palette);
+      gif.writeFrame(
+        imageIndex,
+        canvas.width,
+        canvas.height,
+        {
+          palette,
+          delay: 200,
+          repeat: -1,
+        },
+      );
+
+      console.log('Render Frame #3');
+      drawBackground(
+        ctx,
+        canvas,
+        backgroundImage,
+      );
+
+      for (const [i, battleMonster] of BattleMonsters.entries()) {
+        if (battleMonster.currentHp > 0) {
+          enemyPosition[i] = drawEnemy(
+            ctx, // CTX
+            BattleMonsters.find((element) => element.id === battleMonster.id), // MonsterState
+            currentSelectedMonster && currentSelectedMonster.id === battleMonster.id, // is current Monster selected?
+            enemies[battleMonster.id], // Enemy Image
+            debuffImages,
+            false, // Moved To user?
+            0, // Enemy Image Frame Shown
+            playerPosition, // PlayerCords
+            i, // Index
+          );
+        }
+      }
+
+      playerPosition[0] = drawPlayer(
+        ctx, // Ctx drawing canvas
+        playerImage, // image array of player images
+        0, // number of image in the array to show
+        false, // user attacking [false || enemyImagePosition]
+      );
+
+      drawBattleScreenTools(
+        ctx,
+        mainSkill,
+        secondarySkill,
+        hpOrbs[hpOrbs.length - 1],
+        mpOrbs[mpOrbs.length - 1],
+      );
+
+      drawBattleLog(
+        ctx,
+        battleLogs,
+      );
+      ctx.lineWidth = 1;
+      ctx.font = 'bold 13px "HeartWarming"';
+      for (const monsterToUpdate of debuffDamageInfo.monstersToUpdate) {
+        const monsterToUpdatePosition = enemyPosition.find((element) => element && element.id === monsterToUpdate.id);
+        ctx.strokeText(
+          monsterToUpdate.userDamage,
+          monsterToUpdatePosition.x,
+          monsterToUpdatePosition.y - 20,
+          50,
+        );
+      }
+
+      imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+      palette = quantize(imageData.data, 256, { format: 'rgb333' });
+      imageIndex = applyPalette(imageData.data, palette);
+      gif.writeFrame(
+        imageIndex,
+        canvas.width,
+        canvas.height,
+        {
+          palette,
+          delay: 600,
+          repeat: -1,
+        },
+      );
+
+      console.log('Render Frame #4');
+      drawBackground(
+        ctx,
+        canvas,
+        backgroundImage,
+      );
+      playerPosition[0] = drawPlayer(
+        ctx, // Ctx drawing canvas
+        playerImage, // image array of player images
+        0, // number of image in the array to show
+        false, // user attacking [false || enemyImagePosition]
+      );
+
+      for (const [i, battleMonster] of BattleMonsters.entries()) {
+        if (battleMonster.currentHp > 0) {
+          enemyPosition[i] = drawEnemy(
+            ctx, // CTX
+            BattleMonsters.find((element) => element.id === battleMonster.id), // MonsterState
+            currentSelectedMonster && currentSelectedMonster.id === battleMonster.id, // is current Monster selected?
+            enemies[battleMonster.id], // Enemy Image
+            debuffImages,
+            false, // Moved To user?
+            0, // Enemy Image Frame Shown
+            playerPosition, // PlayerCords
+            i, // Index
+          );
+        }
+      }
+
+      drawBattleScreenTools(
+        ctx,
+        mainSkill,
+        secondarySkill,
+        hpOrbs[hpOrbs.length - 1],
+        mpOrbs[mpOrbs.length - 1],
+      );
+      drawBattleLog(
+        ctx,
+        battleLogs,
+      );
+      ctx.lineWidth = 1;
+      ctx.font = 'bold 13px "HeartWarming"';
+      for (const monsterToUpdate of debuffDamageInfo.monstersToUpdate) {
+        const monsterToUpdatePosition = enemyPosition.find((element) => element && element.id === monsterToUpdate.id);
+        ctx.strokeText(
+          monsterToUpdate.userDamage,
+          monsterToUpdatePosition.x,
+          monsterToUpdatePosition.y - 20,
+          50,
+        );
+      }
+
+      imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+      palette = quantize(imageData.data, 256, { format: 'rgb333' });
+      imageIndex = applyPalette(imageData.data, palette);
+      gif.writeFrame(
+        imageIndex,
+        canvas.width,
+        canvas.height,
+        {
+          palette,
+          delay: 400,
+          repeat: -1,
+        },
+      );
+
+      console.log('Render Frame #4 Debuff');
+      drawBackground(
+        ctx,
+        canvas,
+        backgroundImage,
+      );
+      console.log('Render Frame #4 Debuff2');
+      playerPosition[0] = drawPlayer(
+        ctx, // Ctx drawing canvas
+        playerImage, // image array of player images
+        0, // number of image in the array to show
+        false, // user attacking [false || enemyImagePosition]
+      );
+      console.log('Render Frame #4 Debuff3');
+      for (const [i, battleMonster] of BattleMonsters.entries()) {
+        if (battleMonster.currentHp > 0) {
+          enemyPosition[i] = drawEnemy(
+            ctx, // CTX
+            BattleMonsters.find((element) => element.id === battleMonster.id), // MonsterState
+            currentSelectedMonster && currentSelectedMonster.id === battleMonster.id, // is current Monster selected?
+            enemies[battleMonster.id], // Enemy Image
+            debuffImages,
+            false, // Moved To user?
+            0, // Enemy Image Frame Shown
+            false, // PlayerCords
+            i, // Index
+          );
+        }
+      }
+      console.log('Render Frame #4 Debuff4');
+
+      drawBattleScreenTools(
+        ctx,
+        mainSkill,
+        secondarySkill,
+        hpOrbs[hpOrbs.length - 1],
+        mpOrbs[mpOrbs.length - 1],
+      );
+      console.log('Render Frame #4 Debuff5');
+      drawBattleLog(
+        ctx,
+        battleLogs,
+      );
+      console.log('Render Frame #4 Debuff6');
+      imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+      palette = quantize(imageData.data, 256, { format: 'rgb333' });
+      imageIndex = applyPalette(imageData.data, palette);
+      gif.writeFrame(
+        imageIndex,
+        canvas.width,
+        canvas.height,
+        {
+          palette,
+          delay: 400,
+          repeat: -1,
+        },
+      );
+    }
+  }
+
+  console.log('Render Frame #4 Debuff7');
   gif.finish();
   const bytes = gif.bytesView();
   const finalImage = Buffer.from(bytes);

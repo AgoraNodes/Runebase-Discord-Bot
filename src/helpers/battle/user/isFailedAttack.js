@@ -12,7 +12,7 @@ const isFailedAttack = async (
 ) => {
   // TODO: Maybe resist attacks based on resistance? (if attackType === 'Fire' then some logic)
   let attackFailed = false;
-  if (useAttack.attackTpe === 'Physical') {
+  if (useAttack.attackType === 'Physical') {
     // Chance To Hit = 200% * {AR / (AR + DR)} * {Alvl / (Alvl + Dlvl)}
     // AR = Attacker's Attack Rating
     // DR = Defender's Defense rating

@@ -13,6 +13,8 @@ import userApplyDebuffSingle from './user/userApplyDebuffSingle';
 import userApplyAttackSingle from './user/userApplyAttackSingle';
 import userApplyAttackAoE from './user/userApplyAttackAoE';
 import monstersApplyAttack from './monster/monstersApplyAttack';
+import userApplyRetliation from './user/userApplyRetaliation';
+import userApplyDebuffDamage from './user/userApplyDebuffDamage';
 
 // TODO: Make code more readable by moving monster/user updates in their own designated function
 // TODO: APPLY BUFFS TO USER CHARACTER
@@ -33,6 +35,7 @@ export const processBattleMove = async (
     regularAttack,
     block,
     defense,
+    kick,
   } = await calculateCharacterStats(
     userCurrentCharacter,
   );
@@ -67,8 +70,12 @@ export const processBattleMove = async (
     }
   }
 
+  let retaliationArray = [];
+  let retaliationInfoArray = [];
   let monsterInfoArray = [];
   let battleInfoArray = [];
+  let debuffDamageInfoArray = [];
+
   const selectedMonster = battle.BattleMonsters.find((element) => element.id === currentSelectedMonster.id);
 
   if (
@@ -171,6 +178,7 @@ export const processBattleMove = async (
     [
       totalDamageByMonsters,
       battleInfoArray,
+      retaliationArray,
     ] = await monstersApplyAttack(
       userCurrentCharacter, // UserCharacter
       lvl, // Users Level
@@ -184,20 +192,31 @@ export const processBattleMove = async (
     );
   }
 
-  await userCurrentCharacter.condition.update({
-    life: userCurrentCharacter.condition.life - totalDamageByMonsters,
-    mana: userCurrentCharacter.condition.mana - useAttack.cost,
-  }, {
-    lock: t.LOCK.UPDATE,
-    transaction: t,
-  });
+  if (retaliationArray.length > 0) {
+    [
+      retaliationInfoArray,
+    ] = await userApplyRetliation(
+      userCurrentCharacter,
+      battle,
+      retaliationArray,
+      retaliationInfoArray,
+      allRemainingBattleMonster,
+      kick,
+      lvl,
+      t,
+    );
+  }
 
-  // Count down Debuffs
+  // Find all remaining Debuffs
   const findAllMonsterToCountDownDebuff = await db.BattleMonster.findAll({
     where: {
       battleId: battle.id,
     },
     include: [
+      {
+        model: db.monster,
+        as: 'monster',
+      },
       {
         model: db.debuff,
         as: 'debuffs',
@@ -207,6 +226,20 @@ export const processBattleMove = async (
     transaction: t,
   });
 
+  // Apply debuff damage
+  if (findAllMonsterToCountDownDebuff.length > 0) {
+    [
+      debuffDamageInfoArray,
+    ] = await userApplyDebuffDamage(
+      userCurrentCharacter,
+      battle,
+      debuffDamageInfoArray,
+      findAllMonsterToCountDownDebuff,
+      t,
+    );
+  }
+
+  // Count Down Debuffs
   for (const monsterToCountDownDebuff of findAllMonsterToCountDownDebuff) {
     if (monsterToCountDownDebuff.debuffs.length > 0) {
       for (const debuffToCountDown of monsterToCountDownDebuff.debuffs) {
@@ -228,6 +261,14 @@ export const processBattleMove = async (
       }
     }
   }
+
+  await userCurrentCharacter.condition.update({
+    life: userCurrentCharacter.condition.life - totalDamageByMonsters,
+    mana: userCurrentCharacter.condition.mana - useAttack.cost,
+  }, {
+    lock: t.LOCK.UPDATE,
+    transaction: t,
+  });
 
   const updatedBattle = await db.battle.findOne({
     where: {
@@ -267,6 +308,8 @@ export const processBattleMove = async (
     updatedBattle,
     battleInfoArray,
     monsterInfoArray,
+    retaliationInfoArray,
+    debuffDamageInfoArray,
     sumExp,
   ];
 };

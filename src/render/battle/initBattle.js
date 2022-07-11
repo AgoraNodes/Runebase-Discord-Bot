@@ -30,6 +30,8 @@ export const renderInitBattleGif = async (
   currentSelectedMonster,
   battleInfoArray = false,
   monsterInfo = false,
+  retaliationInfoArray = false,
+  debuffDamageInfoArray = false,
 ) => {
   const zone = 'den';
   const enemies = [];

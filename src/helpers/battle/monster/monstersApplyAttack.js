@@ -4,6 +4,7 @@ import db from '../../../models';
 import { randomIntFromInterval } from "../../utils";
 import pickRandomMonsterAttack from './pickRandomMonsterAttack';
 import isFailedAttack from './isFailedAttack';
+import calculateUserRetaliation from './calculateUserRetaliation';
 
 const monstersApplyAttack = async (
   userCurrentCharacter, // UserCharacter
@@ -19,6 +20,7 @@ const monstersApplyAttack = async (
   let currentUserHp = userCurrentCharacter.condition.life;
   let attackFailed = true;
   let totalDamageByMonsters = 0;
+  const retaliationArray = [];
   // eslint-disable-next-line no-restricted-syntax
   for await (const remainingMonster of allRemainingBattleMonster) {
     let individualBattleObject;
@@ -87,6 +89,17 @@ const monstersApplyAttack = async (
         // currentHp: currentUserHp - randomMonsterAttackDamage,
         battleLogs,
       };
+
+      const retaliate = await calculateUserRetaliation(
+        userCurrentCharacter,
+        remainingMonster.id,
+      );
+
+      if (retaliate && retaliate.length > 0) {
+        retaliationArray.push(
+          ...retaliate,
+        );
+      }
     }
 
     battleInfoArray.push(individualBattleObject);
@@ -95,6 +108,7 @@ const monstersApplyAttack = async (
   return [
     totalDamageByMonsters,
     battleInfoArray,
+    retaliationArray,
   ];
 };
 

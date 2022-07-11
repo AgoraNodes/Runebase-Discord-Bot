@@ -683,9 +683,10 @@ ${newLootC.length > 0 ? `__found ${newLootC.length} ${newLootC.length === 1 ? `i
         isolationLevel: Transaction.ISOLATION_LEVELS.SERIALIZABLE,
       }, async (t) => {
         let attackUsed;
+        let retaliationInfoArray;
         let battleInfoArray;
-        let monsterInfo;
-        let userInfo;
+        let monsterInfoArray;
+        let debuffDamageInfoArray;
         let sumExp = 0;
 
         let previousBattleState = battle;
@@ -787,7 +788,9 @@ ${newLootC.length > 0 ? `__found ${newLootC.length} ${newLootC.length === 1 ? `i
               userCurrentCharacter,
               battle,
               battleInfoArray,
-              monsterInfo,
+              monsterInfoArray,
+              retaliationInfoArray,
+              debuffDamageInfoArray,
               sumExp,
             ] = await processBattleMove(
               userCurrentCharacter,
@@ -833,7 +836,9 @@ ${newLootC.length > 0 ? `__found ${newLootC.length} ${newLootC.length === 1 ? `i
                     previousUserState,
                     currentSelectedMonster,
                     battleInfoArray,
-                    monsterInfo,
+                    monsterInfoArray,
+                    retaliationInfoArray,
+                    debuffDamageInfoArray,
                   ),
                   'battle.gif',
                 ),
@@ -869,7 +874,9 @@ ${newLootC.length > 0 ? `__found ${newLootC.length} ${newLootC.length === 1 ? `i
                     previousUserState,
                     currentSelectedMonster,
                     battleInfoArray,
-                    monsterInfo,
+                    monsterInfoArray,
+                    retaliationInfoArray,
+                    debuffDamageInfoArray,
                   ),
                   'battle.gif',
                 ),
@@ -1033,8 +1040,7 @@ ${newLootC.length > 0 ? `__found ${newLootC.length} ${newLootC.length === 1 ? `i
                   previousBattleState,
                   previousUserState,
                   currentSelectedMonster,
-                  monsterInfo,
-                  userInfo,
+                  monsterInfoArray,
                 ),
                 'battle.gif',
               ),

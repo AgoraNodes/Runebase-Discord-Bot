@@ -87,6 +87,28 @@ export const calculateCharacterStats = async (
     }
   });
 
+  let kick = {
+    name: 'Kick',
+    attackType: 'Physical',
+    min: 1,
+    max: 2,
+    ar: currentCharacter.user.currentClass.attackRating + (currentCharacter.stats.dexterity * 5),
+    crit: 0,
+    cost: 0,
+  };
+
+  if (currentCharacter.equipment.boots) {
+    kick = {
+      name: 'Kick',
+      attackType: 'Physical',
+      min: currentCharacter.equipment.boots.minDamage,
+      max: currentCharacter.equipment.boots.maxDamage,
+      ar: currentCharacter.user.currentClass.attackRating + (currentCharacter.stats.dexterity * 5),
+      crit: 0,
+      cost: 0,
+    };
+  }
+
   let regularAttack = {
     name: 'Attack',
     attackType: 'Physical',
@@ -173,5 +195,6 @@ export const calculateCharacterStats = async (
     attackOne,
     attackTwo,
     regularAttack,
+    kick,
   };
 };

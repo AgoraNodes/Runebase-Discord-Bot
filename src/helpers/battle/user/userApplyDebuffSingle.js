@@ -10,24 +10,6 @@ const userApplyDebuffSingle = async (
   selectedMonster,
   t,
 ) => {
-  console.log(useAttack);
-  console.log('useAttack');
-  console.log('useAttack');
-  console.log('useAttack');
-  console.log('useAttack');
-  console.log('useAttack');
-  console.log('useAttack');
-  console.log('useAttack');
-  console.log('useAttack');
-  console.log('useAttack');
-  console.log('useAttack');
-  console.log('useAttack');
-  console.log('useAttack');
-  console.log('useAttack');
-  console.log('useAttack');
-  console.log('useAttack');
-  console.log('useAttack');
-
   const userBattleLogs = [];
   const updatedMonster = JSON.parse(JSON.stringify(selectedMonster));
   // Apply ALL Single Unit Debuffs here

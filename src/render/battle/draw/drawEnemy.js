@@ -61,10 +61,10 @@ export const drawEnemy = (
     );
   }
 
-  console.log('before apply debuff');
+  // console.log('before apply debuff');
   for (const [i, debuff] of monster.debuffs.entries()) {
-    console.log(debuffImages);
-    console.log(debuff);
+    // console.log(debuffImages);
+    // console.log(debuff);
     ctx.drawImage(
       debuffImages[debuff.name][0],
       (x - 6) + (i * 17), // x position
