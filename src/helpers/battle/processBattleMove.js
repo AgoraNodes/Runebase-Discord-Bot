@@ -20,6 +20,7 @@ import userApplyBuffSingle from './user/userApplyBuffSingle';
 import selectAttack from './utils/selectAttack';
 import removeNewTagFromBuffsAndDebuffs from './utils/removeNewTagFromBuffsAndDebuffs';
 import userApplyPreBuffBattleChance from './user/userApplyPreBuffBattleChance';
+import applyEnemyDebuffEffects from './utils/applyEnemyDebuffEffects';
 
 // TODO: Make code more readable by moving monster/user updates in their own designated function
 // TODO: APPLY BUFFS TO USER CHARACTER
@@ -106,7 +107,15 @@ export const processBattleMove = async (
   const initialUserState = JSON.parse(JSON.stringify(userState));
   const selectedMonster = battleMonsterState.find((element) => element.id === currentSelectedMonster.id);
 
-  // TODO: APPLY ALL ENEMY DEBUFFS / ALSO DETERMINE IF UNIT IS STUNNED FROM DEBUFFS
+  console.log('Processing Debuff Effects');
+  // APPLY ALL ENEMY DEBUFFS
+  [
+    battleMonsterState,
+  ] = applyEnemyDebuffEffects(
+    battleMonsterState,
+  );
+
+  // DETERMINE IF UNIT IS STUNNED FROM DEBUFFS AND OTHER PREBATTLE DEBUFF EFFECTS
   console.log('Stage #0 Processing');
   [
     stageZeroInfoArray,
@@ -118,7 +127,7 @@ export const processBattleMove = async (
     stageZeroInfoArray, // Array to fill with battle info
     battle, // battle database record
     useAttack, // Which attack is used by user
-    selectedMonster, // which Monster do we have selected?
+    currentSelectedMonster.id, // which Monster do we have selected?
     t, // database transaction
   );
 
@@ -137,7 +146,7 @@ export const processBattleMove = async (
       stageOneInfoArray,
       battle,
       useAttack,
-      selectedMonster,
+      currentSelectedMonster.id,
       t,
     );
   } else if (
@@ -154,7 +163,7 @@ export const processBattleMove = async (
       stageOneInfoArray,
       battle,
       useAttack,
-      selectedMonster,
+      currentSelectedMonster.id,
       t,
     );
   } else if (
@@ -171,7 +180,7 @@ export const processBattleMove = async (
       stageOneInfoArray,
       battle,
       useAttack,
-      selectedMonster,
+      currentSelectedMonster.id,
       t,
     );
   } else if (
@@ -189,7 +198,7 @@ export const processBattleMove = async (
       stageOneInfoArray, // Array to fill with battle info
       battle, // battle database record
       useAttack, // Which attack is used by user
-      selectedMonster, // which Monster do we have selected?
+      currentSelectedMonster.id, // which Monster do we have selected?
       t, // database transaction
     );
   } else {
@@ -204,7 +213,7 @@ export const processBattleMove = async (
       stageOneInfoArray, // Array to fill with battle info
       battle, // battle database record
       useAttack, // Which attack is used by user
-      selectedMonster, // which Monster do we have selected?
+      currentSelectedMonster.id, // which Monster do we have selected?
       t, // database transaction
     );
   }
@@ -241,7 +250,6 @@ export const processBattleMove = async (
       regularAttack, // Users Regular Attack
       stageTwoInfoArray, // Array to fill with battle info
       battle, // battle database record
-      // allRemainingBattleMonster, // All the remaining Monsters
       t, // database transaction
     );
   }

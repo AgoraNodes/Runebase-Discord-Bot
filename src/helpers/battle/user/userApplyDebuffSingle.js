@@ -8,15 +8,16 @@ const userApplyDebuffSingle = async (
   stageOneInfoArray,
   battle,
   useAttack,
-  selectedMonster,
+  selectedMonsterId,
   t,
 ) => {
   const battleLogs = [];
-  const updatedMonster = JSON.parse(JSON.stringify(selectedMonster));
+  // const updatedMonster = JSON.parse(JSON.stringify(selectedMonster));
+  const updatedMonster = battleMonsterState.find((element) => element.id === selectedMonsterId);
   // Apply ALL Single Unit Debuffs here
 
-  if (selectedMonster.currentHp > 0) {
-    const existingDebuff = selectedMonster.debuffs.find((x) => x.name === useAttack.name);
+  if (updatedMonster.currentHp > 0) {
+    const existingDebuff = updatedMonster.debuffs.find((x) => x.name === useAttack.name);
     if (existingDebuff) {
       await existingDebuff.destroy({
         lock: t.LOCK.UPDATE,
@@ -42,11 +43,11 @@ const userApplyDebuffSingle = async (
     );
 
     battleLogs.unshift({
-      log: `${userState.user.username} used ${useAttack.name} on ${selectedMonster.monster.name}`,
+      log: `${userState.user.username} used ${useAttack.name} on ${updatedMonster.monster.name}`,
     });
     await db.battleLog.create({
       battleId: battle.id,
-      log: `${userState.user.username} used ${useAttack.name} on ${selectedMonster.monster.name}`,
+      log: `${userState.user.username} used ${useAttack.name} on ${updatedMonster.monster.name}`,
     }, {
       lock: t.LOCK.UPDATE,
       transaction: t,

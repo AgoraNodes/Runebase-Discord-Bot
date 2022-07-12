@@ -9,11 +9,12 @@ const userApplyDebuffAoE = async (
   stageOneInfoArray,
   battle,
   useAttack,
-  selectedMonster,
+  selectedMonsterId,
   t,
 ) => {
   const battleLogs = [];
   const monstersToUpdate = [];
+  const selectedMonster = battleMonsterState.find((element) => element.id === selectedMonsterId);
   // Apply ALL AOE Debuffs here
   for (const battleMonster of battleMonsterState) {
     const BattleMonsterToUpdate = JSON.parse(JSON.stringify(battleMonster));
@@ -52,8 +53,6 @@ const userApplyDebuffAoE = async (
       monstersToUpdate.push({
         ...BattleMonsterToUpdate,
         userDamage: useAttack.name,
-        // currentMonsterHp: selectedMonster.currentHp - 0,
-        // died: !(battleMonster.currentHp > 0),
         attackType: useAttack.name,
       });
       const createBattleLog = await db.battleLog.create({
@@ -70,7 +69,7 @@ const userApplyDebuffAoE = async (
   userState.mp.current -= useAttack.cost;
 
   stageOneInfoArray.push({
-    monsterId: selectedMonster.id,
+    monsterId: selectedMonsterId,
     monstersToUpdate,
     useAttack,
     battleLogs,

@@ -12,23 +12,15 @@ const userApplyAttackSingle = async (
   stageOneInfoArray, // Array to fill with battle info
   battle, // battle database record
   useAttack, // Which attack is used by user
-  selectedMonster, // which Monster do we have selected?
+  selectedMonsterId, // which Monster do we have selected?
   t, // database transaction
 ) => {
   let battleLogs = [];
   let monstersToUpdate = [];
   let attackFailed = true;
   // APPLY USER Single MONSTER attack
-  const updatedMonster = JSON.parse(JSON.stringify(selectedMonster));
-
-  // Apply Armor Debuff if exists
-  if (updatedMonster.debuffs && updatedMonster.debuffs.length > 0) {
-    for (const debuff of updatedMonster.debuffs) {
-      if (debuff.reducedArmor) {
-        updatedMonster.monster.armor = Math.round(updatedMonster.monster.defense - ((updatedMonster.monster.defense / 100) * debuff.reducedArmor));
-      }
-    }
-  }
+  // const updatedMonster = JSON.parse(JSON.stringify(selectedMonster));
+  const updatedMonster = battleMonsterState.find((element) => element.id === selectedMonsterId);
 
   [
     battleLogs,
@@ -45,25 +37,34 @@ const userApplyAttackSingle = async (
     t,
   );
 
-  let randomAttackDamage = randomIntFromInterval(useAttack.min, useAttack.max); // Random attack damage between min-max
-  let didWeCrit = false;
-  [
-    didWeCrit,
-    randomAttackDamage,
-  ] = calculateCritDamage(
-    randomAttackDamage,
-    useAttack.crit,
-  );
   // TODO: Apply Damage reductions? based on attackType (useAttack.attackType)
 
   if (!attackFailed) {
+    let randomAttackDamage = randomIntFromInterval(useAttack.min, useAttack.max); // Random attack damage between min-max
+    // Test Crit
+    let didUserCrit = false;
+    [
+      didUserCrit,
+      randomAttackDamage,
+    ] = calculateCritDamage(
+      randomAttackDamage,
+      useAttack.crit,
+    );
+    // Test Stun
+    const didUserStun = Math.random() < Number(useAttack.stun) / 100;
+    // let didUserStun = false;
+    // [
+    //   didUserStun,
+    // ] = calculateCritDamage(
+    //   useAttack.stun,
+    // );
     // Apply Damage to monster
     updatedMonster.currentHp -= randomAttackDamage;
 
     // Generate Battle log
     const createBattleLog = await db.battleLog.create({
       battleId: battle.id,
-      log: `${userState.user.username} used ${useAttack.name} on ${selectedMonster.monster.name} for ${randomAttackDamage} damage`,
+      log: `${userState.user.username} used ${useAttack.name} on ${updatedMonster.monster.name} for ${randomAttackDamage} damage${didUserCrit ? ' (crit)' : ''}`,
     }, {
       lock: t.LOCK.UPDATE,
       transaction: t,
@@ -73,7 +74,7 @@ const userApplyAttackSingle = async (
     if (updatedMonster.currentHp < 1) {
       const createKillLog = await db.battleLog.create({
         battleId: battle.id,
-        log: `${userState.user.username} killed ${selectedMonster.monster.name}`,
+        log: `${userState.user.username} killed ${updatedMonster.monster.name}`,
       }, {
         lock: t.LOCK.UPDATE,
         transaction: t,
@@ -83,13 +84,12 @@ const userApplyAttackSingle = async (
     monstersToUpdate.push(
       {
         ...updatedMonster,
-        didWeCrit,
+        didUserCrit,
+        stunned: didUserStun,
         userDamage: randomAttackDamage,
         attackType: useAttack.name,
       },
     );
-    console.log(updatedMonster);
-    console.log('updatedMonster');
   }
 
   battleMonsterState = battleMonsterState.map((obj) => monstersToUpdate.find((o) => o.id === obj.id) || obj);

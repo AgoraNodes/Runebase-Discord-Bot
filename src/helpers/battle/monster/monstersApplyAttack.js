@@ -15,7 +15,6 @@ const monstersApplyAttack = async (
   regularAttack, // Users Regular Attack
   stageTwoInfoArray, // Array to fill with battle info
   battle, // battle database record
-  // allRemainingBattleMonster, // Which attack is used by user
   t, // database transaction
 ) => {
   // const newUserState = JSON.parse(JSON.stringify(userState));

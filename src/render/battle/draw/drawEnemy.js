@@ -115,10 +115,10 @@ export const drawEnemy = (
   if (monster.stunned) {
     ctx.drawImage(
       effectImages.stunned,
-      x, // x position
-      y - 35, // y position
-      effectImages.stunned.width / 8,
-      effectImages.stunned.height / 8,
+      x - 1, // x position
+      y + 6, // y position
+      effectImages.stunned.width * 0.5,
+      effectImages.stunned.height * 0.5,
     );
   }
 

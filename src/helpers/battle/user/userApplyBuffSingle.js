@@ -8,13 +8,14 @@ const userApplyBuffSingle = async (
   stageOneInfoArray,
   battle,
   useAttack,
-  selectedMonster,
+  selectedMonsterId,
   t,
 ) => {
   // console.log('start apply buff');
   const battleLogs = [];
 
-  const updatedMonster = JSON.parse(JSON.stringify(selectedMonster));
+  // const updatedMonster = JSON.parse(JSON.stringify(selectedMonster));
+  // const updatedMonster = battleMonsterState.find((element) => element.id === selectedMonsterId);
   const existingBuff = userCurrentCharacter.buffs.find((x) => x.name === useAttack.name);
 
   if (existingBuff) {
@@ -47,7 +48,8 @@ const userApplyBuffSingle = async (
 
   const createBattleLog = await db.battleLog.create({
     battleId: battle.id,
-    log: `${userState.user.username} used ${useAttack.name} on ${selectedMonster.monster.name}`,
+    log: `${userState.user.username} used ${useAttack.name}`,
+    // log: `${userState.user.username} used ${useAttack.name} on ${updatedMonster.monster.name}`,
   }, {
     lock: t.LOCK.UPDATE,
     transaction: t,
@@ -58,7 +60,7 @@ const userApplyBuffSingle = async (
   userState.mp.current -= useAttack.cost;
 
   stageOneInfoArray.push({
-    monsterId: updatedMonster.id,
+    monsterId: selectedMonsterId,
     monstersToUpdate: [],
     useAttack,
     battleLogs,
