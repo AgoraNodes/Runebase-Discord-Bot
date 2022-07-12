@@ -33,7 +33,7 @@ export const renderBattleGif = async (
   stageThreeInfoArray = false, // User Retaliating
   stageFourInfoArray = false, // Applying Debuff damage on enemies
 ) => {
-  const userState = initialUserState;
+  let userState = initialUserState;
   const zone = 'den';
   const enemyPosition = [];
   const playerPosition = [];
@@ -54,6 +54,12 @@ export const renderBattleGif = async (
   let imageIndex;
   console.log(userState.hp);
   console.log('initial state hp');
+
+  const orbsStartingPositionStageOne = 1;
+  const orbsStartingPositionStageTwo = 1 + stageOneInfoArray.length;
+  const orbsStartingPositionStageThree = 1 + stageOneInfoArray.length + stageTwoInfoArray.length;
+  const orbsStartingPositionStageFour = 1 + stageOneInfoArray.length + stageTwoInfoArray.length + stageThreeInfoArray.length;
+  const orbsStartingPositionStageFive = 1 + stageOneInfoArray.length + stageTwoInfoArray.length + stageThreeInfoArray.length + stageFourInfoArray.length;
 
   loadPromises.push(
     new Promise((resolve, reject) => {
@@ -174,6 +180,13 @@ export const renderBattleGif = async (
         userState,
         stageOneInfoArray,
         stageTwoInfoArray,
+        stageThreeInfoArray,
+        stageFourInfoArray,
+        orbsStartingPositionStageOne,
+        orbsStartingPositionStageTwo,
+        orbsStartingPositionStageThree,
+        orbsStartingPositionStageFour,
+        orbsStartingPositionStageFive,
       ).then(([
         hpOrbsReturn,
         mpOrbsReturn,
@@ -256,6 +269,7 @@ export const renderBattleGif = async (
   );
 
   console.log('Render Frame #2');
+  userState = stageOneInfoArray[0].userState;
   drawBackground(
     ctx,
     canvas,
@@ -389,8 +403,8 @@ export const renderBattleGif = async (
     ctx,
     mainSkill,
     secondarySkill,
-    hpOrbs[0],
-    mpOrbs[1],
+    hpOrbs[orbsStartingPositionStageOne],
+    mpOrbs[orbsStartingPositionStageOne],
   );
 
   drawBattleLog(
@@ -463,8 +477,8 @@ export const renderBattleGif = async (
     ctx,
     mainSkill,
     secondarySkill,
-    hpOrbs[0],
-    mpOrbs[1],
+    hpOrbs[orbsStartingPositionStageOne],
+    mpOrbs[orbsStartingPositionStageOne],
   );
   drawBattleLog(
     ctx,
@@ -538,8 +552,8 @@ export const renderBattleGif = async (
       ctx,
       mainSkill,
       secondarySkill,
-      hpOrbs[index + 1],
-      mpOrbs[1],
+      hpOrbs[index + orbsStartingPositionStageTwo],
+      mpOrbs[index + orbsStartingPositionStageTwo],
     );
     drawBattleLog(
       ctx,
@@ -599,8 +613,8 @@ export const renderBattleGif = async (
       ctx,
       mainSkill,
       secondarySkill,
-      hpOrbs[index + 1],
-      mpOrbs[1],
+      hpOrbs[index + orbsStartingPositionStageTwo],
+      mpOrbs[index + orbsStartingPositionStageTwo],
     );
     // console.log(battleInfo);
     // console.log('battleInfo');
@@ -683,8 +697,8 @@ export const renderBattleGif = async (
       ctx,
       mainSkill,
       secondarySkill,
-      hpOrbs[index + 1],
-      mpOrbs[1],
+      hpOrbs[index + orbsStartingPositionStageTwo],
+      mpOrbs[index + orbsStartingPositionStageTwo],
     );
     drawBattleLog(
       ctx,
@@ -763,8 +777,8 @@ export const renderBattleGif = async (
       ctx,
       mainSkill,
       secondarySkill,
-      hpOrbs[index + 1],
-      mpOrbs[1],
+      hpOrbs[index + orbsStartingPositionStageTwo],
+      mpOrbs[index + orbsStartingPositionStageTwo],
     );
     drawBattleLog(
       ctx,
@@ -843,8 +857,8 @@ export const renderBattleGif = async (
       ctx,
       mainSkill,
       secondarySkill,
-      hpOrbs[index + 1],
-      mpOrbs[1],
+      hpOrbs[index + orbsStartingPositionStageTwo],
+      mpOrbs[index + orbsStartingPositionStageTwo],
     );
     drawBattleLog(
       ctx,
@@ -906,8 +920,8 @@ export const renderBattleGif = async (
         ctx, // pass canvas ctx
         mainSkill,
         secondarySkill,
-        hpOrbs[hpOrbs.length - 1],
-        mpOrbs[mpOrbs.length - 1],
+        hpOrbs[index + orbsStartingPositionStageThree],
+        mpOrbs[index + orbsStartingPositionStageThree],
       );
       drawBattleLog(
         ctx,
@@ -973,8 +987,8 @@ export const renderBattleGif = async (
         ctx,
         mainSkill,
         secondarySkill,
-        hpOrbs[hpOrbs.length - 1],
-        mpOrbs[mpOrbs.length - 1],
+        hpOrbs[index + orbsStartingPositionStageThree],
+        mpOrbs[index + orbsStartingPositionStageThree],
       );
 
       battleLogs.unshift(...retaliationInfo.battleLogs);
@@ -1054,8 +1068,8 @@ export const renderBattleGif = async (
         ctx,
         mainSkill,
         secondarySkill,
-        hpOrbs[hpOrbs.length - 1],
-        mpOrbs[mpOrbs.length - 1],
+        hpOrbs[index + orbsStartingPositionStageThree],
+        mpOrbs[index + orbsStartingPositionStageThree],
       );
 
       drawBattleLog(
@@ -1128,8 +1142,8 @@ export const renderBattleGif = async (
         ctx,
         mainSkill,
         secondarySkill,
-        hpOrbs[hpOrbs.length - 1],
-        mpOrbs[mpOrbs.length - 1],
+        hpOrbs[index + orbsStartingPositionStageThree],
+        mpOrbs[index + orbsStartingPositionStageThree],
       );
       drawBattleLog(
         ctx,
@@ -1201,8 +1215,8 @@ export const renderBattleGif = async (
         ctx,
         mainSkill,
         secondarySkill,
-        hpOrbs[hpOrbs.length - 1],
-        mpOrbs[mpOrbs.length - 1],
+        hpOrbs[index + orbsStartingPositionStageThree],
+        mpOrbs[index + orbsStartingPositionStageThree],
       );
       drawBattleLog(
         ctx,
@@ -1264,8 +1278,8 @@ export const renderBattleGif = async (
         ctx, // pass canvas ctx
         mainSkill,
         secondarySkill,
-        hpOrbs[hpOrbs.length - 1],
-        mpOrbs[mpOrbs.length - 1],
+        hpOrbs[index + orbsStartingPositionStageFour],
+        mpOrbs[index + orbsStartingPositionStageFour],
       );
       drawBattleLog(
         ctx,
@@ -1331,8 +1345,8 @@ export const renderBattleGif = async (
         ctx,
         mainSkill,
         secondarySkill,
-        hpOrbs[hpOrbs.length - 1],
-        mpOrbs[mpOrbs.length - 1],
+        hpOrbs[index + orbsStartingPositionStageFour],
+        mpOrbs[index + orbsStartingPositionStageFour],
       );
 
       battleLogs.unshift(...debuffDamageInfo.battleLogs);
@@ -1415,8 +1429,8 @@ export const renderBattleGif = async (
         ctx,
         mainSkill,
         secondarySkill,
-        hpOrbs[hpOrbs.length - 1],
-        mpOrbs[mpOrbs.length - 1],
+        hpOrbs[index + orbsStartingPositionStageFour],
+        mpOrbs[index + orbsStartingPositionStageFour],
       );
 
       drawBattleLog(
@@ -1489,8 +1503,8 @@ export const renderBattleGif = async (
         ctx,
         mainSkill,
         secondarySkill,
-        hpOrbs[hpOrbs.length - 1],
-        mpOrbs[mpOrbs.length - 1],
+        hpOrbs[index + orbsStartingPositionStageFour],
+        mpOrbs[index + orbsStartingPositionStageFour],
       );
       drawBattleLog(
         ctx,
@@ -1564,8 +1578,8 @@ export const renderBattleGif = async (
         ctx,
         mainSkill,
         secondarySkill,
-        hpOrbs[hpOrbs.length - 1],
-        mpOrbs[mpOrbs.length - 1],
+        hpOrbs[index + orbsStartingPositionStageFour],
+        mpOrbs[index + orbsStartingPositionStageFour],
       );
       console.log('Render Frame #4 Debuff5');
       drawBattleLog(

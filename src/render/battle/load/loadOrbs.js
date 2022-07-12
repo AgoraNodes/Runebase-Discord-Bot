@@ -5,12 +5,18 @@ import {
 } from 'canvas';
 import { renderHpOrb } from '../../orbs/hp';
 import { renderMpOrb } from '../../orbs/mp';
-import { calculateCharacterStats } from '../../../helpers/stats/calculateCharacterStats';
 
 export const loadOrbs = async (
   initialUserState,
   stageOneInfoArray,
   stageTwoInfoArray,
+  stageThreeInfoArray,
+  stageFourInfoArray,
+  orbsStartingPositionStageOne,
+  orbsStartingPositionStageTwo,
+  orbsStartingPositionStageThree,
+  orbsStartingPositionStageFour,
+  orbsStartingPositionStageFive,
 ) => {
   const promises = [];
   const bufferPromises = [];
@@ -18,21 +24,6 @@ export const loadOrbs = async (
   const mpOrbsBuffer = [];
   const hpOrbs = [];
   const mpOrbs = [];
-
-  console.log(initialUserState);
-  console.log('processing orbs');
-  console.log('processing orbs');
-  console.log('processing orbs');
-  console.log('processing orbs');
-  console.log('processing orbs');
-  console.log('processing orbs');
-  console.log('processing orbs');
-  console.log('processing orbs');
-  console.log('processing orbs');
-  console.log('processing orbs');
-  console.log('processing orbs');
-  console.log('processing orbs');
-  console.log('processing orbs');
 
   bufferPromises.push(
     new Promise((resolve, reject) => {
@@ -66,7 +57,19 @@ export const loadOrbs = async (
             info.userState.mp.current,
             info.userState.mp.max,
           ).then((buffer) => {
-            mpOrbsBuffer[index + 1] = buffer;
+            mpOrbsBuffer[index + orbsStartingPositionStageOne] = buffer;
+            resolve();
+          });
+        }),
+      );
+
+      bufferPromises.push(
+        new Promise((resolve, reject) => {
+          renderHpOrb(
+            info.userState.hp.current,
+            info.userState.hp.max,
+          ).then((buffer) => {
+            hpOrbsBuffer[index + orbsStartingPositionStageOne] = buffer;
             resolve();
           });
         }),
@@ -78,11 +81,79 @@ export const loadOrbs = async (
     for (const [index, info] of stageTwoInfoArray.entries()) {
       bufferPromises.push(
         new Promise((resolve, reject) => {
+          renderMpOrb(
+            info.userState.mp.current,
+            info.userState.mp.max,
+          ).then((buffer) => {
+            mpOrbsBuffer[index + orbsStartingPositionStageTwo] = buffer;
+            resolve();
+          });
+        }),
+      );
+
+      bufferPromises.push(
+        new Promise((resolve, reject) => {
           renderHpOrb(
             info.userState.hp.current,
             info.userState.hp.max,
           ).then((buffer) => {
-            hpOrbsBuffer[index + 1] = buffer;
+            hpOrbsBuffer[index + orbsStartingPositionStageTwo] = buffer;
+            resolve();
+          });
+        }),
+      );
+    }
+  }
+
+  if (stageThreeInfoArray) {
+    for (const [index, info] of stageThreeInfoArray.entries()) {
+      bufferPromises.push(
+        new Promise((resolve, reject) => {
+          renderMpOrb(
+            info.userState.mp.current,
+            info.userState.mp.max,
+          ).then((buffer) => {
+            mpOrbsBuffer[index + orbsStartingPositionStageThree] = buffer;
+            resolve();
+          });
+        }),
+      );
+
+      bufferPromises.push(
+        new Promise((resolve, reject) => {
+          renderHpOrb(
+            info.userState.hp.current,
+            info.userState.hp.max,
+          ).then((buffer) => {
+            hpOrbsBuffer[index + orbsStartingPositionStageThree] = buffer;
+            resolve();
+          });
+        }),
+      );
+    }
+  }
+
+  if (stageFourInfoArray) {
+    for (const [index, info] of stageFourInfoArray.entries()) {
+      bufferPromises.push(
+        new Promise((resolve, reject) => {
+          renderMpOrb(
+            info.userState.mp.current,
+            info.userState.mp.max,
+          ).then((buffer) => {
+            mpOrbsBuffer[index + orbsStartingPositionStageFour] = buffer;
+            resolve();
+          });
+        }),
+      );
+
+      bufferPromises.push(
+        new Promise((resolve, reject) => {
+          renderHpOrb(
+            info.userState.hp.current,
+            info.userState.hp.max,
+          ).then((buffer) => {
+            hpOrbsBuffer[index + orbsStartingPositionStageFour] = buffer;
             resolve();
           });
         }),
