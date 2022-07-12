@@ -39,12 +39,6 @@ const userApplyRetliation = async (
       if (!attackFailed) {
         const randomAttackDamage = randomIntFromInterval(useAttack.min, useAttack.max); // Get Random Monster Damage
 
-        // Apply Damage to monster
-        // await monster.decrement('currentHp', {
-        //   by: randomAttackDamage,
-        //   lock: t.LOCK.UPDATE,
-        //   transaction: t,
-        // });
         // Generate Battle log
         const createBattleLog = await db.battleLog.create({
           battleId: battle.id,
@@ -73,6 +67,29 @@ const userApplyRetliation = async (
         });
       }
       battleMonsterState = battleMonsterState.map((obj) => monstersToUpdate.find((o) => o.id === obj.id) || obj);
+
+      console.log(monstersToUpdate);
+      console.log('monstersToUpdate');
+      console.log('monstersToUpdate');
+      console.log('monstersToUpdate');
+      console.log('monstersToUpdate');
+      console.log('monstersToUpdate');
+      console.log('monstersToUpdate');
+      console.log('monstersToUpdate');
+      console.log('monstersToUpdate');
+      console.log('monstersToUpdate');
+      console.log('monstersToUpdate');
+      console.log('monstersToUpdate');
+      console.log('monstersToUpdate');
+      console.log('monstersToUpdate');
+      console.log('monstersToUpdate');
+      console.log('monstersToUpdate');
+      console.log('monstersToUpdate');
+      console.log('monstersToUpdate');
+      console.log('monstersToUpdate');
+      console.log('monstersToUpdate');
+      console.log('monstersToUpdate');
+      console.log('monstersToUpdate');
 
       individualBattleObject = {
         monsterId: updatedMonster.id,

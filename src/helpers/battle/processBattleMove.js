@@ -45,7 +45,6 @@ export const processBattleMove = async (
   } = await calculateCharacterStats(
     userCurrentCharacter,
   );
-  console.log('start processing battle Move after stats calc');
   const useAttack = selectAttack(
     userCurrentCharacter,
     attackUsed,
@@ -53,19 +52,20 @@ export const processBattleMove = async (
     attackTwo,
     regularAttack,
   );
-  console.log(2);
   await removeNewTagFromBuffsAndDebuffs(
     userCurrentCharacter,
     battle.BattleMonsters,
     t,
   );
-  console.log(3);
   let retaliationArray = [];
-  let stageOneInfoArray = [];
-  let stageTwoInfoArray = [];
-  let stageThreeInfoArray = [];
-  let stageFourInfoArray = [];
-  let stageFiveInfoArray = [];
+  let stageZeroInfoArray = []; // Start of Round effects (ex: stun from debuff)
+  let stageOneInfoArray = []; // User Attacking Monsters
+  let stageTwoInfoArray = []; // Monsters attack the user
+  let stageThreeInfoArray = []; // Retaliation effects
+  let stageFourInfoArray = []; // Apply Debuff damage
+  let stageFiveInfoArray = []; // Count Down Debuffs
+  let stageSixInfoArray = []; // Stage 6 is a placeholder for after round effects
+  let stageSevenInfoArray = []; // when battle is complete effects
   let userState = JSON.parse(JSON.stringify(userCurrentCharacter));
 
   const allBattleMonsters = await db.BattleMonster.findAll({
@@ -103,15 +103,14 @@ export const processBattleMove = async (
 
   // let battleMonsterState = JSON.parse(JSON.stringify(battle.BattleMonsters));
   let battleMonsterState = JSON.parse(JSON.stringify(allBattleMonsters));
-
-  // TODO: APPLY ALL ENEMY DEBUFFS / ALSO DETERMINE IF UNIT IS STUNNED FROM DEBUFFS
-
   userState.hp = hp;
   userState.mp = mp;
   const initialUserState = JSON.parse(JSON.stringify(userState));
-  console.log(initialUserState.hp);
-  console.log('initialUserStateStartProcessor');
   const selectedMonster = battleMonsterState.find((element) => element.id === currentSelectedMonster.id);
+
+  // TODO: APPLY ALL ENEMY DEBUFFS / ALSO DETERMINE IF UNIT IS STUNNED FROM DEBUFFS
+  console.log('Stage #0 Processing');
+  stageZeroInfoArray = [];
 
   console.log('Stage #1 Processing');
   // Stage One
@@ -284,9 +283,22 @@ export const processBattleMove = async (
     t,
   );
 
-  // Stage 6 (Battle Complete effects) (Mana/Health REGEN)
+  // Stage 6 After Round User Effects (example: userHeal each Round)
+  console.log('Stage 6 is a placeholder');
+  stageSixInfoArray = [];
 
-  // STAGE 7 (Unrecorded for rendering)
+  // Stage 7 (Battle Complete effects) (Mana/Health REGEN)
+  stageSevenInfoArray = [];
+  const isBattleMonsterAliveFinal = battleMonsterState.filter((obj) => obj.currentHp > 0);
+  if (!isBattleMonsterAliveFinal || isBattleMonsterAliveFinal.length < 1) {
+    await battle.update({
+      complete: true,
+    }, {
+      lock: t.LOCK.UPDATE,
+      transaction: t,
+    });
+  }
+  // STAGE 8 (Unrecorded for rendering)
   // TODO: TEST IF NEW VALUE SURPASSES MAX HEALTH / MANA
   await userCurrentCharacter.condition.update({
     life: userCurrentCharacter.condition.life - (totalDamageByMonsters - Math.round((totalDamageByMonsters * (userState.hp.totalLifeBonus / 100)))),
@@ -303,18 +315,6 @@ export const processBattleMove = async (
       where: {
         id: updateThisMonster.id,
       },
-      lock: t.LOCK.UPDATE,
-      transaction: t,
-    });
-  }
-
-  // Final Check if Any Monsters are alive if not tag battle as complete
-  const isBattleMonsterAliveFinal = battleMonsterState.filter((obj) => obj.currentHp > 0);
-  // If there are no monsters left, tag battle as complete
-  if (!isBattleMonsterAliveFinal || isBattleMonsterAliveFinal.length < 1) {
-    await battle.update({
-      complete: true,
-    }, {
       lock: t.LOCK.UPDATE,
       transaction: t,
     });
@@ -368,11 +368,14 @@ export const processBattleMove = async (
     userCurrentCharacter,
     initialUserState,
     updatedBattle,
+    stageZeroInfoArray,
     stageOneInfoArray,
     stageTwoInfoArray,
     stageThreeInfoArray,
     stageFourInfoArray,
     stageFiveInfoArray,
+    stageSixInfoArray,
+    stageSevenInfoArray,
     sumExp,
   ];
 };

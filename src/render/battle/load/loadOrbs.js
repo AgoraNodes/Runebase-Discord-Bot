@@ -13,11 +13,15 @@ export const loadOrbs = async (
   stageThreeInfoArray,
   stageFourInfoArray,
   stageFiveInfoArray,
+  stageSixInfoArray,
+  stageSevenInfoArray,
   orbsStartingPositionStageOne,
   orbsStartingPositionStageTwo,
   orbsStartingPositionStageThree,
   orbsStartingPositionStageFour,
   orbsStartingPositionStageFive,
+  orbsStartingPositionStageSix,
+  orbsStartingPositionStageSeven,
 ) => {
   const promises = [];
   const bufferPromises = [];
@@ -183,6 +187,62 @@ export const loadOrbs = async (
             info.userState.hp.max,
           ).then((buffer) => {
             hpOrbsBuffer[index + orbsStartingPositionStageFive] = buffer;
+            resolve();
+          });
+        }),
+      );
+    }
+  }
+
+  if (stageSixInfoArray) {
+    for (const [index, info] of stageSixInfoArray.entries()) {
+      bufferPromises.push(
+        new Promise((resolve, reject) => {
+          renderMpOrb(
+            info.userState.mp.current,
+            info.userState.mp.max,
+          ).then((buffer) => {
+            mpOrbsBuffer[index + orbsStartingPositionStageSix] = buffer;
+            resolve();
+          });
+        }),
+      );
+
+      bufferPromises.push(
+        new Promise((resolve, reject) => {
+          renderHpOrb(
+            info.userState.hp.current,
+            info.userState.hp.max,
+          ).then((buffer) => {
+            hpOrbsBuffer[index + orbsStartingPositionStageSix] = buffer;
+            resolve();
+          });
+        }),
+      );
+    }
+  }
+
+  if (stageSevenInfoArray) {
+    for (const [index, info] of stageSevenInfoArray.entries()) {
+      bufferPromises.push(
+        new Promise((resolve, reject) => {
+          renderMpOrb(
+            info.userState.mp.current,
+            info.userState.mp.max,
+          ).then((buffer) => {
+            mpOrbsBuffer[index + orbsStartingPositionStageSeven] = buffer;
+            resolve();
+          });
+        }),
+      );
+
+      bufferPromises.push(
+        new Promise((resolve, reject) => {
+          renderHpOrb(
+            info.userState.hp.current,
+            info.userState.hp.max,
+          ).then((buffer) => {
+            hpOrbsBuffer[index + orbsStartingPositionStageSeven] = buffer;
             resolve();
           });
         }),
