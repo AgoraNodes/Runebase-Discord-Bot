@@ -179,6 +179,34 @@ export const calculateBarbSkillDamage = (
     };
   }
 
+  if (skillToCalculate.skill.name === "Battle Cry") {
+    const damageBonus = 40 + ((skillToCalculate.points - 1) * 5);
+    const buffRounds = 2 + ((skillToCalculate.points - 1) * 0.2);
+    newAttack = {
+      name: skillToCalculate.skill.name,
+      attackType: 'Magic',
+      damageBonus: Math.round(damageBonus),
+      cost: 2,
+      ranged: true,
+      buff: true,
+      rounds: Math.round(buffRounds),
+    };
+  }
+
+  if (skillToCalculate.skill.name === "Battle Orders") {
+    const lifeBonus = 40 + ((skillToCalculate.points - 1) * 5);
+    const buffRounds = 2 + ((skillToCalculate.points - 1) * 0.2);
+    newAttack = {
+      name: skillToCalculate.skill.name,
+      attackType: 'Magic',
+      lifeBonus: Math.round(lifeBonus),
+      cost: 2,
+      ranged: true,
+      buff: true,
+      rounds: Math.round(buffRounds),
+    };
+  }
+
   if (skillToCalculate.skill.name === "Battle Command") {
     const newMinDamage = (newAttack.min / 100) * (10 + ((skillToCalculate.points - 1) * 5));
     const newMaxDamage = (newAttack.max / 100) * (10 + ((skillToCalculate.points - 1) * 5));

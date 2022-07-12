@@ -42,6 +42,7 @@ export const calculateCharacterStats = async (
   let CR = 0;
   let block = 0;
   let defense = 0;
+  let totalLifeBonus = 0;
 
   const strength = currentCharacter.user.currentClass.strength + currentCharacter.stats.strength;
   const dexterity = currentCharacter.user.currentClass.dexterity + currentCharacter.stats.dexterity;
@@ -147,6 +148,7 @@ export const calculateCharacterStats = async (
     regularAttack,
     currentHp,
     maxHp,
+    totalLifeBonus,
   ] = await calculateBuffs(
     currentCharacter,
     defense,
@@ -199,6 +201,7 @@ export const calculateCharacterStats = async (
     hp: {
       current: currentHp,
       max: maxHp,
+      totalLifeBonus,
     },
     mp: {
       current: currentMp,

@@ -4,6 +4,7 @@ import db from '../../../models';
 
 const userApplyDebuffSingle = async (
   userState,
+  battleMonsterState,
   stageOneInfoArray,
   battle,
   useAttack,
@@ -39,6 +40,7 @@ const userApplyDebuffSingle = async (
     updatedMonster.debuffs.unshift(
       JSON.parse(JSON.stringify(createDebuff)),
     );
+
     battleLogs.unshift({
       log: `${userState.user.username} used ${useAttack.name} on ${selectedMonster.monster.name}`,
     });
@@ -53,17 +55,20 @@ const userApplyDebuffSingle = async (
 
   userState.mp.current -= useAttack.cost;
 
+  const monstersToUpdate = [
+    {
+      ...updatedMonster,
+      userDamage: useAttack.name,
+      // currentMonsterHp: selectedMonster.currentHp - randomAttackDamage,
+      // died: !(updatedMonster.currentHp > 0),
+      attackType: useAttack.name,
+    },
+  ];
+  battleMonsterState = battleMonsterState.map((obj) => monstersToUpdate.find((o) => o.id === obj.id) || obj);
+
   stageOneInfoArray.push({
     monsterId: updatedMonster.id,
-    monstersToUpdate: [
-      {
-        ...updatedMonster,
-        userDamage: useAttack.name,
-        // currentMonsterHp: selectedMonster.currentHp - randomAttackDamage,
-        // died: !(updatedMonster.currentHp > 0),
-        attackType: useAttack.name,
-      },
-    ],
+    monstersToUpdate,
     useAttack,
     battleLogs,
     userState: JSON.parse(JSON.stringify(userState)),
@@ -72,6 +77,7 @@ const userApplyDebuffSingle = async (
   return [
     stageOneInfoArray,
     userState,
+    battleMonsterState,
   ];
 };
 

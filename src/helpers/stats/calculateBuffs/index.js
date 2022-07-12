@@ -9,16 +9,17 @@ const calculateBuffs = async (
   let newCurrentHp = currentHp;
   let newMaxHp = maxHp;
   let newDefense = defense;
+  let totalLifeBonus = 0;
   const newRegularAttack = regularAttack;
   console.log(currentCharacter);
   if (currentCharacter.buffs && currentCharacter.buffs.length > 0) {
     for (const buff of currentCharacter.buffs) {
       if (buff.damageBonus) {
-        newRegularAttack.min += ((newRegularAttack.min / 100) * buff.damageBonus);
-        newRegularAttack.max += ((newRegularAttack.max / 100) * buff.damageBonus);
+        newRegularAttack.min += Math.round(((newRegularAttack.min / 100) * buff.damageBonus));
+        newRegularAttack.max += Math.round(((newRegularAttack.max / 100) * buff.damageBonus));
       }
       if (buff.attackBonus) {
-        newRegularAttack.ar += ((newRegularAttack.ar / 100) * buff.attackBonus);
+        newRegularAttack.ar += Math.round(((newRegularAttack.ar / 100) * buff.attackBonus));
       }
       if (buff.parryBonus) {
         newRegularAttack.parry += buff.parryBonus;
@@ -27,11 +28,12 @@ const calculateBuffs = async (
         newRegularAttack.crit += buff.critBonus;
       }
       if (buff.defenseBonus) {
-        newDefense += ((newDefense / 100) * buff.newDefense);
+        newDefense += Math.round(((newDefense / 100) * buff.newDefense));
       }
       if (buff.lifeBonus) {
-        newCurrentHp += ((newCurrentHp / 100) * buff.lifeBonus);
-        newMaxHp += ((newMaxHp / 100) * buff.lifeBonus);
+        newCurrentHp += Math.round(((newCurrentHp / 100) * buff.lifeBonus));
+        newMaxHp += Math.round(((newMaxHp / 100) * buff.lifeBonus));
+        totalLifeBonus += buff.lifeBonus;
       }
     }
   }
@@ -41,6 +43,7 @@ const calculateBuffs = async (
     newRegularAttack, // Regular Attack
     newCurrentHp,
     newMaxHp,
+    totalLifeBonus,
   ];
 };
 

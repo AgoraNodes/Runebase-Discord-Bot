@@ -5,84 +5,89 @@ import { randomIntFromInterval } from "../../utils";
 import db from '../../../models';
 
 const userApplyRetliation = async (
-  userCurrentCharacter,
+  userState,
+  battleMonsterState,
   battle,
   retaliationArray,
   stageThreeInfoArray,
-  allRemainingBattleMonster,
-  attackUsed,
+  useAttack,
   lvl,
   t,
 ) => {
   for await (const retaliation of retaliationArray) {
     let battleLogs = [];
-    let updatedMonstersArray = [];
+    let monstersToUpdate = [];
     let attackFailed = true;
     let individualBattleObject;
-    const monster = allRemainingBattleMonster.find((x) => x.id === retaliation.monsterId);
-    if (monster) {
+    const monster = battleMonsterState.find((x) => x.id === retaliation.monsterId);
+    if (monster && monster.currentHp > 0) {
       const updatedMonster = JSON.parse(JSON.stringify(monster));
       [
         battleLogs,
-        updatedMonstersArray,
+        monstersToUpdate,
         attackFailed,
       ] = await isFailedAttack(
-        userCurrentCharacter,
+        userState,
         lvl,
-        attackUsed,
+        useAttack,
         battle,
         battleLogs,
         updatedMonster,
-        updatedMonstersArray,
+        monstersToUpdate,
         t,
       );
       if (!attackFailed) {
-        const randomAttackDamage = randomIntFromInterval(attackUsed.min, attackUsed.max); // Get Random Monster Damage
+        const randomAttackDamage = randomIntFromInterval(useAttack.min, useAttack.max); // Get Random Monster Damage
 
         // Apply Damage to monster
-        await monster.decrement('currentHp', {
-          by: randomAttackDamage,
-          lock: t.LOCK.UPDATE,
-          transaction: t,
-        });
+        // await monster.decrement('currentHp', {
+        //   by: randomAttackDamage,
+        //   lock: t.LOCK.UPDATE,
+        //   transaction: t,
+        // });
         // Generate Battle log
-        await db.battleLog.create({
+        const createBattleLog = await db.battleLog.create({
           battleId: battle.id,
-          log: `${userCurrentCharacter.user.username} used ${attackUsed.name} on ${updatedMonster.monster.name} for ${randomAttackDamage} damage`,
+          log: `${userState.user.username} used ${useAttack.name} on ${updatedMonster.monster.name} for ${randomAttackDamage} damage`,
         }, {
           lock: t.LOCK.UPDATE,
           transaction: t,
         });
-        battleLogs.unshift({
-          log: `${userCurrentCharacter.user.username} used ${attackUsed.name} on ${updatedMonster.monster.name} for ${randomAttackDamage} damage`,
-        });
+        battleLogs.unshift(JSON.parse(JSON.stringify(createBattleLog)));
         if (updatedMonster.currentHp < 1) {
-          battleLogs.unshift({
-            log: `${userCurrentCharacter.user.username} killed ${updatedMonster.monster.name}`,
+          const createKillBattleLog = await db.battleLog.create({
+            battleId: battle.id,
+            log: `${userState.user.username} killed ${updatedMonster.monster.name}`,
+          }, {
+            lock: t.LOCK.UPDATE,
+            transaction: t,
           });
+          battleLogs.unshift(JSON.parse(JSON.stringify(createKillBattleLog)));
         }
 
         updatedMonster.currentHp -= randomAttackDamage;
-        updatedMonstersArray.push({
+        monstersToUpdate.push({
           ...updatedMonster,
           userDamage: randomAttackDamage,
-          // currentMonsterHp: selectedMonster.currentHp - randomAttackDamage,
-          // died: !(updatedMonster.currentHp > 0),
-          attackType: attackUsed.name,
+          attackType: useAttack.name,
         });
       }
+      battleMonsterState = battleMonsterState.map((obj) => monstersToUpdate.find((o) => o.id === obj.id) || obj);
+
       individualBattleObject = {
         monsterId: updatedMonster.id,
-        monstersToUpdate: updatedMonstersArray,
+        monstersToUpdate,
+        userState: JSON.parse(JSON.stringify(userState)),
         battleLogs,
-        currentUserMp: userCurrentCharacter.condition.mana,
-        ranged: false,
+        useAttack,
       };
       stageThreeInfoArray.push(individualBattleObject);
     }
   }
   return [
     stageThreeInfoArray,
+    userState,
+    battleMonsterState,
   ];
 };
 export default userApplyRetliation;

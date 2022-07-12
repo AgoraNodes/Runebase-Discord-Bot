@@ -65,102 +65,15 @@ export const processBattleMove = async (
   let stageTwoInfoArray = [];
   let stageThreeInfoArray = [];
   let stageFourInfoArray = [];
+  let stageFiveInfoArray = [];
   let userState = JSON.parse(JSON.stringify(userCurrentCharacter));
-  userState.hp = hp;
-  userState.mp = mp;
-  const initialUserState = JSON.parse(JSON.stringify(userState));
-  console.log(initialUserState.hp);
-  console.log('initialUserStateStartProcessor');
-  const selectedMonster = battle.BattleMonsters.find((element) => element.id === currentSelectedMonster.id);
 
-  console.log('Stage #1 Processing');
-  // Stage One
-  if (
-    useAttack.buff
-    && !useAttack.aoe
-  ) {
-    [
-      stageOneInfoArray,
-      userState,
-    ] = await userApplyBuffSingle(
-      userCurrentCharacter,
-      userState, // Current User State
-      stageOneInfoArray,
-      battle,
-      useAttack,
-      selectedMonster,
-      t,
-    );
-  } else if (
-    useAttack.debuff
-    && useAttack.aoe
-  ) {
-    [
-      stageOneInfoArray,
-      userState,
-    ] = await userApplyDebuffAoE(
-      userState, // Current User State
-      stageOneInfoArray,
-      battle,
-      useAttack,
-      selectedMonster,
-      t,
-    );
-  } else if (
-    useAttack.debuff
-    && !useAttack.aoe
-  ) {
-    [
-      stageOneInfoArray,
-      userState,
-    ] = await userApplyDebuffSingle(
-      userState, // Current User State
-      stageOneInfoArray,
-      battle,
-      useAttack,
-      selectedMonster,
-      t,
-    );
-  } else if (
-    !useAttack.debuff
-    && useAttack.aoe
-  ) {
-    [
-      stageOneInfoArray,
-      userState,
-    ] = await userApplyAttackAoE(
-      userState, // Current User State
-      lvl, // Users Level
-      stageOneInfoArray, // Array to fill with battle info
-      battle, // battle database record
-      useAttack, // Which attack is used by user
-      selectedMonster, // which Monster do we have selected?
-      t, // database transaction
-    );
-  } else {
-    [
-      stageOneInfoArray,
-      userState,
-    ] = await userApplyAttackSingle(
-      userState,
-      lvl, // Users Level
-      stageOneInfoArray, // Array to fill with battle info
-      battle, // battle database record
-      useAttack, // Which attack is used by user
-      selectedMonster, // which Monster do we have selected?
-      t, // database transaction
-    );
-  }
-
-  // Stage Two
-  console.log('Stage #2 Processing');
-  // Process Monster Moves/Attacks
-  const allRemainingBattleMonster = await db.BattleMonster.findAll({
+  const allBattleMonsters = await db.BattleMonster.findAll({
     where: {
       battleId: battle.id,
-      currentHp: {
-        [Op.gt]: 0,
-      },
+      // currentHp: {
+      //   [Op.gt]: 0,
+      // },
     },
     include: [
       {
@@ -188,9 +101,112 @@ export const processBattleMove = async (
     transaction: t,
   });
 
-  console.log('123');
+  // let battleMonsterState = JSON.parse(JSON.stringify(battle.BattleMonsters));
+  let battleMonsterState = JSON.parse(JSON.stringify(allBattleMonsters));
+
+  // TODO: APPLY ALL ENEMY DEBUFFS / ALSO DETERMINE IF UNIT IS STUNNED FROM DEBUFFS
+
+  userState.hp = hp;
+  userState.mp = mp;
+  const initialUserState = JSON.parse(JSON.stringify(userState));
+  console.log(initialUserState.hp);
+  console.log('initialUserStateStartProcessor');
+  const selectedMonster = battleMonsterState.find((element) => element.id === currentSelectedMonster.id);
+
+  console.log('Stage #1 Processing');
+  // Stage One
+  if (
+    useAttack.buff
+    && !useAttack.aoe
+  ) {
+    [
+      stageOneInfoArray,
+      userState,
+    ] = await userApplyBuffSingle(
+      userCurrentCharacter,
+      userState, // Current User State
+      stageOneInfoArray,
+      battle,
+      useAttack,
+      selectedMonster,
+      t,
+    );
+  } else if (
+    useAttack.debuff
+    && useAttack.aoe
+  ) {
+    [
+      stageOneInfoArray,
+      userState,
+      battleMonsterState,
+    ] = await userApplyDebuffAoE(
+      userState, // Current User State
+      battleMonsterState,
+      stageOneInfoArray,
+      battle,
+      useAttack,
+      selectedMonster,
+      t,
+    );
+  } else if (
+    useAttack.debuff
+    && !useAttack.aoe
+  ) {
+    [
+      stageOneInfoArray,
+      userState,
+      battleMonsterState,
+    ] = await userApplyDebuffSingle(
+      userState, // Current User State
+      battleMonsterState,
+      stageOneInfoArray,
+      battle,
+      useAttack,
+      selectedMonster,
+      t,
+    );
+  } else if (
+    !useAttack.debuff
+    && useAttack.aoe
+  ) {
+    [
+      stageOneInfoArray,
+      userState,
+      battleMonsterState,
+    ] = await userApplyAttackAoE(
+      userState, // Current User State
+      battleMonsterState,
+      lvl, // Users Level
+      stageOneInfoArray, // Array to fill with battle info
+      battle, // battle database record
+      useAttack, // Which attack is used by user
+      selectedMonster, // which Monster do we have selected?
+      t, // database transaction
+    );
+  } else {
+    [
+      stageOneInfoArray,
+      userState,
+      battleMonsterState,
+    ] = await userApplyAttackSingle(
+      userState,
+      battleMonsterState,
+      lvl, // Users Level
+      stageOneInfoArray, // Array to fill with battle info
+      battle, // battle database record
+      useAttack, // Which attack is used by user
+      selectedMonster, // which Monster do we have selected?
+      t, // database transaction
+    );
+  }
+
+  // Stage Two
+  console.log('Stage #2 Processing');
+  // Process Monster Moves/Attacks
+  // battleMonsterState = battleMonsterState.filter((obj) => obj.currentHp > 0);
+  const isBattleMonsterAlive = battleMonsterState.filter((obj) => obj.currentHp > 0);
   // If there are no monsters left, tag battle as complete
-  if (!allRemainingBattleMonster || allRemainingBattleMonster.length < 1) {
+  if (!isBattleMonsterAlive || isBattleMonsterAlive.length < 1) {
     await battle.update({
       complete: true,
     }, {
@@ -200,21 +216,23 @@ export const processBattleMove = async (
   }
   let totalDamageByMonsters = 0;
 
-  if (allRemainingBattleMonster) {
+  if (battleMonsterState) {
     [
       totalDamageByMonsters,
       userState,
+      battleMonsterState,
       stageTwoInfoArray,
       retaliationArray,
     ] = await monstersApplyAttack(
       userState,
+      battleMonsterState,
       lvl, // Users Level
       block, // users Block
       defense, // Users defense
       regularAttack, // Users Regular Attack
       stageTwoInfoArray, // Array to fill with battle info
       battle, // battle database record
-      allRemainingBattleMonster, // Which attack is used by user
+      // allRemainingBattleMonster, // All the remaining Monsters
       t, // database transaction
     );
   }
@@ -224,65 +242,83 @@ export const processBattleMove = async (
   if (retaliationArray.length > 0) {
     [
       stageThreeInfoArray,
+      userState,
+      battleMonsterState,
     ] = await userApplyRetliation(
-      userCurrentCharacter,
+      userState,
+      battleMonsterState,
       battle,
       retaliationArray,
       stageThreeInfoArray,
-      allRemainingBattleMonster,
       kick,
       lvl,
       t,
     );
   }
 
-  // Find all remaining Debuffs
-  const findAllMonsterToCountDownDebuff = await db.BattleMonster.findAll({
-    where: {
-      battleId: battle.id,
-    },
-    include: [
-      {
-        model: db.monster,
-        as: 'monster',
-      },
-      {
-        model: db.debuff,
-        as: 'debuffs',
-      },
-    ],
-    lock: t.LOCK.UPDATE,
-    transaction: t,
-  });
-
   console.log('Stage #4 Processing');
   // Stage Four
   // Apply debuff damage
-  if (findAllMonsterToCountDownDebuff.length > 0) {
-    [
-      stageFourInfoArray,
-    ] = await userApplyDebuffDamage(
-      userCurrentCharacter,
-      battle,
-      stageFourInfoArray,
-      findAllMonsterToCountDownDebuff,
-      t,
-    );
-  }
-
-  await countDownBuffsAndDebuffs(
-    findAllMonsterToCountDownDebuff,
-    userCurrentCharacter,
+  [
+    stageFourInfoArray,
+    battleMonsterState,
+    userState,
+  ] = await userApplyDebuffDamage(
+    userState,
+    battleMonsterState,
+    battle,
+    stageFourInfoArray,
     t,
   );
 
+  // Stage 5
+  // Count Down buffs, debuffs / after round effects (heal?)
+  [
+    stageFiveInfoArray,
+    userState,
+    battleMonsterState,
+  ] = await countDownBuffsAndDebuffs(
+    stageFiveInfoArray,
+    userState,
+    battleMonsterState,
+    t,
+  );
+
+  // Stage 6 (Battle Complete effects) (Mana/Health REGEN)
+
+  // STAGE 7 (Unrecorded for rendering)
+  // TODO: TEST IF NEW VALUE SURPASSES MAX HEALTH / MANA
   await userCurrentCharacter.condition.update({
-    life: userCurrentCharacter.condition.life - totalDamageByMonsters,
+    life: userCurrentCharacter.condition.life - (totalDamageByMonsters - Math.round((totalDamageByMonsters * (userState.hp.totalLifeBonus / 100)))),
     mana: userCurrentCharacter.condition.mana - useAttack.cost,
   }, {
     lock: t.LOCK.UPDATE,
     transaction: t,
   });
+
+  for (const updateThisMonster of battleMonsterState) {
+    await db.BattleMonster.update({
+      currentHp: updateThisMonster.currentHp,
+    }, {
+      where: {
+        id: updateThisMonster.id,
+      },
+      lock: t.LOCK.UPDATE,
+      transaction: t,
+    });
+  }
+
+  // Final Check if Any Monsters are alive if not tag battle as complete
+  const isBattleMonsterAliveFinal = battleMonsterState.filter((obj) => obj.currentHp > 0);
+  // If there are no monsters left, tag battle as complete
+  if (!isBattleMonsterAliveFinal || isBattleMonsterAliveFinal.length < 1) {
+    await battle.update({
+      complete: true,
+    }, {
+      lock: t.LOCK.UPDATE,
+      transaction: t,
+    });
+  }
 
   const updatedBattle = await db.battle.findOne({
     where: {
@@ -336,6 +372,7 @@ export const processBattleMove = async (
     stageTwoInfoArray,
     stageThreeInfoArray,
     stageFourInfoArray,
+    stageFiveInfoArray,
     sumExp,
   ];
 };

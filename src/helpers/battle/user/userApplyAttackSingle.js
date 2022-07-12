@@ -7,6 +7,7 @@ import calculateCritDamage from '../utils/calculateCritDamage';
 
 const userApplyAttackSingle = async (
   userState, // Current User State
+  battleMonsterState,
   lvl, // Users Level
   stageOneInfoArray, // Array to fill with battle info
   battle, // battle database record
@@ -15,7 +16,7 @@ const userApplyAttackSingle = async (
   t, // database transaction
 ) => {
   let battleLogs = [];
-  let updatedMonstersArray = [];
+  let monstersToUpdate = [];
   let attackFailed = true;
   // APPLY USER Single MONSTER attack
   const updatedMonster = JSON.parse(JSON.stringify(selectedMonster));
@@ -31,7 +32,7 @@ const userApplyAttackSingle = async (
 
   [
     battleLogs,
-    updatedMonstersArray,
+    monstersToUpdate,
     attackFailed,
   ] = await isFailedAttack(
     userState,
@@ -40,7 +41,7 @@ const userApplyAttackSingle = async (
     battle,
     battleLogs,
     updatedMonster,
-    updatedMonstersArray,
+    monstersToUpdate,
     t,
   );
 
@@ -53,11 +54,6 @@ const userApplyAttackSingle = async (
 
   if (!attackFailed) {
     // Apply Damage to monster
-    await selectedMonster.decrement('currentHp', {
-      by: randomAttackDamage,
-      lock: t.LOCK.UPDATE,
-      transaction: t,
-    });
     updatedMonster.currentHp -= randomAttackDamage;
 
     // Generate Battle log
@@ -80,22 +76,24 @@ const userApplyAttackSingle = async (
       });
       battleLogs.unshift(JSON.parse(JSON.stringify(createKillLog)));
     }
-    updatedMonstersArray.push(
+    monstersToUpdate.push(
       {
         ...updatedMonster,
         userDamage: randomAttackDamage,
-        // currentMonsterHp: selectedMonster.currentHp - randomAttackDamage,
-        // died: !(updatedMonster.currentHp > 0),
         attackType: useAttack.name,
       },
     );
+    console.log(updatedMonster);
+    console.log('updatedMonster');
   }
+
+  battleMonsterState = battleMonsterState.map((obj) => monstersToUpdate.find((o) => o.id === obj.id) || obj);
 
   userState.mp.current -= useAttack.cost;
 
   stageOneInfoArray.push({
     monsterId: updatedMonster.id,
-    monstersToUpdate: updatedMonstersArray,
+    monstersToUpdate,
     useAttack,
     battleLogs,
     userState: JSON.parse(JSON.stringify(userState)),
@@ -104,6 +102,7 @@ const userApplyAttackSingle = async (
   return [
     stageOneInfoArray,
     userState,
+    battleMonsterState,
   ];
 };
 

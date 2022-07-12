@@ -52,8 +52,8 @@ export const generateLoot = async (
       item = await generateRandomMagicItem(level);
     }
   }
-  console.log(pickedQuality);
-  console.log('picked quality');
-  console.log(item);
+  // console.log(pickedQuality);
+  // console.log('picked quality');
+  // console.log(item);
   return item;
 };

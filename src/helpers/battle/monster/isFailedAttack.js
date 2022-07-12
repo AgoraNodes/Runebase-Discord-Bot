@@ -88,7 +88,7 @@ const isFailedAttack = async (
       attackFailed = true;
     }
   }
-
+  console.log('after isfailedAttack #2');
   return [
     individualBattleObject,
     attackFailed,

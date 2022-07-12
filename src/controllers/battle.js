@@ -145,6 +145,18 @@ export const discordBattle = async (
           {
             model: db.monster,
             as: 'monster',
+            include: [
+              {
+                model: db.monsterAttack,
+                as: 'monsterAttacks',
+                include: [
+                  {
+                    model: db.damageType,
+                    as: 'damageType',
+                  },
+                ],
+              },
+            ],
           },
         ],
       },
@@ -160,7 +172,7 @@ export const discordBattle = async (
         name: 'Zombie',
       },
     });
-    const randomAmountOfMobs = randomIntFromInterval(1, 4);
+    const randomAmountOfMobs = randomIntFromInterval(3, 4);
     const mobPromises = [];
     for (let i = 0; i < randomAmountOfMobs; i += 1) {
       const randomMonsterHp = randomIntFromInterval(monster.minHp, monster.maxHp);
@@ -203,6 +215,18 @@ export const discordBattle = async (
             {
               model: db.monster,
               as: 'monster',
+              include: [
+                {
+                  model: db.monsterAttack,
+                  as: 'monsterAttacks',
+                  include: [
+                    {
+                      model: db.damageType,
+                      as: 'damageType',
+                    },
+                  ],
+                },
+              ],
             },
           ],
         },
@@ -611,6 +635,12 @@ ${newLootC.length > 0 ? `__found ${newLootC.length} ${newLootC.length === 1 ? `i
           myInitialUserState.hp = hp;
           myInitialUserState.mp = mp;
 
+          userCurrentCharacter = await fetchUserCurrentCharacter(
+            userId, // user discord id
+            false, // Need inventory?
+            t,
+          );
+
           await interaction.editReply({
             files: [
               new MessageAttachment(
@@ -718,6 +748,7 @@ ${newLootC.length > 0 ? `__found ${newLootC.length} ${newLootC.length === 1 ? `i
         let stageTwoInfoArray;
         let stageThreeInfoArray;
         let stageFourInfoArray;
+        let stageFiveInfoArray;
         let sumExp = 0;
 
         const previousBattleState = JSON.parse(JSON.stringify(battle));
@@ -819,6 +850,7 @@ ${newLootC.length > 0 ? `__found ${newLootC.length} ${newLootC.length === 1 ? `i
               stageTwoInfoArray,
               stageThreeInfoArray,
               stageFourInfoArray,
+              stageFiveInfoArray,
               sumExp,
             ] = await processBattleMove(
               userCurrentCharacter,
@@ -830,6 +862,7 @@ ${newLootC.length > 0 ? `__found ${newLootC.length} ${newLootC.length === 1 ? `i
               t,
             );
             if (battle.complete) {
+              console.log('battle is complete 1');
               currentSelectedMonster = null;
               const newExp = await gainExp(
                 discordClient,
@@ -851,6 +884,7 @@ ${newLootC.length > 0 ? `__found ${newLootC.length} ${newLootC.length === 1 ? `i
             }
           }
           if (battle.complete) {
+            console.log('before final renderbattleGif complete');
             await interaction.editReply({
               content: `<@${userCurrentCharacter.user.user_id}>`,
               embeds: [],
@@ -865,6 +899,7 @@ ${newLootC.length > 0 ? `__found ${newLootC.length} ${newLootC.length === 1 ? `i
                     stageTwoInfoArray,
                     stageThreeInfoArray,
                     stageFourInfoArray,
+                    stageFiveInfoArray,
                   ),
                   'battle.gif',
                 ),
@@ -901,6 +936,7 @@ ${newLootC.length > 0 ? `__found ${newLootC.length} ${newLootC.length === 1 ? `i
                     stageTwoInfoArray,
                     stageThreeInfoArray,
                     stageFourInfoArray,
+                    stageFiveInfoArray,
                   ),
                   'battle.gif',
                 ),

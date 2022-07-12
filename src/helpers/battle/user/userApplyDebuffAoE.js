@@ -4,6 +4,7 @@ import db from '../../../models';
 
 const userApplyDebuffAoE = async (
   userState,
+  battleMonsterState,
   stageOneInfoArray,
   battle,
   useAttack,
@@ -11,14 +12,17 @@ const userApplyDebuffAoE = async (
   t,
 ) => {
   const battleLogs = [];
-  const updatedMonstersArray = [];
+  const monstersToUpdate = [];
   // Apply ALL AOE Debuffs here
-  for (const battleMonster of battle.BattleMonsters) {
+  for (const battleMonster of battleMonsterState) {
     const BattleMonsterToUpdate = JSON.parse(JSON.stringify(battleMonster));
     if (battleMonster.currentHp > 0) {
       const existingDebuff = battleMonster.debuffs.find((x) => x.name === useAttack.name);
       if (existingDebuff) {
-        await existingDebuff.destroy({
+        await db.debuff.destroy({
+          where: {
+            id: existingDebuff.id,
+          },
           lock: t.LOCK.UPDATE,
           transaction: t,
         });
@@ -41,7 +45,9 @@ const userApplyDebuffAoE = async (
       BattleMonsterToUpdate.debuffs.unshift(
         JSON.parse(JSON.stringify(createDebuff)),
       );
-      updatedMonstersArray.push({
+      console.log(BattleMonsterToUpdate);
+      battleMonsterState = battleMonsterState.map((obj) => [BattleMonsterToUpdate].find((o) => o.id === obj.id) || obj);
+      monstersToUpdate.push({
         ...BattleMonsterToUpdate,
         userDamage: useAttack.name,
         // currentMonsterHp: selectedMonster.currentHp - 0,
@@ -63,7 +69,7 @@ const userApplyDebuffAoE = async (
 
   stageOneInfoArray.push({
     monsterId: selectedMonster.id,
-    monstersToUpdate: updatedMonstersArray,
+    monstersToUpdate,
     useAttack,
     battleLogs,
     userState: JSON.parse(JSON.stringify(userState)),
@@ -72,6 +78,7 @@ const userApplyDebuffAoE = async (
   return [
     stageOneInfoArray,
     userState,
+    battleMonsterState,
   ];
 };
 
