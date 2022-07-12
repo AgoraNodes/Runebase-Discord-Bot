@@ -10,6 +10,7 @@ const userApplyDebuffAoE = async (
   battle,
   useAttack,
   selectedMonsterId,
+  saveToDatabasePromises,
   t,
 ) => {
   const battleLogs = [];
@@ -48,21 +49,30 @@ const userApplyDebuffAoE = async (
       BattleMonsterToUpdate.debuffs.unshift(
         JSON.parse(JSON.stringify(createDebuff)),
       );
-      console.log(BattleMonsterToUpdate);
+
       battleMonsterState = battleMonsterState.map((obj) => [BattleMonsterToUpdate].find((o) => o.id === obj.id) || obj);
       monstersToUpdate.push({
         ...BattleMonsterToUpdate,
         userDamage: useAttack.name,
         attackType: useAttack.name,
       });
-      const createBattleLog = await db.battleLog.create({
-        battleId: battle.id,
-        log: `${userState.user.username} used ${useAttack.name} on ${selectedMonster.monster.name}`,
-      }, {
-        lock: t.LOCK.UPDATE,
-        transaction: t,
+
+      // Generate Battle Log
+      const log = `${userState.user.username} used ${useAttack.name} on ${selectedMonster.monster.name}`;
+      saveToDatabasePromises.push(
+        new Promise((resolve, reject) => {
+          db.battleLog.create({
+            battleId: battle.id,
+            log,
+          }, {
+            lock: t.LOCK.UPDATE,
+            transaction: t,
+          }).then(resolve());
+        }),
+      );
+      battleLogs.unshift({
+        log,
       });
-      battleLogs.unshift(JSON.parse(JSON.stringify(createBattleLog)));
     }
   }
 
@@ -80,6 +90,7 @@ const userApplyDebuffAoE = async (
     stageOneInfoArray,
     userState,
     battleMonsterState,
+    saveToDatabasePromises,
   ];
 };
 
