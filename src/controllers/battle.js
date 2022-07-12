@@ -744,11 +744,14 @@ ${newLootC.length > 0 ? `__found ${newLootC.length} ${newLootC.length === 1 ? `i
       }, async (t) => {
         let attackUsed;
         let initialUserState;
+        let stageZeroInfoArray;
         let stageOneInfoArray;
         let stageTwoInfoArray;
         let stageThreeInfoArray;
         let stageFourInfoArray;
         let stageFiveInfoArray;
+        let stageSixInfoArray;
+        let stageSevenInfoArray;
         let sumExp = 0;
 
         const previousBattleState = JSON.parse(JSON.stringify(battle));
@@ -846,11 +849,14 @@ ${newLootC.length > 0 ? `__found ${newLootC.length} ${newLootC.length === 1 ? `i
               userCurrentCharacter,
               initialUserState,
               battle,
+              stageZeroInfoArray,
               stageOneInfoArray,
               stageTwoInfoArray,
               stageThreeInfoArray,
               stageFourInfoArray,
               stageFiveInfoArray,
+              stageSixInfoArray,
+              stageSevenInfoArray,
               sumExp,
             ] = await processBattleMove(
               userCurrentCharacter,
@@ -895,11 +901,14 @@ ${newLootC.length > 0 ? `__found ${newLootC.length} ${newLootC.length === 1 ? `i
                     userCurrentSelectedSkills,
                     previousBattleState,
                     currentSelectedMonster,
+                    stageZeroInfoArray,
                     stageOneInfoArray,
                     stageTwoInfoArray,
                     stageThreeInfoArray,
                     stageFourInfoArray,
                     stageFiveInfoArray,
+                    stageSixInfoArray,
+                    stageSevenInfoArray,
                   ),
                   'battle.gif',
                 ),
@@ -922,6 +931,7 @@ ${newLootC.length > 0 ? `__found ${newLootC.length} ${newLootC.length === 1 ? `i
               }
               return filtered;
             }, []);
+
             await interaction.editReply({
               content: `<@${userCurrentCharacter.user.user_id}>`,
               embeds: [],
@@ -932,11 +942,14 @@ ${newLootC.length > 0 ? `__found ${newLootC.length} ${newLootC.length === 1 ? `i
                     userCurrentSelectedSkills,
                     previousBattleState,
                     currentSelectedMonster,
+                    stageZeroInfoArray,
                     stageOneInfoArray,
                     stageTwoInfoArray,
                     stageThreeInfoArray,
                     stageFourInfoArray,
                     stageFiveInfoArray,
+                    stageSixInfoArray,
+                    stageSevenInfoArray,
                   ),
                   'battle.gif',
                 ),
