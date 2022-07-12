@@ -3,6 +3,7 @@
 import db from '../../../models';
 import { randomIntFromInterval } from "../../utils";
 import isFailedAttack from './isFailedAttack';
+import calculateCritDamage from '../utils/calculateCritDamage';
 
 const userApplyAttackAoE = async (
   userState, // Current User State
@@ -45,11 +46,19 @@ const userApplyAttackAoE = async (
         t,
       );
 
-      const randomAttackDamage = randomIntFromInterval(useAttack.min, useAttack.max); // Random attack damage between min-max
       // TODO: Apply Damage reductions? based on attackType (useAttack.attackType)
 
       if (!attackFailed) {
         // Apply Damage to monster
+        let randomAttackDamage = randomIntFromInterval(useAttack.min, useAttack.max); // Random attack damage between min-max
+        let didWeCrit = false;
+        [
+          didWeCrit,
+          randomAttackDamage,
+        ] = calculateCritDamage(
+          randomAttackDamage,
+          useAttack.crit,
+        );
         updatedMonster.currentHp -= randomAttackDamage;
 
         // Generate Battle log
@@ -75,6 +84,7 @@ const userApplyAttackAoE = async (
         monstersToUpdate.push(
           {
             ...updatedMonster,
+            didWeCrit,
             userDamage: randomAttackDamage,
             attackType: useAttack.name,
           },

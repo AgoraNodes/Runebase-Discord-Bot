@@ -40,6 +40,7 @@ export const renderInitBattleGif = async (
   const loadPromises = [];
   const debuffImages = [];
   const buffImages = [];
+  const effectImages = [];
   const { battleLogs } = previousBattleState;
   let mainSkill;
   let secondarySkill;
@@ -50,6 +51,21 @@ export const renderInitBattleGif = async (
   let imageData;
   let palette;
   let index;
+
+  // Figure out a way to better load all of the battle effects without loading every single one
+  // Maybe additional array comming from battle processor with all of the effects fired during processing
+  loadPromises.push(
+    new Promise((resolve, reject) => {
+      loadImage(path.join(
+        __dirname,
+        `../../assets/images/battle/effects`,
+        `stun.png`,
+      )).then((image) => {
+        effectImages.stunned = image;
+        resolve();
+      });
+    }),
+  );
 
   console.log('1');
   loadPromises.push(
@@ -214,6 +230,7 @@ export const renderInitBattleGif = async (
         currentSelectedMonster.id === battleMonster.id, // is current Monster selected?
         enemies[battleMonster.id], // Enemy Image
         debuffImages,
+        effectImages,
         false, // Moved To user?
         0, // Enemy Image Frame Shown
         playerPosition, // PlayerCords

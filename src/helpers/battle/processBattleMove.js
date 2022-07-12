@@ -19,6 +19,7 @@ import countDownBuffsAndDebuffs from './utils/countDownBuffsAndDebuffs';
 import userApplyBuffSingle from './user/userApplyBuffSingle';
 import selectAttack from './utils/selectAttack';
 import removeNewTagFromBuffsAndDebuffs from './utils/removeNewTagFromBuffsAndDebuffs';
+import userApplyPreBuffBattleChance from './user/userApplyPreBuffBattleChance';
 
 // TODO: Make code more readable by moving monster/user updates in their own designated function
 // TODO: APPLY BUFFS TO USER CHARACTER
@@ -71,9 +72,6 @@ export const processBattleMove = async (
   const allBattleMonsters = await db.BattleMonster.findAll({
     where: {
       battleId: battle.id,
-      // currentHp: {
-      //   [Op.gt]: 0,
-      // },
     },
     include: [
       {
@@ -110,7 +108,19 @@ export const processBattleMove = async (
 
   // TODO: APPLY ALL ENEMY DEBUFFS / ALSO DETERMINE IF UNIT IS STUNNED FROM DEBUFFS
   console.log('Stage #0 Processing');
-  stageZeroInfoArray = [];
+  [
+    stageZeroInfoArray,
+    userState,
+    battleMonsterState,
+  ] = await userApplyPreBuffBattleChance(
+    userState, // Current User State
+    battleMonsterState,
+    stageZeroInfoArray, // Array to fill with battle info
+    battle, // battle database record
+    useAttack, // Which attack is used by user
+    selectedMonster, // which Monster do we have selected?
+    t, // database transaction
+  );
 
   console.log('Stage #1 Processing');
   // Stage One
@@ -362,6 +372,7 @@ export const processBattleMove = async (
   console.log(`crit: ${regularAttack.crit}`);
   console.log(`defense: ${defense}`);
   console.log(`attack rating: ${regularAttack.ar}`);
+  console.log(`lifesteal: ${regularAttack.lifesteal}`);
   console.log(`initialUserState.hp`);
   console.log(initialUserState.hp);
   return [

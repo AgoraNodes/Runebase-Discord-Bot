@@ -46,7 +46,11 @@ const userApplyAttackSingle = async (
   );
 
   let randomAttackDamage = randomIntFromInterval(useAttack.min, useAttack.max); // Random attack damage between min-max
-  randomAttackDamage = calculateCritDamage(
+  let didWeCrit = false;
+  [
+    didWeCrit,
+    randomAttackDamage,
+  ] = calculateCritDamage(
     randomAttackDamage,
     useAttack.crit,
   );
@@ -79,6 +83,7 @@ const userApplyAttackSingle = async (
     monstersToUpdate.push(
       {
         ...updatedMonster,
+        didWeCrit,
         userDamage: randomAttackDamage,
         attackType: useAttack.name,
       },

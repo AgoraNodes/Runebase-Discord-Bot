@@ -25,7 +25,10 @@ const monstersApplyAttack = async (
   // eslint-disable-next-line no-restricted-syntax
   for await (const remainingMonster of battleMonsterState) {
     console.log('#1');
-    if (remainingMonster.currentHp > 0) {
+    if (
+      remainingMonster.currentHp > 0
+      && !remainingMonster.stunned
+    ) {
       console.log('#2');
       let individualBattleObject;
       let attackFailed = true;

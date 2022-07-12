@@ -5,6 +5,7 @@ export const drawEnemy = (
   isSelected,
   enemyFrame,
   debuffImages,
+  effectImages,
   movedToUser = false,
   number = 0,
   playerPosition = {
@@ -108,6 +109,18 @@ export const drawEnemy = (
     enemyFrame[number].width / 1.5,
     enemyFrame[number].height / 1.5,
   );
+
+  // console.log(monster);
+  // console.log('monster');
+  if (monster.stunned) {
+    ctx.drawImage(
+      effectImages.stunned,
+      x, // x position
+      y - 35, // y position
+      effectImages.stunned.width / 8,
+      effectImages.stunned.height / 8,
+    );
+  }
 
   return {
     id: monster.id,

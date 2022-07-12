@@ -1,5 +1,6 @@
 /* eslint-disable no-await-in-loop */
 /* eslint-disable no-restricted-syntax */
+import { use } from 'passport';
 import db from '../../../models';
 
 const userApplyDebuffAoE = async (
@@ -38,6 +39,7 @@ const userApplyDebuffAoE = async (
         reducedArmor: useAttack.reducedArmor ? useAttack.reducedArmor : null,
         minDmg: useAttack.min ? useAttack.min : null,
         maxDmg: useAttack.max ? useAttack.max : null,
+        stun: useAttack.stun ? useAttack.stun : null,
       }, {
         lock: t.LOCK.UPDATE,
         transaction: t,

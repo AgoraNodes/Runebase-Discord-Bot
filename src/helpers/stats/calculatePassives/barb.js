@@ -247,7 +247,8 @@ const calculatePassivesBarb = async (
       crit: newRegularAttack.crit,
       stun: newRegularAttack.stun,
       parry: newRegularAttack.parry,
-      lifeSteal: Math.round(newLifeSteal),
+      // lifeSteal: Math.round(newLifeSteal),
+      lifeSteal: Math.round(50), // temp testing
       manaSteal: newRegularAttack.manaSteal,
       cost: newRegularAttack.cost,
     };

@@ -8,6 +8,7 @@ import { renderMpOrb } from '../../orbs/mp';
 
 export const loadOrbs = async (
   initialUserState,
+  stageZeroInfoArray,
   stageOneInfoArray,
   stageTwoInfoArray,
   stageThreeInfoArray,
@@ -15,6 +16,7 @@ export const loadOrbs = async (
   stageFiveInfoArray,
   stageSixInfoArray,
   stageSevenInfoArray,
+  orbsStartingPositionStageZero,
   orbsStartingPositionStageOne,
   orbsStartingPositionStageTwo,
   orbsStartingPositionStageThree,
@@ -53,6 +55,34 @@ export const loadOrbs = async (
       });
     }),
   );
+
+  if (stageZeroInfoArray) {
+    for (const [index, info] of stageZeroInfoArray.entries()) {
+      bufferPromises.push(
+        new Promise((resolve, reject) => {
+          renderMpOrb(
+            info.userState.mp.current,
+            info.userState.mp.max,
+          ).then((buffer) => {
+            mpOrbsBuffer[index + orbsStartingPositionStageZero] = buffer;
+            resolve();
+          });
+        }),
+      );
+
+      bufferPromises.push(
+        new Promise((resolve, reject) => {
+          renderHpOrb(
+            info.userState.hp.current,
+            info.userState.hp.max,
+          ).then((buffer) => {
+            hpOrbsBuffer[index + orbsStartingPositionStageZero] = buffer;
+            resolve();
+          });
+        }),
+      );
+    }
+  }
 
   if (stageOneInfoArray) {
     for (const [index, info] of stageOneInfoArray.entries()) {

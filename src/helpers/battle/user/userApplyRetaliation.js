@@ -3,6 +3,7 @@
 import isFailedAttack from "./isFailedAttack";
 import { randomIntFromInterval } from "../../utils";
 import db from '../../../models';
+import calculateCritDamage from "../utils/calculateCritDamage";
 
 const userApplyRetliation = async (
   userState,
@@ -37,8 +38,15 @@ const userApplyRetliation = async (
         t,
       );
       if (!attackFailed) {
-        const randomAttackDamage = randomIntFromInterval(useAttack.min, useAttack.max); // Get Random Monster Damage
-
+        let randomAttackDamage = randomIntFromInterval(useAttack.min, useAttack.max); // Get Random Monster Damage
+        let didWeCrit = false;
+        [
+          didWeCrit,
+          randomAttackDamage,
+        ] = calculateCritDamage(
+          randomAttackDamage,
+          useAttack.crit,
+        );
         // Generate Battle log
         const createBattleLog = await db.battleLog.create({
           battleId: battle.id,
@@ -62,34 +70,12 @@ const userApplyRetliation = async (
         updatedMonster.currentHp -= randomAttackDamage;
         monstersToUpdate.push({
           ...updatedMonster,
+          didWeCrit,
           userDamage: randomAttackDamage,
           attackType: useAttack.name,
         });
       }
       battleMonsterState = battleMonsterState.map((obj) => monstersToUpdate.find((o) => o.id === obj.id) || obj);
-
-      console.log(monstersToUpdate);
-      console.log('monstersToUpdate');
-      console.log('monstersToUpdate');
-      console.log('monstersToUpdate');
-      console.log('monstersToUpdate');
-      console.log('monstersToUpdate');
-      console.log('monstersToUpdate');
-      console.log('monstersToUpdate');
-      console.log('monstersToUpdate');
-      console.log('monstersToUpdate');
-      console.log('monstersToUpdate');
-      console.log('monstersToUpdate');
-      console.log('monstersToUpdate');
-      console.log('monstersToUpdate');
-      console.log('monstersToUpdate');
-      console.log('monstersToUpdate');
-      console.log('monstersToUpdate');
-      console.log('monstersToUpdate');
-      console.log('monstersToUpdate');
-      console.log('monstersToUpdate');
-      console.log('monstersToUpdate');
-      console.log('monstersToUpdate');
 
       individualBattleObject = {
         monsterId: updatedMonster.id,

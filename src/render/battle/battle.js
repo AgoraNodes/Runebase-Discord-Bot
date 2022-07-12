@@ -44,6 +44,7 @@ export const renderBattleGif = async (
   const enemies = [];
   const buffImages = [];
   const debuffImages = [];
+  const effectImages = [];
   const loadPromises = [];
   let { BattleMonsters } = previousBattleState;
   const { battleLogs } = previousBattleState;
@@ -57,34 +58,57 @@ export const renderBattleGif = async (
   let palette;
   let imageIndex;
 
-  const orbsStartingPositionStageOne = 1;
+  const orbsStartingPositionStageZero = 1;
+  const orbsStartingPositionStageOne = 1
+    + stageZeroInfoArray.length;
   const orbsStartingPositionStageTwo = 1
+    + stageZeroInfoArray.length
     + stageOneInfoArray.length;
   const orbsStartingPositionStageThree = 1
+    + stageZeroInfoArray.length
     + stageOneInfoArray.length
     + stageTwoInfoArray.length;
   const orbsStartingPositionStageFour = 1
+    + stageZeroInfoArray.length
     + stageOneInfoArray.length
     + stageTwoInfoArray.length
     + stageThreeInfoArray.length;
   const orbsStartingPositionStageFive = 1
+    + stageZeroInfoArray.length
     + stageOneInfoArray.length
     + stageTwoInfoArray.length
     + stageThreeInfoArray.length
     + stageFourInfoArray.length;
   const orbsStartingPositionStageSix = 1
+    + stageZeroInfoArray.length
     + stageOneInfoArray.length
     + stageTwoInfoArray.length
     + stageThreeInfoArray.length
     + stageFourInfoArray.length
     + stageFiveInfoArray.length;
   const orbsStartingPositionStageSeven = 1
+    + stageZeroInfoArray.length
     + stageOneInfoArray.length
     + stageTwoInfoArray.length
     + stageThreeInfoArray.length
     + stageFourInfoArray.length
     + stageFiveInfoArray.length
     + stageSixInfoArray.length;
+
+  // Figure out a way to better load all of the battle effects without loading every single one
+  // Maybe additional array comming from battle processor with all of the effects fired during processing
+  loadPromises.push(
+    new Promise((resolve, reject) => {
+      loadImage(path.join(
+        __dirname,
+        `../../assets/images/battle/effects`,
+        `stun.png`,
+      )).then((image) => {
+        effectImages.stunned = image;
+        resolve();
+      });
+    }),
+  );
 
   loadPromises.push(
     new Promise((resolve, reject) => {
@@ -222,6 +246,7 @@ export const renderBattleGif = async (
     new Promise((resolve, reject) => {
       loadOrbs(
         userState,
+        stageZeroInfoArray,
         stageOneInfoArray,
         stageTwoInfoArray,
         stageThreeInfoArray,
@@ -229,6 +254,7 @@ export const renderBattleGif = async (
         stageFiveInfoArray,
         stageSixInfoArray,
         stageSevenInfoArray,
+        orbsStartingPositionStageZero,
         orbsStartingPositionStageOne,
         orbsStartingPositionStageTwo,
         orbsStartingPositionStageThree,
@@ -282,6 +308,7 @@ export const renderBattleGif = async (
         currentSelectedMonster && currentSelectedMonster.id === battleMonster.id, // is current Monster selected?
         enemies[battleMonster.id], // Enemy Image
         debuffImages,
+        effectImages,
         false, // Moved To user?
         0, // Enemy Image Frame Shown
         playerPosition, // PlayerCords
@@ -317,7 +344,182 @@ export const renderBattleGif = async (
     },
   );
 
+  // Render Stage 0
+
+  for (const [index, stageZeroInfo] of stageZeroInfoArray.entries()) {
+    drawBackground(
+      ctx,
+      canvas,
+      backgroundImage,
+    );
+    console.log('Render Frame #2-1');
+    for (const [i, battleMonster] of BattleMonsters.entries()) {
+      if (battleMonster.currentHp > 0) {
+        // const findUpdatedMonsterState = monsterInfo.find((element) => element.monsterId === battleMonster.id);
+        enemyPosition[i] = drawEnemy(
+          ctx, // CTX
+          BattleMonsters.find((element) => element.id === battleMonster.id), // MonsterState
+          currentSelectedMonster && currentSelectedMonster.id === battleMonster.id, // is current Monster selected?
+          enemies[battleMonster.id], // Enemy Image
+          debuffImages,
+          effectImages,
+          false, // Moved To user?
+          0, // Enemy Image Frame Shown
+          playerPosition, // PlayerCords
+          i, // Index
+          // findUpdatedMonsterState,
+        );
+      }
+    }
+    console.log('Render Frame #2-2');
+    drawUserBuffs(
+      ctx, // Ctx drawing canvas
+      userState, // User Object
+      buffImages, // image array of player images
+    );
+    console.log('Render Frame #2-3');
+    const findAttackedEnemyByUser = enemyPosition.find((element) => element && element.id === stageZeroInfo.monsterId);
+    // console.log('find enemy position after');
+    // console.log(findAttackedEnemyByUser);
+    playerPosition[0] = drawPlayer(
+      ctx, // Ctx drawing canvas
+      playerImage, // image array of player images
+      0, // number of image in the array to show
+      stageZeroInfo.useAttack.ranged ? false : findAttackedEnemyByUser, // user attacking [false || enemyImagePosition]
+    );
+    console.log('Render Frame #2-4');
+    drawBattleScreenTools(
+      ctx,
+      mainSkill,
+      secondarySkill,
+      hpOrbs[orbsStartingPositionStageOne + index],
+      mpOrbs[orbsStartingPositionStageOne + index],
+    );
+    console.log('Render Frame #2-5-1');
+    userState = stageZeroInfo.userState;
+    battleLogs.unshift(...stageZeroInfo.battleLogs);
+
+    BattleMonsters = BattleMonsters.map((obj) => stageZeroInfo.monstersToUpdate.find((o) => o.id === obj.id) || obj);
+
+    drawBattleLog(
+      ctx,
+      battleLogs,
+    );
+    ctx.lineWidth = 1;
+    ctx.font = 'bold 13px "HeartWarming"';
+    ctx.fillStyle = 'red';
+    console.log('before looping monsters');
+    for (const monsterToUpdate of stageZeroInfo.monstersToUpdate) {
+      // console.log(monsterToUpdate);
+      // console.log(enemyPosition);
+      const monsterToUpdatePosition = enemyPosition.find((element) => element && element.id === monsterToUpdate.id);
+      ctx.fillText(
+        monsterToUpdate.userDamage,
+        monsterToUpdatePosition.x,
+        monsterToUpdatePosition.y - 20,
+        50,
+      );
+    }
+
+    imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    palette = quantize(imageData.data, 256, { format: 'rgb333' });
+    imageIndex = applyPalette(imageData.data, palette);
+    gif.writeFrame(
+      imageIndex,
+      canvas.width,
+      canvas.height,
+      {
+        palette,
+        delay: 200,
+        repeat: -1,
+      },
+    );
+
+    console.log('Render Frame #3');
+    drawBackground(
+      ctx,
+      canvas,
+      backgroundImage,
+    );
+
+    for (const [i, battleMonster] of BattleMonsters.entries()) {
+      if (battleMonster.currentHp > 0) {
+        enemyPosition[i] = drawEnemy(
+          ctx, // CTX
+          BattleMonsters.find((element) => element.id === battleMonster.id), // MonsterState
+          currentSelectedMonster && currentSelectedMonster.id === battleMonster.id, // is current Monster selected?
+          enemies[battleMonster.id], // Enemy Image
+          debuffImages,
+          effectImages,
+          false, // Moved To user?
+          0, // Enemy Image Frame Shown
+          playerPosition, // PlayerCords
+          i, // Index
+        );
+      }
+    }
+
+    drawUserBuffs(
+      ctx, // Ctx drawing canvas
+      userState, // User Object
+      buffImages, // image array of player images
+    );
+
+    playerPosition[0] = drawPlayer(
+      ctx, // Ctx drawing canvas
+      playerImage, // image array of player images
+      0, // number of image in the array to show
+      findAttackedEnemyByUser, // user attacking [false || enemyImagePosition]
+    );
+
+    drawUserBuffs(
+      ctx, // Ctx drawing canvas
+      userState, // User Object
+      buffImages, // image array of player images
+    );
+
+    drawBattleScreenTools(
+      ctx,
+      mainSkill,
+      secondarySkill,
+      hpOrbs[orbsStartingPositionStageOne + index],
+      mpOrbs[orbsStartingPositionStageOne + index],
+    );
+    console.log('Render Frame #3-6');
+    drawBattleLog(
+      ctx,
+      battleLogs,
+    );
+    ctx.lineWidth = 1;
+    ctx.font = 'bold 13px "HeartWarming"';
+    ctx.fillStyle = 'red';
+    for (const monsterToUpdate of stageZeroInfo.monstersToUpdate) {
+      const monsterToUpdatePosition = enemyPosition.find((element) => element && element.id === monsterToUpdate.id);
+      ctx.fillText(
+        monsterToUpdate.userDamage,
+        monsterToUpdatePosition.x,
+        monsterToUpdatePosition.y - 20,
+        50,
+      );
+    }
+    console.log('Render Frame #3-7');
+    imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    palette = quantize(imageData.data, 256, { format: 'rgb333' });
+    imageIndex = applyPalette(imageData.data, palette);
+    gif.writeFrame(
+      imageIndex,
+      canvas.width,
+      canvas.height,
+      {
+        palette,
+        delay: 600,
+        repeat: -1,
+      },
+    );
+  }
+
   console.log('Render Frame #2');
+  // Render Stage One
   for (const [index, stageOneInfo] of stageOneInfoArray.entries()) {
     drawBackground(
       ctx,
@@ -334,6 +536,7 @@ export const renderBattleGif = async (
           currentSelectedMonster && currentSelectedMonster.id === battleMonster.id, // is current Monster selected?
           enemies[battleMonster.id], // Enemy Image
           debuffImages,
+          effectImages,
           false, // Moved To user?
           0, // Enemy Image Frame Shown
           playerPosition, // PlayerCords
@@ -421,6 +624,7 @@ export const renderBattleGif = async (
           currentSelectedMonster && currentSelectedMonster.id === battleMonster.id, // is current Monster selected?
           enemies[battleMonster.id], // Enemy Image
           debuffImages,
+          effectImages,
           false, // Moved To user?
           0, // Enemy Image Frame Shown
           playerPosition, // PlayerCords
@@ -515,6 +719,7 @@ export const renderBattleGif = async (
           currentSelectedMonster && currentSelectedMonster.id === battleMonster.id, // is current Monster selected?
           enemies[battleMonster.id], // Enemy Image
           debuffImages,
+          effectImages,
           false, // Moved To user?
           0, // Enemy Image Frame Shown
           playerPosition, // PlayerCords
@@ -593,6 +798,7 @@ export const renderBattleGif = async (
           currentSelectedMonster && currentSelectedMonster.id === battleMonster.id, // is current Monster selected?
           enemies[battleMonster.id], // Enemy Image
           debuffImages,
+          effectImages,
           battleMonster.id === stageTwoInfo.monsterId, // Moved To user?
           battleMonster.id === stageTwoInfo.monsterId ? 0 : 0, // Enemy Image Frame Shown
           playerPosition[0], // PlayerCords
@@ -654,6 +860,7 @@ export const renderBattleGif = async (
           currentSelectedMonster && currentSelectedMonster.id === battleMonster.id, // is current Monster selected?
           enemies[battleMonster.id], // Enemy Image
           debuffImages,
+          effectImages,
           battleMonster.id === stageTwoInfo.monsterId, // Moved To user?
           battleMonster.id === stageTwoInfo.monsterId ? 1 : 0, // Enemy Image Frame Shown
           playerPosition[0], // PlayerCords
@@ -740,6 +947,7 @@ export const renderBattleGif = async (
           currentSelectedMonster && currentSelectedMonster.id === battleMonster.id, // is current Monster selected?
           enemies[battleMonster.id], // Enemy Image
           debuffImages,
+          effectImages,
           battleMonster.id === stageTwoInfo.monsterId, // Moved To user?
           battleMonster.id === stageTwoInfo.monsterId ? 2 : 0, // Enemy Image Frame Shown
           playerPosition[0], // PlayerCords
@@ -821,6 +1029,7 @@ export const renderBattleGif = async (
           currentSelectedMonster && currentSelectedMonster.id === battleMonster.id, // is current Monster selected?
           enemies[battleMonster.id], // Enemy Image
           debuffImages,
+          effectImages,
           battleMonster.id === stageTwoInfo.monsterId, // Moved To user?
           battleMonster.id === stageTwoInfo.monsterId ? 0 : 0, // Enemy Image Frame Shown
           playerPosition[0], // PlayerCords
@@ -902,6 +1111,7 @@ export const renderBattleGif = async (
           currentSelectedMonster && currentSelectedMonster.id === battleMonster.id, // is current Monster selected?
           enemies[battleMonster.id], // Enemy Image
           debuffImages,
+          effectImages,
           false, // Moved To user?
           0, // Enemy Image Frame Shown
           playerPosition[0], // PlayerCords
@@ -964,6 +1174,7 @@ export const renderBattleGif = async (
             currentSelectedMonster && currentSelectedMonster.id === battleMonster.id, // is current Monster selected?
             enemies[battleMonster.id], // Enemy Image
             debuffImages,
+            effectImages,
             false, // Moved To user?
             0, // Enemy Image Frame Shown
             playerPosition, // PlayerCords
@@ -1015,6 +1226,7 @@ export const renderBattleGif = async (
             currentSelectedMonster && currentSelectedMonster.id === battleMonster.id, // is current Monster selected?
             enemies[battleMonster.id], // Enemy Image
             debuffImages,
+            effectImages,
             false, // Moved To user?
             0, // Enemy Image Frame Shown
             playerPosition, // PlayerCords
@@ -1101,6 +1313,7 @@ export const renderBattleGif = async (
             currentSelectedMonster && currentSelectedMonster.id === battleMonster.id, // is current Monster selected?
             enemies[battleMonster.id], // Enemy Image
             debuffImages,
+            effectImages,
             false, // Moved To user?
             0, // Enemy Image Frame Shown
             playerPosition, // PlayerCords
@@ -1189,6 +1402,7 @@ export const renderBattleGif = async (
             currentSelectedMonster && currentSelectedMonster.id === battleMonster.id, // is current Monster selected?
             enemies[battleMonster.id], // Enemy Image
             debuffImages,
+            effectImages,
             false, // Moved To user?
             0, // Enemy Image Frame Shown
             playerPosition, // PlayerCords
@@ -1263,6 +1477,7 @@ export const renderBattleGif = async (
             currentSelectedMonster && currentSelectedMonster.id === battleMonster.id, // is current Monster selected?
             enemies[battleMonster.id], // Enemy Image
             debuffImages,
+            effectImages,
             false, // Moved To user?
             0, // Enemy Image Frame Shown
             playerPosition, // PlayerCords
@@ -1327,6 +1542,7 @@ export const renderBattleGif = async (
             currentSelectedMonster && currentSelectedMonster.id === battleMonster.id, // is current Monster selected?
             enemies[battleMonster.id], // Enemy Image
             debuffImages,
+            effectImages,
             false, // Moved To user?
             0, // Enemy Image Frame Shown
             playerPosition, // PlayerCords
@@ -1377,6 +1593,7 @@ export const renderBattleGif = async (
             currentSelectedMonster && currentSelectedMonster.id === battleMonster.id, // is current Monster selected?
             enemies[battleMonster.id], // Enemy Image
             debuffImages,
+            effectImages,
             false, // Moved To user?
             0, // Enemy Image Frame Shown
             playerPosition, // PlayerCords
@@ -1467,6 +1684,7 @@ export const renderBattleGif = async (
             currentSelectedMonster && currentSelectedMonster.id === battleMonster.id, // is current Monster selected?
             enemies[battleMonster.id], // Enemy Image
             debuffImages,
+            effectImages,
             false, // Moved To user?
             0, // Enemy Image Frame Shown
             playerPosition, // PlayerCords
@@ -1555,6 +1773,7 @@ export const renderBattleGif = async (
             currentSelectedMonster && currentSelectedMonster.id === battleMonster.id, // is current Monster selected?
             enemies[battleMonster.id], // Enemy Image
             debuffImages,
+            effectImages,
             false, // Moved To user?
             0, // Enemy Image Frame Shown
             playerPosition, // PlayerCords
@@ -1630,6 +1849,7 @@ export const renderBattleGif = async (
             currentSelectedMonster && currentSelectedMonster.id === battleMonster.id, // is current Monster selected?
             enemies[battleMonster.id], // Enemy Image
             debuffImages,
+            effectImages,
             false, // Moved To user?
             0, // Enemy Image Frame Shown
             false, // PlayerCords
@@ -1696,6 +1916,7 @@ export const renderBattleGif = async (
             currentSelectedMonster && currentSelectedMonster.id === battleMonster.id, // is current Monster selected?
             enemies[battleMonster.id], // Enemy Image
             debuffImages,
+            effectImages,
             false, // Moved To user?
             0, // Enemy Image Frame Shown
             playerPosition, // PlayerCords
@@ -1746,6 +1967,7 @@ export const renderBattleGif = async (
             currentSelectedMonster && currentSelectedMonster.id === battleMonster.id, // is current Monster selected?
             enemies[battleMonster.id], // Enemy Image
             debuffImages,
+            effectImages,
             false, // Moved To user?
             0, // Enemy Image Frame Shown
             playerPosition, // PlayerCords
@@ -1816,6 +2038,7 @@ export const renderBattleGif = async (
             currentSelectedMonster && currentSelectedMonster.id === battleMonster.id, // is current Monster selected?
             enemies[battleMonster.id], // Enemy Image
             debuffImages,
+            effectImages,
             false, // Moved To user?
             0, // Enemy Image Frame Shown
             playerPosition, // PlayerCords
@@ -1893,6 +2116,7 @@ export const renderBattleGif = async (
             currentSelectedMonster && currentSelectedMonster.id === battleMonster.id, // is current Monster selected?
             enemies[battleMonster.id], // Enemy Image
             debuffImages,
+            effectImages,
             false, // Moved To user?
             0, // Enemy Image Frame Shown
             playerPosition, // PlayerCords
@@ -1956,6 +2180,7 @@ export const renderBattleGif = async (
             currentSelectedMonster && currentSelectedMonster.id === battleMonster.id, // is current Monster selected?
             enemies[battleMonster.id], // Enemy Image
             debuffImages,
+            effectImages,
             false, // Moved To user?
             0, // Enemy Image Frame Shown
             false, // PlayerCords

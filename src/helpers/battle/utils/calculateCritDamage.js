@@ -5,9 +5,12 @@ const calculateCritDamage = (
   let damage = myDamage;
   const didWeCrit = Math.random() < Number(critChance) / 100;
   if (didWeCrit) {
-    damage = myDamage + ((myDamage / 100) * 75);
+    damage = myDamage + Math.round(((myDamage / 100) * 75));
   }
-  return damage;
+  return [
+    didWeCrit,
+    damage,
+  ];
 };
 
 export default calculateCritDamage;

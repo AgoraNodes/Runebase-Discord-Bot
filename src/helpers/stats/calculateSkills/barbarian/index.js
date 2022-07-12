@@ -224,6 +224,23 @@ export const calculateBarbSkillDamage = (
     };
   }
 
+  if (skillToCalculate.skill.name === "Screech") {
+    const rounds = 2 + (0.2 * (skillToCalculate.points - 1));
+    const chance = 10 + (2 * (skillToCalculate.points - 1));
+    newAttack = {
+      name: skillToCalculate.skill.name,
+      attackType: 'Magic',
+      stun: true,
+      chance: 100, // Temp testing
+      cost: 0, // 2
+      // rounds: Math.round(rounds),
+      rounds: 20,
+      ranged: true,
+      debuff: true,
+      aoe: true,
+    };
+  }
+
   if (skillToCalculate.skill.name === "Cleave") {
     const newMinDamage = (newAttack.min / 100) * (50 + ((skillToCalculate.points - 1) * 5));
     const newMaxDamage = (newAttack.max / 100) * (50 + ((skillToCalculate.points - 1) * 5));
