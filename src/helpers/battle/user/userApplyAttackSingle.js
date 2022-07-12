@@ -26,6 +26,7 @@ const userApplyAttackSingle = async (
     battleLogs,
     monstersToUpdate,
     attackFailed,
+    saveToDatabasePromises,
   ] = await isFailedAttack(
     userState,
     lvl,
@@ -34,6 +35,7 @@ const userApplyAttackSingle = async (
     battleLogs,
     updatedMonster,
     monstersToUpdate,
+    saveToDatabasePromises,
     t,
   );
 
@@ -65,7 +67,7 @@ const userApplyAttackSingle = async (
         }, {
           lock: t.LOCK.UPDATE,
           transaction: t,
-        }).then(resolve());
+        }).then(() => resolve());
       }),
     );
     battleLogs.unshift({
@@ -82,7 +84,7 @@ const userApplyAttackSingle = async (
           }, {
             lock: t.LOCK.UPDATE,
             transaction: t,
-          }).then(resolve());
+          }).then(() => resolve());
         }),
       );
       battleLogs.unshift({

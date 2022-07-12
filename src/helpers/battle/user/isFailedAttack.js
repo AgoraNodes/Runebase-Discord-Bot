@@ -8,6 +8,7 @@ const isFailedAttack = async (
   battleLogs,
   updatedMonster,
   updatedMonstersArray,
+  saveToDatabasePromises,
   t,
 ) => {
   // TODO: Maybe resist attacks based on resistance? (if attackType === 'Fire' then some logic)
@@ -32,14 +33,24 @@ const isFailedAttack = async (
         // died: !(updatedMonster.currentHp > 0),
         attackType: 'Missed',
       });
-      const createBattleLog = await db.battleLog.create({
-        battleId: battle.id,
-        log: `${userState.user.username} ${useAttack.name} missed ${updatedMonster.monster.name}`,
-      }, {
-        lock: t.LOCK.UPDATE,
-        transaction: t,
+
+      // Create battleLog
+      const log = `${userState.user.username} ${useAttack.name} missed ${updatedMonster.monster.name}`;
+      saveToDatabasePromises.push(
+        new Promise((resolve, reject) => {
+          db.battleLog.create({
+            battleId: battle.id,
+            log,
+          }, {
+            lock: t.LOCK.UPDATE,
+            transaction: t,
+          }).then(() => resolve());
+        }),
+      );
+      battleLogs.unshift({
+        log,
       });
-      battleLogs.unshift(JSON.parse(JSON.stringify(createBattleLog)));
+
       attackFailed = true;
     } else if (isBlocked) {
       updatedMonstersArray.push({
@@ -49,14 +60,22 @@ const isFailedAttack = async (
         // died: !(updatedMonster.currentHp > 0),
         attackType: 'Blocked', // TODO: Attack Type should be used to determin the animation to pick
       });
-      const createBattleLog = await db.battleLog.create({
-        battleId: battle.id,
-        log: `${updatedMonster.monster.name} blocked ${userState.user.username} ${useAttack.name}`,
-      }, {
-        lock: t.LOCK.UPDATE,
-        transaction: t,
+
+      const log = `${updatedMonster.monster.name} blocked ${userState.user.username} ${useAttack.name}`;
+      saveToDatabasePromises.push(
+        new Promise((resolve, reject) => {
+          db.battleLog.create({
+            battleId: battle.id,
+            log,
+          }, {
+            lock: t.LOCK.UPDATE,
+            transaction: t,
+          }).then(() => resolve());
+        }),
+      );
+      battleLogs.unshift({
+        log,
       });
-      battleLogs.unshift(JSON.parse(JSON.stringify(createBattleLog)));
       attackFailed = true;
     } else if (isParried) {
       updatedMonstersArray.push({
@@ -67,14 +86,21 @@ const isFailedAttack = async (
         attackType: 'Parried',
       });
 
-      const createBattleLog = await db.battleLog.create({
-        battleId: battle.id,
-        log: `${updatedMonster.monster.name} parried ${userState.user.username} ${useAttack.name}`,
-      }, {
-        lock: t.LOCK.UPDATE,
-        transaction: t,
+      const log = `${updatedMonster.monster.name} parried ${userState.user.username} ${useAttack.name}`;
+      saveToDatabasePromises.push(
+        new Promise((resolve, reject) => {
+          db.battleLog.create({
+            battleId: battle.id,
+            log,
+          }, {
+            lock: t.LOCK.UPDATE,
+            transaction: t,
+          }).then(() => resolve());
+        }),
+      );
+      battleLogs.unshift({
+        log,
       });
-      battleLogs.unshift(JSON.parse(JSON.stringify(createBattleLog)));
       attackFailed = true;
     }
   }
@@ -83,6 +109,7 @@ const isFailedAttack = async (
     battleLogs,
     updatedMonstersArray,
     attackFailed,
+    saveToDatabasePromises,
   ];
 };
 

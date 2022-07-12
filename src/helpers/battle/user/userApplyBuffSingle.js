@@ -43,7 +43,7 @@ const userApplyBuffSingle = async (
       db.buff.create(buffObject, {
         lock: t.LOCK.UPDATE,
         transaction: t,
-      }).then(resolve());
+      }).then(() => resolve());
     }),
   );
   userState.buffs.unshift(

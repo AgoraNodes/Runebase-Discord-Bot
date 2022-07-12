@@ -12,7 +12,7 @@ import {
 } from 'discord.js';
 import db from '../models';
 import { renderBattleGif } from '../render/battle/battle';
-import { renderInitBattleGif } from '../render/battle/initBattle';
+// import { renderInitBattleGif } from '../render/battle/initBattle';
 import { renderUserDied } from '../render/battle/userDied';
 import { renderOutOfStamina } from '../render/battle/outOfStamina';
 import { fetchUserCurrentCharacter } from "../helpers/character/character";
@@ -304,11 +304,9 @@ export const discordBattle = async (
     content: `<@${userCurrentCharacter.user.user_id}>`,
     files: [
       new MessageAttachment(
-        await renderInitBattleGif(
-          userCurrentCharacter,
+        await renderBattleGif(
           myInitialUserState,
           userCurrentSelectedSkills,
-          battle,
           battle,
           currentSelectedMonster,
         ),
@@ -646,11 +644,9 @@ ${newLootC.length > 0 ? `__found ${newLootC.length} ${newLootC.length === 1 ? `i
           await interaction.editReply({
             files: [
               new MessageAttachment(
-                await renderInitBattleGif(
-                  userCurrentCharacter,
+                await renderBattleGif(
                   myInitialUserState,
                   userCurrentSelectedSkills,
-                  battle,
                   battle,
                   currentSelectedMonster,
                 ),
@@ -869,6 +865,9 @@ ${newLootC.length > 0 ? `__found ${newLootC.length} ${newLootC.length === 1 ? `i
               queue,
               t,
             );
+
+            console.log(`Is Battle Complete: ${battle.complete ? 'Yes' : 'No'}`);
+
             if (battle.complete) {
               console.log('battle is complete 1');
               currentSelectedMonster = null;
@@ -892,6 +891,7 @@ ${newLootC.length > 0 ? `__found ${newLootC.length} ${newLootC.length === 1 ? `i
             }
           }
           if (battle.complete) {
+            console.log(initialUserState);
             console.log('before final renderbattleGif complete');
             await interaction.editReply({
               content: `<@${userCurrentCharacter.user.user_id}>`,
@@ -901,7 +901,7 @@ ${newLootC.length > 0 ? `__found ${newLootC.length} ${newLootC.length === 1 ? `i
                   await renderBattleGif(
                     initialUserState,
                     userCurrentSelectedSkills,
-                    battle,
+                    previousBattleState,
                     currentSelectedMonster,
                     stageZeroInfoArray,
                     stageOneInfoArray,
@@ -914,7 +914,6 @@ ${newLootC.length > 0 ? `__found ${newLootC.length} ${newLootC.length === 1 ? `i
                   ),
                   'battle.gif',
                 ),
-
               ],
               components: [],
             });
@@ -1080,11 +1079,15 @@ ${newLootC.length > 0 ? `__found ${newLootC.length} ${newLootC.length === 1 ? `i
 
           mainSkillMap = userCurrentSelectedSkills.UserClassSkills.reduce((filtered, mySkill) => {
             if (!mySkill.skill.passive) {
+              const emoji = skillEmoji.find((a) => a.name === mySkill.skill.name);
               const mapped = {
                 placeholder: 'pick a skill',
                 label: `Main Skill: ${mySkill.skill.name}`,
                 value: `mainSkill:${mySkill.id}`,
                 default: mySkill.id === userCurrentSelectedSkills.selectedMainSkillId,
+                ...(emoji ? {
+                  emoji: emoji.emoji,
+                } : false),
               };
               filtered.push(mapped);
             }
@@ -1093,11 +1096,15 @@ ${newLootC.length > 0 ? `__found ${newLootC.length} ${newLootC.length === 1 ? `i
 
           secondarySkillMap = userCurrentSelectedSkills.UserClassSkills.reduce((filtered, mySkill) => {
             if (!mySkill.skill.passive) {
+              const emoji = skillEmoji.find((a) => a.name === mySkill.skill.name);
               const mapped = {
                 placeholder: 'pick a skill',
                 label: `Secondary Skill: ${mySkill.skill.name}`,
                 value: `secondarySkill:${mySkill.id}`,
                 default: mySkill.id === userCurrentSelectedSkills.selectedSecondarySkillId,
+                ...(emoji ? {
+                  emoji: emoji.emoji,
+                } : false),
               };
               filtered.push(mapped);
             }
@@ -1119,14 +1126,11 @@ ${newLootC.length > 0 ? `__found ${newLootC.length} ${newLootC.length === 1 ? `i
             embeds: [],
             files: [
               new MessageAttachment(
-                await renderInitBattleGif(
-                  userCurrentCharacter,
+                await renderBattleGif(
                   myInitialUserState,
                   userCurrentSelectedSkills,
                   battle,
-                  battle,
                   currentSelectedMonster,
-                  stageOneInfoArray,
                 ),
                 'battle.gif',
               ),

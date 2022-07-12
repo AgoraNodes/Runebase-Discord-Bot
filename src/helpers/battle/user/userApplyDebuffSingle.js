@@ -26,7 +26,8 @@ const userApplyDebuffSingle = async (
       const index = updatedMonster.debuffs.findIndex((o) => o.id === existingDebuff.id);
       if (index !== -1) updatedMonster.debuffs.splice(index, 1);
     }
-    const createDebuff = await db.debuff.create({
+
+    const debuffObject = {
       name: useAttack.name,
       new: true,
       rounds: useAttack.rounds,
@@ -34,12 +35,19 @@ const userApplyDebuffSingle = async (
       reducedArmor: useAttack.reducedArmor ? useAttack.reducedArmor : null,
       minDmg: useAttack.min ? useAttack.min : null,
       maxDmg: useAttack.max ? useAttack.max : null,
-    }, {
-      lock: t.LOCK.UPDATE,
-      transaction: t,
-    });
+    };
+
+    saveToDatabasePromises.push(
+      new Promise((resolve, reject) => {
+        db.debuff.create(debuffObject, {
+          lock: t.LOCK.UPDATE,
+          transaction: t,
+        }).then(() => resolve());
+      }),
+    );
+
     updatedMonster.debuffs.unshift(
-      JSON.parse(JSON.stringify(createDebuff)),
+      debuffObject,
     );
 
     const log = `${userState.user.username} used ${useAttack.name} on ${updatedMonster.monster.name}`;
@@ -51,7 +59,7 @@ const userApplyDebuffSingle = async (
         }, {
           lock: t.LOCK.UPDATE,
           transaction: t,
-        }).then(resolve());
+        }).then(() => resolve());
       }),
     );
     battleLogs.unshift({

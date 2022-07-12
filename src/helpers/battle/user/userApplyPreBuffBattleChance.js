@@ -1,9 +1,6 @@
 /* eslint-disable no-await-in-loop */
 /* eslint-disable no-restricted-syntax */
 import db from '../../../models';
-import { randomIntFromInterval } from "../../utils";
-import isFailedAttack from './isFailedAttack';
-import calculateCritDamage from '../utils/calculateCritDamage';
 
 const userApplyPreBuffBattleChance = async (
   userState, // Current User State
@@ -17,9 +14,6 @@ const userApplyPreBuffBattleChance = async (
 ) => {
   const battleLogs = [];
   const monstersToUpdate = [];
-  console.log(battleMonsterState);
-  console.log(selectedMonsterId);
-  console.log('123');
   const selectedMonster = battleMonsterState.find((element) => element.id === selectedMonsterId);
   // Apply ALL AOE Debuffs here
   for (const battleMonster of battleMonsterState) {
@@ -40,7 +34,7 @@ const userApplyPreBuffBattleChance = async (
                   }, {
                     lock: t.LOCK.UPDATE,
                     transaction: t,
-                  }).then(resolve());
+                  }).then(() => resolve());
                 }),
               );
               battleLogs.unshift({

@@ -1,6 +1,5 @@
 /* eslint-disable no-await-in-loop */
 /* eslint-disable no-restricted-syntax */
-import { use } from 'passport';
 import db from '../../../models';
 
 const userApplyDebuffAoE = async (
@@ -33,7 +32,7 @@ const userApplyDebuffAoE = async (
         if (index !== -1) BattleMonsterToUpdate.debuffs.splice(index, 1);
       }
 
-      const createDebuff = await db.debuff.create({
+      const debuffObject = {
         name: useAttack.name,
         new: true,
         rounds: useAttack.rounds,
@@ -42,15 +41,23 @@ const userApplyDebuffAoE = async (
         minDmg: useAttack.min ? useAttack.min : null,
         maxDmg: useAttack.max ? useAttack.max : null,
         stun: useAttack.stun ? useAttack.stun : null,
-      }, {
-        lock: t.LOCK.UPDATE,
-        transaction: t,
-      });
+      };
+
+      saveToDatabasePromises.push(
+        new Promise((resolve, reject) => {
+          db.debuff.create(debuffObject, {
+            lock: t.LOCK.UPDATE,
+            transaction: t,
+          }).then(() => resolve());
+        }),
+      );
+
       BattleMonsterToUpdate.debuffs.unshift(
-        JSON.parse(JSON.stringify(createDebuff)),
+        debuffObject,
       );
 
       battleMonsterState = battleMonsterState.map((obj) => [BattleMonsterToUpdate].find((o) => o.id === obj.id) || obj);
+
       monstersToUpdate.push({
         ...BattleMonsterToUpdate,
         userDamage: useAttack.name,
@@ -67,7 +74,7 @@ const userApplyDebuffAoE = async (
           }, {
             lock: t.LOCK.UPDATE,
             transaction: t,
-          }).then(resolve());
+          }).then(() => resolve());
         }),
       );
       battleLogs.unshift({

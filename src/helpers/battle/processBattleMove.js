@@ -14,18 +14,22 @@ import selectAttack from './utils/selectAttack';
 import removeNewTagFromBuffsAndDebuffs from './utils/removeNewTagFromBuffsAndDebuffs';
 import userApplyPreBuffBattleChance from './user/userApplyPreBuffBattleChance';
 import applyEnemyDebuffEffects from './utils/applyEnemyDebuffEffects';
-
+import reFetchBattle from './fetchBattle';
 // TODO: Make code more readable by moving monster/user updates in their own designated function
 // TODO: APPLY BUFFS TO USER CHARACTER
 export const processBattleMove = async (
   userCurrentCharacter,
-  battle,
+  battleOld,
   currentSelectedMonster,
   attackUsed,
   io,
   queue,
   t,
 ) => {
+  const battle = await reFetchBattle(
+    battleOld,
+    t,
+  );
   let stageZeroInfoArray = []; // Start of Round effects (ex: stun from debuff)
   let stageOneInfoArray = []; // User Attacking Monsters
   let stageTwoInfoArray = []; // Monsters attack the user
@@ -233,8 +237,11 @@ export const processBattleMove = async (
   // Process Monster Moves/Attacks
   const isBattleMonsterAlive = battleMonsterState.filter((obj) => obj.currentHp > 0);
 
+  console.log(isBattleMonsterAlive);
+  console.log('check if there is monsters alive');
   // If there are no monsters left, tag battle as complete
   if (!isBattleMonsterAlive || isBattleMonsterAlive.length < 1) {
+    console.log('battle is complete');
     isBattleComplete = true;
   }
   if (!isBattleComplete) {
@@ -265,8 +272,10 @@ export const processBattleMove = async (
         stageThreeInfoArray,
         userState,
         battleMonsterState,
+        saveToDatabasePromises,
       ] = await userApplyRetliation(
         userState,
+        saveToDatabasePromises,
         battleMonsterState,
         battle,
         retaliationArray,
@@ -318,14 +327,18 @@ export const processBattleMove = async (
   }
 
   if (isBattleComplete) {
+    console.log('battle is complete end promise push');
     saveToDatabasePromises.push(
       new Promise((resolve, reject) => {
-        battle.update({
+        db.battle.update({
           complete: true,
         }, {
+          where: {
+            id: battle.id,
+          },
           lock: t.LOCK.UPDATE,
           transaction: t,
-        }).then(resolve());
+        }).then(() => resolve());
       }),
     );
   }
@@ -340,7 +353,7 @@ export const processBattleMove = async (
       }, {
         lock: t.LOCK.UPDATE,
         transaction: t,
-      }).then(resolve());
+      }).then(() => resolve());
     }),
   );
 
@@ -355,7 +368,7 @@ export const processBattleMove = async (
           },
           lock: t.LOCK.UPDATE,
           transaction: t,
-        }).then(resolve());
+        }).then(() => resolve());
       }),
     );
   }
@@ -399,7 +412,9 @@ export const processBattleMove = async (
     lock: t.LOCK.UPDATE,
     transaction: t,
   });
-
+  console.log(updatedBattle.BattleMonsters);
+  console.log('updatedBattle.complete');
+  console.log(updatedBattle.complete);
   console.log('done processing moves');
   console.log(`parry: ${regularAttack.parry}`);
   console.log(`crit: ${regularAttack.crit}`);
@@ -408,10 +423,12 @@ export const processBattleMove = async (
   console.log(`lifesteal: ${regularAttack.lifesteal}`);
   console.log(`initialUserState.hp`);
   console.log(initialUserState.hp);
+  const newBattleState = JSON.parse(JSON.stringify(updatedBattle));
+
   return [
     userCurrentCharacter,
     initialUserState,
-    updatedBattle,
+    newBattleState,
     stageZeroInfoArray,
     stageOneInfoArray,
     stageTwoInfoArray,
@@ -421,5 +438,6 @@ export const processBattleMove = async (
     stageSixInfoArray,
     stageSevenInfoArray,
     sumExp,
+    // newBattleState,
   ];
 };
