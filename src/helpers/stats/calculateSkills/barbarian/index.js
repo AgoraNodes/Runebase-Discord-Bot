@@ -165,6 +165,37 @@ export const calculateBarbSkillDamage = (
     };
   }
 
+  if (skillToCalculate.skill.name === "War Cry") {
+    const parryBonus = 30 + ((skillToCalculate.points - 1) * 5);
+    const buffRounds = 2 + ((skillToCalculate.points - 1) * 0.5);
+    newAttack = {
+      name: skillToCalculate.skill.name,
+      attackType: 'Magic',
+      parryBonus: Math.round(parryBonus),
+      cost: 2,
+      ranged: true,
+      buff: true,
+      rounds: Math.round(buffRounds),
+    };
+  }
+
+  if (skillToCalculate.skill.name === "Battle Command") {
+    const newMinDamage = (newAttack.min / 100) * (10 + ((skillToCalculate.points - 1) * 5));
+    const newMaxDamage = (newAttack.max / 100) * (10 + ((skillToCalculate.points - 1) * 5));
+    const rounds = 2 + (0.5 * (skillToCalculate.points - 1));
+    newAttack = {
+      name: skillToCalculate.skill.name,
+      attackType: 'Magic',
+      min: newMinDamage,
+      max: newMaxDamage,
+      cost: 2,
+      rounds: Math.round(rounds),
+      ranged: true,
+      debuff: true,
+      aoe: true,
+    };
+  }
+
   if (skillToCalculate.skill.name === "Cleave") {
     const newMinDamage = (newAttack.min / 100) * (50 + ((skillToCalculate.points - 1) * 5));
     const newMaxDamage = (newAttack.max / 100) * (50 + ((skillToCalculate.points - 1) * 5));

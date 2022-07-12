@@ -29,7 +29,6 @@ export const renderInitBattleGif = async (
   userCurrentSelectedSkills,
   battle,
   previousBattleState,
-  previousUserState,
   currentSelectedMonster,
   battleInfoArray = false,
   monsterInfo = false,

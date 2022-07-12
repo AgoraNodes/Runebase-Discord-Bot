@@ -285,7 +285,6 @@ export const discordBattle = async (
           userCurrentSelectedSkills,
           battle,
           battle,
-          userCurrentCharacter,
           currentSelectedMonster,
         ),
         'battle.gif',
@@ -407,9 +406,9 @@ ${newLootC.length > 0 ? `__found ${newLootC.length} ${newLootC.length === 1 ? `i
       });
       return;
     }
-    console.log(battle.UserClassId);
-    console.log(userCurrentCharacter.id);
-    console.log('123');
+    // console.log(battle.UserClassId);
+    // console.log(userCurrentCharacter.id);
+    // console.log('123');
     if (battle.UserClassId !== userCurrentCharacter.id) {
       await interaction.reply({
         content: `<@${interaction.user.id}>, This battle belongs to a different character!`,
@@ -621,7 +620,6 @@ ${newLootC.length > 0 ? `__found ${newLootC.length} ${newLootC.length === 1 ? `i
                   userCurrentSelectedSkills,
                   battle,
                   battle,
-                  userCurrentCharacter,
                   currentSelectedMonster,
                 ),
                 'battle.gif',
@@ -722,12 +720,8 @@ ${newLootC.length > 0 ? `__found ${newLootC.length} ${newLootC.length === 1 ? `i
         let stageFourInfoArray;
         let sumExp = 0;
 
-        let previousBattleState = battle;
-        previousBattleState = JSON.stringify(previousBattleState);
-        previousBattleState = JSON.parse(previousBattleState);
-        let previousUserState = userCurrentCharacter;
-        previousUserState = JSON.stringify(previousUserState);
-        previousUserState = JSON.parse(previousUserState);
+        const previousBattleState = JSON.parse(JSON.stringify(battle));
+        const previousUserState = JSON.parse(JSON.stringify(userCurrentCharacter));
 
         if (interaction.isButton()) {
           await interaction.deferUpdate();
@@ -863,15 +857,12 @@ ${newLootC.length > 0 ? `__found ${newLootC.length} ${newLootC.length === 1 ? `i
               files: [
                 new MessageAttachment(
                   await renderBattleGif(
-                    userCurrentCharacter,
                     initialUserState,
                     userCurrentSelectedSkills,
-                    battle,
                     previousBattleState,
-                    previousUserState,
                     currentSelectedMonster,
-                    stageTwoInfoArray,
                     stageOneInfoArray,
+                    stageTwoInfoArray,
                     stageThreeInfoArray,
                     stageFourInfoArray,
                   ),
@@ -902,15 +893,12 @@ ${newLootC.length > 0 ? `__found ${newLootC.length} ${newLootC.length === 1 ? `i
               files: [
                 new MessageAttachment(
                   await renderBattleGif(
-                    userCurrentCharacter,
                     initialUserState,
                     userCurrentSelectedSkills,
-                    battle,
                     previousBattleState,
-                    previousUserState,
                     currentSelectedMonster,
-                    stageTwoInfoArray,
                     stageOneInfoArray,
+                    stageTwoInfoArray,
                     stageThreeInfoArray,
                     stageFourInfoArray,
                   ),
@@ -1085,7 +1073,6 @@ ${newLootC.length > 0 ? `__found ${newLootC.length} ${newLootC.length === 1 ? `i
                   userCurrentSelectedSkills,
                   battle,
                   previousBattleState,
-                  previousUserState,
                   currentSelectedMonster,
                   stageOneInfoArray,
                 ),

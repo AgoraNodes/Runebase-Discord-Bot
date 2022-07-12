@@ -11,7 +11,7 @@ const userApplyBuffSingle = async (
   selectedMonster,
   t,
 ) => {
-  console.log('start apply buff');
+  // console.log('start apply buff');
   const battleLogs = [];
 
   const updatedMonster = JSON.parse(JSON.stringify(selectedMonster));
@@ -62,10 +62,10 @@ const userApplyBuffSingle = async (
     monstersToUpdate: [],
     useAttack,
     battleLogs,
-    userState,
+    userState: JSON.parse(JSON.stringify(userState)),
   });
 
-  console.log('done applying buff');
+  // console.log('done applying buff');
   return [
     stageOneInfoArray,
     userState,

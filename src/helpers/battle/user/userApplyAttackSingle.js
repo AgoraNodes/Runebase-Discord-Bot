@@ -6,8 +6,7 @@ import isFailedAttack from './isFailedAttack';
 import calculateCritDamage from '../utils/calculateCritDamage';
 
 const userApplyAttackSingle = async (
-  userCurrentCharacter, // UserCharacter
-  userState,
+  userState, // Current User State
   lvl, // Users Level
   stageOneInfoArray, // Array to fill with battle info
   battle, // battle database record
@@ -22,7 +21,7 @@ const userApplyAttackSingle = async (
   const updatedMonster = JSON.parse(JSON.stringify(selectedMonster));
 
   // Apply Armor Debuff if exists
-  if (updatedMonster.debuffs.length > 0) {
+  if (updatedMonster.debuffs && updatedMonster.debuffs.length > 0) {
     for (const debuff of updatedMonster.debuffs) {
       if (debuff.reducedArmor) {
         updatedMonster.monster.armor = Math.round(updatedMonster.monster.defense - ((updatedMonster.monster.defense / 100) * debuff.reducedArmor));
@@ -35,7 +34,7 @@ const userApplyAttackSingle = async (
     updatedMonstersArray,
     attackFailed,
   ] = await isFailedAttack(
-    userCurrentCharacter,
+    userState,
     lvl,
     useAttack,
     battle,
@@ -99,7 +98,7 @@ const userApplyAttackSingle = async (
     monstersToUpdate: updatedMonstersArray,
     useAttack,
     battleLogs,
-    userState,
+    userState: JSON.parse(JSON.stringify(userState)),
   });
 
   return [

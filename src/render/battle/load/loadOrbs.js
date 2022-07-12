@@ -10,7 +10,7 @@ import { calculateCharacterStats } from '../../../helpers/stats/calculateCharact
 export const loadOrbs = async (
   initialUserState,
   stageOneInfoArray,
-  battleInfoArray,
+  stageTwoInfoArray,
 ) => {
   const promises = [];
   const bufferPromises = [];
@@ -74,13 +74,13 @@ export const loadOrbs = async (
     }
   }
 
-  if (battleInfoArray) {
-    for (const [index, info] of battleInfoArray.entries()) {
+  if (stageTwoInfoArray) {
+    for (const [index, info] of stageTwoInfoArray.entries()) {
       bufferPromises.push(
         new Promise((resolve, reject) => {
           renderHpOrb(
-            info.currentHp,
-            initialUserState.hp.max,
+            info.userState.hp.current,
+            info.userState.hp.max,
           ).then((buffer) => {
             hpOrbsBuffer[index + 1] = buffer;
             resolve();
@@ -112,7 +112,7 @@ export const loadOrbs = async (
       }),
     );
   }
-  console.log('before promise wait');
+  // console.log('before promise wait');
   await Promise.all(promises);
 
   return [

@@ -1,11 +1,11 @@
 import db from '../../../models';
 
 const isFailedAttack = async (
-  userCurrentCharacter,
+  userState,
   lvl,
   useAttack,
   battle,
-  userBattleLogs,
+  battleLogs,
   updatedMonster,
   updatedMonstersArray,
   t,
@@ -25,9 +25,6 @@ const isFailedAttack = async (
     const isNotMissed = Math.random() < Number(userHitChance) / 100; // Did User hit monster?
 
     if (!isNotMissed) {
-      userBattleLogs.unshift({
-        log: `${userCurrentCharacter.user.username} ${useAttack.name} missed ${updatedMonster.monster.name}`,
-      });
       updatedMonstersArray.push({
         ...updatedMonster,
         userDamage: 'Missed',
@@ -35,18 +32,16 @@ const isFailedAttack = async (
         // died: !(updatedMonster.currentHp > 0),
         attackType: 'Missed',
       });
-      await db.battleLog.create({
+      const createBattleLog = await db.battleLog.create({
         battleId: battle.id,
-        log: `${userCurrentCharacter.user.username} ${useAttack.name} missed ${updatedMonster.monster.name}`,
+        log: `${userState.user.username} ${useAttack.name} missed ${updatedMonster.monster.name}`,
       }, {
         lock: t.LOCK.UPDATE,
         transaction: t,
       });
+      battleLogs.unshift(JSON.parse(JSON.stringify(createBattleLog)));
       attackFailed = true;
     } else if (isBlocked) {
-      userBattleLogs.unshift({
-        log: `${updatedMonster.monster.name} blocked ${userCurrentCharacter.user.username} ${useAttack.name}`,
-      });
       updatedMonstersArray.push({
         ...updatedMonster, // the updated monster info
         userDamage: 'Blocked', // Damage to show on hit
@@ -54,18 +49,16 @@ const isFailedAttack = async (
         // died: !(updatedMonster.currentHp > 0),
         attackType: 'Blocked', // TODO: Attack Type should be used to determin the animation to pick
       });
-      await db.battleLog.create({
+      const createBattleLog = await db.battleLog.create({
         battleId: battle.id,
-        log: `${updatedMonster.monster.name} blocked ${userCurrentCharacter.user.username} ${useAttack.name}`,
+        log: `${updatedMonster.monster.name} blocked ${userState.user.username} ${useAttack.name}`,
       }, {
         lock: t.LOCK.UPDATE,
         transaction: t,
       });
+      battleLogs.unshift(JSON.parse(JSON.stringify(createBattleLog)));
       attackFailed = true;
     } else if (isParried) {
-      userBattleLogs.unshift({
-        log: `${updatedMonster.monster.name} parried ${userCurrentCharacter.user.username} ${useAttack.name}`,
-      });
       updatedMonstersArray.push({
         ...updatedMonster,
         userDamage: 'Parried',
@@ -74,19 +67,20 @@ const isFailedAttack = async (
         attackType: 'Parried',
       });
 
-      await db.battleLog.create({
+      const createBattleLog = await db.battleLog.create({
         battleId: battle.id,
-        log: `${updatedMonster.monster.name} parried ${userCurrentCharacter.user.username} ${useAttack.name}`,
+        log: `${updatedMonster.monster.name} parried ${userState.user.username} ${useAttack.name}`,
       }, {
         lock: t.LOCK.UPDATE,
         transaction: t,
       });
+      battleLogs.unshift(JSON.parse(JSON.stringify(createBattleLog)));
       attackFailed = true;
     }
   }
 
   return [
-    userBattleLogs,
+    battleLogs,
     updatedMonstersArray,
     attackFailed,
   ];

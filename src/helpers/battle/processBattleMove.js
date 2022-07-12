@@ -68,10 +68,12 @@ export const processBattleMove = async (
   let userState = JSON.parse(JSON.stringify(userCurrentCharacter));
   userState.hp = hp;
   userState.mp = mp;
-  const initialUserState = userState;
-  console.log(userState);
+  const initialUserState = JSON.parse(JSON.stringify(userState));
+  console.log(initialUserState.hp);
+  console.log('initialUserStateStartProcessor');
   const selectedMonster = battle.BattleMonsters.find((element) => element.id === currentSelectedMonster.id);
 
+  console.log('Stage #1 Processing');
   // Stage One
   if (
     useAttack.buff
@@ -82,7 +84,7 @@ export const processBattleMove = async (
       userState,
     ] = await userApplyBuffSingle(
       userCurrentCharacter,
-      userState,
+      userState, // Current User State
       stageOneInfoArray,
       battle,
       useAttack,
@@ -97,8 +99,7 @@ export const processBattleMove = async (
       stageOneInfoArray,
       userState,
     ] = await userApplyDebuffAoE(
-      userCurrentCharacter,
-      userState,
+      userState, // Current User State
       stageOneInfoArray,
       battle,
       useAttack,
@@ -113,8 +114,7 @@ export const processBattleMove = async (
       stageOneInfoArray,
       userState,
     ] = await userApplyDebuffSingle(
-      userCurrentCharacter,
-      userState,
+      userState, // Current User State
       stageOneInfoArray,
       battle,
       useAttack,
@@ -129,8 +129,7 @@ export const processBattleMove = async (
       stageOneInfoArray,
       userState,
     ] = await userApplyAttackAoE(
-      userCurrentCharacter, // UserCharacter
-      userState,
+      userState, // Current User State
       lvl, // Users Level
       stageOneInfoArray, // Array to fill with battle info
       battle, // battle database record
@@ -143,7 +142,6 @@ export const processBattleMove = async (
       stageOneInfoArray,
       userState,
     ] = await userApplyAttackSingle(
-      userCurrentCharacter, // UserCharacter
       userState,
       lvl, // Users Level
       stageOneInfoArray, // Array to fill with battle info
@@ -155,7 +153,7 @@ export const processBattleMove = async (
   }
 
   // Stage Two
-  console.log('before processing battle moves');
+  console.log('Stage #2 Processing');
   // Process Monster Moves/Attacks
   const allRemainingBattleMonster = await db.BattleMonster.findAll({
     where: {
@@ -176,6 +174,12 @@ export const processBattleMove = async (
           {
             model: db.monsterAttack,
             as: 'monsterAttacks',
+            include: [
+              {
+                model: db.damageType,
+                as: 'damageType',
+              },
+            ],
           },
         ],
       },
@@ -199,10 +203,11 @@ export const processBattleMove = async (
   if (allRemainingBattleMonster) {
     [
       totalDamageByMonsters,
+      userState,
       stageTwoInfoArray,
       retaliationArray,
     ] = await monstersApplyAttack(
-      userCurrentCharacter, // UserCharacter
+      userState,
       lvl, // Users Level
       block, // users Block
       defense, // Users defense
@@ -214,6 +219,7 @@ export const processBattleMove = async (
     );
   }
 
+  console.log('Stage #3 Processing');
   // Stage Three
   if (retaliationArray.length > 0) {
     [
@@ -249,6 +255,7 @@ export const processBattleMove = async (
     transaction: t,
   });
 
+  console.log('Stage #4 Processing');
   // Stage Four
   // Apply debuff damage
   if (findAllMonsterToCountDownDebuff.length > 0) {
@@ -315,6 +322,12 @@ export const processBattleMove = async (
   });
 
   console.log('done processing moves');
+  console.log(`parry: ${regularAttack.parry}`);
+  console.log(`crit: ${regularAttack.crit}`);
+  console.log(`defense: ${defense}`);
+  console.log(`attack rating: ${regularAttack.ar}`);
+  console.log(`initialUserState.hp`);
+  console.log(initialUserState.hp);
   return [
     userCurrentCharacter,
     initialUserState,

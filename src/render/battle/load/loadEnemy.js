@@ -45,7 +45,7 @@ export const loadEnemy = async (
       });
     }),
   );
-  console.log('before promise wait');
+  // console.log('before promise wait');
   await Promise.all(promises);
 
   return enemyFrame;

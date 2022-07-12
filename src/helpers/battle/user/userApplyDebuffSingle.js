@@ -3,7 +3,6 @@
 import db from '../../../models';
 
 const userApplyDebuffSingle = async (
-  userCurrentCharacter,
   userState,
   stageOneInfoArray,
   battle,
@@ -41,11 +40,11 @@ const userApplyDebuffSingle = async (
       JSON.parse(JSON.stringify(createDebuff)),
     );
     battleLogs.unshift({
-      log: `${userCurrentCharacter.user.username} used ${useAttack.name} on ${selectedMonster.monster.name}`,
+      log: `${userState.user.username} used ${useAttack.name} on ${selectedMonster.monster.name}`,
     });
     await db.battleLog.create({
       battleId: battle.id,
-      log: `${userCurrentCharacter.user.username} used ${useAttack.name} on ${selectedMonster.monster.name}`,
+      log: `${userState.user.username} used ${useAttack.name} on ${selectedMonster.monster.name}`,
     }, {
       lock: t.LOCK.UPDATE,
       transaction: t,
@@ -67,7 +66,7 @@ const userApplyDebuffSingle = async (
     ],
     useAttack,
     battleLogs,
-    userState,
+    userState: JSON.parse(JSON.stringify(userState)),
   });
 
   return [

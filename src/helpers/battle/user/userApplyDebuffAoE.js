@@ -3,7 +3,6 @@
 import db from '../../../models';
 
 const userApplyDebuffAoE = async (
-  userCurrentCharacter,
   userState,
   stageOneInfoArray,
   battle,
@@ -26,12 +25,15 @@ const userApplyDebuffAoE = async (
         const index = BattleMonsterToUpdate.debuffs.findIndex((o) => o.id === existingDebuff.id);
         if (index !== -1) BattleMonsterToUpdate.debuffs.splice(index, 1);
       }
+
       const createDebuff = await db.debuff.create({
         name: useAttack.name,
         new: true,
         rounds: useAttack.rounds,
         BattleMonsterId: battleMonster.id,
-        reducedArmor: useAttack.reducedArmor,
+        reducedArmor: useAttack.reducedArmor ? useAttack.reducedArmor : null,
+        minDmg: useAttack.min ? useAttack.min : null,
+        maxDmg: useAttack.max ? useAttack.max : null,
       }, {
         lock: t.LOCK.UPDATE,
         transaction: t,
@@ -64,7 +66,7 @@ const userApplyDebuffAoE = async (
     monstersToUpdate: updatedMonstersArray,
     useAttack,
     battleLogs,
-    userState,
+    userState: JSON.parse(JSON.stringify(userState)),
   });
 
   return [

@@ -12,7 +12,7 @@ const userApplyDebuffDamage = async (
   t,
 ) => {
   for await (const monster of findAllMonsterToCountDownDebuff) {
-    console.log('debuff 1');
+    // console.log('debuff 1');
     if (monster.currentHp > 0) {
       if (monster.debuffs.length > 0) {
         for await (const debuffToCountDown of monster.debuffs) {
@@ -21,7 +21,7 @@ const userApplyDebuffDamage = async (
             && debuffToCountDown.minDmg
             && debuffToCountDown.maxDmg
           ) {
-            console.log('debuff 2');
+            // console.log('debuff 2');
             const battleLogs = [];
             const updatedMonstersArray = [];
             const updatedMonster = JSON.parse(JSON.stringify(monster));
@@ -32,7 +32,7 @@ const userApplyDebuffDamage = async (
               lock: t.LOCK.UPDATE,
               transaction: t,
             });
-            console.log('debuff 4');
+            // console.log('debuff 4');
             // Generate Battle log
             const createBattleLog = await db.battleLog.create({
               battleId: battle.id,
@@ -43,7 +43,7 @@ const userApplyDebuffDamage = async (
             });
             battleLogs.unshift(JSON.parse(JSON.stringify(createBattleLog)));
 
-            console.log('debuff 6');
+            // console.log('debuff 6');
             if (updatedMonster.currentHp < 1) {
               const createKillLog = await db.battleLog.create({
                 battleId: battle.id,
@@ -54,7 +54,7 @@ const userApplyDebuffDamage = async (
               });
               battleLogs.unshift(JSON.parse(JSON.stringify(createKillLog)));
             }
-            console.log('debuff 7');
+            // console.log('debuff 7');
             updatedMonster.currentHp -= randomAttackDamage;
             updatedMonstersArray.push({
               ...updatedMonster,

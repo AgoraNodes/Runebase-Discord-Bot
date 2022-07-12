@@ -5,8 +5,7 @@ import { randomIntFromInterval } from "../../utils";
 import isFailedAttack from './isFailedAttack';
 
 const userApplyAttackAoE = async (
-  userCurrentCharacter, // UserCharacter
-  userState,
+  userState, // Current User State
   lvl, // Users Level
   stageOneInfoArray, // Array to fill with battle info
   battle, // battle database record
@@ -35,7 +34,7 @@ const userApplyAttackAoE = async (
         updatedMonstersArray,
         attackFailed,
       ] = await isFailedAttack(
-        userCurrentCharacter,
+        userState,
         lvl,
         useAttack,
         battle,
@@ -60,7 +59,7 @@ const userApplyAttackAoE = async (
         // Generate Battle log
         const createBattleLog = await db.battleLog.create({
           battleId: battle.id,
-          log: `${userCurrentCharacter.user.username} used ${useAttack.name} on ${selectedMonster.monster.name} for ${randomAttackDamage} damage`,
+          log: `${userState.user.username} used ${useAttack.name} on ${selectedMonster.monster.name} for ${randomAttackDamage} damage`,
         }, {
           lock: t.LOCK.UPDATE,
           transaction: t,
@@ -70,7 +69,7 @@ const userApplyAttackAoE = async (
         if (updatedMonster.currentHp < 1) {
           const killLog = await db.battleLog.create({
             battleId: battle.id,
-            log: `${userCurrentCharacter.user.username} killed ${selectedMonster.monster.name}`,
+            log: `${userState.user.username} killed ${selectedMonster.monster.name}`,
           }, {
             lock: t.LOCK.UPDATE,
             transaction: t,
@@ -95,7 +94,7 @@ const userApplyAttackAoE = async (
     monstersToUpdate: updatedMonstersArray,
     useAttack,
     battleLogs,
-    userState,
+    userState: JSON.parse(JSON.stringify(userState)),
   });
 
   return [

@@ -7,7 +7,7 @@ import isFailedAttack from './isFailedAttack';
 import calculateUserRetaliation from './calculateUserRetaliation';
 
 const monstersApplyAttack = async (
-  userCurrentCharacter, // UserCharacter
+  userState, // Current User State
   lvl, // Users Level
   block, // users Block
   defense, // Users defense
@@ -17,29 +17,29 @@ const monstersApplyAttack = async (
   allRemainingBattleMonster, // Which attack is used by user
   t, // database transaction
 ) => {
-  let currentUserHp = userCurrentCharacter.condition.life;
-  let attackFailed = true;
+  // const newUserState = JSON.parse(JSON.stringify(userState));
+  // let currentUserHp = userCurrentCharacter.condition.life;
   let totalDamageByMonsters = 0;
   const retaliationArray = [];
   // eslint-disable-next-line no-restricted-syntax
   for await (const remainingMonster of allRemainingBattleMonster) {
     let individualBattleObject;
+    let attackFailed = true;
     const battleLogs = [];
-    if (currentUserHp > 0) {
+    if (userState.hp.current > 0) {
       const [
-        pickedMonsterAttack,
+        useAttack,
       ] = pickRandomMonsterAttack(
         remainingMonster,
       );
 
-      const randomMonsterAttackDamage = randomIntFromInterval(pickedMonsterAttack.minDmg, pickedMonsterAttack.maxDmg); // Get Random Monster Damage
+      const randomMonsterAttackDamage = randomIntFromInterval(useAttack.minDmg, useAttack.maxDmg); // Get Random Monster Damage
 
       [
         individualBattleObject,
         attackFailed,
       ] = await isFailedAttack(
-        userCurrentCharacter,
-        currentUserHp,
+        userState,
         lvl,
         block,
         defense,
@@ -47,51 +47,46 @@ const monstersApplyAttack = async (
         battle,
         battleLogs,
         remainingMonster,
-        pickedMonsterAttack,
+        useAttack,
         t,
       );
 
       if (!attackFailed) {
-        // TODO Check if we counter attack (retaliate)
-        // TODO Create Kick Damage calculation in statscalculations
-
-        await db.battleLog.create({
+        const createBattleLog = await db.battleLog.create({
           battleId: battle.id,
-          log: `${remainingMonster.monster.name} used ${pickedMonsterAttack.name} on ${userCurrentCharacter.user.username} for ${randomMonsterAttackDamage} damage`,
+          log: `${remainingMonster.monster.name} used ${useAttack.name} on ${userState.user.username} for ${randomMonsterAttackDamage} damage`,
         }, {
           lock: t.LOCK.UPDATE,
           transaction: t,
         });
-        battleLogs.unshift({
-          log: `${remainingMonster.monster.name} used ${pickedMonsterAttack.name} on ${userCurrentCharacter.user.username} for ${randomMonsterAttackDamage} damage`,
-        });
+        battleLogs.unshift(JSON.parse(JSON.stringify(createBattleLog)));
+        userState.hp.current -= randomMonsterAttackDamage;
+        totalDamageByMonsters += randomMonsterAttackDamage;
+        individualBattleObject = {
+          monsterId: remainingMonster.id,
+          // attackType: useAttack.name,
+          useAttack,
+          damage: randomMonsterAttackDamage,
+          userState: JSON.parse(JSON.stringify(userState)),
+          battleLogs,
+        };
       }
 
-      if (currentUserHp < 1) {
-        await db.battleLog.create({
+      if (userState.hp.current < 1) {
+        const createKillBattleLog = await db.battleLog.create({
           battleId: battle.id,
-          log: `${remainingMonster.monster.name} killed ${userCurrentCharacter.user.username}`,
+          log: `${remainingMonster.monster.name} killed ${userState.user.username}`,
         }, {
           lock: t.LOCK.UPDATE,
           transaction: t,
         });
-        battleLogs.unshift({
-          log: `${remainingMonster.monster.name} killed ${userCurrentCharacter.user.username}`,
-        });
+        battleLogs.unshift(JSON.parse(JSON.stringify(createKillBattleLog)));
       }
-      totalDamageByMonsters += randomMonsterAttackDamage;
-      currentUserHp -= randomMonsterAttackDamage;
-      individualBattleObject = {
-        monsterId: remainingMonster.id,
-        attackType: pickedMonsterAttack.name,
-        damage: randomMonsterAttackDamage,
-        currentHp: currentUserHp,
-        // currentHp: currentUserHp - randomMonsterAttackDamage,
-        battleLogs,
-      };
+
+      stageTwoInfoArray.push(individualBattleObject);
 
       const retaliate = await calculateUserRetaliation(
-        userCurrentCharacter,
+        userState,
         remainingMonster.id,
       );
 
@@ -101,12 +96,11 @@ const monstersApplyAttack = async (
         );
       }
     }
-
-    stageTwoInfoArray.push(individualBattleObject);
   }
 
   return [
     totalDamageByMonsters,
+    userState,
     stageTwoInfoArray,
     retaliationArray,
   ];

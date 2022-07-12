@@ -2,8 +2,7 @@ import db from '../../../models';
 import { randomIntFromInterval } from "../../utils";
 
 const isFailedAttack = async (
-  userCurrentCharacter,
-  currentUserHp,
+  userState,
   lvl,
   block,
   defense,
@@ -11,15 +10,15 @@ const isFailedAttack = async (
   battle,
   battleLogs,
   remainingMonster,
-  pickedMonsterAttack,
+  useAttack,
   t,
 ) => {
   let individualBattleObject;
   // TODO: Maybe resist attacks based on resistance? (if attackType === 'Fire' then some logic)
   let attackFailed = false;
-  const randomMonsterAttackRating = randomIntFromInterval(pickedMonsterAttack.minAr, pickedMonsterAttack.maxAr); // Get Random Monster Damage
+  const randomMonsterAttackRating = randomIntFromInterval(useAttack.minAr, useAttack.maxAr); // Get Random Monster Damage
 
-  if (pickedMonsterAttack.attackType === 'physical') {
+  if (useAttack.damageType.name === 'Physical') {
     // Chance To Hit = 200% * {AR / (AR + DR)} * {Alvl / (Alvl + Dlvl)}
     // AR = Attacker's Attack Rating
     // DR = Defender's Defense rating
@@ -32,61 +31,58 @@ const isFailedAttack = async (
     const isNotMissed = Math.random() < Number(monsterHitChance) / 100; // Did Monster hit user?
 
     if (!isNotMissed) {
-      battleLogs.unshift({
-        log: `${remainingMonster.monster.name} ${pickedMonsterAttack.name} missed ${userCurrentCharacter.user.username}`,
-      });
-      await db.battleLog.create({
+      const createBattleLog = await db.battleLog.create({
         battleId: battle.id,
-        log: `${remainingMonster.monster.name} ${pickedMonsterAttack.name} missed ${userCurrentCharacter.user.username}`,
+        log: `${remainingMonster.monster.name} ${useAttack.name} missed ${userState.user.username}`,
       }, {
         lock: t.LOCK.UPDATE,
         transaction: t,
       });
+      battleLogs.unshift(JSON.parse(JSON.stringify(createBattleLog)));
       individualBattleObject = {
         monsterId: remainingMonster.id,
         attackType: 'Missed',
         damage: 0,
-        currentHp: currentUserHp,
+        userState: JSON.parse(JSON.stringify(userState)),
+        useAttack,
         battleLogs,
       };
       attackFailed = true;
     } else if (isBlocked) {
-      battleLogs.unshift({
-        log: `${userCurrentCharacter.user.username} blocked ${remainingMonster.monster.name} ${pickedMonsterAttack.name}`,
-      });
-      await db.battleLog.create({
+      const createBattleLog = await db.battleLog.create({
         battleId: battle.id,
-        log: `${userCurrentCharacter.user.username} blocked ${remainingMonster.monster.name} ${pickedMonsterAttack.name}`,
+        log: `${userState.user.username} blocked ${remainingMonster.monster.name} ${useAttack.name}`,
       }, {
         lock: t.LOCK.UPDATE,
         transaction: t,
       });
+      battleLogs.unshift(JSON.parse(JSON.stringify(createBattleLog)));
+
       individualBattleObject = {
         monsterId: remainingMonster.id,
         attackType: 'Blocked',
         damage: 0,
-        currentHp: currentUserHp,
+        userState: JSON.parse(JSON.stringify(userState)),
+        useAttack,
         battleLogs,
       };
       attackFailed = true;
     } else if (isParried) {
-      battleLogs.unshift({
-        log: `${userCurrentCharacter.user.username} parried ${remainingMonster.monster.name} ${pickedMonsterAttack.name}`,
-      });
-
-      await db.battleLog.create({
+      const createBattleLog = await db.battleLog.create({
         battleId: battle.id,
-        log: `${userCurrentCharacter.user.username} parried ${remainingMonster.monster.name} ${pickedMonsterAttack.name}`,
+        log: `${userState.user.username} parried ${remainingMonster.monster.name} ${useAttack.name}`,
       }, {
         lock: t.LOCK.UPDATE,
         transaction: t,
       });
+      battleLogs.unshift(JSON.parse(JSON.stringify(createBattleLog)));
 
       individualBattleObject = {
         monsterId: remainingMonster.id,
         attackType: 'Parried',
         damage: 0,
-        currentHp: currentUserHp,
+        userState: JSON.parse(JSON.stringify(userState)),
+        useAttack,
         battleLogs,
       };
       attackFailed = true;

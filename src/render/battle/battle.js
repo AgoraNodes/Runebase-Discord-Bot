@@ -24,17 +24,14 @@ import { drawEnemy } from './draw/drawEnemy';
 import { drawUserBuffs } from './draw/drawUserBuffs';
 
 export const renderBattleGif = async (
-  currentUser,
   initialUserState,
   userCurrentSelectedSkills,
-  battle,
   previousBattleState,
-  previousUserState,
   currentSelectedMonster, // Selected monster
-  battleInfoArray = false, // Enemies attacking the user
   stageOneInfoArray = false, // User Attacking Enemy
-  retaliationInfoArray = false, // User Retaliating
-  debuffDamageInfoArray = false, // Applying Debuff damage on enemies
+  stageTwoInfoArray = false, // Enemies attacking the user
+  stageThreeInfoArray = false, // User Retaliating
+  stageFourInfoArray = false, // Applying Debuff damage on enemies
 ) => {
   const userState = initialUserState;
   const zone = 'den';
@@ -55,6 +52,8 @@ export const renderBattleGif = async (
   let imageData;
   let palette;
   let imageIndex;
+  console.log(userState.hp);
+  console.log('initial state hp');
 
   loadPromises.push(
     new Promise((resolve, reject) => {
@@ -174,7 +173,7 @@ export const renderBattleGif = async (
       loadOrbs(
         userState,
         stageOneInfoArray,
-        battleInfoArray,
+        stageTwoInfoArray,
       ).then(([
         hpOrbsReturn,
         mpOrbsReturn,
@@ -192,6 +191,7 @@ export const renderBattleGif = async (
   const ctx = canvas.getContext('2d');
   const gif = GIFEncoder();
 
+  // Stage One
   console.log('Render Frame #1');
   drawBackground(
     ctx,
@@ -293,7 +293,7 @@ export const renderBattleGif = async (
     ctx, // Ctx drawing canvas
     playerImage, // image array of player images
     0, // number of image in the array to show
-    findAttackedEnemyByUser, // user attacking [false || enemyImagePosition]
+    stageOneInfoArray[0].useAttack.ranged ? false : findAttackedEnemyByUser, // user attacking [false || enemyImagePosition]
   );
 
   drawBattleScreenTools(
@@ -496,8 +496,9 @@ export const renderBattleGif = async (
     },
   );
 
+  // Stage Two
   // eslint-disable-next-line no-restricted-syntax
-  for (const [index, battleInfo] of battleInfoArray.entries()) {
+  for (const [index, battleInfo] of stageTwoInfoArray.entries()) {
     console.log('Render Frame #5');
     drawBackground(
       ctx,
@@ -865,8 +866,8 @@ export const renderBattleGif = async (
     );
   }
 
-  if (retaliationInfoArray && retaliationInfoArray.length > 0) {
-    for (const [index, retaliationInfo] of retaliationInfoArray.entries()) {
+  if (stageThreeInfoArray && stageThreeInfoArray.length > 0) {
+    for (const [index, retaliationInfo] of stageThreeInfoArray.entries()) {
       drawBackground(
         ctx,
         canvas,
@@ -1225,8 +1226,8 @@ export const renderBattleGif = async (
   }
 
   // Apply Debuff Damage
-  if (debuffDamageInfoArray && debuffDamageInfoArray.length > 0) {
-    for (const [index, debuffDamageInfo] of debuffDamageInfoArray.entries()) {
+  if (stageFourInfoArray && stageFourInfoArray.length > 0) {
+    for (const [index, debuffDamageInfo] of stageFourInfoArray.entries()) {
       drawBackground(
         ctx,
         canvas,
