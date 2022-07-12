@@ -26,13 +26,6 @@ const userApplyDebuffDamage = async (
             const monstersToUpdate = [];
             const updatedMonster = JSON.parse(JSON.stringify(monster));
             const randomAttackDamage = randomIntFromInterval(debuffToCountDown.minDmg, debuffToCountDown.maxDmg); // Get Random Monster Damage
-            // Apply Damage to monster
-            // await monster.decrement('currentHp', {
-            //   by: randomAttackDamage,
-            //   lock: t.LOCK.UPDATE,
-            //   transaction: t,
-            // });
-            // console.log('debuff 4');
             // Generate Battle log
             const createBattleLog = await db.battleLog.create({
               battleId: battle.id,

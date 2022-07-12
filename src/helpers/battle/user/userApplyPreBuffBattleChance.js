@@ -12,10 +12,15 @@ const userApplyPreBuffBattleChance = async (
   battle, // battle database record
   useAttack, // Which attack is used by user
   selectedMonsterId, // which Monster do we have selected?
+  saveToDatabasePromises,
   t, // database transaction
 ) => {
   const battleLogs = [];
   const monstersToUpdate = [];
+  console.log(battleMonsterState);
+  console.log(selectedMonsterId);
+  console.log('123');
+  const selectedMonster = battleMonsterState.find((element) => element.id === selectedMonsterId);
   // Apply ALL AOE Debuffs here
   for (const battleMonster of battleMonsterState) {
     const effects = [];
@@ -26,14 +31,21 @@ const userApplyPreBuffBattleChance = async (
             const isUnitStunned = Math.random() < Number(debuff.chance) / 100;
             if (isUnitStunned) {
               // Generate Battle log
-              const createBattleLog = await db.battleLog.create({
-                battleId: battle.id,
-                log: `${battleMonster.monster.name} was stunned by ${debuff.name}`,
-              }, {
-                lock: t.LOCK.UPDATE,
-                transaction: t,
+              const log = `${battleMonster.monster.name} was stunned by ${debuff.name}`;
+              saveToDatabasePromises.push(
+                new Promise((resolve, reject) => {
+                  db.battleLog.create({
+                    battleId: battle.id,
+                    log,
+                  }, {
+                    lock: t.LOCK.UPDATE,
+                    transaction: t,
+                  }).then(resolve());
+                }),
+              );
+              battleLogs.unshift({
+                log,
               });
-              battleLogs.unshift(JSON.parse(JSON.stringify(createBattleLog)));
               effects.push('Stunned');
             }
           }
@@ -67,6 +79,7 @@ const userApplyPreBuffBattleChance = async (
     stageZeroInfoArray,
     userState,
     battleMonsterState,
+    saveToDatabasePromises,
   ];
 };
 

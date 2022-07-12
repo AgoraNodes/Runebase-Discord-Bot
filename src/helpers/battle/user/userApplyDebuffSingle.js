@@ -9,10 +9,10 @@ const userApplyDebuffSingle = async (
   battle,
   useAttack,
   selectedMonsterId,
+  saveToDatabasePromises,
   t,
 ) => {
   const battleLogs = [];
-  // const updatedMonster = JSON.parse(JSON.stringify(selectedMonster));
   const updatedMonster = battleMonsterState.find((element) => element.id === selectedMonsterId);
   // Apply ALL Single Unit Debuffs here
 
@@ -42,15 +42,20 @@ const userApplyDebuffSingle = async (
       JSON.parse(JSON.stringify(createDebuff)),
     );
 
+    const log = `${userState.user.username} used ${useAttack.name} on ${updatedMonster.monster.name}`;
+    saveToDatabasePromises.push(
+      new Promise((resolve, reject) => {
+        db.battleLog.create({
+          battleId: battle.id,
+          log,
+        }, {
+          lock: t.LOCK.UPDATE,
+          transaction: t,
+        }).then(resolve());
+      }),
+    );
     battleLogs.unshift({
-      log: `${userState.user.username} used ${useAttack.name} on ${updatedMonster.monster.name}`,
-    });
-    await db.battleLog.create({
-      battleId: battle.id,
-      log: `${userState.user.username} used ${useAttack.name} on ${updatedMonster.monster.name}`,
-    }, {
-      lock: t.LOCK.UPDATE,
-      transaction: t,
+      log,
     });
   }
 
@@ -60,8 +65,6 @@ const userApplyDebuffSingle = async (
     {
       ...updatedMonster,
       userDamage: useAttack.name,
-      // currentMonsterHp: selectedMonster.currentHp - randomAttackDamage,
-      // died: !(updatedMonster.currentHp > 0),
       attackType: useAttack.name,
     },
   ];
@@ -79,6 +82,7 @@ const userApplyDebuffSingle = async (
     stageOneInfoArray,
     userState,
     battleMonsterState,
+    saveToDatabasePromises,
   ];
 };
 

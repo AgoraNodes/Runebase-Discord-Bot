@@ -12,7 +12,6 @@ const applyEnemyDebuffEffects = async (
       }
     }
   }
-
   return [
     battleMonsterState,
   ];

@@ -3,23 +3,22 @@
 import db from '../../../models';
 
 const userApplyBuffSingle = async (
-  userCurrentCharacter,
   userState,
   stageOneInfoArray,
   battle,
   useAttack,
   selectedMonsterId,
+  saveToDatabasePromises,
   t,
 ) => {
-  // console.log('start apply buff');
   const battleLogs = [];
-
-  // const updatedMonster = JSON.parse(JSON.stringify(selectedMonster));
-  // const updatedMonster = battleMonsterState.find((element) => element.id === selectedMonsterId);
-  const existingBuff = userCurrentCharacter.buffs.find((x) => x.name === useAttack.name);
+  const existingBuff = userState.buffs.find((x) => x.name === useAttack.name);
 
   if (existingBuff) {
     await existingBuff.destroy({
+      where: {
+        id: existingBuff.id,
+      },
       lock: t.LOCK.UPDATE,
       transaction: t,
     });
@@ -27,7 +26,7 @@ const userApplyBuffSingle = async (
     if (index !== -1) userState.buffs.splice(index, 1);
   }
 
-  const createBuff = await db.buff.create({
+  const buffObject = {
     name: useAttack.name,
     UserClassId: userState.id,
     damageBonus: useAttack.damageBonus ? useAttack.damageBonus : null,
@@ -38,24 +37,35 @@ const userApplyBuffSingle = async (
     chance: useAttack.chance ? useAttack.chance : 100,
     new: true,
     rounds: useAttack.rounds,
-  }, {
-    lock: t.LOCK.UPDATE,
-    transaction: t,
-  });
+  };
+  saveToDatabasePromises.push(
+    new Promise((resolve, reject) => {
+      db.buff.create(buffObject, {
+        lock: t.LOCK.UPDATE,
+        transaction: t,
+      }).then(resolve());
+    }),
+  );
   userState.buffs.unshift(
-    JSON.parse(JSON.stringify(createBuff)),
+    buffObject,
   );
 
-  const createBattleLog = await db.battleLog.create({
-    battleId: battle.id,
-    log: `${userState.user.username} used ${useAttack.name}`,
-    // log: `${userState.user.username} used ${useAttack.name} on ${updatedMonster.monster.name}`,
-  }, {
-    lock: t.LOCK.UPDATE,
-    transaction: t,
-  });
+  const log = `${userState.user.username} used ${useAttack.name}`;
+  saveToDatabasePromises.push(
+    new Promise((resolve, reject) => {
+      db.battleLog.create({
+        battleId: battle.id,
+        log,
+      }, {
+        lock: t.LOCK.UPDATE,
+        transaction: t,
+      }).then(resolve());
+    }),
+  );
 
-  battleLogs.unshift(JSON.parse(JSON.stringify(createBattleLog)));
+  battleLogs.unshift({
+    log,
+  });
 
   userState.mp.current -= useAttack.cost;
 
@@ -71,6 +81,7 @@ const userApplyBuffSingle = async (
   return [
     stageOneInfoArray,
     userState,
+    saveToDatabasePromises,
   ];
 };
 

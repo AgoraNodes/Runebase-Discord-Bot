@@ -1,27 +1,25 @@
 /* eslint-disable no-await-in-loop */
-
+/* eslint-disable no-restricted-syntax */
 import db from "../../../models";
 
-/* eslint-disable no-restricted-syntax */
+// TODO: Use Promises to push to database
 const countDownBuffsAndDebuffs = async (
   stageFiveInfoArray,
   userState,
   battleMonsterState,
   t,
 ) => {
-  // const updatedMonstersArray = JSON.parse(JSON.stringify(findAllMonsterToCountDownDebuff));
   const newUserBuffsArray = [];
   const monstersToUpdate = [];
   // Count Down Debuffs
   for (const monsterToCountDownDebuff of battleMonsterState) {
     if (monsterToCountDownDebuff.currentHp > 0) {
       const newBattleMonstersDebuffArrays = [];
-      const updatedBattleMonster = JSON.parse(JSON.stringify(monsterToCountDownDebuff));
       if (monsterToCountDownDebuff.debuffs.length > 0) {
         for (const monsterDebuff of monsterToCountDownDebuff.debuffs) {
           if (monsterDebuff.new) {
             newBattleMonstersDebuffArrays.push(
-              JSON.parse(JSON.stringify(monsterDebuff)),
+              monsterDebuff,
             );
           }
           if (
@@ -38,7 +36,7 @@ const countDownBuffsAndDebuffs = async (
             });
             newBattleMonstersDebuffArrays.push(
               {
-                ...JSON.parse(JSON.stringify(monsterDebuff)),
+                ...monsterDebuff,
                 rounds: monsterDebuff.rounds - 1,
               },
             );
@@ -53,9 +51,9 @@ const countDownBuffsAndDebuffs = async (
           }
         }
       }
-      updatedBattleMonster.debuffs = newBattleMonstersDebuffArrays;
+      monsterToCountDownDebuff.debuffs = newBattleMonstersDebuffArrays;
       monstersToUpdate.push(
-        updatedBattleMonster,
+        monsterToCountDownDebuff,
       );
     }
   }
@@ -65,17 +63,16 @@ const countDownBuffsAndDebuffs = async (
       if (userBuff.new) {
         console.log('user buff is new');
         newUserBuffsArray.push(
-          JSON.parse(JSON.stringify(userBuff)),
+          userBuff,
         );
       } else if (
         userBuff.rounds >= 1
         && !userBuff.new
       ) {
-        console.log(userBuff);
         console.log('user buff is not new');
         newUserBuffsArray.push(
           {
-            ...JSON.parse(JSON.stringify(userBuff)),
+            ...userBuff,
             rounds: userBuff.rounds - 1,
           },
         );

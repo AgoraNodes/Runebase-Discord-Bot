@@ -13,25 +13,16 @@ const userApplyAttackAoE = async (
   battle, // battle database record
   useAttack, // Which attack is used by user
   selectedMonsterId, // which Monster do we have selected?
+  saveToDatabasePromises,
   t, // database transaction
 ) => {
   let battleLogs = [];
   let monstersToUpdate = [];
   let attackFailed = true;
-  // const selectedMonster = battleMonsterState.find((element) => element.id === selectedMonsterId);
   // Apply ALL AOE Debuffs here
   for (const battleMonster of battleMonsterState) {
     const updatedMonster = battleMonster;
     if (updatedMonster.currentHp > 0) {
-      // Apply Armor Debuff if exists
-      if (updatedMonster.debuffs.length > 0) {
-        for (const debuff of updatedMonster.debuffs) {
-          if (debuff.reducedArmor) {
-            updatedMonster.monster.armor = Math.round(updatedMonster.monster.defense - ((updatedMonster.monster.defense / 100) * debuff.reducedArmor));
-          }
-        }
-      }
-
       [
         battleLogs,
         monstersToUpdate,
@@ -65,25 +56,41 @@ const userApplyAttackAoE = async (
         updatedMonster.currentHp -= randomAttackDamage;
 
         // Generate Battle log
-        const createBattleLog = await db.battleLog.create({
-          battleId: battle.id,
-          log: `${userState.user.username} used ${useAttack.name} on ${updatedMonster.monster.name} for ${randomAttackDamage} damage${didUserCrit ? ' (crit)' : ''}`,
-        }, {
-          lock: t.LOCK.UPDATE,
-          transaction: t,
+        const log = `${userState.user.username} used ${useAttack.name} on ${updatedMonster.monster.name} for ${randomAttackDamage} damage${didUserCrit ? ' (crit)' : ''}`;
+        saveToDatabasePromises.push(
+          new Promise((resolve, reject) => {
+            db.battleLog.create({
+              battleId: battle.id,
+              log,
+            }, {
+              lock: t.LOCK.UPDATE,
+              transaction: t,
+            }).then(resolve());
+          }),
+        );
+        battleLogs.unshift({
+          log,
         });
-        battleLogs.unshift(JSON.parse(JSON.stringify(createBattleLog)));
 
         if (updatedMonster.currentHp < 1) {
-          const killLog = await db.battleLog.create({
-            battleId: battle.id,
-            log: `${userState.user.username} killed ${updatedMonster.monster.name}`,
-          }, {
-            lock: t.LOCK.UPDATE,
-            transaction: t,
+          const log = `${userState.user.username} killed ${updatedMonster.monster.name}`;
+          saveToDatabasePromises.push(
+            new Promise((resolve, reject) => {
+              db.battleLog.create({
+                battleId: battle.id,
+                log,
+              }, {
+                lock: t.LOCK.UPDATE,
+                transaction: t,
+              }).then(resolve());
+            }),
+          );
+          battleLogs.unshift({
+            log,
           });
-          battleLogs.unshift(JSON.parse(JSON.stringify(killLog)));
         }
+
+        // Push new monster state
         monstersToUpdate.push(
           {
             ...updatedMonster,
@@ -97,8 +104,10 @@ const userApplyAttackAoE = async (
     }
   }
 
+  // Replace old battlemonster state with new state
   battleMonsterState = battleMonsterState.map((obj) => monstersToUpdate.find((o) => o.id === obj.id) || obj);
 
+  // Push into StageOneInfoArray -> Passed to rendering
   stageOneInfoArray.push({
     monsterId: selectedMonsterId,
     monstersToUpdate,
@@ -111,6 +120,7 @@ const userApplyAttackAoE = async (
     stageOneInfoArray,
     userState,
     battleMonsterState,
+    saveToDatabasePromises,
   ];
 };
 

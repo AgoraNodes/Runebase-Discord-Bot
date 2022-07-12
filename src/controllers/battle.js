@@ -24,6 +24,7 @@ import { processBattleMove } from '../helpers/battle/processBattleMove';
 import { renderBattleComplete } from '../render/battle/battleComplete';
 import { randomIntFromInterval } from "../helpers/utils";
 import { calculateCharacterStats } from '../helpers/stats/calculateCharacterStats';
+import reFetchBattle from '../helpers/battle/fetchBattle';
 
 import { gainExp } from '../helpers/client/experience';
 import { generateLoot } from '../helpers/items/generateLoot';
@@ -430,9 +431,7 @@ ${newLootC.length > 0 ? `__found ${newLootC.length} ${newLootC.length === 1 ? `i
       });
       return;
     }
-    // console.log(battle.UserClassId);
-    // console.log(userCurrentCharacter.id);
-    // console.log('123');
+
     if (battle.UserClassId !== userCurrentCharacter.id) {
       await interaction.reply({
         content: `<@${interaction.user.id}>, This battle belongs to a different character!`,
@@ -522,6 +521,9 @@ ${newLootC.length > 0 ? `__found ${newLootC.length} ${newLootC.length === 1 ? `i
       });
       return;
     }
+    battle = await reFetchBattle(
+      battle,
+    );
     if (interaction.isButton() && interaction.customId === 'accept') {
       await interaction.deferUpdate();
       await queue.add(async () => {
@@ -754,7 +756,7 @@ ${newLootC.length > 0 ? `__found ${newLootC.length} ${newLootC.length === 1 ? `i
         let stageSevenInfoArray;
         let sumExp = 0;
 
-        const previousBattleState = JSON.parse(JSON.stringify(battle));
+        let previousBattleState = JSON.parse(JSON.stringify(battle));
         const previousUserState = JSON.parse(JSON.stringify(userCurrentCharacter));
 
         if (interaction.isButton()) {
@@ -899,7 +901,7 @@ ${newLootC.length > 0 ? `__found ${newLootC.length} ${newLootC.length === 1 ? `i
                   await renderBattleGif(
                     initialUserState,
                     userCurrentSelectedSkills,
-                    previousBattleState,
+                    battle,
                     currentSelectedMonster,
                     stageZeroInfoArray,
                     stageOneInfoArray,
@@ -998,6 +1000,7 @@ ${newLootC.length > 0 ? `__found ${newLootC.length} ${newLootC.length === 1 ? `i
               ],
             });
           }
+          previousBattleState = JSON.parse(JSON.stringify(previousBattleState));
 
           if (userCurrentCharacter.condition.life < 1) {
             setTimeout(async () => {
@@ -1121,7 +1124,7 @@ ${newLootC.length > 0 ? `__found ${newLootC.length} ${newLootC.length === 1 ? `i
                   myInitialUserState,
                   userCurrentSelectedSkills,
                   battle,
-                  previousBattleState,
+                  battle,
                   currentSelectedMonster,
                   stageOneInfoArray,
                 ),

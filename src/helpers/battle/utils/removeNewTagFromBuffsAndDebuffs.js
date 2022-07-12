@@ -5,7 +5,7 @@ const removeNewTagFromBuffsAndDebuffs = async (
   monsters,
   t,
 ) => {
-  // console.log('start removing new tags from buffs & debuffs');
+  console.log('start removing new tags from buffs & debuffs');
   for (const monsterToRemoveNewDebuffTag of monsters) {
     if (monsterToRemoveNewDebuffTag.debuffs.length > 0) {
       for (const monsterDebuff of monsterToRemoveNewDebuffTag.debuffs) {
@@ -61,6 +61,6 @@ const removeNewTagFromBuffsAndDebuffs = async (
     }
   }
 
-  // console.log('done removing new tag from buffs & debuffs');
+  console.log('done removing new tag from buffs & debuffs');
 };
 export default removeNewTagFromBuffsAndDebuffs;

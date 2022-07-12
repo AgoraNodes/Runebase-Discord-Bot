@@ -13,13 +13,13 @@ const userApplyAttackSingle = async (
   battle, // battle database record
   useAttack, // Which attack is used by user
   selectedMonsterId, // which Monster do we have selected?
+  saveToDatabasePromises,
   t, // database transaction
 ) => {
   let battleLogs = [];
   let monstersToUpdate = [];
   let attackFailed = true;
   // APPLY USER Single MONSTER attack
-  // const updatedMonster = JSON.parse(JSON.stringify(selectedMonster));
   const updatedMonster = battleMonsterState.find((element) => element.id === selectedMonsterId);
 
   [
@@ -52,34 +52,42 @@ const userApplyAttackSingle = async (
     );
     // Test Stun
     const didUserStun = Math.random() < Number(useAttack.stun) / 100;
-    // let didUserStun = false;
-    // [
-    //   didUserStun,
-    // ] = calculateCritDamage(
-    //   useAttack.stun,
-    // );
-    // Apply Damage to monster
+
     updatedMonster.currentHp -= randomAttackDamage;
 
     // Generate Battle log
-    const createBattleLog = await db.battleLog.create({
-      battleId: battle.id,
-      log: `${userState.user.username} used ${useAttack.name} on ${updatedMonster.monster.name} for ${randomAttackDamage} damage${didUserCrit ? ' (crit)' : ''}`,
-    }, {
-      lock: t.LOCK.UPDATE,
-      transaction: t,
+    const log = `${userState.user.username} used ${useAttack.name} on ${updatedMonster.monster.name} for ${randomAttackDamage} damage${didUserCrit ? ' (crit)' : ''}`;
+    saveToDatabasePromises.push(
+      new Promise((resolve, reject) => {
+        db.battleLog.create({
+          battleId: battle.id,
+          log,
+        }, {
+          lock: t.LOCK.UPDATE,
+          transaction: t,
+        }).then(resolve());
+      }),
+    );
+    battleLogs.unshift({
+      log,
     });
-    battleLogs.unshift(JSON.parse(JSON.stringify(createBattleLog)));
 
     if (updatedMonster.currentHp < 1) {
-      const createKillLog = await db.battleLog.create({
-        battleId: battle.id,
-        log: `${userState.user.username} killed ${updatedMonster.monster.name}`,
-      }, {
-        lock: t.LOCK.UPDATE,
-        transaction: t,
+      const log = `${userState.user.username} killed ${updatedMonster.monster.name}`;
+      saveToDatabasePromises.push(
+        new Promise((resolve, reject) => {
+          db.battleLog.create({
+            battleId: battle.id,
+            log,
+          }, {
+            lock: t.LOCK.UPDATE,
+            transaction: t,
+          }).then(resolve());
+        }),
+      );
+      battleLogs.unshift({
+        log,
       });
-      battleLogs.unshift(JSON.parse(JSON.stringify(createKillLog)));
     }
     monstersToUpdate.push(
       {
@@ -108,6 +116,7 @@ const userApplyAttackSingle = async (
     stageOneInfoArray,
     userState,
     battleMonsterState,
+    saveToDatabasePromises,
   ];
 };
 
