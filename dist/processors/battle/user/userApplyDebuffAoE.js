@@ -166,6 +166,7 @@ var userApplyDebuffAoE = /*#__PURE__*/function () {
 
           case 19:
             userState.mp.current -= useAttack.cost;
+            console.log(JSON.parse(JSON.stringify(monstersToUpdate)));
             stageOneInfoArray.push({
               monsterId: selectedMonsterId,
               monstersToUpdate: JSON.parse(JSON.stringify(monstersToUpdate)),
@@ -175,7 +176,7 @@ var userApplyDebuffAoE = /*#__PURE__*/function () {
             });
             return _context2.abrupt("return", [stageOneInfoArray, userState, battleMonsterState, saveToDatabasePromises]);
 
-          case 22:
+          case 23:
           case "end":
             return _context2.stop();
         }

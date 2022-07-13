@@ -839,7 +839,7 @@ export const renderBattleGif = async (
         ctx,
         battleLogs,
       );
-
+      console.log('|5');
       imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
       palette = quantize(imageData.data, 256, { format: 'rgb333' });
       imageIndex = applyPalette(imageData.data, palette);
@@ -853,7 +853,7 @@ export const renderBattleGif = async (
           repeat: -1,
         },
       );
-
+      console.log('|6');
       drawBackground(
         ctx,
         canvas,
@@ -873,6 +873,7 @@ export const renderBattleGif = async (
         0, // number of image in the array to show
         false, // user attacking [false || enemyImagePosition]
       );
+      console.log('|7');
       for (const [i, battleMonster] of BattleMonsters.entries()) {
         if (battleMonster.currentHp > 0) {
           enemyPosition[i] = drawEnemy(
@@ -890,6 +891,8 @@ export const renderBattleGif = async (
         }
       }
 
+      console.log('|8');
+
       drawBattleScreenTools(
         ctx,
         mainSkill,
@@ -898,11 +901,13 @@ export const renderBattleGif = async (
         mpOrbs[index + orbsStartingPositionStageTwo],
       );
 
+      console.log(stageTwoInfo);
       console.log(stageTwoInfo.monstersToUpdate);
       userState = stageTwoInfo.userState;
       battleLogs.unshift(...stageTwoInfo.battleLogs);
       BattleMonsters = BattleMonsters.map((obj) => stageTwoInfo.monstersToUpdate.find((o) => o.id === obj.id) || obj);
 
+      console.log('|9');
       drawBattleLog(
         ctx,
         battleLogs,

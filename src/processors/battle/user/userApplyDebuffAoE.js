@@ -85,6 +85,7 @@ const userApplyDebuffAoE = async (
 
   userState.mp.current -= useAttack.cost;
 
+  console.log(JSON.parse(JSON.stringify(monstersToUpdate)));
   stageOneInfoArray.push({
     monsterId: selectedMonsterId,
     monstersToUpdate: JSON.parse(JSON.stringify(monstersToUpdate)),

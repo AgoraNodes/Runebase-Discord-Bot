@@ -1072,6 +1072,7 @@ var renderBattleGif = /*#__PURE__*/function () {
                   (0, _drawBattleScreenTools.drawBattleScreenTools)(ctx, mainSkill, secondarySkill, hpOrbs[index + orbsStartingPositionStageTwo], mpOrbs[index + orbsStartingPositionStageTwo]);
                   console.log('|4');
                   (0, _drawBattleLog.drawBattleLog)(ctx, battleLogs);
+                  console.log('|5');
                   imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
                   palette = (0, _gifenc.quantize)(imageData.data, 256, {
                     format: 'rgb333'
@@ -1082,6 +1083,7 @@ var renderBattleGif = /*#__PURE__*/function () {
                     delay: 400,
                     repeat: -1
                   });
+                  console.log('|6');
                   (0, _drawBackground.drawBackground)(ctx, canvas, backgroundImage);
                   (0, _drawUserBuffs.drawUserBuffs)(ctx, // Ctx drawing canvas
                   userState, // User Object
@@ -1093,6 +1095,7 @@ var renderBattleGif = /*#__PURE__*/function () {
                   0, // number of image in the array to show
                   false // user attacking [false || enemyImagePosition]
                   );
+                  console.log('|7');
 
                   var _iterator24 = _createForOfIteratorHelper(BattleMonsters.entries()),
                       _step24;
@@ -1127,7 +1130,9 @@ var renderBattleGif = /*#__PURE__*/function () {
                     _iterator24.f();
                   }
 
+                  console.log('|8');
                   (0, _drawBattleScreenTools.drawBattleScreenTools)(ctx, mainSkill, secondarySkill, hpOrbs[index + orbsStartingPositionStageTwo], mpOrbs[index + orbsStartingPositionStageTwo]);
+                  console.log(stageTwoInfo);
                   console.log(stageTwoInfo.monstersToUpdate);
                   userState = stageTwoInfo.userState;
                   battleLogs.unshift.apply(battleLogs, (0, _toConsumableArray2["default"])(stageTwoInfo.battleLogs));
@@ -1136,6 +1141,7 @@ var renderBattleGif = /*#__PURE__*/function () {
                       return o.id === obj.id;
                     }) || obj;
                   });
+                  console.log('|9');
                   (0, _drawBattleLog.drawBattleLog)(ctx, battleLogs);
                   ctx.lineWidth = 1;
                   ctx.font = 'bold 13px "HeartWarming"';
