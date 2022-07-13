@@ -13,15 +13,7 @@ var _asyncToGenerator2 = _interopRequireDefault(require("@babel/runtime/helpers/
 
 var _models = _interopRequireDefault(require("../../../models"));
 
-var _utils = require("../../../helpers/utils");
-
-var _isFailedAttack = _interopRequireDefault(require("./isFailedAttack"));
-
-var _calculateCritDamage = _interopRequireDefault(require("../utils/calculateCritDamage"));
-
 /* eslint-disable no-await-in-loop */
-
-/* eslint-disable no-restricted-syntax */
 var userApplyBattleCompleteEffects = /*#__PURE__*/function () {
   var _ref = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(stageSevenInfoArray, userState, battle, totalHealedByLifeSteal, saveToDatabasePromises, t) {
     var relieve, battleLogs, percentageHealed, totalRelieveHealing, log;
@@ -29,19 +21,8 @@ var userApplyBattleCompleteEffects = /*#__PURE__*/function () {
       while (1) {
         switch (_context.prev = _context.next) {
           case 0:
-            // userState.hp.current += useAttack.cost;
             console.log(userState);
             console.log('userState');
-            console.log('userState');
-            console.log('userState');
-            console.log('userState');
-            console.log('userState');
-            console.log('userState');
-            console.log('userState');
-            console.log('userState');
-            console.log('userState');
-            console.log('userState');
-            console.log('userState'); // for (const userSkill of userState.UserClassSkills) {
 
             if (userState["class"].name === 'Barbarian') {
               relieve = userState.UserClassSkills.find(function (element) {
@@ -77,12 +58,11 @@ var userApplyBattleCompleteEffects = /*#__PURE__*/function () {
                   userState: JSON.parse(JSON.stringify(userState))
                 });
               }
-            } // }
-
+            }
 
             return _context.abrupt("return", [stageSevenInfoArray, userState, totalHealedByLifeSteal, saveToDatabasePromises]);
 
-          case 14:
+          case 4:
           case "end":
             return _context.stop();
         }

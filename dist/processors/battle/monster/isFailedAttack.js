@@ -62,7 +62,8 @@ var isFailedAttack = /*#__PURE__*/function () {
                   damage: 0,
                   userState: JSON.parse(JSON.stringify(userState)),
                   useAttack: useAttack,
-                  battleLogs: battleLogs
+                  battleLogs: battleLogs,
+                  monstersToUpdate: []
                 };
                 attackFailed = true;
               } else if (isBlocked) {
@@ -87,7 +88,8 @@ var isFailedAttack = /*#__PURE__*/function () {
                   damage: 0,
                   userState: JSON.parse(JSON.stringify(userState)),
                   useAttack: useAttack,
-                  battleLogs: battleLogs
+                  battleLogs: battleLogs,
+                  monstersToUpdate: []
                 };
                 attackFailed = true;
               } else if (isParried) {

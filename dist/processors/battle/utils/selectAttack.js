@@ -5,11 +5,11 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports["default"] = void 0;
 
-var selectAttack = function selectAttack(userCurrentCharacter, attackUsed, attackOne, attackTwo, regularAttack) {
+var selectAttack = function selectAttack(userState, attackUsed, attackOne, attackTwo, regularAttack) {
   var useAttack;
 
   if (attackUsed === 'main') {
-    if (userCurrentCharacter.condition.mana >= attackOne.cost) {
+    if (userState.condition.mana >= attackOne.cost) {
       useAttack = attackOne;
     } else {
       useAttack = regularAttack;
@@ -17,7 +17,7 @@ var selectAttack = function selectAttack(userCurrentCharacter, attackUsed, attac
   }
 
   if (attackUsed === 'secondary') {
-    if (userCurrentCharacter.condition.mana >= attackTwo.cost) {
+    if (userState.condition.mana >= attackTwo.cost) {
       useAttack = attackTwo;
     } else {
       useAttack = regularAttack;

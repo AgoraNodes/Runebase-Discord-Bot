@@ -17,18 +17,18 @@ var _path = _interopRequireDefault(require("path"));
 
 var loadDebuff = /*#__PURE__*/function () {
   var _ref = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(debuffName) {
-    var playerImage;
+    var debuffImage;
     return _regenerator["default"].wrap(function _callee$(_context) {
       while (1) {
         switch (_context.prev = _context.next) {
           case 0:
-            playerImage = [];
+            debuffImage = [];
             _context.next = 3;
             return (0, _canvas.loadImage)(_path["default"].join(__dirname, "../../../assets/images/debuff/", "".concat(debuffName, ".png")));
 
           case 3:
-            playerImage[0] = _context.sent;
-            return _context.abrupt("return", playerImage);
+            debuffImage[0] = _context.sent;
+            return _context.abrupt("return", debuffImage);
 
           case 5:
           case "end":

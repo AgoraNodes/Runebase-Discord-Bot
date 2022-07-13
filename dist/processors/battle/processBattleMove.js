@@ -9,13 +9,13 @@ exports.processBattleMove = void 0;
 
 var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
 
+var _toConsumableArray2 = _interopRequireDefault(require("@babel/runtime/helpers/toConsumableArray"));
+
 var _slicedToArray2 = _interopRequireDefault(require("@babel/runtime/helpers/slicedToArray"));
 
 var _asyncToGenerator2 = _interopRequireDefault(require("@babel/runtime/helpers/asyncToGenerator"));
 
 var _models = _interopRequireDefault(require("../../models"));
-
-var _calculateCharacterStats = require("../../helpers/stats/calculateCharacterStats");
 
 var _userApplyDebuffAoE = _interopRequireDefault(require("./user/userApplyDebuffAoE"));
 
@@ -25,27 +25,27 @@ var _userApplyAttackSingle = _interopRequireDefault(require("./user/userApplyAtt
 
 var _userApplyAttackAoE = _interopRequireDefault(require("./user/userApplyAttackAoE"));
 
-var _monstersApplyAttack = _interopRequireDefault(require("./monster/monstersApplyAttack"));
-
 var _userApplyRetaliation = _interopRequireDefault(require("./user/userApplyRetaliation"));
 
 var _userApplyDebuffDamage = _interopRequireDefault(require("./user/userApplyDebuffDamage"));
 
-var _countDownBuffsAndDebuffs = _interopRequireDefault(require("./utils/countDownBuffsAndDebuffs"));
-
 var _userApplyBuffSingle = _interopRequireDefault(require("./user/userApplyBuffSingle"));
-
-var _selectAttack = _interopRequireDefault(require("./utils/selectAttack"));
-
-var _removeNewTagFromBuffsAndDebuffs = _interopRequireDefault(require("./utils/removeNewTagFromBuffsAndDebuffs"));
 
 var _userApplyPreBuffBattleChance = _interopRequireDefault(require("./user/userApplyPreBuffBattleChance"));
 
-var _applyEnemyDebuffEffects = _interopRequireDefault(require("./utils/applyEnemyDebuffEffects"));
-
 var _userApplyBattleCompleteEffects = _interopRequireDefault(require("./user/userApplyBattleCompleteEffects"));
 
-var _fetchBattle = _interopRequireDefault(require("../../helpers/fetchBattle"));
+var _countDownBuffsAndDebuffs = _interopRequireDefault(require("./utils/countDownBuffsAndDebuffs"));
+
+var _applyEnemyDebuffEffects = _interopRequireDefault(require("./utils/applyEnemyDebuffEffects"));
+
+var _removeNewTagFromBuffsAndDebuffs = _interopRequireDefault(require("./utils/removeNewTagFromBuffsAndDebuffs"));
+
+var _selectAttack = _interopRequireDefault(require("./utils/selectAttack"));
+
+var _monstersApplyAttack = _interopRequireDefault(require("./monster/monstersApplyAttack"));
+
+var _calculateCharacterStats = require("../../helpers/stats/calculateCharacterStats");
 
 function _createForOfIteratorHelper(o, allowArrayLike) { var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"]; if (!it) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = it.call(o); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it["return"] != null) it["return"](); } finally { if (didErr) throw err; } } }; }
 
@@ -53,21 +53,26 @@ function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o =
 
 function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
 
-// TODO: Make code more readable by moving monster/user updates in their own designated function
-// TODO: APPLY BUFFS TO USER CHARACTER
+// import reFetchBattle from '../../helpers/fetchBattle';
 var processBattleMove = /*#__PURE__*/function () {
-  var _ref = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(userCurrentCharacter, battleOld, currentSelectedMonster, attackUsed, io, queue, t) {
-    var battle, stageZeroInfoArray, stageOneInfoArray, stageTwoInfoArray, retaliationArray, stageThreeInfoArray, stageFourInfoArray, stageFiveInfoArray, stageSixInfoArray, stageSevenInfoArray, isBattleComplete, totalDamageByMonsters, totalHealedByLifeSteal, saveToDatabasePromises, sumExp, _yield$calculateChara, lvl, attackOne, attackTwo, regularAttack, block, defense, kick, hp, mp, useAttack, allBattleMonsters, userState, initialUserState, battleMonsterState, _yield$applyEnemyDebu, _yield$applyEnemyDebu2, _yield$userApplyPreBu, _yield$userApplyPreBu2, _yield$userApplyBuffS, _yield$userApplyBuffS2, _yield$userApplyDebuf, _yield$userApplyDebuf2, _yield$userApplyDebuf3, _yield$userApplyDebuf4, _yield$userApplyAttac, _yield$userApplyAttac2, _yield$userApplyAttac3, _yield$userApplyAttac4, isBattleMonsterAlive, _yield$monstersApplyA, _yield$monstersApplyA2, _yield$userApplyRetli, _yield$userApplyRetli2, _yield$userApplyDebuf5, _yield$userApplyDebuf6, _yield$countDownBuffs, _yield$countDownBuffs2, isBattleMonsterAliveFinal, _yield$userApplyBattl, _yield$userApplyBattl2, newLifeValue, _iterator, _step, _loop, updatedBattle, newBattleState;
+  var _ref = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(userCurrentCharacter, // Our current character
+  battle, // The battle object
+  currentSelectedMonster, // The Monster we got selected
+  attackUsed, // The attack we used
+  t // Sequelize Transaction object
+  ) {
+    var allRoundBuffsInfoArray, allRoundDebuffsInfoArray, allRoundEffectsInfoArray, stageZeroInfoArray, stageOneInfoArray, stageTwoInfoArray, retaliationArray, stageThreeInfoArray, stageFourInfoArray, stageFiveInfoArray, stageSixInfoArray, stageSevenInfoArray, isBattleComplete, totalDamageByMonsters, totalHealedByLifeSteal, saveToDatabasePromisesOne, saveToDatabasePromisesTwo, sumExp, _yield$calculateChara, lvl, attackOne, attackTwo, regularAttack, block, defense, kick, hp, mp, userState, initialUserState, battleMonsterState, useAttack, _yield$removeNewTagFr, _yield$removeNewTagFr2, _yield$applyEnemyDebu, _yield$applyEnemyDebu2, _yield$userApplyPreBu, _yield$userApplyPreBu2, _yield$userApplyBuffS, _yield$userApplyBuffS2, _yield$userApplyDebuf, _yield$userApplyDebuf2, _yield$userApplyDebuf3, _yield$userApplyDebuf4, _yield$userApplyAttac, _yield$userApplyAttac2, _yield$userApplyAttac3, _yield$userApplyAttac4, isBattleMonsterAlive, _yield$monstersApplyA, _yield$monstersApplyA2, _yield$userApplyRetli, _yield$userApplyRetli2, _yield$userApplyDebuf5, _yield$userApplyDebuf6, _yield$countDownBuffs, _yield$countDownBuffs2, isBattleMonsterAliveFinal, _yield$userApplyBattl, _yield$userApplyBattl2, newLifeValue, _iterator, _step, _loop, updatedBattle, newBattleState;
 
     return _regenerator["default"].wrap(function _callee$(_context) {
       while (1) {
         switch (_context.prev = _context.next) {
           case 0:
-            _context.next = 2;
-            return (0, _fetchBattle["default"])(battleOld, t);
+            allRoundBuffsInfoArray = []; // an array with all the buffs used this round to load the images in renderer
 
-          case 2:
-            battle = _context.sent;
+            allRoundDebuffsInfoArray = []; // an array with the debuffs used this round to load the images in renderer
+
+            allRoundEffectsInfoArray = []; // an array with the debuffs used this round to load the images in renderer
+
             stageZeroInfoArray = []; // Start of Round effects (ex: stun from debuff)
 
             stageOneInfoArray = []; // User Attacking Monsters
@@ -88,18 +93,22 @@ var processBattleMove = /*#__PURE__*/function () {
 
             isBattleComplete = false; // Test for battle completion
 
-            totalDamageByMonsters = 0;
-            totalHealedByLifeSteal = 0; // let battleLogDatabasePromises = [];
+            totalDamageByMonsters = 0; // Total accumilated damage by monsters
 
-            saveToDatabasePromises = []; // TODO: Only Gather Exp if Units are not lower then 5 levels of user level
+            totalHealedByLifeSteal = 0; // total heal accumilated by healing effects
+
+            saveToDatabasePromisesOne = []; // First database promises
+
+            saveToDatabasePromisesTwo = []; // Second database promises (should not start to run before saveToDatabasePromisesOne has finished)
+            // TODO: Only Gather Exp if Units are not lower then 5 levels of user level
 
             sumExp = battle.BattleMonsters.reduce(function (accumulator, object) {
               return accumulator + object.monster.exp;
             }, 0);
-            _context.next = 19;
+            _context.next = 20;
             return (0, _calculateCharacterStats.calculateCharacterStats)(userCurrentCharacter);
 
-          case 19:
+          case 20:
             _yield$calculateChara = _context.sent;
             lvl = _yield$calculateChara.lvl;
             attackOne = _yield$calculateChara.attackOne;
@@ -110,190 +119,230 @@ var processBattleMove = /*#__PURE__*/function () {
             kick = _yield$calculateChara.kick;
             hp = _yield$calculateChara.hp;
             mp = _yield$calculateChara.mp;
-            useAttack = (0, _selectAttack["default"])(userCurrentCharacter, attackUsed, attackOne, attackTwo, regularAttack);
-            _context.next = 32;
-            return (0, _removeNewTagFromBuffsAndDebuffs["default"])(userCurrentCharacter, battle.BattleMonsters, t);
-
-          case 32:
-            _context.next = 34;
-            return _models["default"].BattleMonster.findAll({
-              where: {
-                battleId: battle.id
-              },
-              include: [{
-                model: _models["default"].debuff,
-                as: 'debuffs'
-              }, {
-                model: _models["default"].monster,
-                as: 'monster',
-                include: [{
-                  model: _models["default"].monsterAttack,
-                  as: 'monsterAttacks',
-                  include: [{
-                    model: _models["default"].damageType,
-                    as: 'damageType'
-                  }]
-                }]
-              }],
-              lock: t.LOCK.UPDATE,
-              transaction: t
-            });
-
-          case 34:
-            allBattleMonsters = _context.sent;
+            // Create the current userState for processing
             userState = JSON.parse(JSON.stringify(userCurrentCharacter));
             userState.hp = hp;
             userState.mp = mp;
-            initialUserState = JSON.parse(JSON.stringify(userState));
-            battleMonsterState = JSON.parse(JSON.stringify(allBattleMonsters));
-            console.log('Processing Debuff Effects'); // APPLY ALL ENEMY DEBUFFS
+            initialUserState = JSON.parse(JSON.stringify(userState)); // Parse all the battlemonsters into state array
 
-            _context.next = 43;
-            return (0, _applyEnemyDebuffEffects["default"])(battleMonsterState);
+            battleMonsterState = JSON.parse(JSON.stringify(battle.BattleMonsters)); // Test Which user attack to execute.. (pick regular attack if not enough mana)
+            // TODO: Throwing weapons?
 
-          case 43:
+            useAttack = (0, _selectAttack["default"])(userState, // Pass Current user state
+            attackUsed, // Pass attack picked by user
+            attackOne, // The user current Main Selected Attack
+            attackTwo, // The user current secondary selected Attack
+            regularAttack // The user Regular attack
+            );
+            console.log('Stage PreProcessing'); // Removing New Tag From Buffs/Debuffs
+
+            _context.next = 39;
+            return (0, _removeNewTagFromBuffsAndDebuffs["default"])(userState, // Pass userstate
+            battleMonsterState, // pass battlemonster state
+            allRoundBuffsInfoArray, allRoundDebuffsInfoArray, saveToDatabasePromisesOne, // pass saveToDatabasePromisesOne array
+            t // Sequelize Transaction object
+            );
+
+          case 39:
+            _yield$removeNewTagFr = _context.sent;
+            _yield$removeNewTagFr2 = (0, _slicedToArray2["default"])(_yield$removeNewTagFr, 5);
+            userState = _yield$removeNewTagFr2[0];
+            // Return new user state
+            battleMonsterState = _yield$removeNewTagFr2[1];
+            // Return new battlemonster state
+            allRoundBuffsInfoArray = _yield$removeNewTagFr2[2];
+            allRoundDebuffsInfoArray = _yield$removeNewTagFr2[3];
+            saveToDatabasePromisesOne // return database promises
+            = _yield$removeNewTagFr2[4];
+            _context.next = 48;
+            return (0, _applyEnemyDebuffEffects["default"])(battleMonsterState // Pass battleMonsterState
+            );
+
+          case 48:
             _yield$applyEnemyDebu = _context.sent;
             _yield$applyEnemyDebu2 = (0, _slicedToArray2["default"])(_yield$applyEnemyDebu, 1);
-            battleMonsterState = _yield$applyEnemyDebu2[0];
+            battleMonsterState // Return new battleMonsterState
+            = _yield$applyEnemyDebu2[0];
             // DETERMINE IF UNIT IS STUNNED FROM DEBUFFS AND OTHER PREBATTLE DEBUFF EFFECTS
             console.log('Stage #0 Processing');
-            _context.next = 49;
+            _context.next = 54;
             return (0, _userApplyPreBuffBattleChance["default"])(userState, // Current User State
-            battleMonsterState, stageZeroInfoArray, // Array to fill with battle info
+            allRoundEffectsInfoArray, battleMonsterState, // Pass battlemonster state
+            stageZeroInfoArray, // Array to fill with battle info
             battle, // battle database record
             useAttack, // Which attack is used by user
             currentSelectedMonster.id, // which Monster do we have selected?
-            saveToDatabasePromises, // Database Promises to execute and wait for
+            saveToDatabasePromisesTwo, // Database Promises to execute and wait for
             t // database transaction
             );
 
-          case 49:
+          case 54:
             _yield$userApplyPreBu = _context.sent;
-            _yield$userApplyPreBu2 = (0, _slicedToArray2["default"])(_yield$userApplyPreBu, 4);
+            _yield$userApplyPreBu2 = (0, _slicedToArray2["default"])(_yield$userApplyPreBu, 5);
             stageZeroInfoArray = _yield$userApplyPreBu2[0];
+            // Return stageZeroInfoArray
             userState = _yield$userApplyPreBu2[1];
-            battleMonsterState = _yield$userApplyPreBu2[2];
-            saveToDatabasePromises = _yield$userApplyPreBu2[3];
+            // Return new userstate
+            allRoundEffectsInfoArray = _yield$userApplyPreBu2[2];
+            battleMonsterState = _yield$userApplyPreBu2[3];
+            // Return new battlemonster state
+            saveToDatabasePromisesTwo // Return database promises
+            = _yield$userApplyPreBu2[4];
             console.log('Stage #1 Processing'); // Stage One
 
-            if (!(useAttack.buff && !useAttack.aoe)) {
-              _context.next = 66;
+            if (!(useAttack.buff // If attack is a buff
+            && !useAttack.aoe // and the attack is NOT an AOE attack
+            )) {
+              _context.next = 73;
               break;
             }
 
-            _context.next = 59;
+            _context.next = 65;
             return (0, _userApplyBuffSingle["default"])(userState, // Current User State
-            stageOneInfoArray, // Stage One Info Array
+            allRoundBuffsInfoArray, stageOneInfoArray, // Stage One Info Array
             battle, // passing battle object? (maybe we can reduce to just battle.id)?
             useAttack, // What attack are we using?
             currentSelectedMonster.id, // Which Monster is selected?
-            saveToDatabasePromises, // Saving to Database promises
+            saveToDatabasePromisesTwo, // pass the Database promises array
             t // Transaction object sequelize
             );
 
-          case 59:
+          case 65:
             _yield$userApplyBuffS = _context.sent;
-            _yield$userApplyBuffS2 = (0, _slicedToArray2["default"])(_yield$userApplyBuffS, 3);
+            _yield$userApplyBuffS2 = (0, _slicedToArray2["default"])(_yield$userApplyBuffS, 4);
             stageOneInfoArray = _yield$userApplyBuffS2[0];
             // Return completed StageOneInfo Array
             userState = _yield$userApplyBuffS2[1];
             // Return new User State
-            saveToDatabasePromises // Return battle promises
-            = _yield$userApplyBuffS2[2];
-            _context.next = 109;
+            allRoundBuffsInfoArray = _yield$userApplyBuffS2[2];
+            saveToDatabasePromisesTwo // Return database promises
+            = _yield$userApplyBuffS2[3];
+            _context.next = 120;
             break;
 
-          case 66:
-            if (!(useAttack.debuff && useAttack.aoe)) {
-              _context.next = 77;
+          case 73:
+            if (!(useAttack.debuff // if Attack is a debuff
+            && useAttack.aoe // and the attack is an AOE attack
+            )) {
+              _context.next = 85;
               break;
             }
 
-            _context.next = 69;
+            _context.next = 76;
             return (0, _userApplyDebuffAoE["default"])(userState, // Current User State
-            battleMonsterState, stageOneInfoArray, battle, useAttack, currentSelectedMonster.id, saveToDatabasePromises, t);
+            allRoundDebuffsInfoArray, battleMonsterState, // Battlemonster state
+            stageOneInfoArray, // Pass stageOneInfoArray
+            battle, useAttack, // pass the user used attack
+            currentSelectedMonster.id, saveToDatabasePromisesTwo, // pass the Database promises array
+            t);
 
-          case 69:
+          case 76:
             _yield$userApplyDebuf = _context.sent;
-            _yield$userApplyDebuf2 = (0, _slicedToArray2["default"])(_yield$userApplyDebuf, 4);
+            _yield$userApplyDebuf2 = (0, _slicedToArray2["default"])(_yield$userApplyDebuf, 5);
             stageOneInfoArray = _yield$userApplyDebuf2[0];
             // Return completed StageOneInfo Array
             userState = _yield$userApplyDebuf2[1];
-            battleMonsterState = _yield$userApplyDebuf2[2];
-            saveToDatabasePromises = _yield$userApplyDebuf2[3];
-            _context.next = 109;
+            // Return new userState
+            allRoundDebuffsInfoArray = _yield$userApplyDebuf2[2];
+            battleMonsterState = _yield$userApplyDebuf2[3];
+            // Return new Battlemonster state
+            saveToDatabasePromisesTwo = _yield$userApplyDebuf2[4];
+            _context.next = 120;
             break;
 
-          case 77:
-            if (!(useAttack.debuff && !useAttack.aoe)) {
-              _context.next = 88;
+          case 85:
+            if (!(useAttack.debuff // If the attack is a debuff
+            && !useAttack.aoe // and not an AOE attack
+            )) {
+              _context.next = 97;
               break;
             }
 
-            _context.next = 80;
+            _context.next = 88;
             return (0, _userApplyDebuffSingle["default"])(userState, // Current User State
-            battleMonsterState, stageOneInfoArray, battle, useAttack, currentSelectedMonster.id, saveToDatabasePromises, t);
+            allRoundDebuffsInfoArray, battleMonsterState, // pass the Battlemonster state
+            stageOneInfoArray, // pass StageOneInfo Array
+            battle, useAttack, // pass the user used attack
+            currentSelectedMonster.id, saveToDatabasePromisesTwo, // pass the Database promises array
+            t);
 
-          case 80:
+          case 88:
             _yield$userApplyDebuf3 = _context.sent;
-            _yield$userApplyDebuf4 = (0, _slicedToArray2["default"])(_yield$userApplyDebuf3, 4);
+            _yield$userApplyDebuf4 = (0, _slicedToArray2["default"])(_yield$userApplyDebuf3, 5);
             stageOneInfoArray = _yield$userApplyDebuf4[0];
             // Return completed StageOneInfo Array
             userState = _yield$userApplyDebuf4[1];
-            battleMonsterState = _yield$userApplyDebuf4[2];
-            saveToDatabasePromises = _yield$userApplyDebuf4[3];
-            _context.next = 109;
+            // Return new userState
+            allRoundDebuffsInfoArray = _yield$userApplyDebuf4[2];
+            battleMonsterState = _yield$userApplyDebuf4[3];
+            // Return new Battlemonster state
+            saveToDatabasePromisesTwo = _yield$userApplyDebuf4[4];
+            _context.next = 120;
             break;
 
-          case 88:
-            if (!(!useAttack.debuff && useAttack.aoe)) {
-              _context.next = 100;
+          case 97:
+            if (!(!useAttack.debuff // if the attack is NOT a debuff
+            && useAttack.aoe // and the attack is an AOE attack
+            )) {
+              _context.next = 110;
               break;
             }
 
-            _context.next = 91;
+            _context.next = 100;
             return (0, _userApplyAttackAoE["default"])(userState, // Current User State
-            battleMonsterState, totalHealedByLifeSteal, lvl, // Users Level
+            battleMonsterState, // pass the Battlemonster state
+            allRoundEffectsInfoArray, totalHealedByLifeSteal, lvl, // Users Level
             stageOneInfoArray, // Array to fill with battle info
             battle, // battle database record
             useAttack, // Which attack is used by user
             currentSelectedMonster.id, // which Monster do we have selected?
-            saveToDatabasePromises, t // database transaction
+            saveToDatabasePromisesTwo, // pass the Database promises array
+            t // database transaction
             );
 
-          case 91:
+          case 100:
             _yield$userApplyAttac = _context.sent;
-            _yield$userApplyAttac2 = (0, _slicedToArray2["default"])(_yield$userApplyAttac, 5);
+            _yield$userApplyAttac2 = (0, _slicedToArray2["default"])(_yield$userApplyAttac, 6);
             stageOneInfoArray = _yield$userApplyAttac2[0];
             // Return completed StageOneInfo Array
             userState = _yield$userApplyAttac2[1];
+            // Return new userState
             battleMonsterState = _yield$userApplyAttac2[2];
-            totalHealedByLifeSteal = _yield$userApplyAttac2[3];
-            saveToDatabasePromises = _yield$userApplyAttac2[4];
-            _context.next = 109;
+            // Return new Battlemonster state
+            allRoundEffectsInfoArray = _yield$userApplyAttac2[3];
+            totalHealedByLifeSteal = _yield$userApplyAttac2[4];
+            saveToDatabasePromisesTwo = _yield$userApplyAttac2[5];
+            _context.next = 120;
             break;
 
-          case 100:
-            _context.next = 102;
-            return (0, _userApplyAttackSingle["default"])(userState, battleMonsterState, totalHealedByLifeSteal, lvl, // Users Level
+          case 110:
+            _context.next = 112;
+            return (0, _userApplyAttackSingle["default"])(userState, // pass the userState
+            battleMonsterState, // pass the battlemonster state
+            allRoundEffectsInfoArray, totalHealedByLifeSteal, // pass the totalHealedByLifeSteal variable
+            lvl, // Users Level
             stageOneInfoArray, // Array to fill with battle info
             battle, // battle database record
             useAttack, // Which attack is used by user
             currentSelectedMonster.id, // which Monster do we have selected?
-            saveToDatabasePromises, t // database transaction
+            saveToDatabasePromisesTwo, // pass the Database promises array
+            t // database transaction
             );
 
-          case 102:
+          case 112:
             _yield$userApplyAttac3 = _context.sent;
-            _yield$userApplyAttac4 = (0, _slicedToArray2["default"])(_yield$userApplyAttac3, 5);
+            _yield$userApplyAttac4 = (0, _slicedToArray2["default"])(_yield$userApplyAttac3, 6);
             stageOneInfoArray = _yield$userApplyAttac4[0];
             // Return completed StageOneInfo Array
             userState = _yield$userApplyAttac4[1];
+            // Return new userState
             battleMonsterState = _yield$userApplyAttac4[2];
-            totalHealedByLifeSteal = _yield$userApplyAttac4[3];
-            saveToDatabasePromises = _yield$userApplyAttac4[4];
+            // Return new Battlemonster state
+            allRoundEffectsInfoArray = _yield$userApplyAttac4[3];
+            totalHealedByLifeSteal = _yield$userApplyAttac4[4];
+            saveToDatabasePromisesTwo = _yield$userApplyAttac4[5];
 
-          case 109:
+          case 120:
             // If there are no monsters left, tag battle as complete
             isBattleMonsterAlive = battleMonsterState.filter(function (obj) {
               return obj.currentHp > 0;
@@ -307,12 +356,15 @@ var processBattleMove = /*#__PURE__*/function () {
             console.log('Stage #2 Processing'); // Process Monster Moves/Attacks
 
             if (isBattleComplete) {
-              _context.next = 153;
+              _context.next = 155;
               break;
             }
 
-            _context.next = 115;
-            return (0, _monstersApplyAttack["default"])(userState, saveToDatabasePromises, battleMonsterState, lvl, // Users Level
+            _context.next = 126;
+            return (0, _monstersApplyAttack["default"])(userState, // Pass the userState
+            saveToDatabasePromisesTwo, // pass database promises array
+            battleMonsterState, // pass battlemonster state
+            lvl, // Users Level
             block, // users Block
             defense, // Users defense
             regularAttack, // Users Regular Attack
@@ -321,57 +373,85 @@ var processBattleMove = /*#__PURE__*/function () {
             t // database transaction
             );
 
-          case 115:
+          case 126:
             _yield$monstersApplyA = _context.sent;
             _yield$monstersApplyA2 = (0, _slicedToArray2["default"])(_yield$monstersApplyA, 6);
             totalDamageByMonsters = _yield$monstersApplyA2[0];
+            // Return total damage done by monsters
             userState = _yield$monstersApplyA2[1];
+            // Return the new userState
             battleMonsterState = _yield$monstersApplyA2[2];
+            // Return new Battlemonster state
             stageTwoInfoArray = _yield$monstersApplyA2[3];
+            // Return the stageTwoInfoArray to pass to render
             retaliationArray = _yield$monstersApplyA2[4];
-            saveToDatabasePromises = _yield$monstersApplyA2[5];
-            // }
+            // Return array with retaliation info
+            saveToDatabasePromisesTwo // DataPromises to execute
+            = _yield$monstersApplyA2[5];
             console.log('Stage #3 Processing'); // Stage Three
 
             if (!(retaliationArray.length > 0)) {
-              _context.next = 134;
+              _context.next = 146;
               break;
             }
 
-            _context.next = 127;
-            return (0, _userApplyRetaliation["default"])(userState, totalHealedByLifeSteal, saveToDatabasePromises, battleMonsterState, battle, retaliationArray, stageThreeInfoArray, kick, lvl, t);
+            _context.next = 138;
+            return (0, _userApplyRetaliation["default"])(userState, totalHealedByLifeSteal, saveToDatabasePromisesTwo, // pass the Database promises array
+            battleMonsterState, allRoundEffectsInfoArray, battle, retaliationArray, stageThreeInfoArray, kick, lvl, t);
 
-          case 127:
+          case 138:
             _yield$userApplyRetli = _context.sent;
-            _yield$userApplyRetli2 = (0, _slicedToArray2["default"])(_yield$userApplyRetli, 5);
+            _yield$userApplyRetli2 = (0, _slicedToArray2["default"])(_yield$userApplyRetli, 6);
             stageThreeInfoArray = _yield$userApplyRetli2[0];
+            // Return completed stageThreeInfoArray Array
             userState = _yield$userApplyRetli2[1];
+            // Return the new userState
             battleMonsterState = _yield$userApplyRetli2[2];
-            totalHealedByLifeSteal = _yield$userApplyRetli2[3];
-            saveToDatabasePromises = _yield$userApplyRetli2[4];
+            // Return new Battlemonster state
+            allRoundEffectsInfoArray = _yield$userApplyRetli2[3];
+            totalHealedByLifeSteal = _yield$userApplyRetli2[4];
+            saveToDatabasePromisesTwo = _yield$userApplyRetli2[5];
 
-          case 134:
+          case 146:
             console.log('Stage #4 Processing'); // Stage Four
             // Apply debuff damage
 
-            _context.next = 137;
-            return (0, _userApplyDebuffDamage["default"])(userState, battleMonsterState, battle, stageFourInfoArray, t);
+            _context.next = 149;
+            return (0, _userApplyDebuffDamage["default"])(userState, battleMonsterState, saveToDatabasePromisesOne, battle, stageFourInfoArray, t);
 
-          case 137:
+          case 149:
             _yield$userApplyDebuf5 = _context.sent;
-            _yield$userApplyDebuf6 = (0, _slicedToArray2["default"])(_yield$userApplyDebuf5, 3);
+            _yield$userApplyDebuf6 = (0, _slicedToArray2["default"])(_yield$userApplyDebuf5, 4);
             stageFourInfoArray = _yield$userApplyDebuf6[0];
+            // Return completed stageFourInfoArray Array
             battleMonsterState = _yield$userApplyDebuf6[1];
+            // Return new Battlemonster state
             userState = _yield$userApplyDebuf6[2];
-            _context.next = 144;
+            // Return the new userState
+            saveToDatabasePromisesOne = _yield$userApplyDebuf6[3];
+
+          case 155:
+            _context.next = 157;
+            return Promise.all(saveToDatabasePromisesOne);
+
+          case 157:
+            if (isBattleComplete) {
+              _context.next = 169;
+              break;
+            }
+
+            _context.next = 160;
             return (0, _countDownBuffsAndDebuffs["default"])(stageFiveInfoArray, userState, battleMonsterState, t);
 
-          case 144:
+          case 160:
             _yield$countDownBuffs = _context.sent;
             _yield$countDownBuffs2 = (0, _slicedToArray2["default"])(_yield$countDownBuffs, 3);
             stageFiveInfoArray = _yield$countDownBuffs2[0];
+            // Return completed stageFiveInfoArray Array
             userState = _yield$countDownBuffs2[1];
-            battleMonsterState = _yield$countDownBuffs2[2];
+            // Return the new userState
+            battleMonsterState // Return new Battlemonster state
+            = _yield$countDownBuffs2[2];
             // Stage 6 After Round User Effects (example: manaRegen each Round)
             console.log('Stage 6 is a placeholder');
             stageSixInfoArray = []; // Test if Battle is complete
@@ -384,23 +464,27 @@ var processBattleMove = /*#__PURE__*/function () {
               isBattleComplete = true;
             }
 
-          case 153:
+          case 169:
             if (!isBattleComplete) {
-              _context.next = 163;
+              _context.next = 179;
               break;
             }
 
-            _context.next = 156;
-            return (0, _userApplyBattleCompleteEffects["default"])(stageSevenInfoArray, userState, battle, totalHealedByLifeSteal, saveToDatabasePromises, t);
+            _context.next = 172;
+            return (0, _userApplyBattleCompleteEffects["default"])(stageSevenInfoArray, userState, battle, totalHealedByLifeSteal, saveToDatabasePromisesTwo, // pass the Database promises array
+            t);
 
-          case 156:
+          case 172:
             _yield$userApplyBattl = _context.sent;
             _yield$userApplyBattl2 = (0, _slicedToArray2["default"])(_yield$userApplyBattl, 4);
             stageSevenInfoArray = _yield$userApplyBattl2[0];
+            // Return completed stageSevenInfoArray Array
             userState = _yield$userApplyBattl2[1];
+            // Return the new userState
             totalHealedByLifeSteal = _yield$userApplyBattl2[2];
-            saveToDatabasePromises = _yield$userApplyBattl2[3];
-            saveToDatabasePromises.push(new Promise(function (resolve, reject) {
+            saveToDatabasePromisesTwo = _yield$userApplyBattl2[3];
+            // Tag the battle as complete
+            saveToDatabasePromisesTwo.push(new Promise(function (resolve, reject) {
               _models["default"].battle.update({
                 complete: true
               }, {
@@ -414,11 +498,11 @@ var processBattleMove = /*#__PURE__*/function () {
               });
             }));
 
-          case 163:
+          case 179:
             // STAGE 8 (Unrecorded for rendering)
             // TODO: TEST IF NEW VALUE SURPASSES MAX HEALTH / MANA (Life Steal & after battle heal effects)
             newLifeValue = userCurrentCharacter.condition.life - (totalDamageByMonsters - Math.round(totalDamageByMonsters * (userState.hp.totalLifeBonus / 100))) + (totalHealedByLifeSteal - Math.round(totalHealedByLifeSteal * (userState.hp.totalLifeBonus / 100)));
-            saveToDatabasePromises.push(new Promise(function (resolve, reject) {
+            saveToDatabasePromisesTwo.push(new Promise(function (resolve, reject) {
               userCurrentCharacter.condition.update({
                 life: newLifeValue > userState.hp.max - Math.round(userState.hp.max * (userState.hp.totalLifeBonus / 100)) ? userState.hp.max - Math.round(userState.hp.max * (userState.hp.totalLifeBonus / 100)) : newLifeValue,
                 mana: userCurrentCharacter.condition.mana - useAttack.cost
@@ -437,7 +521,7 @@ var processBattleMove = /*#__PURE__*/function () {
                     i = _step$value[0],
                     battleMonsterStateToSave = _step$value[1];
 
-                saveToDatabasePromises.push(new Promise(function (resolve, reject) {
+                saveToDatabasePromisesTwo.push(new Promise(function (resolve, reject) {
                   _models["default"].BattleMonster.update({
                     currentHp: battleMonsterStateToSave.currentHp
                   }, {
@@ -461,11 +545,16 @@ var processBattleMove = /*#__PURE__*/function () {
               _iterator.f();
             }
 
-            _context.next = 169;
-            return Promise.all(saveToDatabasePromises);
+            _context.next = 185;
+            return Promise.all(saveToDatabasePromisesTwo);
 
-          case 169:
-            _context.next = 171;
+          case 185:
+            // Remove all the duplicates from (allRoundBuffsInfoArray, allRoundDebuffsInfoArray, allRoundEffectsInfoArray)
+            allRoundBuffsInfoArray = (0, _toConsumableArray2["default"])(new Set(allRoundBuffsInfoArray));
+            allRoundDebuffsInfoArray = (0, _toConsumableArray2["default"])(new Set(allRoundDebuffsInfoArray));
+            allRoundEffectsInfoArray = (0, _toConsumableArray2["default"])(new Set(allRoundEffectsInfoArray)); // Fetch Updated Battle for next round -> See battle controller for handling
+
+            _context.next = 190;
             return _models["default"].battle.findOne({
               where: {
                 id: battle.id
@@ -493,7 +582,7 @@ var processBattleMove = /*#__PURE__*/function () {
               transaction: t
             });
 
-          case 171:
+          case 190:
             updatedBattle = _context.sent;
             console.log(updatedBattle.BattleMonsters);
             console.log('updatedBattle.complete');
@@ -509,10 +598,10 @@ var processBattleMove = /*#__PURE__*/function () {
             console.log('\nkick:');
             console.log(JSON.stringify(kick));
             newBattleState = JSON.parse(JSON.stringify(updatedBattle));
-            return _context.abrupt("return", [userCurrentCharacter, initialUserState, newBattleState, stageZeroInfoArray, stageOneInfoArray, stageTwoInfoArray, stageThreeInfoArray, stageFourInfoArray, stageFiveInfoArray, stageSixInfoArray, stageSevenInfoArray, sumExp // newBattleState,
+            return _context.abrupt("return", [userCurrentCharacter, initialUserState, newBattleState, allRoundBuffsInfoArray, allRoundDebuffsInfoArray, allRoundEffectsInfoArray, stageZeroInfoArray, stageOneInfoArray, stageTwoInfoArray, stageThreeInfoArray, stageFourInfoArray, stageFiveInfoArray, stageSixInfoArray, stageSevenInfoArray, sumExp // newBattleState,
             ]);
 
-          case 187:
+          case 206:
           case "end":
             return _context.stop();
         }
@@ -520,7 +609,7 @@ var processBattleMove = /*#__PURE__*/function () {
     }, _callee);
   }));
 
-  return function processBattleMove(_x, _x2, _x3, _x4, _x5, _x6, _x7) {
+  return function processBattleMove(_x, _x2, _x3, _x4, _x5) {
     return _ref.apply(this, arguments);
   };
 }();

@@ -26,7 +26,7 @@ function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o =
 function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
 
 var userApplyDebuffAoE = /*#__PURE__*/function () {
-  var _ref = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(userState, battleMonsterState, stageOneInfoArray, battle, useAttack, selectedMonsterId, saveToDatabasePromises, t) {
+  var _ref = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(userState, allRoundDebuffsInfoArray, battleMonsterState, stageOneInfoArray, battle, useAttack, selectedMonsterId, saveToDatabasePromises, t) {
     var battleLogs, monstersToUpdate, selectedMonster, _iterator, _step, _loop;
 
     return _regenerator["default"].wrap(function _callee$(_context2) {
@@ -51,7 +51,7 @@ var userApplyDebuffAoE = /*#__PURE__*/function () {
                       BattleMonsterToUpdate = JSON.parse(JSON.stringify(battleMonster));
 
                       if (!(battleMonster.currentHp > 0)) {
-                        _context.next = 17;
+                        _context.next = 18;
                         break;
                       }
 
@@ -80,6 +80,10 @@ var userApplyDebuffAoE = /*#__PURE__*/function () {
                       if (index !== -1) BattleMonsterToUpdate.debuffs.splice(index, 1);
 
                     case 9:
+                      if (!existingDebuff) {
+                        allRoundDebuffsInfoArray.push(useAttack.name);
+                      }
+
                       debuffObject = {
                         name: useAttack.name,
                         "new": true,
@@ -125,7 +129,7 @@ var userApplyDebuffAoE = /*#__PURE__*/function () {
                         log: log
                       });
 
-                    case 17:
+                    case 18:
                     case "end":
                       return _context.stop();
                   }
@@ -174,7 +178,7 @@ var userApplyDebuffAoE = /*#__PURE__*/function () {
               battleLogs: battleLogs,
               userState: JSON.parse(JSON.stringify(userState))
             });
-            return _context2.abrupt("return", [stageOneInfoArray, userState, battleMonsterState, saveToDatabasePromises]);
+            return _context2.abrupt("return", [stageOneInfoArray, userState, allRoundDebuffsInfoArray, battleMonsterState, saveToDatabasePromises]);
 
           case 23:
           case "end":
@@ -184,7 +188,7 @@ var userApplyDebuffAoE = /*#__PURE__*/function () {
     }, _callee, null, [[4, 13, 16, 19]]);
   }));
 
-  return function userApplyDebuffAoE(_x, _x2, _x3, _x4, _x5, _x6, _x7, _x8) {
+  return function userApplyDebuffAoE(_x, _x2, _x3, _x4, _x5, _x6, _x7, _x8, _x9) {
     return _ref.apply(this, arguments);
   };
 }();

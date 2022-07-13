@@ -46,8 +46,6 @@ var isFailedAttack = /*#__PURE__*/function () {
               if (!isNotMissed) {
                 updatedMonstersArray.push(_objectSpread(_objectSpread({}, updatedMonster), {}, {
                   userDamage: 'Missed',
-                  // currentMonsterHp: selectedMonster.currentHp - randomAttackDamage,
-                  // died: !(updatedMonster.currentHp > 0),
                   attackType: 'Missed'
                 })); // Create battleLog
 
@@ -72,8 +70,6 @@ var isFailedAttack = /*#__PURE__*/function () {
                   // the updated monster info
                   userDamage: 'Blocked',
                   // Damage to show on hit
-                  // currentMonsterHp: selectedMonster.currentHp - randomAttackDamage,
-                  // died: !(updatedMonster.currentHp > 0),
                   attackType: 'Blocked' // TODO: Attack Type should be used to determin the animation to pick
 
                 }));

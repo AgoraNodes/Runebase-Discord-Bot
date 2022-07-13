@@ -114,9 +114,10 @@ var drawEnemy = function drawEnemy(ctx, monster, isSelected, enemyFrame, debuffI
   // console.log('monster');
 
   if (monster.stunned) {
-    ctx.drawImage(effectImages.stunned, x - 1, // x position
+    console.log(effectImages.Stunned);
+    ctx.drawImage(effectImages.Stunned[0], x - 1, // x position
     y + 6, // y position
-    effectImages.stunned.width * 0.5, effectImages.stunned.height * 0.5);
+    effectImages.Stunned[0].width * 0.5, effectImages.Stunned[0].height * 0.5);
   }
 
   return {

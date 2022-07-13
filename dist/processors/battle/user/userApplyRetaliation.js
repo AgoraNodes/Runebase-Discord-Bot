@@ -34,7 +34,7 @@ function _asyncIterator(iterable) { var method, async, sync, retry = 2; for ("un
 function AsyncFromSyncIterator(s) { function AsyncFromSyncIteratorContinuation(r) { if (Object(r) !== r) return Promise.reject(new TypeError(r + " is not an object.")); var done = r.done; return Promise.resolve(r.value).then(function (value) { return { value: value, done: done }; }); } return AsyncFromSyncIterator = function AsyncFromSyncIterator(s) { this.s = s, this.n = s.next; }, AsyncFromSyncIterator.prototype = { s: null, n: null, next: function next() { return AsyncFromSyncIteratorContinuation(this.n.apply(this.s, arguments)); }, "return": function _return(value) { var ret = this.s["return"]; return void 0 === ret ? Promise.resolve({ value: value, done: !0 }) : AsyncFromSyncIteratorContinuation(ret.apply(this.s, arguments)); }, "throw": function _throw(value) { var thr = this.s["return"]; return void 0 === thr ? Promise.reject(value) : AsyncFromSyncIteratorContinuation(thr.apply(this.s, arguments)); } }, new AsyncFromSyncIterator(s); }
 
 var userApplyRetliation = /*#__PURE__*/function () {
-  var _ref = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(userState, totalHealedByLifeSteal, saveToDatabasePromises, battleMonsterState, battle, retaliationArray, stageThreeInfoArray, useAttack, lvl, t) {
+  var _ref = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(userState, totalHealedByLifeSteal, saveToDatabasePromises, battleMonsterState, allRoundEffectsInfoArray, battle, retaliationArray, stageThreeInfoArray, useAttack, lvl, t) {
     var _iteratorAbruptCompletion, _didIteratorError, _iteratorError, _loop, _iterator, _step;
 
     return _regenerator["default"].wrap(function _callee$(_context2) {
@@ -213,7 +213,7 @@ var userApplyRetliation = /*#__PURE__*/function () {
             return _context2.finish(18);
 
           case 28:
-            return _context2.abrupt("return", [stageThreeInfoArray, userState, battleMonsterState, totalHealedByLifeSteal, saveToDatabasePromises]);
+            return _context2.abrupt("return", [stageThreeInfoArray, userState, battleMonsterState, allRoundEffectsInfoArray, totalHealedByLifeSteal, saveToDatabasePromises]);
 
           case 29:
           case "end":
@@ -223,7 +223,7 @@ var userApplyRetliation = /*#__PURE__*/function () {
     }, _callee, null, [[2, 14, 18, 28], [19,, 23, 27]]);
   }));
 
-  return function userApplyRetliation(_x, _x2, _x3, _x4, _x5, _x6, _x7, _x8, _x9, _x10) {
+  return function userApplyRetliation(_x, _x2, _x3, _x4, _x5, _x6, _x7, _x8, _x9, _x10, _x11) {
     return _ref.apply(this, arguments);
   };
 }();

@@ -27,7 +27,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 
 var userApplyPreBuffBattleChance = /*#__PURE__*/function () {
   var _ref = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(userState, // Current User State
-  battleMonsterState, stageZeroInfoArray, // Array to fill with battle info
+  allRoundEffectsInfoArray, battleMonsterState, stageZeroInfoArray, // Array to fill with battle info
   battle, // battle database record
   useAttack, // Which attack is used by user
   selectedMonsterId, // which Monster do we have selected?
@@ -94,11 +94,12 @@ var userApplyPreBuffBattleChance = /*#__PURE__*/function () {
                   }
                 }
 
+                allRoundEffectsInfoArray.push.apply(allRoundEffectsInfoArray, effects);
+
                 if (effects.length > 0) {
                   monstersToUpdate.push(_objectSpread(_objectSpread({}, battleMonster), {}, {
                     stunned: true,
                     attackType: useAttack.name,
-                    // userDamage: 'Stunned',
                     effects: effects
                   }));
                 }
@@ -121,7 +122,7 @@ var userApplyPreBuffBattleChance = /*#__PURE__*/function () {
               battleLogs: battleLogs,
               userState: JSON.parse(JSON.stringify(userState))
             });
-            return _context.abrupt("return", [stageZeroInfoArray, userState, battleMonsterState, saveToDatabasePromises]);
+            return _context.abrupt("return", [stageZeroInfoArray, userState, allRoundEffectsInfoArray, battleMonsterState, saveToDatabasePromises]);
 
           case 8:
           case "end":
@@ -131,7 +132,7 @@ var userApplyPreBuffBattleChance = /*#__PURE__*/function () {
     }, _callee);
   }));
 
-  return function userApplyPreBuffBattleChance(_x, _x2, _x3, _x4, _x5, _x6, _x7, _x8) {
+  return function userApplyPreBuffBattleChance(_x, _x2, _x3, _x4, _x5, _x6, _x7, _x8, _x9) {
     return _ref.apply(this, arguments);
   };
 }();

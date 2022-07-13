@@ -5,7 +5,7 @@ var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefau
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.loadBuff = void 0;
+exports.loadEffect = void 0;
 
 var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
 
@@ -15,20 +15,20 @@ var _canvas = require("canvas");
 
 var _path = _interopRequireDefault(require("path"));
 
-var loadBuff = /*#__PURE__*/function () {
-  var _ref = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(buffName) {
-    var buffImage;
+var loadEffect = /*#__PURE__*/function () {
+  var _ref = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(effectName) {
+    var effectImage;
     return _regenerator["default"].wrap(function _callee$(_context) {
       while (1) {
         switch (_context.prev = _context.next) {
           case 0:
-            buffImage = [];
+            effectImage = [];
             _context.next = 3;
-            return (0, _canvas.loadImage)(_path["default"].join(__dirname, "../../../assets/images/buff/", "".concat(buffName, ".png")));
+            return (0, _canvas.loadImage)(_path["default"].join(__dirname, "../../../assets/images/battle/effects", "".concat(effectName, ".png")));
 
           case 3:
-            buffImage[0] = _context.sent;
-            return _context.abrupt("return", buffImage);
+            effectImage[0] = _context.sent;
+            return _context.abrupt("return", effectImage);
 
           case 5:
           case "end":
@@ -38,9 +38,9 @@ var loadBuff = /*#__PURE__*/function () {
     }, _callee);
   }));
 
-  return function loadBuff(_x) {
+  return function loadEffect(_x) {
     return _ref.apply(this, arguments);
   };
 }();
 
-exports.loadBuff = loadBuff;
+exports.loadEffect = loadEffect;

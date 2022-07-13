@@ -37,7 +37,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 
 var userApplyAttackAoE = /*#__PURE__*/function () {
   var _ref = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(userState, // Current User State
-  battleMonsterState, totalHealedByLifeSteal, lvl, // Users Level
+  battleMonsterState, allRoundEffectsInfoArray, totalHealedByLifeSteal, lvl, // Users Level
   stageOneInfoArray, // Array to fill with battle info
   battle, // battle database record
   useAttack, // Which attack is used by user
@@ -141,6 +141,10 @@ var userApplyAttackAoE = /*#__PURE__*/function () {
                 } // Push new monster state
 
 
+                if (updatedMonster.stunned) {
+                  allRoundEffectsInfoArray.push('Stunned');
+                }
+
                 monstersToUpdate.push(_objectSpread(_objectSpread({}, updatedMonster), {}, {
                   didUserCrit: didUserCrit,
                   stunned: updatedMonster.stunned ? true : didUserStun,
@@ -190,7 +194,7 @@ var userApplyAttackAoE = /*#__PURE__*/function () {
               battleLogs: battleLogs,
               userState: JSON.parse(JSON.stringify(userState))
             });
-            return _context.abrupt("return", [stageOneInfoArray, userState, battleMonsterState, totalHealedByLifeSteal, saveToDatabasePromises]);
+            return _context.abrupt("return", [stageOneInfoArray, userState, battleMonsterState, allRoundEffectsInfoArray, totalHealedByLifeSteal, saveToDatabasePromises]);
 
           case 36:
           case "end":
@@ -200,7 +204,7 @@ var userApplyAttackAoE = /*#__PURE__*/function () {
     }, _callee, null, [[5, 24, 27, 30]]);
   }));
 
-  return function userApplyAttackAoE(_x, _x2, _x3, _x4, _x5, _x6, _x7, _x8, _x9, _x10) {
+  return function userApplyAttackAoE(_x, _x2, _x3, _x4, _x5, _x6, _x7, _x8, _x9, _x10, _x11) {
     return _ref.apply(this, arguments);
   };
 }();

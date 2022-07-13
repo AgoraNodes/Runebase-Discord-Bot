@@ -20,7 +20,7 @@ function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (O
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { (0, _defineProperty2["default"])(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
 
 var userApplyDebuffSingle = /*#__PURE__*/function () {
-  var _ref = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(userState, battleMonsterState, stageOneInfoArray, battle, useAttack, selectedMonsterId, saveToDatabasePromises, t) {
+  var _ref = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(userState, allRoundDebuffsInfoArray, battleMonsterState, stageOneInfoArray, battle, useAttack, selectedMonsterId, saveToDatabasePromises, t) {
     var battleLogs, updatedMonster, existingDebuff, index, debuffObject, log, monstersToUpdate;
     return _regenerator["default"].wrap(function _callee$(_context) {
       while (1) {
@@ -32,7 +32,7 @@ var userApplyDebuffSingle = /*#__PURE__*/function () {
             }); // Apply ALL Single Unit Debuffs here
 
             if (!(updatedMonster.currentHp > 0)) {
-              _context.next = 15;
+              _context.next = 16;
               break;
             }
 
@@ -46,7 +46,10 @@ var userApplyDebuffSingle = /*#__PURE__*/function () {
             }
 
             _context.next = 7;
-            return existingDebuff.destroy({
+            return _models["default"].debuff.destroy({
+              where: {
+                id: existingDebuff.id
+              },
               lock: t.LOCK.UPDATE,
               transaction: t
             });
@@ -58,6 +61,10 @@ var userApplyDebuffSingle = /*#__PURE__*/function () {
             if (index !== -1) updatedMonster.debuffs.splice(index, 1);
 
           case 9:
+            if (!existingDebuff) {
+              allRoundDebuffsInfoArray.push(useAttack.name);
+            }
+
             debuffObject = {
               name: useAttack.name,
               "new": true,
@@ -92,7 +99,7 @@ var userApplyDebuffSingle = /*#__PURE__*/function () {
               log: log
             });
 
-          case 15:
+          case 16:
             userState.mp.current -= useAttack.cost;
             monstersToUpdate = [_objectSpread(_objectSpread({}, updatedMonster), {}, {
               userDamage: useAttack.name,
@@ -110,9 +117,9 @@ var userApplyDebuffSingle = /*#__PURE__*/function () {
               battleLogs: battleLogs,
               userState: JSON.parse(JSON.stringify(userState))
             });
-            return _context.abrupt("return", [stageOneInfoArray, userState, battleMonsterState, saveToDatabasePromises]);
+            return _context.abrupt("return", [stageOneInfoArray, userState, allRoundDebuffsInfoArray, battleMonsterState, saveToDatabasePromises]);
 
-          case 20:
+          case 21:
           case "end":
             return _context.stop();
         }
@@ -120,7 +127,7 @@ var userApplyDebuffSingle = /*#__PURE__*/function () {
     }, _callee);
   }));
 
-  return function userApplyDebuffSingle(_x, _x2, _x3, _x4, _x5, _x6, _x7, _x8) {
+  return function userApplyDebuffSingle(_x, _x2, _x3, _x4, _x5, _x6, _x7, _x8, _x9) {
     return _ref.apply(this, arguments);
   };
 }();

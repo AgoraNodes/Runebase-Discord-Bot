@@ -13,11 +13,8 @@ var _asyncToGenerator2 = _interopRequireDefault(require("@babel/runtime/helpers/
 
 var _models = _interopRequireDefault(require("../../../models"));
 
-/* eslint-disable no-await-in-loop */
-
-/* eslint-disable no-restricted-syntax */
 var userApplyBuffSingle = /*#__PURE__*/function () {
-  var _ref = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(userState, stageOneInfoArray, battle, useAttack, selectedMonsterId, saveToDatabasePromises, t) {
+  var _ref = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(userState, allRoundBuffsInfoArray, stageOneInfoArray, battle, useAttack, selectedMonsterId, saveToDatabasePromises, t) {
     var battleLogs, existingBuff, index, buffObject, log;
     return _regenerator["default"].wrap(function _callee$(_context) {
       while (1) {
@@ -34,7 +31,7 @@ var userApplyBuffSingle = /*#__PURE__*/function () {
             }
 
             _context.next = 5;
-            return existingBuff.destroy({
+            return _models["default"].buff.destroy({
               where: {
                 id: existingBuff.id
               },
@@ -49,6 +46,10 @@ var userApplyBuffSingle = /*#__PURE__*/function () {
             if (index !== -1) userState.buffs.splice(index, 1);
 
           case 7:
+            if (!existingBuff) {
+              allRoundBuffsInfoArray.push(useAttack.name);
+            }
+
             buffObject = {
               name: useAttack.name,
               UserClassId: userState.id,
@@ -90,11 +91,11 @@ var userApplyBuffSingle = /*#__PURE__*/function () {
               useAttack: useAttack,
               battleLogs: battleLogs,
               userState: JSON.parse(JSON.stringify(userState))
-            }); // console.log('done applying buff');
+            });
+            console.log('done applying buff');
+            return _context.abrupt("return", [stageOneInfoArray, userState, allRoundBuffsInfoArray, saveToDatabasePromises]);
 
-            return _context.abrupt("return", [stageOneInfoArray, userState, saveToDatabasePromises]);
-
-          case 16:
+          case 18:
           case "end":
             return _context.stop();
         }
@@ -102,7 +103,7 @@ var userApplyBuffSingle = /*#__PURE__*/function () {
     }, _callee);
   }));
 
-  return function userApplyBuffSingle(_x, _x2, _x3, _x4, _x5, _x6, _x7) {
+  return function userApplyBuffSingle(_x, _x2, _x3, _x4, _x5, _x6, _x7, _x8) {
     return _ref.apply(this, arguments);
   };
 }();
