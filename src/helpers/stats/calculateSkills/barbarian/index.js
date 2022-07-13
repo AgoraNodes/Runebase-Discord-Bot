@@ -231,10 +231,9 @@ export const calculateBarbSkillDamage = (
       name: skillToCalculate.skill.name,
       attackType: 'Magic',
       stun: true,
-      chance: 100, // Temp testing
-      cost: 0, // 2
-      // rounds: Math.round(rounds),
-      rounds: 20,
+      chance,
+      cost: 2,
+      rounds: Math.round(rounds),
       ranged: true,
       debuff: true,
       aoe: true,

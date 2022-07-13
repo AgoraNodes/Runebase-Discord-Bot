@@ -2,6 +2,7 @@ const calculatePassivesBarb = async (
   currentCharacter,
   defense,
   regularAttack,
+  kick,
   FR,
   PR,
   LR,
@@ -13,8 +14,8 @@ const calculatePassivesBarb = async (
   let newPR = PR;
   let newLR = LR;
   let newCR = CR;
-  console.log(currentCharacter.equipment.mainHand.itemBase.itemFamily.itemType);
-  console.log('currentCharacter.equipment');
+  let newKick = kick;
+
   const thoughSkin = currentCharacter.UserClassSkills.find((x) => x.skill.name === 'Though Skin');
   const resistance = currentCharacter.UserClassSkills.find((x) => x.skill.name === 'Resistance');
   const swordsman = currentCharacter.UserClassSkills.find((x) => x.skill.name === 'Swordsman');
@@ -25,6 +26,7 @@ const calculatePassivesBarb = async (
   const spearman = currentCharacter.UserClassSkills.find((x) => x.skill.name === 'Spearman');
   const parry = currentCharacter.UserClassSkills.find((x) => x.skill.name === 'Parry');
   const criticalHit = currentCharacter.UserClassSkills.find((x) => x.skill.name === 'Critical Hit');
+  const criticalKick = currentCharacter.UserClassSkills.find((x) => x.skill.name === 'Critical Kick');
   const healingHit = currentCharacter.UserClassSkills.find((x) => x.skill.name === 'Healing Hit');
 
   if (thoughSkin) {
@@ -217,6 +219,21 @@ const calculatePassivesBarb = async (
     };
   }
 
+  if (criticalKick) {
+    const addCrit = newRegularAttack.crit + 5 + (criticalKick.points);
+    newKick = {
+      name: 'Kick',
+      attackType: newKick.attackType,
+      min: newKick.min,
+      max: newKick.max,
+      ar: newKick.ar,
+      crit: newKick.crit + addCrit,
+      lifeSteal: newKick.lifeSteal,
+      manaSteal: newKick.manaSteal,
+      cost: 0,
+    };
+  }
+
   if (criticalHit) {
     const newCrit = newRegularAttack.crit + 5 + (criticalHit.points);
     newRegularAttack = {
@@ -247,16 +264,30 @@ const calculatePassivesBarb = async (
       crit: newRegularAttack.crit,
       stun: newRegularAttack.stun,
       parry: newRegularAttack.parry,
-      // lifeSteal: Math.round(newLifeSteal),
-      lifeSteal: Math.round(50), // temp testing
+      lifeSteal: Math.round(newLifeSteal),
+      // lifeSteal: Math.round(50), // temp testing
       manaSteal: newRegularAttack.manaSteal,
       cost: newRegularAttack.cost,
+    };
+    const newKickLifeSteal = newRegularAttack.lifeSteal + 1 + ((healingHit.points - 1) * 0.5);
+    newKick = {
+      name: 'Kick',
+      attackType: newKick.attackType,
+      min: newKick.min,
+      max: newKick.max,
+      ar: newKick.ar,
+      crit: newKick.crit,
+      lifeSteal: Math.round(50), // temp testing
+      // lifeSteal: Math.round(newKickLifeSteal),
+      manaSteal: newKick.manaSteal,
+      cost: 0,
     };
   }
 
   return [
     newDefense, // Defense
     newRegularAttack, // Regular Attack
+    newKick, // Kick
     newFR, // Fire resistance
     newPR, // Poison Resistance
     newLR, // Lightning Resitance

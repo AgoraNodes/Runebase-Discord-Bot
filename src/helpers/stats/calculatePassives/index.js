@@ -4,6 +4,7 @@ const calculatePassives = async (
   currentCharacter,
   defense,
   regularAttack,
+  kick,
   FR,
   PR,
   LR,
@@ -11,6 +12,7 @@ const calculatePassives = async (
 ) => {
   let newDefense = defense;
   let newRegularAttack = regularAttack;
+  let newKick = kick;
   let newFR = FR;
   let newPR = PR;
   let newLR = LR;
@@ -19,6 +21,7 @@ const calculatePassives = async (
     [
       newDefense, // Defense
       newRegularAttack,
+      newKick,
       newFR, // Fire resistance
       newPR, // Poison Resistance
       newLR, // Lightning Resitance
@@ -27,6 +30,7 @@ const calculatePassives = async (
       currentCharacter,
       newDefense,
       newRegularAttack,
+      newKick,
       newFR, // Fire resistance
       newPR, // Poison Resistance
       newLR, // Lightning Resitance
@@ -36,6 +40,7 @@ const calculatePassives = async (
   return [
     newDefense, // Defense
     newRegularAttack, // Regular Attack
+    newKick, // Kick
     newFR, // Fire resistance
     newPR, // Poison Resistance
     newLR, // Lightning Resitance

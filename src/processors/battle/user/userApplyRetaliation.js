@@ -1,12 +1,17 @@
 /* eslint-disable no-restricted-syntax */
 /* eslint-disable no-loop-func */
 import isFailedAttack from "./isFailedAttack";
-import { randomIntFromInterval } from "../../utils";
+import { randomIntFromInterval } from "../../../helpers/utils";
 import db from '../../../models';
 import calculateCritDamage from "../utils/calculateCritDamage";
+import {
+  lifeSteal,
+  manaSteal,
+} from '../utils/utils';
 
 const userApplyRetliation = async (
   userState,
+  totalHealedByLifeSteal,
   saveToDatabasePromises,
   battleMonsterState,
   battle,
@@ -20,6 +25,7 @@ const userApplyRetliation = async (
     let battleLogs = [];
     let monstersToUpdate = [];
     let attackFailed = true;
+    let lifeStolen = false;
     let individualBattleObject;
     const monster = battleMonsterState.find((x) => x.id === retaliation.monsterId);
     if (monster && monster.currentHp > 0) {
@@ -42,6 +48,7 @@ const userApplyRetliation = async (
       );
       if (!attackFailed) {
         let randomAttackDamage = randomIntFromInterval(useAttack.min, useAttack.max); // Get Random Damage
+        lifeStolen = lifeSteal(randomAttackDamage, useAttack.lifeSteal);
         let didWeCrit = false;
         [
           didWeCrit,
@@ -97,13 +104,17 @@ const userApplyRetliation = async (
       }
 
       battleMonsterState = battleMonsterState.map((obj) => monstersToUpdate.find((o) => o.id === obj.id) || obj);
+      totalHealedByLifeSteal += lifeStolen || 0;
+      const addAmountLife = lifeStolen || 0;
+      userState.hp.current = (userState.hp.current + addAmountLife) > userState.hp.max ? userState.hp.max : (userState.hp.current + addAmountLife);
 
       individualBattleObject = {
         monsterId: updatedMonster.id,
-        monstersToUpdate,
+        monstersToUpdate: JSON.parse(JSON.stringify(monstersToUpdate)),
         userState: JSON.parse(JSON.stringify(userState)),
         battleLogs,
         useAttack,
+        receivedHeal: lifeStolen || false,
       };
 
       stageThreeInfoArray.push(individualBattleObject);
@@ -113,6 +124,7 @@ const userApplyRetliation = async (
     stageThreeInfoArray,
     userState,
     battleMonsterState,
+    totalHealedByLifeSteal,
     saveToDatabasePromises,
   ];
 };

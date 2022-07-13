@@ -99,7 +99,7 @@ const countDownBuffsAndDebuffs = async (
   userState.buffs = newUserBuffsArray;
 
   stageFiveInfoArray.push({
-    monstersToUpdate,
+    monstersToUpdate: JSON.parse(JSON.stringify(monstersToUpdate)),
     userState: JSON.parse(JSON.stringify(userState)),
   });
 

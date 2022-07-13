@@ -80,7 +80,7 @@ const userApplyDebuffSingle = async (
 
   stageOneInfoArray.push({
     monsterId: updatedMonster.id,
-    monstersToUpdate,
+    monstersToUpdate: JSON.parse(JSON.stringify(monstersToUpdate)),
     useAttack,
     battleLogs,
     userState: JSON.parse(JSON.stringify(userState)),

@@ -1,13 +1,18 @@
 /* eslint-disable no-await-in-loop */
 /* eslint-disable no-restricted-syntax */
 import db from '../../../models';
-import { randomIntFromInterval } from "../../utils";
+import { randomIntFromInterval } from "../../../helpers/utils";
 import isFailedAttack from './isFailedAttack';
 import calculateCritDamage from '../utils/calculateCritDamage';
+import {
+  lifeSteal,
+  manaSteal,
+} from '../utils/utils';
 
 const userApplyAttackAoE = async (
   userState, // Current User State
   battleMonsterState,
+  totalHealedByLifeSteal,
   lvl, // Users Level
   stageOneInfoArray, // Array to fill with battle info
   battle, // battle database record
@@ -19,6 +24,8 @@ const userApplyAttackAoE = async (
   let battleLogs = [];
   let monstersToUpdate = [];
   let attackFailed = true;
+  let lifeStolen = false;
+  // let totalLifeStolen = 0;
   // Apply ALL AOE Debuffs here
   for (const battleMonster of battleMonsterState) {
     const updatedMonster = battleMonster;
@@ -45,6 +52,7 @@ const userApplyAttackAoE = async (
       if (!attackFailed) {
         // Apply Damage to monster
         let randomAttackDamage = randomIntFromInterval(useAttack.min, useAttack.max); // Random attack damage between min-max
+        lifeStolen += lifeSteal(randomAttackDamage, useAttack.lifeSteal);
         let didUserCrit = false;
         [
           didUserCrit,
@@ -97,7 +105,7 @@ const userApplyAttackAoE = async (
           {
             ...updatedMonster,
             didUserCrit,
-            stunned: didUserStun,
+            stunned: updatedMonster.stunned ? true : didUserStun,
             userDamage: randomAttackDamage,
             attackType: useAttack.name,
           },
@@ -108,11 +116,15 @@ const userApplyAttackAoE = async (
 
   // Replace old battlemonster state with new state
   battleMonsterState = battleMonsterState.map((obj) => monstersToUpdate.find((o) => o.id === obj.id) || obj);
+  totalHealedByLifeSteal += lifeStolen || 0;
+  const addAmountLife = lifeStolen || 0;
+  userState.hp.current = (userState.hp.current + addAmountLife) > userState.hp.max ? userState.hp.max : (userState.hp.current + addAmountLife);
 
   // Push into StageOneInfoArray -> Passed to rendering
   stageOneInfoArray.push({
     monsterId: selectedMonsterId,
-    monstersToUpdate,
+    monstersToUpdate: JSON.parse(JSON.stringify(monstersToUpdate)),
+    receivedHeal: lifeStolen || false,
     useAttack,
     battleLogs,
     userState: JSON.parse(JSON.stringify(userState)),
@@ -122,6 +134,7 @@ const userApplyAttackAoE = async (
     stageOneInfoArray,
     userState,
     battleMonsterState,
+    totalHealedByLifeSteal,
     saveToDatabasePromises,
   ];
 };

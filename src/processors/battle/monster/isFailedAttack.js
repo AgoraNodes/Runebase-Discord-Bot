@@ -1,5 +1,5 @@
 import db from '../../../models';
-import { randomIntFromInterval } from "../../utils";
+import { randomIntFromInterval } from "../../../helpers/utils";
 
 const isFailedAttack = async (
   userState,
@@ -11,6 +11,7 @@ const isFailedAttack = async (
   battleLogs,
   remainingMonster,
   useAttack,
+  saveToDatabasePromises,
   t,
 ) => {
   let individualBattleObject;
@@ -31,14 +32,22 @@ const isFailedAttack = async (
     const isNotMissed = Math.random() < Number(monsterHitChance) / 100; // Did Monster hit user?
 
     if (!isNotMissed) {
-      const createBattleLog = await db.battleLog.create({
-        battleId: battle.id,
-        log: `${remainingMonster.monster.name} ${useAttack.name} missed ${userState.user.username}`,
-      }, {
-        lock: t.LOCK.UPDATE,
-        transaction: t,
+      const log = `${remainingMonster.monster.name} ${useAttack.name} missed ${userState.user.username}`;
+      saveToDatabasePromises.push(
+        new Promise((resolve, reject) => {
+          db.battleLog.create({
+            battleId: battle.id,
+            log,
+          }, {
+            lock: t.LOCK.UPDATE,
+            transaction: t,
+          }).then(() => resolve());
+        }),
+      );
+      battleLogs.unshift({
+        log,
       });
-      battleLogs.unshift(JSON.parse(JSON.stringify(createBattleLog)));
+
       individualBattleObject = {
         monsterId: remainingMonster.id,
         attackType: 'Missed',
@@ -49,14 +58,21 @@ const isFailedAttack = async (
       };
       attackFailed = true;
     } else if (isBlocked) {
-      const createBattleLog = await db.battleLog.create({
-        battleId: battle.id,
-        log: `${userState.user.username} blocked ${remainingMonster.monster.name} ${useAttack.name}`,
-      }, {
-        lock: t.LOCK.UPDATE,
-        transaction: t,
+      const log = `${userState.user.username} blocked ${remainingMonster.monster.name} ${useAttack.name}`;
+      saveToDatabasePromises.push(
+        new Promise((resolve, reject) => {
+          db.battleLog.create({
+            battleId: battle.id,
+            log,
+          }, {
+            lock: t.LOCK.UPDATE,
+            transaction: t,
+          }).then(() => resolve());
+        }),
+      );
+      battleLogs.unshift({
+        log,
       });
-      battleLogs.unshift(JSON.parse(JSON.stringify(createBattleLog)));
 
       individualBattleObject = {
         monsterId: remainingMonster.id,
@@ -68,14 +84,21 @@ const isFailedAttack = async (
       };
       attackFailed = true;
     } else if (isParried) {
-      const createBattleLog = await db.battleLog.create({
-        battleId: battle.id,
-        log: `${userState.user.username} parried ${remainingMonster.monster.name} ${useAttack.name}`,
-      }, {
-        lock: t.LOCK.UPDATE,
-        transaction: t,
+      const log = `${userState.user.username} parried ${remainingMonster.monster.name} ${useAttack.name}`;
+      saveToDatabasePromises.push(
+        new Promise((resolve, reject) => {
+          db.battleLog.create({
+            battleId: battle.id,
+            log,
+          }, {
+            lock: t.LOCK.UPDATE,
+            transaction: t,
+          }).then(() => resolve());
+        }),
+      );
+      battleLogs.unshift({
+        log,
       });
-      battleLogs.unshift(JSON.parse(JSON.stringify(createBattleLog)));
 
       individualBattleObject = {
         monsterId: remainingMonster.id,
@@ -88,10 +111,11 @@ const isFailedAttack = async (
       attackFailed = true;
     }
   }
-  console.log('after isfailedAttack #2');
+
   return [
     individualBattleObject,
     attackFailed,
+    saveToDatabasePromises,
   ];
 };
 

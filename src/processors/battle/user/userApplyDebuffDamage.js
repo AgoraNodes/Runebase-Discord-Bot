@@ -1,7 +1,7 @@
 /* eslint-disable no-restricted-syntax */
 /* eslint-disable no-loop-func */
 // import isFailedAttack from "./isFailedAttack";
-import { randomIntFromInterval } from "../../utils";
+import { randomIntFromInterval } from "../../../helpers/utils";
 import db from '../../../models';
 
 const userApplyDebuffDamage = async (
@@ -61,7 +61,7 @@ const userApplyDebuffDamage = async (
 
             stageFourInfoArray.push({
               monsterId: updatedMonster.id,
-              monstersToUpdate,
+              monstersToUpdate: JSON.parse(JSON.stringify(monstersToUpdate)),
               battleLogs,
               userState: JSON.parse(JSON.stringify(userState)),
               ranged: false,

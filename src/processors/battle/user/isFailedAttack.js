@@ -81,8 +81,6 @@ const isFailedAttack = async (
       updatedMonstersArray.push({
         ...updatedMonster,
         userDamage: 'Parried',
-        // currentMonsterHp: selectedMonster.currentHp - randomAttackDamage,
-        // died: !(updatedMonster.currentHp > 0),
         attackType: 'Parried',
       });
 

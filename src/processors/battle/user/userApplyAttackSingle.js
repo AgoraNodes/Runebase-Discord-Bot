@@ -1,13 +1,18 @@
 /* eslint-disable no-await-in-loop */
 /* eslint-disable no-restricted-syntax */
 import db from '../../../models';
-import { randomIntFromInterval } from "../../utils";
+import { randomIntFromInterval } from "../../../helpers/utils";
 import isFailedAttack from './isFailedAttack';
 import calculateCritDamage from '../utils/calculateCritDamage';
+import {
+  lifeSteal,
+  manaSteal,
+} from '../utils/utils';
 
 const userApplyAttackSingle = async (
   userState, // Current User State
   battleMonsterState,
+  totalHealedByLifeSteal,
   lvl, // Users Level
   stageOneInfoArray, // Array to fill with battle info
   battle, // battle database record
@@ -19,6 +24,7 @@ const userApplyAttackSingle = async (
   let battleLogs = [];
   let monstersToUpdate = [];
   let attackFailed = true;
+  let lifeStolen = false;
   // APPLY USER Single MONSTER attack
   const updatedMonster = battleMonsterState.find((element) => element.id === selectedMonsterId);
 
@@ -43,6 +49,7 @@ const userApplyAttackSingle = async (
 
   if (!attackFailed) {
     let randomAttackDamage = randomIntFromInterval(useAttack.min, useAttack.max); // Random attack damage between min-max
+    lifeStolen = lifeSteal(randomAttackDamage, useAttack.lifeSteal);
     // Test Crit
     let didUserCrit = false;
     [
@@ -95,7 +102,7 @@ const userApplyAttackSingle = async (
       {
         ...updatedMonster,
         didUserCrit,
-        stunned: didUserStun,
+        stunned: updatedMonster.stunned ? true : didUserStun,
         userDamage: randomAttackDamage,
         attackType: useAttack.name,
       },
@@ -103,14 +110,17 @@ const userApplyAttackSingle = async (
   }
 
   battleMonsterState = battleMonsterState.map((obj) => monstersToUpdate.find((o) => o.id === obj.id) || obj);
-
   userState.mp.current -= useAttack.cost;
+  totalHealedByLifeSteal += lifeStolen || 0;
+  const addAmountLife = lifeStolen || 0;
+  userState.hp.current = (userState.hp.current + addAmountLife) > userState.hp.max ? userState.hp.max : (userState.hp.current + addAmountLife);
 
   stageOneInfoArray.push({
     monsterId: updatedMonster.id,
-    monstersToUpdate,
+    monstersToUpdate: JSON.parse(JSON.stringify(monstersToUpdate)),
     useAttack,
     battleLogs,
+    receivedHeal: lifeStolen || false,
     userState: JSON.parse(JSON.stringify(userState)),
   });
 
@@ -118,6 +128,7 @@ const userApplyAttackSingle = async (
     stageOneInfoArray,
     userState,
     battleMonsterState,
+    totalHealedByLifeSteal,
     saveToDatabasePromises,
   ];
 };

@@ -63,7 +63,7 @@ const userApplyPreBuffBattleChance = async (
 
   stageZeroInfoArray.push({
     monsterId: selectedMonster.id,
-    monstersToUpdate,
+    monstersToUpdate: JSON.parse(JSON.stringify(monstersToUpdate)),
     useAttack,
     battleLogs,
     userState: JSON.parse(JSON.stringify(userState)),

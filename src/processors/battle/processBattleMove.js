@@ -1,6 +1,6 @@
 /* eslint-disable no-restricted-syntax */
 import db from '../../models';
-import { calculateCharacterStats } from '../stats/calculateCharacterStats';
+import { calculateCharacterStats } from '../../helpers/stats/calculateCharacterStats';
 import userApplyDebuffAoE from './user/userApplyDebuffAoE';
 import userApplyDebuffSingle from './user/userApplyDebuffSingle';
 import userApplyAttackSingle from './user/userApplyAttackSingle';
@@ -14,7 +14,8 @@ import selectAttack from './utils/selectAttack';
 import removeNewTagFromBuffsAndDebuffs from './utils/removeNewTagFromBuffsAndDebuffs';
 import userApplyPreBuffBattleChance from './user/userApplyPreBuffBattleChance';
 import applyEnemyDebuffEffects from './utils/applyEnemyDebuffEffects';
-import reFetchBattle from './fetchBattle';
+import userApplyBattleCompleteEffects from './user/userApplyBattleCompleteEffects';
+import reFetchBattle from '../../helpers/fetchBattle';
 // TODO: Make code more readable by moving monster/user updates in their own designated function
 // TODO: APPLY BUFFS TO USER CHARACTER
 export const processBattleMove = async (
@@ -41,6 +42,7 @@ export const processBattleMove = async (
   let stageSevenInfoArray = []; // when battle is complete effects
   let isBattleComplete = false; // Test for battle completion
   let totalDamageByMonsters = 0;
+  let totalHealedByLifeSteal = 0;
   // let battleLogDatabasePromises = [];
   let saveToDatabasePromises = [];
 
@@ -201,10 +203,12 @@ export const processBattleMove = async (
       stageOneInfoArray, // Return completed StageOneInfo Array
       userState,
       battleMonsterState,
+      totalHealedByLifeSteal,
       saveToDatabasePromises,
     ] = await userApplyAttackAoE(
       userState, // Current User State
       battleMonsterState,
+      totalHealedByLifeSteal,
       lvl, // Users Level
       stageOneInfoArray, // Array to fill with battle info
       battle, // battle database record
@@ -218,10 +222,12 @@ export const processBattleMove = async (
       stageOneInfoArray, // Return completed StageOneInfo Array
       userState,
       battleMonsterState,
+      totalHealedByLifeSteal,
       saveToDatabasePromises,
     ] = await userApplyAttackSingle(
       userState,
       battleMonsterState,
+      totalHealedByLifeSteal,
       lvl, // Users Level
       stageOneInfoArray, // Array to fill with battle info
       battle, // battle database record
@@ -232,18 +238,15 @@ export const processBattleMove = async (
     );
   }
 
+  // If there are no monsters left, tag battle as complete
+  const isBattleMonsterAlive = battleMonsterState.filter((obj) => obj.currentHp > 0);
+  if (!isBattleMonsterAlive || isBattleMonsterAlive.length < 1) {
+    isBattleComplete = true;
+  }
+
   // Stage Two
   console.log('Stage #2 Processing');
   // Process Monster Moves/Attacks
-  const isBattleMonsterAlive = battleMonsterState.filter((obj) => obj.currentHp > 0);
-
-  console.log(isBattleMonsterAlive);
-  console.log('check if there is monsters alive');
-  // If there are no monsters left, tag battle as complete
-  if (!isBattleMonsterAlive || isBattleMonsterAlive.length < 1) {
-    console.log('battle is complete');
-    isBattleComplete = true;
-  }
   if (!isBattleComplete) {
     // if (battleMonsterState) {
     [
@@ -252,8 +255,10 @@ export const processBattleMove = async (
       battleMonsterState,
       stageTwoInfoArray,
       retaliationArray,
+      saveToDatabasePromises,
     ] = await monstersApplyAttack(
       userState,
+      saveToDatabasePromises,
       battleMonsterState,
       lvl, // Users Level
       block, // users Block
@@ -272,9 +277,11 @@ export const processBattleMove = async (
         stageThreeInfoArray,
         userState,
         battleMonsterState,
+        totalHealedByLifeSteal,
         saveToDatabasePromises,
       ] = await userApplyRetliation(
         userState,
+        totalHealedByLifeSteal,
         saveToDatabasePromises,
         battleMonsterState,
         battle,
@@ -314,20 +321,32 @@ export const processBattleMove = async (
       t,
     );
 
-    // Stage 6 After Round User Effects (example: userHeal each Round)
+    // Stage 6 After Round User Effects (example: manaRegen each Round)
     console.log('Stage 6 is a placeholder');
     stageSixInfoArray = [];
 
-    // Stage 7 (Battle Complete effects) (Mana/Health REGEN)
-    stageSevenInfoArray = [];
+    // Test if Battle is complete
     const isBattleMonsterAliveFinal = battleMonsterState.filter((obj) => obj.currentHp > 0);
     if (!isBattleMonsterAliveFinal || isBattleMonsterAliveFinal.length < 1) {
       isBattleComplete = true;
     }
   }
 
+  // Stage 7 (Battle Complete effects) (Mana/Health REGEN)
   if (isBattleComplete) {
-    console.log('battle is complete end promise push');
+    [
+      stageSevenInfoArray,
+      userState,
+      totalHealedByLifeSteal,
+      saveToDatabasePromises,
+    ] = await userApplyBattleCompleteEffects(
+      stageSevenInfoArray,
+      userState,
+      battle,
+      totalHealedByLifeSteal,
+      saveToDatabasePromises,
+      t,
+    );
     saveToDatabasePromises.push(
       new Promise((resolve, reject) => {
         db.battle.update({
@@ -345,10 +364,17 @@ export const processBattleMove = async (
   // STAGE 8 (Unrecorded for rendering)
   // TODO: TEST IF NEW VALUE SURPASSES MAX HEALTH / MANA (Life Steal & after battle heal effects)
 
+  const newLifeValue = userCurrentCharacter.condition.life
+    - (totalDamageByMonsters - Math.round((totalDamageByMonsters * (userState.hp.totalLifeBonus / 100))))
+    + (totalHealedByLifeSteal - Math.round((totalHealedByLifeSteal * (userState.hp.totalLifeBonus / 100))));
+
   saveToDatabasePromises.push(
     new Promise((resolve, reject) => {
       userCurrentCharacter.condition.update({
-        life: userCurrentCharacter.condition.life - (totalDamageByMonsters - Math.round((totalDamageByMonsters * (userState.hp.totalLifeBonus / 100)))),
+        life: newLifeValue
+          > (userState.hp.max - Math.round((userState.hp.max * (userState.hp.totalLifeBonus / 100))))
+          ? (userState.hp.max - Math.round((userState.hp.max * (userState.hp.totalLifeBonus / 100))))
+          : newLifeValue,
         mana: userCurrentCharacter.condition.mana - useAttack.cost,
       }, {
         lock: t.LOCK.UPDATE,
@@ -420,9 +446,11 @@ export const processBattleMove = async (
   console.log(`crit: ${regularAttack.crit}`);
   console.log(`defense: ${defense}`);
   console.log(`attack rating: ${regularAttack.ar}`);
-  console.log(`lifesteal: ${regularAttack.lifesteal}`);
+  console.log(`lifesteal: ${regularAttack.lifeSteal}`);
   console.log(`initialUserState.hp`);
   console.log(initialUserState.hp);
+  console.log('\nkick:');
+  console.log(JSON.stringify(kick));
   const newBattleState = JSON.parse(JSON.stringify(updatedBattle));
 
   return [

@@ -20,12 +20,12 @@ import { fetchUserCurrentSelectedSkills } from "../helpers/character/selectedSki
 import { updateUserCurrentSelectedSkills } from '../helpers/character/updateSelectedSkills';
 import { fetchDiscordUserIdFromMessageOrInteraction } from '../helpers/client/fetchDiscordUserIdFromMessageOrInteraction';
 import { fetchDiscordChannel } from '../helpers/client/fetchDiscordChannel';
-import { processBattleMove } from '../helpers/battle/processBattleMove';
+
 import { renderBattleComplete } from '../render/battle/battleComplete';
 import { randomIntFromInterval } from "../helpers/utils";
 import { calculateCharacterStats } from '../helpers/stats/calculateCharacterStats';
-import reFetchBattle from '../helpers/battle/fetchBattle';
-
+import reFetchBattle from '../helpers/fetchBattle';
+import { processBattleMove } from '../processors/battle/processBattleMove';
 import { gainExp } from '../helpers/client/experience';
 import { generateLoot } from '../helpers/items/generateLoot';
 import { renderItemImage } from "../render/item";
