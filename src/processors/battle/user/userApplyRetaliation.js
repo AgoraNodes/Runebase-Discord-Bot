@@ -14,6 +14,7 @@ const userApplyRetliation = async (
   totalHealedByLifeSteal,
   saveToDatabasePromises,
   battleMonsterState,
+  allRoundEffectsInfoArray,
   battle,
   retaliationArray,
   stageThreeInfoArray,
@@ -124,6 +125,7 @@ const userApplyRetliation = async (
     stageThreeInfoArray,
     userState,
     battleMonsterState,
+    allRoundEffectsInfoArray,
     totalHealedByLifeSteal,
     saveToDatabasePromises,
   ];
