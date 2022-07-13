@@ -82,7 +82,7 @@ export const calculateCharacterStats = async (
     }
   });
 
-  const kick = currentCharacter.equipment.boots
+  let kick = currentCharacter.equipment.boots
     ? {
       name: 'Kick',
       attackType: 'Physical',
@@ -90,6 +90,8 @@ export const calculateCharacterStats = async (
       max: currentCharacter.equipment.boots.maxDamage,
       ar: currentCharacter.user.currentClass.attackRating + (currentCharacter.stats.dexterity * 5),
       crit: 0,
+      lifeSteal: 0,
+      manaSteal: 0,
       cost: 0,
     }
     : {
@@ -99,6 +101,8 @@ export const calculateCharacterStats = async (
       max: 2,
       ar: currentCharacter.user.currentClass.attackRating + (currentCharacter.stats.dexterity * 5),
       crit: 0,
+      lifeSteal: 0,
+      manaSteal: 0,
       cost: 0,
     };
 
@@ -122,6 +126,7 @@ export const calculateCharacterStats = async (
   [
     defense,
     regularAttack,
+    kick,
     FR,
     PR,
     LR,
@@ -130,6 +135,7 @@ export const calculateCharacterStats = async (
     currentCharacter,
     defense,
     regularAttack,
+    kick,
     FR,
     PR,
     LR,
