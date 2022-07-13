@@ -29,8 +29,6 @@ const isFailedAttack = async (
       updatedMonstersArray.push({
         ...updatedMonster,
         userDamage: 'Missed',
-        // currentMonsterHp: selectedMonster.currentHp - randomAttackDamage,
-        // died: !(updatedMonster.currentHp > 0),
         attackType: 'Missed',
       });
 
@@ -56,8 +54,6 @@ const isFailedAttack = async (
       updatedMonstersArray.push({
         ...updatedMonster, // the updated monster info
         userDamage: 'Blocked', // Damage to show on hit
-        // currentMonsterHp: selectedMonster.currentHp - randomAttackDamage,
-        // died: !(updatedMonster.currentHp > 0),
         attackType: 'Blocked', // TODO: Attack Type should be used to determin the animation to pick
       });
 

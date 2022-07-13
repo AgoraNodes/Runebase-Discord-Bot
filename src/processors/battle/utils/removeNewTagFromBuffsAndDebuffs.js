@@ -1,66 +1,139 @@
-/* eslint-disable no-await-in-loop */
+import db from "../../../models";
+
 /* eslint-disable no-restricted-syntax */
 const removeNewTagFromBuffsAndDebuffs = async (
-  userCurrentCharacter,
-  monsters,
+  userState,
+  battleMonsterState,
+  saveToDatabasePromisesOne,
   t,
 ) => {
-  console.log('start removing new tags from buffs & debuffs');
-  for (const monsterToRemoveNewDebuffTag of monsters) {
+  const monstersToUpdate = [];
+
+  // Remove Debuff "new" tag from Monsters
+  for (const monsterToRemoveNewDebuffTag of battleMonsterState) {
+    const updatedDebuffs = [];
+    const updatedBuffs = [];
     if (monsterToRemoveNewDebuffTag.debuffs.length > 0) {
-      for (const monsterDebuff of monsterToRemoveNewDebuffTag.debuffs) {
+      const { debuffs } = monsterToRemoveNewDebuffTag;
+      for (const monsterDebuff of debuffs) {
         if (monsterDebuff.new) {
-          await monsterDebuff.update({
-            new: false,
-          }, {
-            lock: t.LOCK.UPDATE,
-            transaction: t,
-          });
+          saveToDatabasePromisesOne.push(
+            new Promise((resolve, reject) => {
+              db.debuff.update({
+                new: false,
+              }, {
+                where: {
+                  id: monsterDebuff.id,
+                },
+                lock: t.LOCK.UPDATE,
+                transaction: t,
+              }).then(() => resolve());
+            }),
+          );
         }
+        updatedDebuffs.push(
+          {
+            ...monsterDebuff,
+            new: false,
+          },
+        );
       }
+      monsterToRemoveNewDebuffTag.debuffs = updatedDebuffs;
     }
+
     if (monsterToRemoveNewDebuffTag.buffs.length > 0) {
-      for (const monsterbuff of monsterToRemoveNewDebuffTag.buffs) {
+      const { buffs } = monsterToRemoveNewDebuffTag;
+      for (const monsterbuff of buffs) {
         if (monsterbuff.new) {
-          await monsterbuff.update({
-            new: false,
-          }, {
-            lock: t.LOCK.UPDATE,
-            transaction: t,
-          });
+          saveToDatabasePromisesOne.push(
+            new Promise((resolve, reject) => {
+              db.buff.update({
+                new: false,
+              }, {
+                where: {
+                  id: monsterbuff.id,
+                },
+                lock: t.LOCK.UPDATE,
+                transaction: t,
+              }).then(() => resolve());
+            }),
+          );
         }
+        updatedBuffs.push(
+          {
+            ...monsterbuff,
+            new: false,
+          },
+        );
       }
+      monsterToRemoveNewDebuffTag.buffs = updatedBuffs;
     }
+    monstersToUpdate.push(monsterToRemoveNewDebuffTag);
   }
-  // console.log(userCurrentCharacter.buffs);
-  // console.log('intermediate');
 
-  if (userCurrentCharacter.buffs.length > 0) {
-    for (const userBuff of userCurrentCharacter.buffs) {
+  const newUserBuffsArray = [];
+  const newUserDebuffsArray = [];
+
+  if (userState.buffs.length > 0) {
+    for (const userBuff of userState.buffs) {
       if (userBuff.new) {
-        await userBuff.update({
-          new: false,
-        }, {
-          lock: t.LOCK.UPDATE,
-          transaction: t,
-        });
+        saveToDatabasePromisesOne.push(
+          new Promise((resolve, reject) => {
+            db.buff.update({
+              new: false,
+            }, {
+              where: {
+                id: userBuff.id,
+              },
+              lock: t.LOCK.UPDATE,
+              transaction: t,
+            }).then(() => resolve());
+          }),
+        );
       }
+      newUserBuffsArray.push(
+        {
+          ...userBuff,
+          new: false,
+        },
+      );
     }
   }
 
-  if (userCurrentCharacter.debuffs.length > 0) {
-    for (const userDebuff of userCurrentCharacter.debuffs) {
+  if (userState.debuffs.length > 0) {
+    for (const userDebuff of userState.debuffs) {
       if (userDebuff.new) {
-        await userDebuff.update({
-          new: false,
-        }, {
-          lock: t.LOCK.UPDATE,
-          transaction: t,
-        });
+        saveToDatabasePromisesOne.push(
+          new Promise((resolve, reject) => {
+            db.debuff.update({
+              new: false,
+            }, {
+              where: {
+                id: userDebuff.id,
+              },
+              lock: t.LOCK.UPDATE,
+              transaction: t,
+            }).then(() => resolve());
+          }),
+        );
       }
+      newUserDebuffsArray.push(
+        {
+          ...userDebuff,
+          new: false,
+        },
+      );
     }
   }
 
-  console.log('done removing new tag from buffs & debuffs');
+  battleMonsterState = battleMonsterState.map((obj) => monstersToUpdate.find((o) => o.id === obj.id) || obj);
+  userState.buffs = newUserBuffsArray;
+  userState.debuffs = newUserDebuffsArray;
+
+  return [
+    userState,
+    battleMonsterState,
+    saveToDatabasePromisesOne,
+  ];
 };
 export default removeNewTagFromBuffsAndDebuffs;

@@ -55,6 +55,7 @@ const isFailedAttack = async (
         userState: JSON.parse(JSON.stringify(userState)),
         useAttack,
         battleLogs,
+        monstersToUpdate: [],
       };
       attackFailed = true;
     } else if (isBlocked) {
@@ -81,6 +82,7 @@ const isFailedAttack = async (
         userState: JSON.parse(JSON.stringify(userState)),
         useAttack,
         battleLogs,
+        monstersToUpdate: [],
       };
       attackFailed = true;
     } else if (isParried) {

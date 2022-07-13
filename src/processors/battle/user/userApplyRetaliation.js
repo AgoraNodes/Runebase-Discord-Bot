@@ -1,5 +1,5 @@
 /* eslint-disable no-restricted-syntax */
-/* eslint-disable no-loop-func */
+
 import isFailedAttack from "./isFailedAttack";
 import { randomIntFromInterval } from "../../../helpers/utils";
 import db from '../../../models';

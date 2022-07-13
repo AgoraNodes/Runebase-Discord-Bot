@@ -1,5 +1,5 @@
 const selectAttack = (
-  userCurrentCharacter,
+  userState,
   attackUsed,
   attackOne,
   attackTwo,
@@ -7,14 +7,14 @@ const selectAttack = (
 ) => {
   let useAttack;
   if (attackUsed === 'main') {
-    if (userCurrentCharacter.condition.mana >= attackOne.cost) {
+    if (userState.condition.mana >= attackOne.cost) {
       useAttack = attackOne;
     } else {
       useAttack = regularAttack;
     }
   }
   if (attackUsed === 'secondary') {
-    if (userCurrentCharacter.condition.mana >= attackTwo.cost) {
+    if (userState.condition.mana >= attackTwo.cost) {
       useAttack = attackTwo;
     } else {
       useAttack = regularAttack;

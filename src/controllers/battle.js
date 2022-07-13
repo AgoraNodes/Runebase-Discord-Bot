@@ -861,8 +861,6 @@ ${newLootC.length > 0 ? `__found ${newLootC.length} ${newLootC.length === 1 ? `i
               battle,
               currentSelectedMonster,
               attackUsed,
-              io,
-              queue,
               t,
             );
 

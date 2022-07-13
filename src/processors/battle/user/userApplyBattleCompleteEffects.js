@@ -1,9 +1,5 @@
 /* eslint-disable no-await-in-loop */
-/* eslint-disable no-restricted-syntax */
 import db from '../../../models';
-import { randomIntFromInterval } from "../../../helpers/utils";
-import isFailedAttack from './isFailedAttack';
-import calculateCritDamage from '../utils/calculateCritDamage';
 
 const userApplyBattleCompleteEffects = async (
   stageSevenInfoArray,
@@ -13,22 +9,8 @@ const userApplyBattleCompleteEffects = async (
   saveToDatabasePromises,
   t,
 ) => {
-  // userState.hp.current += useAttack.cost;
-
   console.log(userState);
   console.log('userState');
-  console.log('userState');
-  console.log('userState');
-  console.log('userState');
-  console.log('userState');
-  console.log('userState');
-  console.log('userState');
-  console.log('userState');
-  console.log('userState');
-  console.log('userState');
-  console.log('userState');
-
-  // for (const userSkill of userState.UserClassSkills) {
 
   if (userState.class.name === 'Barbarian') {
     const relieve = userState.UserClassSkills.find((element) => element.skill.name === 'Relieve');
@@ -63,7 +45,6 @@ const userApplyBattleCompleteEffects = async (
       });
     }
   }
-  // }
 
   return [
     stageSevenInfoArray,

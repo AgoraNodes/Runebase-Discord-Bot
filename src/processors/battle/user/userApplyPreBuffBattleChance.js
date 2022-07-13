@@ -1,4 +1,3 @@
-/* eslint-disable no-await-in-loop */
 /* eslint-disable no-restricted-syntax */
 import db from '../../../models';
 
@@ -52,7 +51,6 @@ const userApplyPreBuffBattleChance = async (
           ...battleMonster,
           stunned: true,
           attackType: useAttack.name,
-          // userDamage: 'Stunned',
           effects,
         },
       );

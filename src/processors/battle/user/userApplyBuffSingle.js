@@ -1,5 +1,3 @@
-/* eslint-disable no-await-in-loop */
-/* eslint-disable no-restricted-syntax */
 import db from '../../../models';
 
 const userApplyBuffSingle = async (
@@ -77,7 +75,7 @@ const userApplyBuffSingle = async (
     userState: JSON.parse(JSON.stringify(userState)),
   });
 
-  // console.log('done applying buff');
+  console.log('done applying buff');
   return [
     stageOneInfoArray,
     userState,
