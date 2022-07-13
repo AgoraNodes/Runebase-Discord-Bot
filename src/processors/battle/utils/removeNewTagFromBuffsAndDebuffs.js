@@ -4,6 +4,8 @@ import db from "../../../models";
 const removeNewTagFromBuffsAndDebuffs = async (
   userState,
   battleMonsterState,
+  allRoundBuffsInfoArray,
+  allRoundDebuffsInfoArray,
   saveToDatabasePromisesOne,
   t,
 ) => {
@@ -31,6 +33,14 @@ const removeNewTagFromBuffsAndDebuffs = async (
             }),
           );
         }
+        // Alternative to removing all the duplicates at the end of the processor?
+        // allRoundDebuffsInfoArray.push([
+        //   ...allRoundDebuffsInfoArray,
+        //   monsterDebuff.name,
+        // ]);
+        allRoundDebuffsInfoArray.push(
+          monsterDebuff.name,
+        );
         updatedDebuffs.push(
           {
             ...monsterDebuff,
@@ -59,6 +69,9 @@ const removeNewTagFromBuffsAndDebuffs = async (
             }),
           );
         }
+        allRoundBuffsInfoArray.push(
+          monsterbuff,
+        );
         updatedBuffs.push(
           {
             ...monsterbuff,
@@ -91,6 +104,9 @@ const removeNewTagFromBuffsAndDebuffs = async (
           }),
         );
       }
+      allRoundBuffsInfoArray.push(
+        userBuff.name,
+      );
       newUserBuffsArray.push(
         {
           ...userBuff,
@@ -117,6 +133,9 @@ const removeNewTagFromBuffsAndDebuffs = async (
           }),
         );
       }
+      allRoundDebuffsInfoArray.push(
+        userDebuff.name,
+      );
       newUserDebuffsArray.push(
         {
           ...userDebuff,
@@ -133,6 +152,8 @@ const removeNewTagFromBuffsAndDebuffs = async (
   return [
     userState,
     battleMonsterState,
+    allRoundBuffsInfoArray,
+    allRoundDebuffsInfoArray,
     saveToDatabasePromisesOne,
   ];
 };

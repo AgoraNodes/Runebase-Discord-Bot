@@ -2,6 +2,7 @@ import db from '../../../models';
 
 const userApplyBuffSingle = async (
   userState,
+  allRoundBuffsInfoArray,
   stageOneInfoArray,
   battle,
   useAttack,
@@ -13,7 +14,7 @@ const userApplyBuffSingle = async (
   const existingBuff = userState.buffs.find((x) => x.name === useAttack.name);
 
   if (existingBuff) {
-    await existingBuff.destroy({
+    await db.buff.destroy({
       where: {
         id: existingBuff.id,
       },
@@ -22,6 +23,9 @@ const userApplyBuffSingle = async (
     });
     const index = userState.buffs.findIndex((o) => o.id === existingBuff.id);
     if (index !== -1) userState.buffs.splice(index, 1);
+  }
+  if (!existingBuff) {
+    allRoundBuffsInfoArray.push(useAttack.name);
   }
 
   const buffObject = {
@@ -79,6 +83,7 @@ const userApplyBuffSingle = async (
   return [
     stageOneInfoArray,
     userState,
+    allRoundBuffsInfoArray,
     saveToDatabasePromises,
   ];
 };

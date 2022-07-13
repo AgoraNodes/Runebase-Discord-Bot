@@ -15,6 +15,7 @@ import { loadEnemy } from './load/loadEnemy';
 import { loadOrbs } from './load/loadOrbs';
 import { loadDebuff } from './load/loadDebuff';
 import { loadBuff } from './load/loadBuff';
+import { loadEffect } from './load/loadEffect';
 
 import { drawBackground } from './draw/drawBackground';
 import { drawBattleLog } from './draw/drawBattleLog';
@@ -28,6 +29,9 @@ export const renderBattleGif = async (
   userCurrentSelectedSkills, // The Selected User Skills
   previousBattleState, // The previous battle state
   currentSelectedMonster, // Selected monster
+  allRoundBuffsInfoArray = false,
+  allRoundDebuffsInfoArray = false,
+  allRoundEffectsInfoArray = false,
   stageZeroInfoArray = false, // User Attacking Enemy
   stageOneInfoArray = false, // User Attacking Enemy
   stageTwoInfoArray = false, // Enemies attacking the user
@@ -98,18 +102,6 @@ export const renderBattleGif = async (
   console.log('2');
   // Figure out a way to better load all of the battle effects without loading every single one
   // Maybe additional array comming from battle processor with all of the effects fired during processing
-  loadPromises.push(
-    new Promise((resolve, reject) => {
-      loadImage(path.join(
-        __dirname,
-        `../../assets/images/battle/effects`,
-        `stun.png`,
-      )).then((image) => {
-        effectImages.stunned = image;
-        resolve();
-      });
-    }),
-  );
 
   loadPromises.push(
     new Promise((resolve, reject) => {
@@ -156,33 +148,21 @@ export const renderBattleGif = async (
       });
     }),
   );
-  console.log('5');
-  for (const [i, buff] of userState.buffs.entries()) {
-    loadPromises.push(
-      new Promise((resolve, reject) => {
-        if (!buffImages[buff.name]) {
-          loadBuff(
-            buff.name,
-          ).then((image) => {
-            buffImages[buff.name] = image;
-            resolve();
-          });
-        } else {
-          resolve();
-        }
-      }),
-    );
-  }
-  console.log('6');
-  if (stageTwoInfoArray && stageTwoInfoArray.length > 0) {
-    for (const [i, buff] of stageTwoInfoArray[stageTwoInfoArray.length - 1].userState.buffs.entries()) {
+
+  console.log(allRoundEffectsInfoArray);
+  console.log(allRoundBuffsInfoArray);
+  console.log(allRoundDebuffsInfoArray);
+
+  console.log('load allRoundEffectsInfoArray');
+  if (allRoundEffectsInfoArray && allRoundEffectsInfoArray.length > 0) {
+    for (const [i, effectName] of allRoundEffectsInfoArray.entries()) {
       loadPromises.push(
         new Promise((resolve, reject) => {
-          if (!buffImages[buff.name]) {
-            loadBuff(
-              buff.name,
+          if (!effectImages[effectName]) {
+            loadEffect(
+              effectName,
             ).then((image) => {
-              buffImages[buff.name] = image;
+              effectImages[effectName] = image;
               resolve();
             });
           } else {
@@ -192,29 +172,50 @@ export const renderBattleGif = async (
       );
     }
   }
-  console.log('7');
-  if (stageOneInfoArray && stageOneInfoArray.length > 0) {
-    for (const [i, monsterInfoA] of stageOneInfoArray.entries()) {
-      for (const [i, monsterToUpdateA] of monsterInfoA.monstersToUpdate.entries()) {
-        for (const [i, debuff] of monsterToUpdateA.debuffs.entries()) {
-          loadPromises.push(
-            new Promise((resolve, reject) => {
-              if (!debuffImages[debuff.name]) {
-                loadDebuff(
-                  debuff.name,
-                ).then((image) => {
-                  debuffImages[debuff.name] = image;
-                  resolve();
-                });
-              } else {
-                resolve();
-              }
-            }),
-          );
-        }
-      }
+
+  console.log('load allRoundBuffsInfoArray');
+  if (allRoundBuffsInfoArray && allRoundBuffsInfoArray.length > 0) {
+    for (const [i, buffName] of allRoundBuffsInfoArray.entries()) {
+      loadPromises.push(
+        new Promise((resolve, reject) => {
+          if (!buffImages[buffName]) {
+            loadBuff(
+              buffName,
+            ).then((image) => {
+              buffImages[buffName] = image;
+              resolve();
+            });
+          } else {
+            resolve();
+          }
+        }),
+      );
     }
   }
+
+  console.log('load allRoundDebuffsInfoArray');
+
+  if (allRoundDebuffsInfoArray && allRoundDebuffsInfoArray.length > 0) {
+    console.log(allRoundDebuffsInfoArray);
+    for (const [i, debuffName] of allRoundDebuffsInfoArray.entries()) {
+      console.log(debuffName);
+      loadPromises.push(
+        new Promise((resolve, reject) => {
+          if (!debuffImages[debuffName]) {
+            loadDebuff(
+              debuffName,
+            ).then((image) => {
+              debuffImages[debuffName] = image;
+              resolve();
+            });
+          } else {
+            resolve();
+          }
+        }),
+      );
+    }
+  }
+
   console.log('7');
   for (const [i, battleMonster] of BattleMonsters.entries()) {
     loadPromises.push(
@@ -227,24 +228,8 @@ export const renderBattleGif = async (
         });
       }),
     );
-    for (const [i, debuff] of battleMonster.debuffs.entries()) {
-      loadPromises.push(
-        new Promise((resolve, reject) => {
-          if (!debuffImages[debuff.name]) {
-            loadDebuff(
-              debuff.name,
-            ).then((image) => {
-              debuffImages[debuff.name] = image;
-              resolve();
-            });
-          } else {
-            resolve();
-          }
-        }),
-      );
-    }
   }
-  console.log('8');
+
   loadPromises.push(
     new Promise((resolve, reject) => {
       loadOrbs(
@@ -525,19 +510,20 @@ export const renderBattleGif = async (
 
   console.log('Render Stage #1');
   // Render Stage One
+  console.log('1');
   if (stageOneInfoArray && stageOneInfoArray.length > 0) {
     for (const [index, stageOneInfo] of stageOneInfoArray.entries()) {
-      console.log(stageOneInfo.monstersToUpdate);
+      // console.log(stageOneInfo.monstersToUpdate);
       userState = stageOneInfo.userState;
       battleLogs.unshift(...stageOneInfo.battleLogs);
       BattleMonsters = BattleMonsters.map((obj) => stageOneInfo.monstersToUpdate.find((o) => o.id === obj.id) || obj);
-
+      console.log('2');
       drawBackground(
         ctx,
         canvas,
         backgroundImage,
       );
-
+      console.log('3');
       for (const [i, battleMonster] of BattleMonsters.entries()) {
         if (battleMonster.currentHp > 0) {
           // const findUpdatedMonsterState = monsterInfo.find((element) => element.monsterId === battleMonster.id);
@@ -556,13 +542,15 @@ export const renderBattleGif = async (
           );
         }
       }
-
+      console.log('4');
+      console.log(userState);
+      console.log(buffImages);
       drawUserBuffs(
         ctx, // Ctx drawing canvas
         userState, // User Object
         buffImages, // image array of player images
       );
-
+      console.log('5');
       const findAttackedEnemyByUser = enemyPosition.find((element) => element && element.id === stageOneInfo.monsterId);
       // console.log('find enemy position after');
       // console.log(findAttackedEnemyByUser);

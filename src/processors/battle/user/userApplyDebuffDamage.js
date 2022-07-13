@@ -6,6 +6,7 @@ import db from '../../../models';
 const userApplyDebuffDamage = async (
   userState,
   battleMonsterState,
+  saveToDatabasePromises,
   battle,
   stageFourInfoArray,
   t,
@@ -25,24 +26,38 @@ const userApplyDebuffDamage = async (
             const randomAttackDamage = randomIntFromInterval(debuffToCountDown.minDmg, debuffToCountDown.maxDmg); // Get Random Monster Damage
 
             // Generate Battle log
-            const createBattleLog = await db.battleLog.create({
-              battleId: battle.id,
-              log: `${updatedMonster.monster.name} suffers from ${debuffToCountDown.name} for ${randomAttackDamage} damage`,
-            }, {
-              lock: t.LOCK.UPDATE,
-              transaction: t,
+            const log = `${updatedMonster.monster.name} suffers from ${debuffToCountDown.name} for ${randomAttackDamage} damage`;
+            saveToDatabasePromises.push(
+              new Promise((resolve, reject) => {
+                db.battleLog.create({
+                  battleId: battle.id,
+                  log,
+                }, {
+                  lock: t.LOCK.UPDATE,
+                  transaction: t,
+                }).then(() => resolve());
+              }),
+            );
+            battleLogs.unshift({
+              log,
             });
-            battleLogs.unshift(JSON.parse(JSON.stringify(createBattleLog)));
 
             if (updatedMonster.currentHp < 1) {
-              const createKillLog = await db.battleLog.create({
-                battleId: battle.id,
-                log: `${userState.user.username} killed ${updatedMonster.monster.name}`,
-              }, {
-                lock: t.LOCK.UPDATE,
-                transaction: t,
+              const log = `${userState.user.username} killed ${updatedMonster.monster.name}`;
+              saveToDatabasePromises.push(
+                new Promise((resolve, reject) => {
+                  db.battleLog.create({
+                    battleId: battle.id,
+                    log,
+                  }, {
+                    lock: t.LOCK.UPDATE,
+                    transaction: t,
+                  }).then(() => resolve());
+                }),
+              );
+              battleLogs.unshift({
+                log,
               });
-              battleLogs.unshift(JSON.parse(JSON.stringify(createKillLog)));
             }
 
             updatedMonster.currentHp -= randomAttackDamage;
@@ -70,6 +85,7 @@ const userApplyDebuffDamage = async (
     stageFourInfoArray,
     battleMonsterState,
     userState,
+    saveToDatabasePromises,
   ];
 };
 export default userApplyDebuffDamage;

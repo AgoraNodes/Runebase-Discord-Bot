@@ -51,6 +51,9 @@ export const discordBattle = async (
   io,
   queue,
 ) => {
+  let allRoundBuffsInfoArray = [];
+  let allRoundDebuffsInfoArray = [];
+  let allRoundEffectsInfoArray = [];
   // const activity = [];
   const userId = await fetchDiscordUserIdFromMessageOrInteraction(
     message,
@@ -300,6 +303,34 @@ export const discordBattle = async (
   myInitialUserState.hp = hp;
   myInitialUserState.mp = mp;
 
+  if (myInitialUserState.buffs.length > 0) {
+    for (const userBuff of myInitialUserState.buffs) {
+      allRoundBuffsInfoArray.push(userBuff.name);
+    }
+  }
+  if (myInitialUserState.debuffs.lenth > 0) {
+    for (const userDebuff of myInitialUserState.debuffs) {
+      allRoundDebuffsInfoArray.push(userDebuff.name);
+    }
+  }
+  if (battle.BattleMonsters.length > 0) {
+    for (const eachBattleMonster of battle.BattleMonsters) {
+      if (eachBattleMonster.buffs.length > 0) {
+        for (const monsterBuff of eachBattleMonster.buffs) {
+          allRoundBuffsInfoArray.push(monsterBuff.name);
+        }
+      }
+      if (eachBattleMonster.debuffs.length > 0) {
+        for (const monsterDebuff of eachBattleMonster.debuffs) {
+          allRoundDebuffsInfoArray.push(monsterDebuff.name);
+        }
+      }
+    }
+  }
+
+  allRoundBuffsInfoArray = [...new Set(allRoundBuffsInfoArray)];
+  allRoundDebuffsInfoArray = [...new Set(allRoundDebuffsInfoArray)];
+
   const embedMessage = await discordChannel.send({
     content: `<@${userCurrentCharacter.user.user_id}>`,
     files: [
@@ -309,6 +340,9 @@ export const discordBattle = async (
           userCurrentSelectedSkills,
           battle,
           currentSelectedMonster,
+          allRoundBuffsInfoArray,
+          allRoundDebuffsInfoArray,
+          allRoundEffectsInfoArray,
         ),
         'battle.gif',
       ),
@@ -649,6 +683,9 @@ ${newLootC.length > 0 ? `__found ${newLootC.length} ${newLootC.length === 1 ? `i
                   userCurrentSelectedSkills,
                   battle,
                   currentSelectedMonster,
+                  allRoundBuffsInfoArray,
+                  allRoundDebuffsInfoArray,
+                  allRoundEffectsInfoArray,
                 ),
                 'battle.gif',
               ),
@@ -750,10 +787,11 @@ ${newLootC.length > 0 ? `__found ${newLootC.length} ${newLootC.length === 1 ? `i
         let stageFiveInfoArray;
         let stageSixInfoArray;
         let stageSevenInfoArray;
+
         let sumExp = 0;
 
         let previousBattleState = JSON.parse(JSON.stringify(battle));
-        const previousUserState = JSON.parse(JSON.stringify(userCurrentCharacter));
+        // const previousUserState = JSON.parse(JSON.stringify(userCurrentCharacter));
 
         if (interaction.isButton()) {
           await interaction.deferUpdate();
@@ -847,6 +885,9 @@ ${newLootC.length > 0 ? `__found ${newLootC.length} ${newLootC.length === 1 ? `i
               userCurrentCharacter,
               initialUserState,
               battle,
+              allRoundBuffsInfoArray,
+              allRoundDebuffsInfoArray,
+              allRoundEffectsInfoArray,
               stageZeroInfoArray,
               stageOneInfoArray,
               stageTwoInfoArray,
@@ -901,6 +942,9 @@ ${newLootC.length > 0 ? `__found ${newLootC.length} ${newLootC.length === 1 ? `i
                     userCurrentSelectedSkills,
                     previousBattleState,
                     currentSelectedMonster,
+                    allRoundBuffsInfoArray,
+                    allRoundDebuffsInfoArray,
+                    allRoundEffectsInfoArray,
                     stageZeroInfoArray,
                     stageOneInfoArray,
                     stageTwoInfoArray,
@@ -941,6 +985,9 @@ ${newLootC.length > 0 ? `__found ${newLootC.length} ${newLootC.length === 1 ? `i
                     userCurrentSelectedSkills,
                     previousBattleState,
                     currentSelectedMonster,
+                    allRoundBuffsInfoArray,
+                    allRoundDebuffsInfoArray,
+                    allRoundEffectsInfoArray,
                     stageZeroInfoArray,
                     stageOneInfoArray,
                     stageTwoInfoArray,
@@ -1129,6 +1176,9 @@ ${newLootC.length > 0 ? `__found ${newLootC.length} ${newLootC.length === 1 ? `i
                   userCurrentSelectedSkills,
                   battle,
                   currentSelectedMonster,
+                  allRoundBuffsInfoArray,
+                  allRoundDebuffsInfoArray,
+                  allRoundEffectsInfoArray,
                 ),
                 'battle.gif',
               ),
@@ -1179,7 +1229,9 @@ ${newLootC.length > 0 ? `__found ${newLootC.length} ${newLootC.length === 1 ? `i
         }
       });
     }).catch(async (err) => {
+      console.log('catch error');
       console.log(err);
+      console.log('end catch error');
     });
   });
 };

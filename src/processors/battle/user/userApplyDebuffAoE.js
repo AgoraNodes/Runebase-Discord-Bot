@@ -4,6 +4,7 @@ import db from '../../../models';
 
 const userApplyDebuffAoE = async (
   userState,
+  allRoundDebuffsInfoArray,
   battleMonsterState,
   stageOneInfoArray,
   battle,
@@ -30,6 +31,11 @@ const userApplyDebuffAoE = async (
         });
         const index = BattleMonsterToUpdate.debuffs.findIndex((o) => o.id === existingDebuff.id);
         if (index !== -1) BattleMonsterToUpdate.debuffs.splice(index, 1);
+      }
+      if (!existingDebuff) {
+        allRoundDebuffsInfoArray.push(
+          useAttack.name,
+        );
       }
 
       const debuffObject = {
@@ -97,6 +103,7 @@ const userApplyDebuffAoE = async (
   return [
     stageOneInfoArray,
     userState,
+    allRoundDebuffsInfoArray,
     battleMonsterState,
     saveToDatabasePromises,
   ];

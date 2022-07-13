@@ -3,6 +3,7 @@ import db from '../../../models';
 
 const userApplyDebuffSingle = async (
   userState,
+  allRoundDebuffsInfoArray,
   battleMonsterState,
   stageOneInfoArray,
   battle,
@@ -18,12 +19,20 @@ const userApplyDebuffSingle = async (
   if (updatedMonster.currentHp > 0) {
     const existingDebuff = updatedMonster.debuffs.find((x) => x.name === useAttack.name);
     if (existingDebuff) {
-      await existingDebuff.destroy({
+      await db.debuff.destroy({
+        where: {
+          id: existingDebuff.id,
+        },
         lock: t.LOCK.UPDATE,
         transaction: t,
       });
       const index = updatedMonster.debuffs.findIndex((o) => o.id === existingDebuff.id);
       if (index !== -1) updatedMonster.debuffs.splice(index, 1);
+    }
+    if (!existingDebuff) {
+      allRoundDebuffsInfoArray.push(
+        useAttack.name,
+      );
     }
 
     const debuffObject = {
@@ -88,6 +97,7 @@ const userApplyDebuffSingle = async (
   return [
     stageOneInfoArray,
     userState,
+    allRoundDebuffsInfoArray,
     battleMonsterState,
     saveToDatabasePromises,
   ];

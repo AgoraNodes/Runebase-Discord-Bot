@@ -113,12 +113,13 @@ export const drawEnemy = (
   // console.log(monster);
   // console.log('monster');
   if (monster.stunned) {
+    console.log(effectImages.Stunned);
     ctx.drawImage(
-      effectImages.stunned,
+      effectImages.Stunned[0],
       x - 1, // x position
       y + 6, // y position
-      effectImages.stunned.width * 0.5,
-      effectImages.stunned.height * 0.5,
+      effectImages.Stunned[0].width * 0.5,
+      effectImages.Stunned[0].height * 0.5,
     );
   }
 

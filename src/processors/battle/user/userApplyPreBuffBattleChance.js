@@ -3,6 +3,7 @@ import db from '../../../models';
 
 const userApplyPreBuffBattleChance = async (
   userState, // Current User State
+  allRoundEffectsInfoArray,
   battleMonsterState,
   stageZeroInfoArray, // Array to fill with battle info
   battle, // battle database record
@@ -45,6 +46,9 @@ const userApplyPreBuffBattleChance = async (
         }
       }
     }
+    allRoundEffectsInfoArray.push(
+      ...effects,
+    );
     if (effects.length > 0) {
       monstersToUpdate.push(
         {
@@ -70,6 +74,7 @@ const userApplyPreBuffBattleChance = async (
   return [
     stageZeroInfoArray,
     userState,
+    allRoundEffectsInfoArray,
     battleMonsterState,
     saveToDatabasePromises,
   ];

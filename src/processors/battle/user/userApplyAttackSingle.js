@@ -10,6 +10,7 @@ import {
 const userApplyAttackSingle = async (
   userState, // Current User State
   battleMonsterState,
+  allRoundEffectsInfoArray,
   totalHealedByLifeSteal,
   lvl, // Users Level
   stageOneInfoArray, // Array to fill with battle info
@@ -96,6 +97,10 @@ const userApplyAttackSingle = async (
         log,
       });
     }
+
+    if (updatedMonster.stunned) {
+      allRoundEffectsInfoArray.push('Stunned');
+    }
     monstersToUpdate.push(
       {
         ...updatedMonster,
@@ -126,6 +131,7 @@ const userApplyAttackSingle = async (
     stageOneInfoArray,
     userState,
     battleMonsterState,
+    allRoundEffectsInfoArray,
     totalHealedByLifeSteal,
     saveToDatabasePromises,
   ];

@@ -28,6 +28,9 @@ export const processBattleMove = async (
   attackUsed, // The attack we used
   t, // Sequelize Transaction object
 ) => {
+  let allRoundBuffsInfoArray = []; // an array with all the buffs used this round to load the images in renderer
+  let allRoundDebuffsInfoArray = []; // an array with the debuffs used this round to load the images in renderer
+  let allRoundEffectsInfoArray = []; // an array with the debuffs used this round to load the images in renderer
   let stageZeroInfoArray = []; // Start of Round effects (ex: stun from debuff)
   let stageOneInfoArray = []; // User Attacking Monsters
   let stageTwoInfoArray = []; // Monsters attack the user
@@ -84,10 +87,14 @@ export const processBattleMove = async (
   [
     userState, // Return new user state
     battleMonsterState, // Return new battlemonster state
+    allRoundBuffsInfoArray,
+    allRoundDebuffsInfoArray,
     saveToDatabasePromisesOne, // return database promises
   ] = await removeNewTagFromBuffsAndDebuffs(
     userState, // Pass userstate
     battleMonsterState, // pass battlemonster state
+    allRoundBuffsInfoArray,
+    allRoundDebuffsInfoArray,
     saveToDatabasePromisesOne, // pass saveToDatabasePromisesOne array
     t, // Sequelize Transaction object
   );
@@ -104,10 +111,12 @@ export const processBattleMove = async (
   [
     stageZeroInfoArray, // Return stageZeroInfoArray
     userState, // Return new userstate
+    allRoundEffectsInfoArray,
     battleMonsterState, // Return new battlemonster state
     saveToDatabasePromisesTwo, // Return database promises
   ] = await userApplyPreBuffBattleChance(
     userState, // Current User State
+    allRoundEffectsInfoArray,
     battleMonsterState, // Pass battlemonster state
     stageZeroInfoArray, // Array to fill with battle info
     battle, // battle database record
@@ -126,9 +135,11 @@ export const processBattleMove = async (
     [
       stageOneInfoArray, // Return completed StageOneInfo Array
       userState, // Return new User State
+      allRoundBuffsInfoArray,
       saveToDatabasePromisesTwo, // Return database promises
     ] = await userApplyBuffSingle(
       userState, // Current User State
+      allRoundBuffsInfoArray,
       stageOneInfoArray, // Stage One Info Array
       battle, // passing battle object? (maybe we can reduce to just battle.id)?
       useAttack, // What attack are we using?
@@ -143,10 +154,12 @@ export const processBattleMove = async (
     [
       stageOneInfoArray, // Return completed StageOneInfo Array
       userState, // Return new userState
+      allRoundDebuffsInfoArray,
       battleMonsterState, // Return new Battlemonster state
       saveToDatabasePromisesTwo,
     ] = await userApplyDebuffAoE(
       userState, // Current User State
+      allRoundDebuffsInfoArray,
       battleMonsterState, // Battlemonster state
       stageOneInfoArray, // Pass stageOneInfoArray
       battle,
@@ -162,10 +175,12 @@ export const processBattleMove = async (
     [
       stageOneInfoArray, // Return completed StageOneInfo Array
       userState, // Return new userState
+      allRoundDebuffsInfoArray,
       battleMonsterState, // Return new Battlemonster state
       saveToDatabasePromisesTwo,
     ] = await userApplyDebuffSingle(
       userState, // Current User State
+      allRoundDebuffsInfoArray,
       battleMonsterState, // pass the Battlemonster state
       stageOneInfoArray, // pass StageOneInfo Array
       battle,
@@ -182,11 +197,13 @@ export const processBattleMove = async (
       stageOneInfoArray, // Return completed StageOneInfo Array
       userState, // Return new userState
       battleMonsterState, // Return new Battlemonster state
+      allRoundEffectsInfoArray,
       totalHealedByLifeSteal,
       saveToDatabasePromisesTwo,
     ] = await userApplyAttackAoE(
       userState, // Current User State
       battleMonsterState, // pass the Battlemonster state
+      allRoundEffectsInfoArray,
       totalHealedByLifeSteal,
       lvl, // Users Level
       stageOneInfoArray, // Array to fill with battle info
@@ -201,11 +218,13 @@ export const processBattleMove = async (
       stageOneInfoArray, // Return completed StageOneInfo Array
       userState, // Return new userState
       battleMonsterState, // Return new Battlemonster state
+      allRoundEffectsInfoArray,
       totalHealedByLifeSteal,
       saveToDatabasePromisesTwo,
     ] = await userApplyAttackSingle(
       userState, // pass the userState
       battleMonsterState, // pass the battlemonster state
+      allRoundEffectsInfoArray,
       totalHealedByLifeSteal, // pass the totalHealedByLifeSteal variable
       lvl, // Users Level
       stageOneInfoArray, // Array to fill with battle info
@@ -256,6 +275,7 @@ export const processBattleMove = async (
         stageThreeInfoArray, // Return completed stageThreeInfoArray Array
         userState, // Return the new userState
         battleMonsterState, // Return new Battlemonster state
+        allRoundEffectsInfoArray,
         totalHealedByLifeSteal,
         saveToDatabasePromisesTwo,
       ] = await userApplyRetliation(
@@ -263,6 +283,7 @@ export const processBattleMove = async (
         totalHealedByLifeSteal,
         saveToDatabasePromisesTwo, // pass the Database promises array
         battleMonsterState,
+        allRoundEffectsInfoArray,
         battle,
         retaliationArray,
         stageThreeInfoArray,
@@ -279,9 +300,11 @@ export const processBattleMove = async (
       stageFourInfoArray, // Return completed stageFourInfoArray Array
       battleMonsterState, // Return new Battlemonster state
       userState, // Return the new userState
+      saveToDatabasePromisesOne,
     ] = await userApplyDebuffDamage(
       userState,
       battleMonsterState,
+      saveToDatabasePromisesOne,
       battle,
       stageFourInfoArray,
       t,
@@ -386,6 +409,11 @@ export const processBattleMove = async (
 
   await Promise.all(saveToDatabasePromisesTwo);
 
+  // Remove all the duplicates from (allRoundBuffsInfoArray, allRoundDebuffsInfoArray, allRoundEffectsInfoArray)
+  allRoundBuffsInfoArray = [...new Set(allRoundBuffsInfoArray)];
+  allRoundDebuffsInfoArray = [...new Set(allRoundDebuffsInfoArray)];
+  allRoundEffectsInfoArray = [...new Set(allRoundEffectsInfoArray)];
+
   // Fetch Updated Battle for next round -> See battle controller for handling
   const updatedBattle = await db.battle.findOne({
     where: {
@@ -442,6 +470,9 @@ export const processBattleMove = async (
     userCurrentCharacter,
     initialUserState,
     newBattleState,
+    allRoundBuffsInfoArray,
+    allRoundDebuffsInfoArray,
+    allRoundEffectsInfoArray,
     stageZeroInfoArray,
     stageOneInfoArray,
     stageTwoInfoArray,
