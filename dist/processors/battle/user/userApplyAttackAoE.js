@@ -93,6 +93,10 @@ var userApplyAttackAoE = /*#__PURE__*/function () {
                 var randomAttackDamage = (0, _utils.randomIntFromInterval)(useAttack.min, useAttack.max); // Random attack damage between min-max
 
                 lifeStolen += (0, _utils2.lifeSteal)(randomAttackDamage, useAttack.lifeSteal);
+                console.log('lifesteal -');
+                console.log(lifeStolen);
+                console.log(randomAttackDamage);
+                console.log(useAttack.lifeSteal);
                 var didUserCrit = false;
 
                 var _calculateCritDamage = (0, _calculateCritDamage3["default"])(randomAttackDamage, useAttack.crit);
@@ -184,7 +188,10 @@ var userApplyAttackAoE = /*#__PURE__*/function () {
             });
             totalHealedByLifeSteal += lifeStolen || 0;
             addAmountLife = lifeStolen || 0;
-            userState.hp.current = userState.hp.current + addAmountLife > userState.hp.max ? userState.hp.max : userState.hp.current + addAmountLife; // Push into StageOneInfoArray -> Passed to rendering
+            userState.hp.current = userState.hp.current + addAmountLife > userState.hp.max ? userState.hp.max : userState.hp.current + addAmountLife;
+            console.log(totalHealedByLifeSteal);
+            console.log(lifeStolen);
+            console.log('lifeSteal amount AOE ATTACK'); // Push into StageOneInfoArray -> Passed to rendering
 
             stageOneInfoArray.push({
               monsterId: selectedMonsterId,
@@ -196,7 +203,7 @@ var userApplyAttackAoE = /*#__PURE__*/function () {
             });
             return _context.abrupt("return", [stageOneInfoArray, userState, battleMonsterState, allRoundEffectsInfoArray, totalHealedByLifeSteal, saveToDatabasePromises]);
 
-          case 36:
+          case 39:
           case "end":
             return _context.stop();
         }

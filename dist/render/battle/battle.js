@@ -181,7 +181,6 @@ var renderBattleGif = /*#__PURE__*/function () {
             loadPromises = [];
             BattleMonsters = previousBattleState.BattleMonsters;
             battleLogs = previousBattleState.battleLogs;
-            console.log('1');
             orbsStartingPositionStageZero = 1;
             orbsStartingPositionStageOne = 1 + stageZeroInfoArray.length;
             orbsStartingPositionStageTwo = 1 + stageZeroInfoArray.length + stageOneInfoArray.length;
@@ -189,8 +188,7 @@ var renderBattleGif = /*#__PURE__*/function () {
             orbsStartingPositionStageFour = 1 + stageZeroInfoArray.length + stageOneInfoArray.length + stageTwoInfoArray.length + stageThreeInfoArray.length;
             orbsStartingPositionStageFive = 1 + stageZeroInfoArray.length + stageOneInfoArray.length + stageTwoInfoArray.length + stageThreeInfoArray.length + stageFourInfoArray.length;
             orbsStartingPositionStageSix = 1 + stageZeroInfoArray.length + stageOneInfoArray.length + stageTwoInfoArray.length + stageThreeInfoArray.length + stageFourInfoArray.length + stageFiveInfoArray.length;
-            orbsStartingPositionStageSeven = 1 + stageZeroInfoArray.length + stageOneInfoArray.length + stageTwoInfoArray.length + stageThreeInfoArray.length + stageFourInfoArray.length + stageFiveInfoArray.length + stageSixInfoArray.length;
-            console.log('2'); // Figure out a way to better load all of the battle effects without loading every single one
+            orbsStartingPositionStageSeven = 1 + stageZeroInfoArray.length + stageOneInfoArray.length + stageTwoInfoArray.length + stageThreeInfoArray.length + stageFourInfoArray.length + stageFiveInfoArray.length + stageSixInfoArray.length; // Figure out a way to better load all of the battle effects without loading every single one
             // Maybe additional array comming from battle processor with all of the effects fired during processing
 
             loadPromises.push(new Promise(function (resolve, reject) {
@@ -199,14 +197,12 @@ var renderBattleGif = /*#__PURE__*/function () {
                 resolve();
               });
             }));
-            console.log(3);
             loadPromises.push(new Promise(function (resolve, reject) {
               (0, _canvas.loadImage)(_path["default"].join(__dirname, "../../assets/images/skills/".concat(userCurrentSelectedSkills.selectedSecondarySkill.skill.skillTree ? "".concat(userCurrentSelectedSkills.selectedSecondarySkill.skill.skillTree["class"].name, "/").concat(userCurrentSelectedSkills.selectedSecondarySkill.skill.skillTree.name) : ""), "".concat(userCurrentSelectedSkills.selectedSecondarySkill.skill.name, ".png"))).then(function (image) {
                 secondarySkill = image;
                 resolve();
               });
             }));
-            console.log('4');
             loadPromises.push(new Promise(function (resolve, reject) {
               (0, _canvas.loadImage)(_path["default"].join(__dirname, "../../assets/images/battle/background", "".concat(zone, ".png"))).then(function (image) {
                 backgroundImage = image;
@@ -222,7 +218,6 @@ var renderBattleGif = /*#__PURE__*/function () {
             console.log(allRoundEffectsInfoArray);
             console.log(allRoundBuffsInfoArray);
             console.log(allRoundDebuffsInfoArray);
-            console.log('load allRoundEffectsInfoArray');
 
             if (allRoundEffectsInfoArray && allRoundEffectsInfoArray.length > 0) {
               _iterator = _createForOfIteratorHelper(allRoundEffectsInfoArray.entries());
@@ -255,8 +250,6 @@ var renderBattleGif = /*#__PURE__*/function () {
               }
             }
 
-            console.log('load allRoundBuffsInfoArray');
-
             if (allRoundBuffsInfoArray && allRoundBuffsInfoArray.length > 0) {
               _iterator2 = _createForOfIteratorHelper(allRoundBuffsInfoArray.entries());
 
@@ -288,10 +281,7 @@ var renderBattleGif = /*#__PURE__*/function () {
               }
             }
 
-            console.log('load allRoundDebuffsInfoArray');
-
             if (allRoundDebuffsInfoArray && allRoundDebuffsInfoArray.length > 0) {
-              console.log(allRoundDebuffsInfoArray);
               _iterator3 = _createForOfIteratorHelper(allRoundDebuffsInfoArray.entries());
 
               try {
@@ -300,7 +290,6 @@ var renderBattleGif = /*#__PURE__*/function () {
                       i = _step3$value[0],
                       debuffName = _step3$value[1];
 
-                  console.log(debuffName);
                   loadPromises.push(new Promise(function (resolve, reject) {
                     if (!debuffImages[debuffName]) {
                       (0, _loadDebuff.loadDebuff)(debuffName).then(function (image) {
@@ -323,7 +312,6 @@ var renderBattleGif = /*#__PURE__*/function () {
               }
             }
 
-            console.log('7');
             _iterator4 = _createForOfIteratorHelper(BattleMonsters.entries());
 
             try {
@@ -360,11 +348,10 @@ var renderBattleGif = /*#__PURE__*/function () {
                 resolve();
               });
             }));
-            _context.next = 53;
+            _context.next = 45;
             return Promise.all(loadPromises);
 
-          case 53:
-            console.log('10');
+          case 45:
             canvas = (0, _canvas.createCanvas)(650, 300);
             ctx = canvas.getContext('2d');
             gif = (0, _gifenc.GIFEncoder)(); // One Frame To Start Gif (Resting Frame) (Battle Init screen)
@@ -665,8 +652,6 @@ var renderBattleGif = /*#__PURE__*/function () {
 
             console.log('Render Stage #1'); // Render Stage One
 
-            console.log('1');
-
             if (stageOneInfoArray && stageOneInfoArray.length > 0) {
               _iterator13 = _createForOfIteratorHelper(stageOneInfoArray.entries());
 
@@ -684,9 +669,7 @@ var renderBattleGif = /*#__PURE__*/function () {
                       return o.id === obj.id;
                     }) || obj;
                   });
-                  console.log('2');
                   (0, _drawBackground.drawBackground)(ctx, canvas, backgroundImage);
-                  console.log('3');
 
                   var _iterator14 = _createForOfIteratorHelper(BattleMonsters.entries()),
                       _step14;
@@ -724,8 +707,6 @@ var renderBattleGif = /*#__PURE__*/function () {
                   }
 
                   console.log('4');
-                  console.log(userState);
-                  console.log(buffImages);
                   (0, _drawUserBuffs.drawUserBuffs)(ctx, // Ctx drawing canvas
                   userState, // User Object
                   buffImages // image array of player images
@@ -733,9 +714,7 @@ var renderBattleGif = /*#__PURE__*/function () {
                   console.log('5');
                   var findAttackedEnemyByUser = enemyPosition.find(function (element) {
                     return element && element.id === stageOneInfo.monsterId;
-                  }); // console.log('find enemy position after');
-                  // console.log(findAttackedEnemyByUser);
-
+                  });
                   playerPosition[0] = (0, _drawPlayer.drawPlayer)(ctx, // Ctx drawing canvas
                   playerImage, // image array of player images
                   0, // number of image in the array to show
@@ -753,8 +732,6 @@ var renderBattleGif = /*#__PURE__*/function () {
                   try {
                     var _loop12 = function _loop12() {
                       var monsterToUpdate = _step15.value;
-                      // console.log(monsterToUpdate);
-                      // console.log(enemyPosition);
                       var monsterToUpdatePosition = enemyPosition.find(function (element) {
                         return element && element.id === monsterToUpdate.id;
                       });
@@ -1087,8 +1064,6 @@ var renderBattleGif = /*#__PURE__*/function () {
 
                   console.log('|8');
                   (0, _drawBattleScreenTools.drawBattleScreenTools)(ctx, mainSkill, secondarySkill, hpOrbs[index + orbsStartingPositionStageTwo], mpOrbs[index + orbsStartingPositionStageTwo]);
-                  console.log(stageTwoInfo);
-                  console.log(stageTwoInfo.monstersToUpdate);
                   userState = stageTwoInfo.userState;
                   battleLogs.unshift.apply(battleLogs, (0, _toConsumableArray2["default"])(stageTwoInfo.battleLogs));
                   BattleMonsters = BattleMonsters.map(function (obj) {
@@ -1429,9 +1404,7 @@ var renderBattleGif = /*#__PURE__*/function () {
                   );
                   var findAttackedEnemyByUser = enemyPosition.find(function (element) {
                     return element && element.id === stageThreeInfo.monsterId;
-                  }); // console.log('find enemy position after');
-                  // console.log(findAttackedEnemyByUser);
-
+                  });
                   playerPosition[0] = (0, _drawPlayer.drawPlayer)(ctx, // Ctx drawing canvas
                   playerImage, // image array of player images
                   0, // number of image in the array to show
@@ -1829,10 +1802,7 @@ var renderBattleGif = /*#__PURE__*/function () {
                   (0, _drawUserBuffs.drawUserBuffs)(ctx, // Ctx drawing canvas
                   userState, // User Object
                   buffImages // image array of player images
-                  ); // const findAttackedEnemyByUser = enemyPosition.find((element) => element && element.id === debuffDamageInfo.monsterId);
-                  // console.log('find enemy position after');
-                  // console.log(findAttackedEnemyByUser);
-
+                  );
                   playerPosition[0] = (0, _drawPlayer.drawPlayer)(ctx, // Ctx drawing canvas
                   playerImage, // image array of player images
                   0, // number of image in the array to show
@@ -1849,7 +1819,7 @@ var renderBattleGif = /*#__PURE__*/function () {
                   (0, _drawBattleLog.drawBattleLog)(ctx, battleLogs);
                   ctx.lineWidth = 1;
                   ctx.font = 'bold 13px "HeartWarming"';
-                  ctx.fillStyle = 'red'; // console.log('before looping monsters');
+                  ctx.fillStyle = 'red';
 
                   var _iterator38 = _createForOfIteratorHelper(stageFourInfo.monstersToUpdate),
                       _step38;
@@ -1857,14 +1827,9 @@ var renderBattleGif = /*#__PURE__*/function () {
                   try {
                     var _loop35 = function _loop35() {
                       var monsterToUpdate = _step38.value;
-                      console.log(monsterToUpdate); // console.log(monsterToUpdate);
-                      // console.log(enemyPosition);
-
                       var monsterToUpdatePosition = enemyPosition.find(function (element) {
                         return element && element.id === monsterToUpdate.id;
                       });
-                      console.log(monsterToUpdatePosition);
-                      console.log('123');
                       ctx.fillText(monsterToUpdate.userDamage, monsterToUpdatePosition.x, monsterToUpdatePosition.y - 20, 50);
                     };
 
@@ -2225,17 +2190,13 @@ var renderBattleGif = /*#__PURE__*/function () {
                   (0, _drawUserBuffs.drawUserBuffs)(ctx, // Ctx drawing canvas
                   userState, // User Object
                   buffImages // image array of player images
-                  ); // const findAttackedEnemyByUser = enemyPosition.find((element) => element && element.id === debuffDamageInfo.monsterId);
-                  // console.log('find enemy position after');
-                  // console.log(findAttackedEnemyByUser);
-
+                  );
                   playerPosition[0] = (0, _drawPlayer.drawPlayer)(ctx, // Ctx drawing canvas
                   playerImage, // image array of player images
                   0, // number of image in the array to show
                   false // user attacking [false || enemyImagePosition]
                   );
                   (0, _drawBattleScreenTools.drawBattleScreenTools)(ctx, mainSkill, secondarySkill, hpOrbs[index + orbsStartingPositionStageFive], mpOrbs[index + orbsStartingPositionStageFive]);
-                  console.log(stageFiveInfo);
                   userState = stageFiveInfo.userState;
                   BattleMonsters = BattleMonsters.map(function (obj) {
                     return stageFiveInfo.monstersToUpdate.find(function (o) {
@@ -2752,7 +2713,7 @@ var renderBattleGif = /*#__PURE__*/function () {
             finalImage = Buffer.from(bytes);
             return _context.abrupt("return", finalImage);
 
-          case 88:
+          case 78:
           case "end":
             return _context.stop();
         }

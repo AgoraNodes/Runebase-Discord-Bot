@@ -279,9 +279,8 @@ var calculatePassivesBarb = /*#__PURE__*/function () {
                 max: newKick.max,
                 ar: newKick.ar,
                 crit: newKick.crit,
-                lifeSteal: Math.round(50),
-                // temp testing
-                // lifeSteal: Math.round(newKickLifeSteal),
+                // lifeSteal: Math.round(50), // temp testing
+                lifeSteal: Math.round(newKickLifeSteal),
                 manaSteal: newKick.manaSteal,
                 cost: 0
               };

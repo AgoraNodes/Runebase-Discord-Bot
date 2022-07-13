@@ -61,7 +61,6 @@ export const renderBattleGif = async (
   let imageData;
   let palette;
   let imageIndex;
-  console.log('1');
 
   const orbsStartingPositionStageZero = 1;
   const orbsStartingPositionStageOne = 1
@@ -99,7 +98,7 @@ export const renderBattleGif = async (
     + stageFourInfoArray.length
     + stageFiveInfoArray.length
     + stageSixInfoArray.length;
-  console.log('2');
+
   // Figure out a way to better load all of the battle effects without loading every single one
   // Maybe additional array comming from battle processor with all of the effects fired during processing
 
@@ -115,7 +114,7 @@ export const renderBattleGif = async (
       });
     }),
   );
-  console.log(3);
+
   loadPromises.push(
     new Promise((resolve, reject) => {
       loadImage(path.join(
@@ -128,7 +127,7 @@ export const renderBattleGif = async (
       });
     }),
   );
-  console.log('4');
+
   loadPromises.push(
     new Promise((resolve, reject) => {
       loadImage(path.join(__dirname, `../../assets/images/battle/background`, `${zone}.png`)).then((image) => {
@@ -153,7 +152,6 @@ export const renderBattleGif = async (
   console.log(allRoundBuffsInfoArray);
   console.log(allRoundDebuffsInfoArray);
 
-  console.log('load allRoundEffectsInfoArray');
   if (allRoundEffectsInfoArray && allRoundEffectsInfoArray.length > 0) {
     for (const [i, effectName] of allRoundEffectsInfoArray.entries()) {
       loadPromises.push(
@@ -173,7 +171,6 @@ export const renderBattleGif = async (
     }
   }
 
-  console.log('load allRoundBuffsInfoArray');
   if (allRoundBuffsInfoArray && allRoundBuffsInfoArray.length > 0) {
     for (const [i, buffName] of allRoundBuffsInfoArray.entries()) {
       loadPromises.push(
@@ -193,12 +190,8 @@ export const renderBattleGif = async (
     }
   }
 
-  console.log('load allRoundDebuffsInfoArray');
-
   if (allRoundDebuffsInfoArray && allRoundDebuffsInfoArray.length > 0) {
-    console.log(allRoundDebuffsInfoArray);
     for (const [i, debuffName] of allRoundDebuffsInfoArray.entries()) {
-      console.log(debuffName);
       loadPromises.push(
         new Promise((resolve, reject) => {
           if (!debuffImages[debuffName]) {
@@ -216,7 +209,6 @@ export const renderBattleGif = async (
     }
   }
 
-  console.log('7');
   for (const [i, battleMonster] of BattleMonsters.entries()) {
     loadPromises.push(
       new Promise((resolve, reject) => {
@@ -262,7 +254,7 @@ export const renderBattleGif = async (
   );
 
   await Promise.all(loadPromises);
-  console.log('10');
+
   const canvas = createCanvas(650, 300);
   const ctx = canvas.getContext('2d');
   const gif = GIFEncoder();
@@ -510,20 +502,17 @@ export const renderBattleGif = async (
 
   console.log('Render Stage #1');
   // Render Stage One
-  console.log('1');
   if (stageOneInfoArray && stageOneInfoArray.length > 0) {
     for (const [index, stageOneInfo] of stageOneInfoArray.entries()) {
       // console.log(stageOneInfo.monstersToUpdate);
       userState = stageOneInfo.userState;
       battleLogs.unshift(...stageOneInfo.battleLogs);
       BattleMonsters = BattleMonsters.map((obj) => stageOneInfo.monstersToUpdate.find((o) => o.id === obj.id) || obj);
-      console.log('2');
       drawBackground(
         ctx,
         canvas,
         backgroundImage,
       );
-      console.log('3');
       for (const [i, battleMonster] of BattleMonsters.entries()) {
         if (battleMonster.currentHp > 0) {
           // const findUpdatedMonsterState = monsterInfo.find((element) => element.monsterId === battleMonster.id);
@@ -543,8 +532,6 @@ export const renderBattleGif = async (
         }
       }
       console.log('4');
-      console.log(userState);
-      console.log(buffImages);
       drawUserBuffs(
         ctx, // Ctx drawing canvas
         userState, // User Object
@@ -552,8 +539,6 @@ export const renderBattleGif = async (
       );
       console.log('5');
       const findAttackedEnemyByUser = enemyPosition.find((element) => element && element.id === stageOneInfo.monsterId);
-      // console.log('find enemy position after');
-      // console.log(findAttackedEnemyByUser);
       playerPosition[0] = drawPlayer(
         ctx, // Ctx drawing canvas
         playerImage, // image array of player images
@@ -577,8 +562,6 @@ export const renderBattleGif = async (
       ctx.font = 'bold 13px "HeartWarming"';
       ctx.fillStyle = 'red';
       for (const monsterToUpdate of stageOneInfo.monstersToUpdate) {
-        // console.log(monsterToUpdate);
-        // console.log(enemyPosition);
         const monsterToUpdatePosition = enemyPosition.find((element) => element && element.id === monsterToUpdate.id);
         ctx.fillText(
           monsterToUpdate.userDamage,
@@ -889,8 +872,6 @@ export const renderBattleGif = async (
         mpOrbs[index + orbsStartingPositionStageTwo],
       );
 
-      console.log(stageTwoInfo);
-      console.log(stageTwoInfo.monstersToUpdate);
       userState = stageTwoInfo.userState;
       battleLogs.unshift(...stageTwoInfo.battleLogs);
       BattleMonsters = BattleMonsters.map((obj) => stageTwoInfo.monstersToUpdate.find((o) => o.id === obj.id) || obj);
@@ -1260,8 +1241,6 @@ export const renderBattleGif = async (
       );
 
       const findAttackedEnemyByUser = enemyPosition.find((element) => element && element.id === stageThreeInfo.monsterId);
-      // console.log('find enemy position after');
-      // console.log(findAttackedEnemyByUser);
       playerPosition[0] = drawPlayer(
         ctx, // Ctx drawing canvas
         playerImage, // image array of player images
@@ -1635,9 +1614,6 @@ export const renderBattleGif = async (
         buffImages, // image array of player images
       );
 
-      // const findAttackedEnemyByUser = enemyPosition.find((element) => element && element.id === debuffDamageInfo.monsterId);
-      // console.log('find enemy position after');
-      // console.log(findAttackedEnemyByUser);
       playerPosition[0] = drawPlayer(
         ctx, // Ctx drawing canvas
         playerImage, // image array of player images
@@ -1664,14 +1640,8 @@ export const renderBattleGif = async (
       ctx.lineWidth = 1;
       ctx.font = 'bold 13px "HeartWarming"';
       ctx.fillStyle = 'red';
-      // console.log('before looping monsters');
       for (const monsterToUpdate of stageFourInfo.monstersToUpdate) {
-        console.log(monsterToUpdate);
-        // console.log(monsterToUpdate);
-        // console.log(enemyPosition);
         const monsterToUpdatePosition = enemyPosition.find((element) => element && element.id === monsterToUpdate.id);
-        console.log(monsterToUpdatePosition);
-        console.log('123');
         ctx.fillText(
           monsterToUpdate.userDamage,
           monsterToUpdatePosition.x,
@@ -2002,9 +1972,6 @@ export const renderBattleGif = async (
         buffImages, // image array of player images
       );
 
-      // const findAttackedEnemyByUser = enemyPosition.find((element) => element && element.id === debuffDamageInfo.monsterId);
-      // console.log('find enemy position after');
-      // console.log(findAttackedEnemyByUser);
       playerPosition[0] = drawPlayer(
         ctx, // Ctx drawing canvas
         playerImage, // image array of player images
@@ -2019,7 +1986,7 @@ export const renderBattleGif = async (
         hpOrbs[index + orbsStartingPositionStageFive],
         mpOrbs[index + orbsStartingPositionStageFive],
       );
-      console.log(stageFiveInfo);
+
       userState = stageFiveInfo.userState;
       BattleMonsters = BattleMonsters.map((obj) => stageFiveInfo.monstersToUpdate.find((o) => o.id === obj.id) || obj);
 

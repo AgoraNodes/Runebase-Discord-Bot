@@ -163,7 +163,10 @@ export const renderSkillDescriptionImage = async (
 
         Object.entries(jsonSkillInfo.initial).forEach(([key, value], p) => {
           let skillValue;
-          if (key === 'rounds') {
+          if (
+            key === 'rounds'
+            || key === 'heal %'
+          ) {
             skillValue = Math.round(value + (jsonSkillInfo.next[key] * ((x / 18) - 1)));
           } else {
             skillValue = value + (jsonSkillInfo.next[key] * ((x / 18) - 1));

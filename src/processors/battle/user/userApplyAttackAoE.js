@@ -54,6 +54,10 @@ const userApplyAttackAoE = async (
         // Apply Damage to monster
         let randomAttackDamage = randomIntFromInterval(useAttack.min, useAttack.max); // Random attack damage between min-max
         lifeStolen += lifeSteal(randomAttackDamage, useAttack.lifeSteal);
+        console.log('lifesteal -');
+        console.log(lifeStolen);
+        console.log(randomAttackDamage);
+        console.log(useAttack.lifeSteal);
         let didUserCrit = false;
         [
           didUserCrit,
@@ -124,6 +128,9 @@ const userApplyAttackAoE = async (
   const addAmountLife = lifeStolen || 0;
   userState.hp.current = (userState.hp.current + addAmountLife) > userState.hp.max ? userState.hp.max : (userState.hp.current + addAmountLife);
 
+  console.log(totalHealedByLifeSteal);
+  console.log(lifeStolen);
+  console.log('lifeSteal amount AOE ATTACK');
   // Push into StageOneInfoArray -> Passed to rendering
   stageOneInfoArray.push({
     monsterId: selectedMonsterId,
