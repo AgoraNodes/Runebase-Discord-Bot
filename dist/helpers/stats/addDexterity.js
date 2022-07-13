@@ -19,10 +19,10 @@ var _models = _interopRequireDefault(require("../../models"));
 
 var _logger = _interopRequireDefault(require("../logger"));
 
-var _messages = require("../../messages");
+var _character = require("../character/character");
 
 var addDexterity = /*#__PURE__*/function () {
-  var _ref = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee4(userId, discordChannel, io, queue) {
+  var _ref = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee4(currentUserCharacter, io, queue) {
     var activity, cannotSpend, myUpdatedUser;
     return _regenerator["default"].wrap(function _callee4$(_context4) {
       while (1) {
@@ -48,7 +48,7 @@ var addDexterity = /*#__PURE__*/function () {
                                   _context.next = 2;
                                   return _models["default"].user.findOne({
                                     where: {
-                                      id: userId
+                                      id: currentUserCharacter.user.id
                                     },
                                     include: [{
                                       model: _models["default"]["class"],
@@ -100,7 +100,7 @@ var addDexterity = /*#__PURE__*/function () {
                                   _context.next = 12;
                                   return _models["default"].activity.create({
                                     type: 'addDexterity_s',
-                                    earnerId: userId
+                                    earnerId: currentUserCharacter.user.id
                                   }, {
                                     lock: t.LOCK.UPDATE,
                                     transaction: t
@@ -136,7 +136,7 @@ var addDexterity = /*#__PURE__*/function () {
                           }, _callee);
                         }));
 
-                        return function (_x5) {
+                        return function (_x4) {
                           return _ref3.apply(this, arguments);
                         };
                       }())["catch"]( /*#__PURE__*/function () {
@@ -164,31 +164,6 @@ var addDexterity = /*#__PURE__*/function () {
                                   _logger["default"].error("Error Discord: ".concat(_context2.t0));
 
                                 case 9:
-                                  if (!(err.code && err.code === 50007)) {
-                                    _context2.next = 14;
-                                    break;
-                                  }
-
-                                  _context2.next = 12;
-                                  return discordChannel.send({
-                                    embeds: [(0, _messages.cannotSendMessageUser)("addDexterity", message)]
-                                  })["catch"](function (e) {
-                                    console.log(e);
-                                  });
-
-                                case 12:
-                                  _context2.next = 16;
-                                  break;
-
-                                case 14:
-                                  _context2.next = 16;
-                                  return discordChannel.send({
-                                    embeds: [(0, _messages.discordErrorMessage)("addDexterity")]
-                                  })["catch"](function (e) {
-                                    console.log(e);
-                                  });
-
-                                case 16:
                                 case "end":
                                   return _context2.stop();
                               }
@@ -196,7 +171,7 @@ var addDexterity = /*#__PURE__*/function () {
                           }, _callee2, null, [[1, 6]]);
                         }));
 
-                        return function (_x6) {
+                        return function (_x5) {
                           return _ref4.apply(this, arguments);
                         };
                       }());
@@ -218,37 +193,9 @@ var addDexterity = /*#__PURE__*/function () {
 
           case 3:
             _context4.next = 5;
-            return _models["default"].UserClass.findOne({
-              where: {
-                classId: (0, _defineProperty2["default"])({}, _sequelize.Op.col, 'user.currentClassId')
-              },
-              include: [{
-                model: _models["default"].user,
-                as: 'user',
-                where: {
-                  id: userId
-                },
-                include: [{
-                  model: _models["default"]["class"],
-                  as: 'currentClass'
-                }, {
-                  model: _models["default"].rank,
-                  as: 'ranks'
-                }]
-              }, {
-                model: _models["default"].stats,
-                as: 'stats'
-              }, {
-                model: _models["default"].condition,
-                as: 'condition'
-              }, {
-                model: _models["default"].equipment,
-                as: 'equipment'
-              }, {
-                model: _models["default"]["class"],
-                as: 'class'
-              }]
-            });
+            return (0, _character.fetchUserCurrentCharacter)(currentUserCharacter.user.user_id, // user discord id
+            false // Need inventory?
+            );
 
           case 5:
             myUpdatedUser = _context4.sent;
@@ -262,7 +209,7 @@ var addDexterity = /*#__PURE__*/function () {
     }, _callee4);
   }));
 
-  return function addDexterity(_x, _x2, _x3, _x4) {
+  return function addDexterity(_x, _x2, _x3) {
     return _ref.apply(this, arguments);
   };
 }();

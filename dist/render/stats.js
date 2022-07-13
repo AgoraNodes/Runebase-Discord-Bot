@@ -22,7 +22,7 @@ var _calculateCharacterStats = require("../helpers/stats/calculateCharacterStats
 // import db from '../models';
 var renderStatsImage = /*#__PURE__*/function () {
   var _ref = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(currentUser, cannotSpendWarning) {
-    var _yield$calculateChara, unspedAttributes, username, currentClass, lvl, exp, expNext, strength, dexterity, vitality, energy, hp, mp, stamina, ar, attackOne, attackTwo, defense, FR, PR, LR, CR, canvas, ctx, BackgroundImageStats, unspendAttributesBoxImage, finalImage;
+    var _yield$calculateChara, unspendAttributes, username, currentClass, lvl, exp, expNext, strength, dexterity, vitality, energy, hp, mp, stamina, ar, attackOne, attackTwo, defense, FR, PR, LR, CR, canvas, ctx, BackgroundImageStats, unspendAttributesBoxImage, finalImage;
 
     return _regenerator["default"].wrap(function _callee$(_context) {
       while (1) {
@@ -33,7 +33,7 @@ var renderStatsImage = /*#__PURE__*/function () {
 
           case 2:
             _yield$calculateChara = _context.sent;
-            unspedAttributes = _yield$calculateChara.unspedAttributes;
+            unspendAttributes = _yield$calculateChara.unspendAttributes;
             username = _yield$calculateChara.username;
             currentClass = _yield$calculateChara.currentClass;
             lvl = _yield$calculateChara.lvl;
@@ -68,7 +68,7 @@ var renderStatsImage = /*#__PURE__*/function () {
             unspendAttributesBoxImage = _context.sent;
             ctx.drawImage(BackgroundImageStats, 0, 0, 960, 1300);
 
-            if (unspedAttributes > 0) {
+            if (unspendAttributes > 0) {
               ctx.drawImage(unspendAttributesBoxImage, 10, 1070, 495, 82);
               ctx.fillStyle = "red";
               ctx.strokeStyle = 'black';
@@ -81,8 +81,8 @@ var renderStatsImage = /*#__PURE__*/function () {
               ctx.fillText('Remaining', 155, 1130, 540);
               ctx.fillStyle = "#ccc";
               ctx.font = 'bold 45px "HeartWarming"';
-              ctx.strokeText(unspedAttributes, 410, 1125, 540);
-              ctx.fillText(unspedAttributes, 410, 1125, 540);
+              ctx.strokeText(unspendAttributes, 410, 1125, 540);
+              ctx.fillText(unspendAttributes, 410, 1125, 540);
             }
 
             ctx.fillStyle = "#ccc";

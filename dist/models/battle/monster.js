@@ -37,14 +37,6 @@ module.exports = function (sequelize, DataTypes) {
       type: DataTypes.SMALLINT,
       allowNull: false
     },
-    minDamage: {
-      type: DataTypes.SMALLINT,
-      allowNull: false
-    },
-    maxDamage: {
-      type: DataTypes.SMALLINT,
-      allowNull: false
-    },
     FR: {
       type: DataTypes.SMALLINT,
       allowNull: false
@@ -70,8 +62,8 @@ module.exports = function (sequelize, DataTypes) {
   var MonsterModel = sequelize.define('monster', modelDefinition, modelOptions);
 
   MonsterModel.associate = function (model) {
+    MonsterModel.hasMany(model.monsterAttack);
     MonsterModel.belongsTo(model.monsterType);
-    MonsterModel.belongsTo(model.damageType);
     MonsterModel.belongsToMany(model.battle, {
       through: 'BattleMonster'
     });

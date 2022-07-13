@@ -19,8 +19,7 @@ var _skillTree = require("./skillTree");
 
 var _skillDescription = require("./skillDescription");
 
-var _skills = _interopRequireDefault(require("./skills.json"));
-
+// import skills from './skills.json';
 var renderSkillScreen = /*#__PURE__*/function () {
   var _ref = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(userCharacter, skillTree, skillTreeIndex, selectedSkill, jsonSkillInfo, failReason) {
     var skillTreeImageBuffer, userHasSkill, skillDescriptionImageBuffer, skillTreeImage, skillDescriptionImage, failReasonHeight, canvas, ctx;

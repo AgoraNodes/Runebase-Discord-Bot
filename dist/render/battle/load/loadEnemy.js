@@ -41,15 +41,15 @@ var loadEnemy = /*#__PURE__*/function () {
                 enemyFrame[2] = image;
                 resolve();
               });
-            }));
-            console.log('before promise wait');
-            _context.next = 8;
+            })); // console.log('before promise wait');
+
+            _context.next = 7;
             return Promise.all(promises);
 
-          case 8:
+          case 7:
             return _context.abrupt("return", enemyFrame);
 
-          case 9:
+          case 8:
           case "end":
             return _context.stop();
         }

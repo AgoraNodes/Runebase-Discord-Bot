@@ -60,8 +60,20 @@ var fetchUserCurrentCharacter = /*#__PURE__*/function () {
               transaction: t
             }]), {}, {
               include: [{
+                model: _models["default"].buff,
+                as: 'buffs',
+                separate: true
+              }, {
+                model: _models["default"].debuff,
+                as: 'debuffs',
+                separate: true
+              }, {
                 model: _models["default"].UserClassSkill,
                 as: 'UserClassSkills',
+                include: [{
+                  model: _models["default"].skill,
+                  as: 'skill'
+                }],
                 separate: true
               }, {
                 model: _models["default"]["class"],

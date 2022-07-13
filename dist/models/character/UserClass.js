@@ -51,6 +51,8 @@ module.exports = function (sequelize, DataTypes) {
     });
     UserClassModel.hasMany(model.UserClassSkill);
     UserClassModel.hasMany(model.battle);
+    UserClassModel.hasMany(model.buff);
+    UserClassModel.hasMany(model.debuff);
   };
 
   return UserClassModel;

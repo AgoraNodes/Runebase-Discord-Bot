@@ -52,7 +52,7 @@ var _buttons = require("../buttons");
 /* eslint-disable import/prefer-default-export */
 var discordStats = /*#__PURE__*/function () {
   var _ref = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee3(discordClient, message, setting, io, queue) {
-    var activity, userId, discordChannel, userCurrentCharacter, _yield$calculateChara, unspedAttributes, generateCancelClassPicked, loadingEmbed, calc, embedMessage, collector;
+    var activity, userId, discordChannel, userCurrentCharacter, _yield$calculateChara, unspendAttributes, generateCancelClassPicked, loadingEmbed, calc, embedMessage, collector;
 
     return _regenerator["default"].wrap(function _callee3$(_context3) {
       while (1) {
@@ -71,7 +71,7 @@ var discordStats = /*#__PURE__*/function () {
             discordChannel = _context3.sent;
             _context3.next = 9;
             return (0, _character.fetchUserCurrentCharacter)(userId, // user discord id
-            true // Need inventory?
+            false // Need inventory?
             );
 
           case 9:
@@ -97,7 +97,7 @@ var discordStats = /*#__PURE__*/function () {
 
           case 16:
             _yield$calculateChara = _context3.sent;
-            unspedAttributes = _yield$calculateChara.unspedAttributes;
+            unspendAttributes = _yield$calculateChara.unspendAttributes;
 
             generateCancelClassPicked = /*#__PURE__*/function () {
               var _ref2 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee() {
@@ -137,7 +137,7 @@ var discordStats = /*#__PURE__*/function () {
             //   + userCurrentCharacter.stats.energy
             // ) < (userCurrentCharacter.user.ranks[0].id * 5);
 
-            calc = unspedAttributes > 0;
+            calc = unspendAttributes > 0;
             _context3.t0 = discordChannel;
             _context3.t1 = _discord.MessageAttachment;
             _context3.next = 25;
@@ -205,7 +205,7 @@ var discordStats = /*#__PURE__*/function () {
                         }
 
                         _context2.next = 11;
-                        return (0, _addStrength.addStrength)(userCurrentCharacter.user.id, discordChannel, io, queue);
+                        return (0, _addStrength.addStrength)(userCurrentCharacter, io, queue);
 
                       case 11:
                         _yield$addStrength = _context2.sent;
@@ -220,7 +220,7 @@ var discordStats = /*#__PURE__*/function () {
                         }
 
                         _context2.next = 18;
-                        return (0, _addDexterity.addDexterity)(userCurrentCharacter.user.id, discordChannel, io, queue);
+                        return (0, _addDexterity.addDexterity)(userCurrentCharacter, io, queue);
 
                       case 18:
                         _yield$addDexterity = _context2.sent;
@@ -235,7 +235,7 @@ var discordStats = /*#__PURE__*/function () {
                         }
 
                         _context2.next = 25;
-                        return (0, _addVitality.addVitality)(userCurrentCharacter.user.id, discordChannel, io, queue);
+                        return (0, _addVitality.addVitality)(userCurrentCharacter, io, queue);
 
                       case 25:
                         _yield$addVitality = _context2.sent;
@@ -250,7 +250,7 @@ var discordStats = /*#__PURE__*/function () {
                         }
 
                         _context2.next = 32;
-                        return (0, _addEnergy.addEnergy)(userCurrentCharacter.user.id, discordChannel, io, queue);
+                        return (0, _addEnergy.addEnergy)(userCurrentCharacter, io, queue);
 
                       case 32:
                         _yield$addEnergy = _context2.sent;

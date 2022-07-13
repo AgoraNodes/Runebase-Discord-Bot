@@ -13,8 +13,6 @@ var _slicedToArray2 = _interopRequireDefault(require("@babel/runtime/helpers/sli
 
 var _asyncToGenerator2 = _interopRequireDefault(require("@babel/runtime/helpers/asyncToGenerator"));
 
-var _sequelize = require("sequelize");
-
 var _canvas = require("canvas");
 
 var _lodash = _interopRequireDefault(require("lodash"));

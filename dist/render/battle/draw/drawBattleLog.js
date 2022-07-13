@@ -5,7 +5,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.drawBattleLog = void 0;
 
-var drawBattleLog = function drawBattleLog(ctx, battle) {
+var drawBattleLog = function drawBattleLog(ctx, battleLogs) {
   ctx.fillStyle = 'white';
   ctx.fillRect(420, 0, 230, 300);
   ctx.font = 'bold 13px "HeartWarming"';
@@ -14,8 +14,8 @@ var drawBattleLog = function drawBattleLog(ctx, battle) {
   ctx.font = 'normal 15px serif';
   ctx.fillStyle = 'black';
 
-  for (var i = 0; i < battle.battleLogs.length; i++) {
-    ctx.fillText(battle.battleLogs[i].log, 430, 17 + (i + 1) * 20, 210);
+  for (var i = 0; i < battleLogs.length; i++) {
+    ctx.fillText(battleLogs[i].log, 430, 17 + (i + 1) * 20, 210);
   }
 };
 

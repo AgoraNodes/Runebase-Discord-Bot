@@ -138,12 +138,9 @@ var generateLoot = /*#__PURE__*/function () {
             item = _context.sent;
 
           case 33:
-            console.log(pickedQuality);
-            console.log('picked quality');
-            console.log(item);
             return _context.abrupt("return", item);
 
-          case 37:
+          case 34:
           case "end":
             return _context.stop();
         }

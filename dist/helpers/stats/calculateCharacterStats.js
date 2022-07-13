@@ -9,6 +9,8 @@ exports.calculateCharacterStats = void 0;
 
 var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
 
+var _slicedToArray2 = _interopRequireDefault(require("@babel/runtime/helpers/slicedToArray"));
+
 var _defineProperty2 = _interopRequireDefault(require("@babel/runtime/helpers/defineProperty"));
 
 var _asyncToGenerator2 = _interopRequireDefault(require("@babel/runtime/helpers/asyncToGenerator"));
@@ -17,9 +19,13 @@ var _sequelize = require("sequelize");
 
 var _models = _interopRequireDefault(require("../../models"));
 
-var _calculateSkillDamage = require("../skills/calculateSkillDamage");
+var _calculateSkills = require("./calculateSkills");
 
 var _selectedSkills = require("../character/selectedSkills");
+
+var _calculatePassives = _interopRequireDefault(require("./calculatePassives"));
+
+var _calculateBuffs = _interopRequireDefault(require("./calculateBuffs"));
 
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
 
@@ -32,29 +38,37 @@ var calculateCharacterStats = /*#__PURE__*/function () {
         userCurrentRank,
         nextRankExp,
         countedSpendAttributes,
-        AttributesToSpend,
+        unspendAttributes,
+        FR,
+        PR,
+        LR,
+        CR,
+        block,
+        defense,
+        totalLifeBonus,
         strength,
         dexterity,
         vitality,
         energy,
-        attackOneMin,
-        attackOnemax,
-        attackOneAr,
-        attackTwoAr,
-        block,
-        defense,
         shieldBlock,
         blocking,
-        maxHp,
-        currentHp,
         maxStamina,
         currentStaminaPoints,
-        maxMp,
+        kick,
+        regularAttack,
+        _yield$calculatePassi,
+        _yield$calculatePassi2,
+        currentHp,
+        maxHp,
         currentMp,
+        maxMp,
+        _yield$calculateBuffs,
+        _yield$calculateBuffs2,
         selectedSkills,
-        skillOne,
-        skillTwo,
+        attackOne,
+        attackTwo,
         _args = arguments;
+
     return _regenerator["default"].wrap(function _callee$(_context) {
       while (1) {
         switch (_context.prev = _context.next) {
@@ -77,22 +91,20 @@ var calculateCharacterStats = /*#__PURE__*/function () {
               id: 0,
               expNeeded: nextRank.expNeeded
             };
-            console.log(userCurrentRank);
-            console.log('userCurrentRank');
             nextRankExp = nextRank && nextRank.expNeeded ? nextRank.expNeeded : userCurrentRank.expNeeded;
             countedSpendAttributes = currentCharacter.stats.strength + currentCharacter.stats.dexterity + currentCharacter.stats.vitality + currentCharacter.stats.energy;
-            AttributesToSpend = userCurrentRank.id * 5 - countedSpendAttributes;
+            unspendAttributes = userCurrentRank.id * 5 - countedSpendAttributes;
+            FR = 0;
+            PR = 0;
+            LR = 0;
+            CR = 0;
+            block = 0;
+            defense = 0;
+            totalLifeBonus = 0;
             strength = currentCharacter.user.currentClass.strength + currentCharacter.stats.strength;
             dexterity = currentCharacter.user.currentClass.dexterity + currentCharacter.stats.dexterity;
             vitality = currentCharacter.user.currentClass.vitality + currentCharacter.stats.vitality;
-            energy = currentCharacter.user.currentClass.energy + currentCharacter.stats.energy; // Calculate by skill in later version, instead of just weapon damage
-
-            attackOneMin = currentCharacter.equipment.mainHand ? currentCharacter.equipment.mainHand.minDamage : 1;
-            attackOnemax = currentCharacter.equipment.mainHand ? currentCharacter.equipment.mainHand.maxDamage : 2;
-            attackOneAr = currentCharacter.user.currentClass.attackRating + currentCharacter.stats.dexterity * 5;
-            attackTwoAr = currentCharacter.user.currentClass.attackRating + currentCharacter.stats.dexterity * 5;
-            block = 0;
-            defense = 0;
+            energy = currentCharacter.user.currentClass.energy + currentCharacter.stats.energy;
 
             if (currentCharacter.equipment.offHand && currentCharacter.equipment.offHand.itemBase.itemFamily.itemType.name === 'Shields') {
               shieldBlock = currentCharacter.equipment.offHand.itemBase.block;
@@ -100,12 +112,8 @@ var calculateCharacterStats = /*#__PURE__*/function () {
               block = blocking > 50 ? 50 : blocking;
             }
 
-            maxHp = currentCharacter.user.currentClass.life + currentCharacter.stats.life;
-            currentHp = currentCharacter.condition.life;
             maxStamina = currentCharacter.user.currentClass.stamina + currentCharacter.stats.stamina;
             currentStaminaPoints = currentCharacter.condition.stamina;
-            maxMp = currentCharacter.user.currentClass.mana + currentCharacter.stats.mana;
-            currentMp = currentCharacter.condition.mana;
             defense += currentCharacter.user.currentClass.defense;
             Object.keys(currentCharacter.equipment).forEach(function (key) {
               if ((key === 'helm' || key === 'belt' || key === 'boots' || key === 'gloves' || key === 'armor' || key === 'offHand' || key === 'amulet' || key === 'ringSlotTwo' || key === 'ringSlotOne') && currentCharacter.equipment[key] && currentCharacter.equipment[key].defense) {
@@ -113,36 +121,103 @@ var calculateCharacterStats = /*#__PURE__*/function () {
                 defense += realDefenseValue;
               }
             });
-            _context.next = 31;
+            kick = currentCharacter.equipment.boots ? {
+              name: 'Kick',
+              attackType: 'Physical',
+              min: currentCharacter.equipment.boots.minDamage,
+              max: currentCharacter.equipment.boots.maxDamage,
+              ar: currentCharacter.user.currentClass.attackRating + currentCharacter.stats.dexterity * 5,
+              crit: 0,
+              lifeSteal: 0,
+              manaSteal: 0,
+              cost: 0
+            } : {
+              name: 'Kick',
+              attackType: 'Physical',
+              min: 1,
+              max: 2,
+              ar: currentCharacter.user.currentClass.attackRating + currentCharacter.stats.dexterity * 5,
+              crit: 0,
+              lifeSteal: 0,
+              manaSteal: 0,
+              cost: 0
+            };
+            regularAttack = {
+              name: 'Attack',
+              attackType: 'Physical',
+              min: currentCharacter.equipment.mainHand ? currentCharacter.equipment.mainHand.minDamage : 1,
+              max: currentCharacter.equipment.mainHand ? currentCharacter.equipment.mainHand.maxDamage : 2,
+              minThrow: currentCharacter.equipment.mainHand && currentCharacter.equipment.mainHand.minThrowDamage ? currentCharacter.equipment.mainHand.minThrowDamage : 0,
+              maxThrow: currentCharacter.equipment.mainHand && currentCharacter.equipment.mainHand.maxThrowDamage ? currentCharacter.equipment.mainHand.maxThrowDamage : 0,
+              ar: currentCharacter.user.currentClass.attackRating + currentCharacter.stats.dexterity * 5,
+              crit: 0,
+              stun: 0,
+              parry: 0,
+              lifeSteal: 0,
+              manaSteal: 0,
+              cost: 0
+            }; // Add Passive Skill stats
+
+            _context.next = 28;
+            return (0, _calculatePassives["default"])(currentCharacter, defense, regularAttack, kick, FR, PR, LR, CR);
+
+          case 28:
+            _yield$calculatePassi = _context.sent;
+            _yield$calculatePassi2 = (0, _slicedToArray2["default"])(_yield$calculatePassi, 7);
+            defense = _yield$calculatePassi2[0];
+            regularAttack = _yield$calculatePassi2[1];
+            kick = _yield$calculatePassi2[2];
+            FR = _yield$calculatePassi2[3];
+            PR = _yield$calculatePassi2[4];
+            LR = _yield$calculatePassi2[5];
+            CR = _yield$calculatePassi2[6];
+            currentHp = currentCharacter.condition.life;
+            maxHp = currentCharacter.user.currentClass.life + currentCharacter.stats.life;
+            currentMp = currentCharacter.condition.mana;
+            maxMp = currentCharacter.user.currentClass.mana + currentCharacter.stats.mana;
+            console.log('before calculating buffs'); // Calculate Buffs
+
+            _context.next = 44;
+            return (0, _calculateBuffs["default"])(currentCharacter, defense, regularAttack, currentHp, maxHp);
+
+          case 44:
+            _yield$calculateBuffs = _context.sent;
+            _yield$calculateBuffs2 = (0, _slicedToArray2["default"])(_yield$calculateBuffs, 5);
+            defense = _yield$calculateBuffs2[0];
+            regularAttack = _yield$calculateBuffs2[1];
+            currentHp = _yield$calculateBuffs2[2];
+            maxHp = _yield$calculateBuffs2[3];
+            totalLifeBonus = _yield$calculateBuffs2[4];
+            console.log('after calculating buffs'); // Fetch Selected Skills
+
+            _context.next = 54;
             return (0, _selectedSkills.fetchUserCurrentSelectedSkills)(currentCharacter.user.user_id, t);
 
-          case 31:
+          case 54:
             selectedSkills = _context.sent;
-            _context.next = 34;
-            return (0, _calculateSkillDamage.calculateSkillDamage)(currentCharacter, selectedSkills.selectedMainSkill, {
-              min: attackOneMin,
-              max: attackOnemax,
-              ar: attackOneAr
-            }, t);
+            console.log('after skill selection'); // calculate Skill damage
 
-          case 34:
-            skillOne = _context.sent;
-            _context.next = 37;
-            return (0, _calculateSkillDamage.calculateSkillDamage)(currentCharacter, selectedSkills.selectedSecondarySkill, {
-              min: attackOneMin,
-              max: attackOnemax,
-              ar: attackOneAr
-            }, t);
+            _context.next = 58;
+            return (0, _calculateSkills.calculateSkillDamage)(currentCharacter, selectedSkills.selectedMainSkill, regularAttack, t);
 
-          case 37:
-            skillTwo = _context.sent;
+          case 58:
+            attackOne = _context.sent;
+            console.log('after main skill damage'); // calculate Skill damage
+
+            _context.next = 62;
+            return (0, _calculateSkills.calculateSkillDamage)(currentCharacter, selectedSkills.selectedSecondarySkill, regularAttack, t);
+
+          case 62:
+            attackTwo = _context.sent;
+            console.log('done calculating character stats'); // TODO: APPLY CAPS BEFORE APPLYING THEM TO FINAL RETURN
+
             return _context.abrupt("return", {
               username: currentCharacter.user.username,
               currentClass: currentCharacter.user.currentClass.name,
               lvl: userCurrentRank.id,
               exp: currentCharacter.user.exp,
               expNext: nextRankExp,
-              unspedAttributes: AttributesToSpend,
+              unspendAttributes: unspendAttributes,
               strength: strength,
               dexterity: dexterity,
               vitality: vitality,
@@ -155,40 +230,24 @@ var calculateCharacterStats = /*#__PURE__*/function () {
               block: block,
               hp: {
                 current: currentHp,
-                max: maxHp
+                max: maxHp,
+                totalLifeBonus: totalLifeBonus
               },
               mp: {
                 current: currentMp,
                 max: maxMp
               },
-              FR: 0,
-              PR: 0,
-              LR: 0,
-              CR: 0,
-              attackOne: {
-                name: skillOne.name,
-                min: skillOne.min,
-                max: skillOne.max,
-                ar: skillOne.ar,
-                cost: skillOne.cost
-              },
-              attackTwo: {
-                name: skillTwo.name,
-                min: skillTwo.min,
-                max: skillTwo.max,
-                ar: skillTwo.ar,
-                cost: skillTwo.cost
-              },
-              regularAttack: {
-                name: 'Attack',
-                min: attackOneMin,
-                max: attackOnemax,
-                ar: attackOneAr,
-                cost: 0
-              }
+              FR: FR,
+              PR: PR,
+              LR: LR,
+              CR: CR,
+              attackOne: attackOne,
+              attackTwo: attackTwo,
+              regularAttack: regularAttack,
+              kick: kick
             });
 
-          case 39:
+          case 65:
           case "end":
             return _context.stop();
         }

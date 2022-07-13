@@ -31,7 +31,7 @@ var _cancelSkillPick = require("../render/skills/cancelSkillPick");
 
 var _buttons = require("../buttons");
 
-var _skills2 = _interopRequireDefault(require("../render/skills/skills.json"));
+var _skillInfo = _interopRequireDefault(require("../render/skills/skillInfo"));
 
 var _messages = require("../messages");
 
@@ -267,7 +267,7 @@ var discordSkills = /*#__PURE__*/function () {
                         }
 
                       case 47:
-                        jsonSkillInfo = _skills2["default"].find(function (x) {
+                        jsonSkillInfo = _skillInfo["default"].find(function (x) {
                           return x.name === selectedSkill.name;
                         });
                         skillTreeMapEdit = userCurrentCharacter["class"].skillTrees.map(function (skilltree, index) {
