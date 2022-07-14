@@ -49,7 +49,7 @@ export const renderPickClassImage = async (
   // ctx.textAlign = "center";
   ctx.strokeStyle = 'black';
   ctx.lineWidth = 3;
-  const newClassImage = await loadImage(path.join(__dirname, '../../assets/images/classes', `${current[0].classDescription.image}.png`));
+  const newClassImage = await loadImage(path.join(__dirname, '../../assets/images/classes', `${current[0].classDescription.name}.png`));
   ctx.drawImage(newClassImage, 0, 0, 500, 800);
   printAtWordWrap(
     ctx,
