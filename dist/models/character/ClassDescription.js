@@ -16,10 +16,6 @@ module.exports = function (sequelize, DataTypes) {
     description: {
       type: DataTypes.STRING(4096),
       allowNull: false
-    },
-    image: {
-      type: DataTypes.STRING,
-      allowNull: false
     }
   }; // 2: The model options.
 

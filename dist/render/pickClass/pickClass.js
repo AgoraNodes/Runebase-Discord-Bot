@@ -71,7 +71,7 @@ var renderPickClassImage = /*#__PURE__*/function () {
             ctx.strokeStyle = 'black';
             ctx.lineWidth = 3;
             _context.next = 9;
-            return (0, _canvas.loadImage)(_path["default"].join(__dirname, '../../assets/images/classes', "".concat(current[0].classDescription.image, ".png")));
+            return (0, _canvas.loadImage)(_path["default"].join(__dirname, '../../assets/images/classes', "".concat(current[0].classDescription.name, ".png")));
 
           case 9:
             newClassImage = _context.sent;
