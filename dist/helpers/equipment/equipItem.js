@@ -216,7 +216,7 @@ var equipItem = /*#__PURE__*/function () {
                                 case 24:
                                   console.log(userCurrentCharacter.user.currentClass.name);
 
-                                  if (!(findItemToEquip.itemBase.itemFamily.itemType.name === 'Sorceress Orbs' && userCurrentCharacter.user.currentClass.name !== 'Sorceress' || findItemToEquip.itemBase.itemFamily.itemType.name === 'Paladin Shields' && userCurrentCharacter.user.currentClass.name !== 'Paladin' || findItemToEquip.itemBase.itemFamily.itemType.name === 'Necromancer Shrunken Heads' && userCurrentCharacter.user.currentClass.name !== 'Necromancer' || findItemToEquip.itemBase.itemFamily.itemType.name === 'Amazon Weapons' && userCurrentCharacter.user.currentClass.name !== 'Amazon' || findItemToEquip.itemBase.itemFamily.itemType.name === 'Assasin Katars' && userCurrentCharacter.user.currentClass.name !== 'Assasin' || findItemToEquip.itemBase.itemFamily.itemType.name === 'Druid Pelts' && userCurrentCharacter.user.currentClass.name !== 'Druid' || findItemToEquip.itemBase.itemFamily.itemType.name === 'Barbarian Helms' && userCurrentCharacter.user.currentClass.name !== 'Barbarian')) {
+                                  if (!(findItemToEquip.itemBase.itemFamily.itemType.name === 'Sorceress Orbs' && userCurrentCharacter.user.currentClass.name !== 'Sorceress' || findItemToEquip.itemBase.itemFamily.itemType.name === 'Paladin Shields' && userCurrentCharacter.user.currentClass.name !== 'Paladin' || findItemToEquip.itemBase.itemFamily.itemType.name === 'Necromancer Shrunken Heads' && userCurrentCharacter.user.currentClass.name !== 'Necromancer' || findItemToEquip.itemBase.itemFamily.itemType.name === 'Amazon Weapons' && userCurrentCharacter.user.currentClass.name !== 'Amazon' || findItemToEquip.itemBase.itemFamily.itemType.name === 'Assasin Katars' && userCurrentCharacter.user.currentClass.name !== 'Assasin' || findItemToEquip.itemBase.itemFamily.itemType.name === 'Druid Pelts' && userCurrentCharacter.user.currentClass.name !== 'Druid' || findItemToEquip.itemBase.itemFamily.itemType.name === 'Warrior Helms' && userCurrentCharacter.user.currentClass.name !== 'Warrior')) {
                                     _context.next = 29;
                                     break;
                                   }
@@ -226,7 +226,7 @@ var equipItem = /*#__PURE__*/function () {
                                   return _context.abrupt("return");
 
                                 case 29:
-                                  if (!(findItemToEquip.itemBase.itemFamily.itemType.name === 'Helms' || findItemToEquip.itemBase.itemFamily.itemType.name === 'Circlets' || findItemToEquip.itemBase.itemFamily.itemType.name === 'Druid Pelts' || findItemToEquip.itemBase.itemFamily.itemType.name === 'Barbarian Helms')) {
+                                  if (!(findItemToEquip.itemBase.itemFamily.itemType.name === 'Helms' || findItemToEquip.itemBase.itemFamily.itemType.name === 'Circlets' || findItemToEquip.itemBase.itemFamily.itemType.name === 'Druid Pelts' || findItemToEquip.itemBase.itemFamily.itemType.name === 'Warrior Helms')) {
                                     _context.next = 32;
                                     break;
                                   }

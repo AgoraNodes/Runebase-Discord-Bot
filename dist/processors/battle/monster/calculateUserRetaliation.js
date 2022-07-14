@@ -8,15 +8,15 @@ exports["default"] = void 0;
 var calculateUserRetaliation = function calculateUserRetaliation(userCurrentCharacter, monsterId) {
   var retaliate = [];
 
-  if (userCurrentCharacter["class"].name === 'Barbarian') {
-    var barbRetaliation = userCurrentCharacter.UserClassSkills.find(function (x) {
+  if (userCurrentCharacter["class"].name === 'Warrior') {
+    var warriorRetaliation = userCurrentCharacter.UserClassSkills.find(function (x) {
       return x.skill.name === 'Retaliate';
     });
 
-    if (barbRetaliation) {
-      var barbRetaliationChance = 5 + (barbRetaliation.points - 1) * 2; // const barbRetaliationChance = 100;
+    if (warriorRetaliation) {
+      var warriorRetaliationChance = 5 + (warriorRetaliation.points - 1) * 2; // const warriorRetaliationChance = 100;
 
-      var didWeRetaliate = Math.random() < Number(barbRetaliationChance) / 100;
+      var didWeRetaliate = Math.random() < Number(warriorRetaliationChance) / 100;
 
       if (didWeRetaliate) {
         retaliate.push({

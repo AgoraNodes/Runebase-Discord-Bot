@@ -11,7 +11,7 @@ var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"))
 
 var _asyncToGenerator2 = _interopRequireDefault(require("@babel/runtime/helpers/asyncToGenerator"));
 
-var calculatePassivesBarb = /*#__PURE__*/function () {
+var calculatePassivesWarrior = /*#__PURE__*/function () {
   var _ref = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(currentCharacter, defense, regularAttack, kick, FR, PR, LR, CR) {
     var newDefense, newRegularAttack, newFR, newPR, newLR, newCR, newKick, thoughSkin, resistance, swordsman, axeman, maceman, polearmMaster, throwingMaster, spearman, parry, criticalHit, criticalKick, healingHit, addedPercentageDefense, amountDefenseAdded, newMinAttack, newMaxAttack, newAr, newCrit, _newMinAttack, _newMaxAttack, _newAr, _newCrit, _newMinAttack2, _newMaxAttack2, _newAr2, _newCrit2, _newMinAttack3, _newMaxAttack3, _newAr3, _newCrit3, _newMinAttack4, _newMaxAttack4, _newAr4, _newCrit4, _newMinAttack5, _newMaxAttack5, newMinThrow, newMaxThrow, _newAr5, _newCrit5, addCrit, _newCrit6, newLifeSteal, newKickLifeSteal;
 
@@ -303,10 +303,10 @@ var calculatePassivesBarb = /*#__PURE__*/function () {
     }, _callee);
   }));
 
-  return function calculatePassivesBarb(_x, _x2, _x3, _x4, _x5, _x6, _x7, _x8) {
+  return function calculatePassivesWarrior(_x, _x2, _x3, _x4, _x5, _x6, _x7, _x8) {
     return _ref.apply(this, arguments);
   };
 }();
 
-var _default = calculatePassivesBarb;
+var _default = calculatePassivesWarrior;
 exports["default"] = _default;

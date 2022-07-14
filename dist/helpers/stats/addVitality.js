@@ -98,7 +98,7 @@ var addVitality = /*#__PURE__*/function () {
 
                                   console.log(user.currentClass.name);
 
-                                  if (user.currentClass.name === 'Barbarian') {
+                                  if (user.currentClass.name === 'Warrior') {
                                     addLife = 4;
                                   } else if (user.currentClass.name === 'Amazon' || user.currentClass.name === 'Assasin' || user.currentClass.name === 'Paladin') {
                                     addLife = 3;

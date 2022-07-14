@@ -24,7 +24,7 @@ var userApplyBattleCompleteEffects = /*#__PURE__*/function () {
             console.log(userState);
             console.log('userState');
 
-            if (userState["class"].name === 'Barbarian') {
+            if (userState["class"].name === 'Warrior') {
               relieve = userState.UserClassSkills.find(function (element) {
                 return element.skill.name === 'Relieve';
               });

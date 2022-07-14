@@ -3,10 +3,9 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.calculateBarbSkillDamage = void 0;
+exports.calculateWarriorSkillDamage = void 0;
 
-var calculateBarbSkillDamage = function calculateBarbSkillDamage(skillToCalculate, attack) {
-  console.log('start calculating barb skills');
+var calculateWarriorSkillDamage = function calculateWarriorSkillDamage(skillToCalculate, attack) {
   var newAttack = attack;
 
   if (skillToCalculate.skill.name === "Bonk") {
@@ -288,8 +287,7 @@ var calculateBarbSkillDamage = function calculateBarbSkillDamage(skillToCalculat
     };
   }
 
-  console.log('done calculating barb attacks');
   return newAttack;
 };
 
-exports.calculateBarbSkillDamage = calculateBarbSkillDamage;
+exports.calculateWarriorSkillDamage = calculateWarriorSkillDamage;

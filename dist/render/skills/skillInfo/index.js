@@ -9,8 +9,8 @@ exports["default"] = void 0;
 
 var _toConsumableArray2 = _interopRequireDefault(require("@babel/runtime/helpers/toConsumableArray"));
 
-var _barbarian = _interopRequireDefault(require("./barbarian"));
+var _warrior = _interopRequireDefault(require("./warrior"));
 
-var skillInfo = (0, _toConsumableArray2["default"])(_barbarian["default"]);
+var skillInfo = (0, _toConsumableArray2["default"])(_warrior["default"]);
 var _default = skillInfo;
 exports["default"] = _default;

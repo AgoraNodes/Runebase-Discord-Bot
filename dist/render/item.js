@@ -36,7 +36,7 @@ var renderItemImage = /*#__PURE__*/function () {
             dexterityReqHeight = newItem.itemBase.dexterityReq ? 25 : 0;
             shieldAndBootsDamageHeight = (newItem.itemBase.itemFamily.itemType.name === "Shields" || newItem.itemBase.itemFamily.itemType.name === "Boots") && newItem.minDamage && newItem.maxDamage ? 25 : 0;
             isWeapon = !!(newItem.itemBase.itemFamily.itemType.name === "Axes" || newItem.itemBase.itemFamily.itemType.name === "Bows" || newItem.itemBase.itemFamily.itemType.name === "Crossbows" || newItem.itemBase.itemFamily.itemType.name === "Daggers" || newItem.itemBase.itemFamily.itemType.name === "Javelins" || newItem.itemBase.itemFamily.itemType.name === "Maces" || newItem.itemBase.itemFamily.itemType.name === "Polearms");
-            isClassSpecific = !!(newItem.itemBase.itemFamily.itemType.name === "Barbarian Helms" || newItem.itemBase.itemFamily.itemType.name === "Druid Pelts" || newItem.itemBase.itemFamily.itemType.name === "Necromancer Shrunken Heads" || newItem.itemBase.itemFamily.itemType.name === "Paladin Shields" || newItem.itemBase.itemFamily.itemType.name === "Amazon Weapons" || newItem.itemBase.itemFamily.itemType.name === "Sorceress Orbs" || newItem.itemBase.itemFamily.itemType.name === "Assassin Katars");
+            isClassSpecific = !!(newItem.itemBase.itemFamily.itemType.name === "Warrior Helms" || newItem.itemBase.itemFamily.itemType.name === "Druid Pelts" || newItem.itemBase.itemFamily.itemType.name === "Necromancer Shrunken Heads" || newItem.itemBase.itemFamily.itemType.name === "Paladin Shields" || newItem.itemBase.itemFamily.itemType.name === "Amazon Weapons" || newItem.itemBase.itemFamily.itemType.name === "Sorceress Orbs" || newItem.itemBase.itemFamily.itemType.name === "Assassin Katars");
             isShield = newItem.itemBase.itemFamily.itemType.name === "Shields";
             isBow = newItem.itemBase.itemFamily.itemType.name === "Bows";
             isRing = newItem.itemBase.itemFamily.itemType.name === "Rings";
@@ -141,9 +141,9 @@ var renderItemImage = /*#__PURE__*/function () {
               ctx.fillText("Stack: ".concat(newItem.stack, " of ").concat(newItem.itemBase.maxStack), 100, itemImage.height + 70 + shieldAndBootsDamageHeight + extraWeaponsHeight + extraShieldBlockHeight + extraThrowingJavelinHeight, 200);
             }
 
-            if (newItem.itemBase.itemFamily.itemType.name === "Barbarian Helms") {
-              ctx.strokeText("(Barbarian Only)", 100, itemImage.height + 95 + shieldAndBootsDamageHeight + extraWeaponsHeight + extraShieldBlockHeight + extraThrowingJavelinHeight, 200);
-              ctx.fillText("(Barbarian Only)", 100, itemImage.height + 95 + shieldAndBootsDamageHeight + extraWeaponsHeight + extraShieldBlockHeight + extraThrowingJavelinHeight, 200);
+            if (newItem.itemBase.itemFamily.itemType.name === "Warrior Helms") {
+              ctx.strokeText("(Warrior Only)", 100, itemImage.height + 95 + shieldAndBootsDamageHeight + extraWeaponsHeight + extraShieldBlockHeight + extraThrowingJavelinHeight, 200);
+              ctx.fillText("(Warrior Only)", 100, itemImage.height + 95 + shieldAndBootsDamageHeight + extraWeaponsHeight + extraShieldBlockHeight + extraThrowingJavelinHeight, 200);
             }
 
             if (newItem.itemBase.itemFamily.itemType.name === "Druid Pelts") {

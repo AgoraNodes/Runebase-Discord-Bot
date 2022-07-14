@@ -150,7 +150,7 @@ var unEquipItem = /*#__PURE__*/function () {
                                 case 5:
                                   findItemToUnEquip = _context.sent;
 
-                                  if (!(findItemToUnEquip.itemBase.itemFamily.itemType.name === 'Helms' || findItemToUnEquip.itemBase.itemFamily.itemType.name === 'Circlets' || findItemToUnEquip.itemBase.itemFamily.itemType.name === 'Druid Pelts' || findItemToUnEquip.itemBase.itemFamily.itemType.name === 'Barbarian Helms')) {
+                                  if (!(findItemToUnEquip.itemBase.itemFamily.itemType.name === 'Helms' || findItemToUnEquip.itemBase.itemFamily.itemType.name === 'Circlets' || findItemToUnEquip.itemBase.itemFamily.itemType.name === 'Druid Pelts' || findItemToUnEquip.itemBase.itemFamily.itemType.name === 'Warrior Helms')) {
                                     _context.next = 9;
                                     break;
                                   }

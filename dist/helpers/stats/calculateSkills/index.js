@@ -11,7 +11,7 @@ var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"))
 
 var _asyncToGenerator2 = _interopRequireDefault(require("@babel/runtime/helpers/asyncToGenerator"));
 
-var _barbarian = require("./barbarian");
+var _warrior = require("./warrior");
 
 var _amazon = require("./amazon");
 
@@ -36,13 +36,13 @@ var calculateSkillDamage = /*#__PURE__*/function () {
             console.log("userCharacter.class");
             console.log(userCharacter["class"]);
 
-            if (!(userCharacter["class"].name === 'Barbarian')) {
+            if (!(userCharacter["class"].name === 'Warrior')) {
               _context.next = 6;
               break;
             }
 
             _context.next = 5;
-            return (0, _barbarian.calculateBarbSkillDamage)(skillToCalculate, attackOne);
+            return (0, _warrior.calculateWarriorSkillDamage)(skillToCalculate, attackOne);
 
           case 5:
             attack = _context.sent;

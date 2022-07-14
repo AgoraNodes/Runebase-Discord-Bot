@@ -4,7 +4,7 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports["default"] = void 0;
-var skillEmoji = [// Barbarian (passives not included)
+var skillEmoji = [// Warrior (passives not included)
 {
   name: 'Attack',
   emoji: '<:Attack:995242768974757939>'

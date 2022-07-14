@@ -13,7 +13,7 @@ var _slicedToArray2 = _interopRequireDefault(require("@babel/runtime/helpers/sli
 
 var _asyncToGenerator2 = _interopRequireDefault(require("@babel/runtime/helpers/asyncToGenerator"));
 
-var _barb = _interopRequireDefault(require("./barb"));
+var _warrior = _interopRequireDefault(require("./warrior"));
 
 var calculatePassives = /*#__PURE__*/function () {
   var _ref = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(currentCharacter, defense, regularAttack, kick, FR, PR, LR, CR) {
@@ -31,13 +31,13 @@ var calculatePassives = /*#__PURE__*/function () {
             newLR = LR;
             newCR = CR;
 
-            if (!(currentCharacter["class"].name === 'Barbarian')) {
+            if (!(currentCharacter["class"].name === 'Warrior')) {
               _context.next = 19;
               break;
             }
 
             _context.next = 10;
-            return (0, _barb["default"])(currentCharacter, newDefense, newRegularAttack, newKick, newFR, // Fire resistance
+            return (0, _warrior["default"])(currentCharacter, newDefense, newRegularAttack, newKick, newFR, // Fire resistance
             newPR, // Poison Resistance
             newLR, // Lightning Resitance
             newCR // Cold Resistance

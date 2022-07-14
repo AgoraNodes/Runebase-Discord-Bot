@@ -4,7 +4,7 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports["default"] = void 0;
-var barbarian = [{
+var warrior = [{
   name: "Bonk",
   description: "Bonk releases a powerful blow that increases damage. Damage and Attack Rating are also increased compared to normal blow; damage is added both as flat amount and percentage (after flat increase).",
   initial: {
@@ -333,5 +333,5 @@ var barbarian = [{
     "attackBonus %": 5
   }
 }];
-var _default = barbarian;
+var _default = warrior;
 exports["default"] = _default;

@@ -88,10 +88,8 @@ var addEnergy = /*#__PURE__*/function () {
 
                                 case 7:
                                   addMana = 0;
-                                  console.log(user.currentClass);
-                                  console.log("user.currentClass");
 
-                                  if (user.currentClass.name === 'Barbarian') {
+                                  if (user.currentClass.name === 'Warrior') {
                                     addMana = 1;
                                   } else if (user.currentClass.name === 'Druid' || user.currentClass.name === 'Necromancer' || user.currentClass.name === 'Sorceress') {
                                     addMana = 2;
@@ -109,7 +107,7 @@ var addEnergy = /*#__PURE__*/function () {
                                     }
                                   }
 
-                                  _context.next = 13;
+                                  _context.next = 11;
                                   return user.UserClass.stats.update({
                                     energy: user.UserClass.stats.energy + 1,
                                     mana: user.UserClass.stats.mana + addMana
@@ -118,9 +116,9 @@ var addEnergy = /*#__PURE__*/function () {
                                     transaction: t
                                   });
 
-                                case 13:
+                                case 11:
                                   updateEnergy = _context.sent;
-                                  _context.next = 16;
+                                  _context.next = 14;
                                   return user.UserClass.condition.update({
                                     mana: user.UserClass.condition.mana + addMana
                                   }, {
@@ -128,9 +126,9 @@ var addEnergy = /*#__PURE__*/function () {
                                     transaction: t
                                   });
 
-                                case 16:
+                                case 14:
                                   updateCondition = _context.sent;
-                                  _context.next = 19;
+                                  _context.next = 17;
                                   return _models["default"].activity.create({
                                     type: 'addEnergy_s',
                                     earnerId: currentUserCharacter.user.id
@@ -139,9 +137,9 @@ var addEnergy = /*#__PURE__*/function () {
                                     transaction: t
                                   });
 
-                                case 19:
+                                case 17:
                                   preActivity = _context.sent;
-                                  _context.next = 22;
+                                  _context.next = 20;
                                   return _models["default"].activity.findOne({
                                     where: {
                                       id: preActivity.id
@@ -154,11 +152,11 @@ var addEnergy = /*#__PURE__*/function () {
                                     transaction: t
                                   });
 
-                                case 22:
+                                case 20:
                                   finalActivity = _context.sent;
                                   activity.unshift(finalActivity);
 
-                                case 24:
+                                case 22:
                                 case "end":
                                   return _context.stop();
                               }
