@@ -35,7 +35,7 @@ var renderClassPicked = /*#__PURE__*/function () {
             ctx.lineWidth = 3;
             ctx.textAlign = "center";
             _context.next = 10;
-            return (0, _canvas.loadImage)(_path["default"].join(__dirname, '../../assets/images/classes', "".concat(current[0].classDescription.image, ".png")));
+            return (0, _canvas.loadImage)(_path["default"].join(__dirname, '../../assets/images/classes', "".concat(current[0].classDescription.name, ".png")));
 
           case 10:
             newClassImage = _context.sent;
