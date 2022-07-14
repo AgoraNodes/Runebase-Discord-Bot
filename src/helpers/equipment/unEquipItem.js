@@ -141,7 +141,7 @@ export const unEquipItem = async (
         findItemToUnEquip.itemBase.itemFamily.itemType.name === 'Helms'
         || findItemToUnEquip.itemBase.itemFamily.itemType.name === 'Circlets'
         || findItemToUnEquip.itemBase.itemFamily.itemType.name === 'Druid Pelts'
-        || findItemToUnEquip.itemBase.itemFamily.itemType.name === 'Barbarian Helms'
+        || findItemToUnEquip.itemBase.itemFamily.itemType.name === 'Warrior Helms'
       ) {
         await unEquipHelm(
           userCurrentCharacter,

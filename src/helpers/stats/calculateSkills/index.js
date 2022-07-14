@@ -1,4 +1,4 @@
-import { calculateBarbSkillDamage } from './barbarian';
+import { calculateWarriorSkillDamage } from './warrior';
 import { calculateAmaSkillDamage } from './amazon';
 import { calculateAssaSkillDamage } from './assasin';
 import { calculatePalaSkillDamage } from './paladin';
@@ -16,8 +16,8 @@ export const calculateSkillDamage = async (
   console.log("userCharacter.class");
   console.log(userCharacter.class);
   let attack;
-  if (userCharacter.class.name === 'Barbarian') {
-    attack = await calculateBarbSkillDamage(
+  if (userCharacter.class.name === 'Warrior') {
+    attack = await calculateWarriorSkillDamage(
       skillToCalculate,
       attackOne,
     );

@@ -1,8 +1,7 @@
-export const calculateBarbSkillDamage = (
+export const calculateWarriorSkillDamage = (
   skillToCalculate,
   attack,
 ) => {
-  console.log('start calculating barb skills');
   let newAttack = attack;
 
   if (skillToCalculate.skill.name === "Bonk") {
@@ -263,6 +262,5 @@ export const calculateBarbSkillDamage = (
     };
   }
 
-  console.log('done calculating barb attacks');
   return newAttack;
 };

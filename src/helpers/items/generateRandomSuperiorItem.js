@@ -97,7 +97,7 @@ export const generateRandomSuperiorItem = async (level) => {
     || randomBaseItem.itemFamily.itemType.name === 'Boots'
     || randomBaseItem.itemFamily.itemType.name === 'Belts'
     || randomBaseItem.itemFamily.itemType.name === 'Circlets'
-    || randomBaseItem.itemFamily.itemType.name === 'Barbarian Helms'
+    || randomBaseItem.itemFamily.itemType.name === 'Warrior Helms'
     || randomBaseItem.itemFamily.itemType.name === 'Druid Pelts'
     || randomBaseItem.itemFamily.itemType.name === 'Paladin Shields'
     || randomBaseItem.itemFamily.itemType.name === 'Necromancer Shrunken Heads'

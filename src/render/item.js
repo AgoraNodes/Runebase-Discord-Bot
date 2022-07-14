@@ -31,7 +31,7 @@ export const renderItemImage = async (
     || newItem.itemBase.itemFamily.itemType.name === "Polearms"
   ));
   const isClassSpecific = !!((
-    newItem.itemBase.itemFamily.itemType.name === "Barbarian Helms"
+    newItem.itemBase.itemFamily.itemType.name === "Warrior Helms"
     || newItem.itemBase.itemFamily.itemType.name === "Druid Pelts"
     || newItem.itemBase.itemFamily.itemType.name === "Necromancer Shrunken Heads"
     || newItem.itemBase.itemFamily.itemType.name === "Paladin Shields"
@@ -249,15 +249,15 @@ export const renderItemImage = async (
     );
   }
 
-  if (newItem.itemBase.itemFamily.itemType.name === "Barbarian Helms") {
+  if (newItem.itemBase.itemFamily.itemType.name === "Warrior Helms") {
     ctx.strokeText(
-      `(Barbarian Only)`,
+      `(Warrior Only)`,
       100,
       (itemImage.height) + 95 + shieldAndBootsDamageHeight + extraWeaponsHeight + extraShieldBlockHeight + extraThrowingJavelinHeight,
       200,
     );
     ctx.fillText(
-      `(Barbarian Only)`,
+      `(Warrior Only)`,
       100,
       (itemImage.height) + 95 + shieldAndBootsDamageHeight + extraWeaponsHeight + extraShieldBlockHeight + extraThrowingJavelinHeight,
       200,

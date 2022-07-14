@@ -1,5 +1,5 @@
 const skillEmoji = [
-  // Barbarian (passives not included)
+  // Warrior (passives not included)
   {
     name: 'Attack',
     emoji: '<:Attack:995242768974757939>',

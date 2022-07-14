@@ -12,7 +12,7 @@ const userApplyBattleCompleteEffects = async (
   console.log(userState);
   console.log('userState');
 
-  if (userState.class.name === 'Barbarian') {
+  if (userState.class.name === 'Warrior') {
     const relieve = userState.UserClassSkills.find((element) => element.skill.name === 'Relieve');
     if (relieve) {
       const battleLogs = [];

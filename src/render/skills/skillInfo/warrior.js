@@ -1,4 +1,4 @@
-const barbarian = [
+const warrior = [
   {
     name: "Bonk",
     description: "Bonk releases a powerful blow that increases damage. Damage and Attack Rating are also increased compared to normal blow; damage is added both as flat amount and percentage (after flat increase).",
@@ -359,4 +359,4 @@ const barbarian = [
   },
 ];
 
-export default barbarian;
+export default warrior;

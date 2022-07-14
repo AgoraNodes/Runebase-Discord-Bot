@@ -1,4 +1,4 @@
-const calculatePassivesBarb = async (
+const calculatePassivesWarrior = async (
   currentCharacter,
   defense,
   regularAttack,
@@ -295,4 +295,4 @@ const calculatePassivesBarb = async (
   ];
 };
 
-export default calculatePassivesBarb;
+export default calculatePassivesWarrior;

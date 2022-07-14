@@ -1,4 +1,4 @@
-import calculatePassivesBarb from './barb';
+import calculatePassivesWarrior from './warrior';
 
 const calculatePassives = async (
   currentCharacter,
@@ -17,7 +17,7 @@ const calculatePassives = async (
   let newPR = PR;
   let newLR = LR;
   let newCR = CR;
-  if (currentCharacter.class.name === 'Barbarian') {
+  if (currentCharacter.class.name === 'Warrior') {
     [
       newDefense, // Defense
       newRegularAttack,
@@ -26,7 +26,7 @@ const calculatePassives = async (
       newPR, // Poison Resistance
       newLR, // Lightning Resitance
       newCR, // Cold Resistance
-    ] = await calculatePassivesBarb(
+    ] = await calculatePassivesWarrior(
       currentCharacter,
       newDefense,
       newRegularAttack,

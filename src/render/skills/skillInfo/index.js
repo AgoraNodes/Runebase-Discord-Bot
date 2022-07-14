@@ -1,7 +1,7 @@
-import barbarian from "./barbarian";
+import warrior from "./warrior";
 
 const skillInfo = [
-  ...barbarian,
+  ...warrior,
 ];
 
 export default skillInfo;

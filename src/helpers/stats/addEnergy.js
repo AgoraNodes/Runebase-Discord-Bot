@@ -67,9 +67,7 @@ export const addEnergy = async (
       }
       let addMana = 0;
 
-      console.log(user.currentClass);
-      console.log("user.currentClass");
-      if (user.currentClass.name === 'Barbarian') {
+      if (user.currentClass.name === 'Warrior') {
         addMana = 1;
       } else if (
         user.currentClass.name === 'Druid'
@@ -99,6 +97,7 @@ export const addEnergy = async (
         lock: t.LOCK.UPDATE,
         transaction: t,
       });
+
       const updateCondition = await user.UserClass.condition.update({
         mana: user.UserClass.condition.mana + addMana,
       }, {

@@ -233,8 +233,8 @@ export const equipItem = async (
           && userCurrentCharacter.user.currentClass.name !== 'Druid'
         )
         || (
-          findItemToEquip.itemBase.itemFamily.itemType.name === 'Barbarian Helms'
-          && userCurrentCharacter.user.currentClass.name !== 'Barbarian'
+          findItemToEquip.itemBase.itemFamily.itemType.name === 'Warrior Helms'
+          && userCurrentCharacter.user.currentClass.name !== 'Warrior'
         )
       ) {
         cannotEquipReason = 'Cannot Equip with this class';
@@ -246,7 +246,7 @@ export const equipItem = async (
         findItemToEquip.itemBase.itemFamily.itemType.name === 'Helms'
         || findItemToEquip.itemBase.itemFamily.itemType.name === 'Circlets'
         || findItemToEquip.itemBase.itemFamily.itemType.name === 'Druid Pelts'
-        || findItemToEquip.itemBase.itemFamily.itemType.name === 'Barbarian Helms'
+        || findItemToEquip.itemBase.itemFamily.itemType.name === 'Warrior Helms'
       ) {
         await equipHelm(
           userCurrentCharacter,

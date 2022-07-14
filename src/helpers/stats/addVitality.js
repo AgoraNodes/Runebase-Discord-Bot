@@ -76,7 +76,7 @@ export const addVitality = async (
       }
 
       console.log(user.currentClass.name);
-      if (user.currentClass.name === 'Barbarian') {
+      if (user.currentClass.name === 'Warrior') {
         addLife = 4;
       } else if (
         user.currentClass.name === 'Amazon'
