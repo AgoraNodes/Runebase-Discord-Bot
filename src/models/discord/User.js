@@ -72,6 +72,12 @@ module.exports = (sequelize, DataTypes) => {
         through: 'UserClass',
       },
     );
+    UserModel.belongsToMany(
+      model.group,
+      {
+        through: 'UserGroup',
+      },
+    );
     UserModel.hasOne(model.UserClass);
     UserModel.hasOne(model.UserRank);
   };
