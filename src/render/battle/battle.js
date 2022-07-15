@@ -104,6 +104,37 @@ export const renderBattleGif = async (
 
   loadPromises.push(
     new Promise((resolve, reject) => {
+      loadOrbs(
+        userState,
+        stageZeroInfoArray,
+        stageOneInfoArray,
+        stageTwoInfoArray,
+        stageThreeInfoArray,
+        stageFourInfoArray,
+        stageFiveInfoArray,
+        stageSixInfoArray,
+        stageSevenInfoArray,
+        orbsStartingPositionStageZero,
+        orbsStartingPositionStageOne,
+        orbsStartingPositionStageTwo,
+        orbsStartingPositionStageThree,
+        orbsStartingPositionStageFour,
+        orbsStartingPositionStageFive,
+        orbsStartingPositionStageSix,
+        orbsStartingPositionStageSeven,
+      ).then(([
+        hpOrbsReturn,
+        mpOrbsReturn,
+      ]) => {
+        hpOrbs = hpOrbsReturn;
+        mpOrbs = mpOrbsReturn;
+        resolve();
+      });
+    }),
+  );
+
+  loadPromises.push(
+    new Promise((resolve, reject) => {
       loadImage(path.join(
         __dirname,
         `../../assets/images/skills/${userCurrentSelectedSkills.selectedMainSkill.skill.skillTree ? `${userCurrentSelectedSkills.selectedMainSkill.skill.skillTree.class.name}/${userCurrentSelectedSkills.selectedMainSkill.skill.skillTree.name}` : ``}`,
@@ -221,37 +252,6 @@ export const renderBattleGif = async (
       }),
     );
   }
-
-  loadPromises.push(
-    new Promise((resolve, reject) => {
-      loadOrbs(
-        userState,
-        stageZeroInfoArray,
-        stageOneInfoArray,
-        stageTwoInfoArray,
-        stageThreeInfoArray,
-        stageFourInfoArray,
-        stageFiveInfoArray,
-        stageSixInfoArray,
-        stageSevenInfoArray,
-        orbsStartingPositionStageZero,
-        orbsStartingPositionStageOne,
-        orbsStartingPositionStageTwo,
-        orbsStartingPositionStageThree,
-        orbsStartingPositionStageFour,
-        orbsStartingPositionStageFive,
-        orbsStartingPositionStageSix,
-        orbsStartingPositionStageSeven,
-      ).then(([
-        hpOrbsReturn,
-        mpOrbsReturn,
-      ]) => {
-        hpOrbs = hpOrbsReturn;
-        mpOrbs = mpOrbsReturn;
-        resolve();
-      });
-    }),
-  );
 
   await Promise.all(loadPromises);
 
@@ -2544,8 +2544,12 @@ export const renderBattleGif = async (
     }
   }
 
+  console.log('1');
   gif.finish();
+  console.log('2');
   const bytes = gif.bytesView();
+  console.log('3');
   const finalImage = Buffer.from(bytes);
+  console.log('4');
   return finalImage;
 };

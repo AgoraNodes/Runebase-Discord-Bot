@@ -245,8 +245,8 @@ export const calculateWarriorSkillDamage = (
     newAttack = {
       name: skillToCalculate.skill.name,
       attackType: 'Physical',
-      min: newMinDamage,
-      max: newMaxDamage,
+      min: Math.round(newMinDamage),
+      max: Math.round(newMaxDamage),
       minThrow: newAttack.minThrow,
       maxThrow: newAttack.maxThrow,
       ar: newAttack.ar,
