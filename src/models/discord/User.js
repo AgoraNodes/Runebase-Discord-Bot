@@ -59,6 +59,9 @@ module.exports = (sequelize, DataTypes) => {
     UserModel.belongsTo(model.class, {
       as: 'currentClass',
     });
+    UserModel.belongsTo(model.group, {
+      as: 'currentRealm',
+    });
     UserModel.hasMany(model.transaction);
     UserModel.belongsToMany(
       model.rank,
