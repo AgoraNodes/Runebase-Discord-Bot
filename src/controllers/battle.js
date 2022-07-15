@@ -651,23 +651,31 @@ ${newLootC.length > 0 ? `__found ${newLootC.length} ${newLootC.length === 1 ? `i
             lock: t.LOCK.UPDATE,
             transaction: t,
           });
-          await userCurrentCharacter.condition.update({
-            life: userToUpdate.class.life + userToUpdate.stats.life,
-            mana: userToUpdate.class.mana + userToUpdate.stats.mana,
-          }, {
-            lock: t.LOCK.UPDATE,
-            transaction: t,
-          });
-
           const {
             hp,
             mp,
           } = await calculateCharacterStats(
             userCurrentCharacter,
           );
+          await userCurrentCharacter.condition.update({
+            life: hp.max,
+            mana: mp.max,
+          }, {
+            lock: t.LOCK.UPDATE,
+            transaction: t,
+          });
+
           myInitialUserState = JSON.parse(JSON.stringify(userCurrentCharacter));
-          myInitialUserState.hp = hp;
-          myInitialUserState.mp = mp;
+          myInitialUserState.hp = {
+            current: hp.max,
+            max: hp.max,
+            totalLifeBonus: hp.totalLifeBonus,
+          };
+          myInitialUserState.mp = {
+            current: mp.max,
+            max: mp.max,
+            totalManaBonus: mp.totalManaBonus,
+          };
 
           userCurrentCharacter = await fetchUserCurrentCharacter(
             userId, // user discord id

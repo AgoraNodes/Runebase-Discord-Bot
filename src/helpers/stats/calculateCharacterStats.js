@@ -43,15 +43,24 @@ export const calculateCharacterStats = async (
   let block = 0;
   let defense = 0;
   let totalLifeBonus = 0;
+  const totalManaBonus = 0;
   const lifeSteal = 0;
   const manaSteal = 0;
+  const initialStrength = currentCharacter.user.currentClass.strength + currentCharacter.stats.strength;
+  const initialDexterity = currentCharacter.user.currentClass.dexterity + currentCharacter.stats.dexterity;
+  const initialVitality = currentCharacter.user.currentClass.vitality + currentCharacter.stats.vitality;
+  const initialEnergy = currentCharacter.user.currentClass.energy + currentCharacter.stats.energy;
+  let strength = initialStrength;
+  let dexterity = initialDexterity;
+  let vitality = initialVitality;
+  let energy = initialEnergy;
 
-  let strength = currentCharacter.user.currentClass.strength + currentCharacter.stats.strength;
-  let dexterity = currentCharacter.user.currentClass.dexterity + currentCharacter.stats.dexterity;
-  let vitality = currentCharacter.user.currentClass.vitality + currentCharacter.stats.vitality;
-  let energy = currentCharacter.user.currentClass.energy + currentCharacter.stats.energy;
   const maxStamina = currentCharacter.user.currentClass.stamina + currentCharacter.stats.stamina;
   const currentStaminaPoints = currentCharacter.condition.stamina;
+  let currentHp = currentCharacter.condition.life;
+  let maxHp = currentCharacter.user.currentClass.life + currentCharacter.stats.life;
+  const currentMp = currentCharacter.condition.mana;
+  let maxMp = currentCharacter.user.currentClass.mana + currentCharacter.stats.mana;
 
   defense += currentCharacter.user.currentClass.defense;
 
@@ -86,7 +95,54 @@ export const calculateCharacterStats = async (
     defense,
     block,
   );
-
+  let addedLifeByItemVitality = 0;
+  let addedManaByItemEnergy = 0;
+  if (currentCharacter.class.name === 'Warrior') {
+    // const totalLoops = (vitality - initialVitality);
+    // Consider looping over points to calculate for example: +1.5 value
+    // EXAMPLE GIVEN: if loopcount % 2 === 0 then life 2 else 1
+    // FOR NOW WE USE Math.round.. perhaps we keep it this way
+    addedLifeByItemVitality = (vitality - initialVitality) * 4;
+    addedManaByItemEnergy = (energy - initialEnergy) * 1;
+  }
+  if (
+    currentCharacter.class.name === 'Amazon'
+  ) {
+    addedLifeByItemVitality = (vitality - initialVitality) * 3;
+    addedManaByItemEnergy = Math.round((energy - initialEnergy) * 1.5);
+  }
+  if (
+    currentCharacter.class.name === 'Assasin'
+  ) {
+    addedLifeByItemVitality = (vitality - initialVitality) * 3;
+    addedManaByItemEnergy = Math.round((energy - initialEnergy) * 1.75);
+  }
+  if (
+    currentCharacter.class.name === 'Paladin'
+  ) {
+    addedLifeByItemVitality = (vitality - initialVitality) * 3;
+    addedManaByItemEnergy = Math.round((energy - initialEnergy) * 1.5);
+  }
+  if (
+    currentCharacter.class.name === 'Druid'
+  ) {
+    addedLifeByItemVitality = (vitality - initialVitality) * 2;
+    addedManaByItemEnergy = Math.round((energy - initialEnergy) * 2);
+  }
+  if (
+    currentCharacter.class.name === 'Necromancer'
+  ) {
+    addedLifeByItemVitality = (vitality - initialVitality) * 2;
+    addedManaByItemEnergy = Math.round((energy - initialEnergy) * 2);
+  }
+  if (
+    currentCharacter.class.name === 'Sorceress'
+  ) {
+    addedLifeByItemVitality = (vitality - initialVitality) * 2;
+    addedManaByItemEnergy = Math.round((energy - initialEnergy) * 2);
+  }
+  maxHp += addedLifeByItemVitality;
+  maxMp += addedManaByItemEnergy;
   // Added Damage % by Strength
   const addedStrengthDamagePercentage = 1 + (strength / 100); // Should we substract starting strength from this? (YES/NO)
 
@@ -160,11 +216,6 @@ export const calculateCharacterStats = async (
     CR,
   );
 
-  let currentHp = currentCharacter.condition.life;
-  let maxHp = currentCharacter.user.currentClass.life + currentCharacter.stats.life;
-  const currentMp = currentCharacter.condition.mana;
-  const maxMp = currentCharacter.user.currentClass.mana + currentCharacter.stats.mana;
-
   console.log('before calculating buffs');
   // Calculate Buffs
   [
@@ -223,13 +274,14 @@ export const calculateCharacterStats = async (
     defense,
     block,
     hp: {
-      current: currentHp,
+      current: currentHp > maxHp ? maxHp : currentHp,
       max: maxHp,
       totalLifeBonus,
     },
     mp: {
-      current: currentMp,
+      current: currentMp > maxMp ? maxMp : currentMp,
       max: maxMp,
+      totalManaBonus,
     },
     FR,
     PR,

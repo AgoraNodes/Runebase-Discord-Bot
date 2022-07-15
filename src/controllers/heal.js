@@ -21,6 +21,7 @@ import {
   declineHealMessage,
   healCompleteMessage,
 } from '../messages';
+import { calculateCharacterStats } from '../helpers/stats/calculateCharacterStats';
 
 export const discordHeal = async (
   discordClient,
@@ -146,9 +147,15 @@ export const discordHeal = async (
               lock: t.LOCK.UPDATE,
               transaction: t,
             });
+            const {
+              hp,
+              mp,
+            } = await calculateCharacterStats(
+              userCurrentCharacter,
+            );
             await userToUpdate.condition.update({
-              life: userToUpdate.class.life + userToUpdate.stats.life,
-              mana: userToUpdate.class.mana + userToUpdate.stats.mana,
+              life: hp.max,
+              mana: mp.max,
             }, {
               lock: t.LOCK.UPDATE,
               transaction: t,
