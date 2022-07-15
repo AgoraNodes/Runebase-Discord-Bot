@@ -526,6 +526,40 @@ you have been rewarded ${amount} experience`)
   return result;
 };
 
+export const realmChangeSuccessEmbed = (
+  server,
+) => {
+  const result = new MessageEmbed()
+    .setColor(settings.bot.color)
+    .setTitle('Change Realm Success')
+    .setDescription(`You are now on realm:
+${server.groupName}`)
+    .setTimestamp()
+    .setFooter({
+      text: `${settings.bot.name} v${pjson.version}`,
+      iconURL: settings.bot.logo,
+    });
+
+  return result;
+};
+
+export const needToBeInDiscordRealmEmbed = (
+  server,
+) => {
+  const result = new MessageEmbed()
+    .setColor(settings.bot.color)
+    .setTitle('Change Realm Failed')
+    .setDescription(`You need to join the realm discord server to be able to participate on this realm
+${server.inviteLink}`)
+    .setTimestamp()
+    .setFooter({
+      text: `${settings.bot.name} v${pjson.version}`,
+      iconURL: settings.bot.logo,
+    });
+
+  return result;
+};
+
 export const gainVoteTopggExpMessage = (
   userId,
   amount,
@@ -553,7 +587,7 @@ export const levelUpMessage = (
     .setTitle('Gain Exp')
     .setDescription(`Congratulations <@${userId}>
 You gained a level
-You are now a ${rank.name} (lvl ${rank.id})`)
+You are now a ${rank.name} (lvl ${rank.level})`)
     .setTimestamp()
     .setFooter({
       text: `${settings.bot.name} v${pjson.version}`,

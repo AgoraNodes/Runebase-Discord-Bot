@@ -52,3 +52,51 @@ export const fetchServers = async (req, res, next) => {
   console.log(res.locals.result);
   next();
 };
+
+export const updateServer = async (
+  req,
+  res,
+  next,
+) => {
+  if (!req.body.id) {
+    throw new Error("id is required");
+  }
+  if (!req.body.inviteLink) {
+    throw new Error("inviteLink is required");
+  }
+
+  const server = await db.group.findOne({
+    where: {
+      id: req.body.id,
+    },
+  });
+  const updatedGroup = await server.update({
+    name: req.body.name,
+    inviteLink: req.body.inviteLink,
+  });
+  res.locals.name = 'updateRank';
+  res.locals.result = await db.group.findOne({
+    where: {
+      id: updatedGroup.id,
+    },
+  });
+  next();
+};
+
+export const activateDeactivateRealm = async (
+  req,
+  res,
+  next,
+) => {
+  const group = await db.group.findOne({
+    where: {
+      id: req.body.id,
+    },
+  });
+  res.locals.name = 'banServer';
+  res.locals.result = await group.update({
+    activeRealm: !group.activeRealm,
+  });
+
+  next();
+};

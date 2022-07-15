@@ -59,7 +59,7 @@ export const addEnergy = async (
         + user.UserClass.stats.dexterity
         + user.UserClass.stats.vitality
         + user.UserClass.stats.energy
-      ) < (user.ranks[0].id * 5);
+      ) < (user.ranks[0].level * 5);
 
       if (!calc) {
         cannotSpend = true;

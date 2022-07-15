@@ -23,6 +23,8 @@ import { insertIp } from './controllers/ip';
 import {
   fetchServers,
   banServer,
+  updateServer,
+  activateDeactivateRealm,
 } from './controllers/servers';
 import {
   fetchSkillTrees,
@@ -341,6 +343,28 @@ export const dashboardRouter = (
     insertIp,
     ensuretfa,
     use(banServer),
+    respondResult,
+  );
+
+  app.post(
+    '/api/management/server/update',
+    IsAuthenticated,
+    isAdmin,
+    isDashboardUserBanned,
+    insertIp,
+    ensuretfa,
+    use(updateServer),
+    respondResult,
+  );
+
+  app.post(
+    '/api/management/server/realm/active-deactivate',
+    IsAuthenticated,
+    isAdmin,
+    isDashboardUserBanned,
+    insertIp,
+    ensuretfa,
+    use(activateDeactivateRealm),
     respondResult,
   );
 

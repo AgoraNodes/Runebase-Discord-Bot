@@ -27,6 +27,15 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.DATE,
       allowNull: true,
     },
+    inviteLink: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    activeRealm: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+      allowNull: true,
+    },
   };
 
   // 2: The model options.
@@ -42,6 +51,9 @@ module.exports = (sequelize, DataTypes) => {
     GroupModel.hasMany(model.rank);
     GroupModel.hasMany(model.channel);
     GroupModel.hasMany(model.featureSetting);
+    GroupModel.hasOne(model.user, {
+      foreignKey: "currentRealmId",
+    });
   };
 
   return GroupModel;

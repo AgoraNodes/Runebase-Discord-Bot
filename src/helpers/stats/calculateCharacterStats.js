@@ -29,13 +29,13 @@ export const calculateCharacterStats = async (
       }]
     ),
   });
-  const userCurrentRank = currentCharacter.user.ranks[0] ? currentCharacter.user.ranks[0] : { id: 0, expNeeded: nextRank.expNeeded };
+  const userCurrentRank = currentCharacter.user.ranks[0] ? currentCharacter.user.ranks[0] : { level: 0, expNeeded: nextRank.expNeeded };
   const nextRankExp = nextRank && nextRank.expNeeded ? nextRank.expNeeded : userCurrentRank.expNeeded;
   const countedSpendAttributes = currentCharacter.stats.strength
     + currentCharacter.stats.dexterity
     + currentCharacter.stats.vitality
     + currentCharacter.stats.energy;
-  const unspendAttributes = (userCurrentRank.id * 5) - countedSpendAttributes;
+  const unspendAttributes = (userCurrentRank.level * 5) - countedSpendAttributes;
   let FR = 0;
   let PR = 0;
   let LR = 0;
@@ -259,7 +259,7 @@ export const calculateCharacterStats = async (
   return {
     username: currentCharacter.user.username,
     currentClass: currentCharacter.user.currentClass.name,
-    lvl: userCurrentRank.id,
+    lvl: userCurrentRank.level,
     exp: currentCharacter.user.exp,
     expNext: nextRankExp,
     unspendAttributes,

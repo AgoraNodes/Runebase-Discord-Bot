@@ -204,7 +204,7 @@ export const discordStats = async (
         + updatedUser.stats.dexterity
         + updatedUser.stats.vitality
         + updatedUser.stats.energy
-      ) < (updatedUser.user.ranks[0].id * 5);
+      ) < (updatedUser.user.ranks[0].level * 5);
 
       await interaction.editReply({
         embeds: [],

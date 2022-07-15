@@ -158,8 +158,8 @@ export const discordMyRank = async (
 
     ctx.strokeText(currentRank ? currentRank.name : 'Unranked', 722, 90, 100);
     ctx.fillText(currentRank ? currentRank.name : 'Unranked', 722, 90, 100);
-    ctx.strokeText(`${currentRank ? currentRank.id : 0}`, 900, 90, 80);
-    ctx.fillText(`${currentRank ? currentRank.id : 0}`, 900, 90, 80);
+    ctx.strokeText(`${currentRank ? currentRank.level : 0}`, 900, 90, 80);
+    ctx.fillText(`${currentRank ? currentRank.level : 0}`, 900, 90, 80);
 
     ctx.fillStyle = 'white';
     ctx.font = 'bold 25px "HeartWarming"';

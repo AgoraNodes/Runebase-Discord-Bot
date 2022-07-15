@@ -240,7 +240,7 @@ const calculateItemStats = async (
         && currentCharacter.equipment.offHand.itemBase.itemFamily.itemType.name === 'Shields'
       ) {
         const shieldBlock = currentCharacter.equipment.offHand.itemBase.block;
-        const blocking = (shieldBlock * (dexterity - 15)) / (userCurrentRank.id * 2);
+        const blocking = (shieldBlock * (dexterity - 15)) / (userCurrentRank.level * 2);
         newBlock = blocking > 50 ? 50 : blocking;
       }
     }

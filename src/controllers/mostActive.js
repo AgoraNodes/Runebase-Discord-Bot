@@ -144,7 +144,7 @@ export const discordMostActive = async (
         currentExp,
         nextRankExp,
         currentRankName: currentRank ? currentRank.name : 'Unranked',
-        currentRankId: currentRank ? currentRank.id : 0,
+        currentRankId: currentRank ? currentRank.level : 0,
       };
     });
 

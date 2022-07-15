@@ -15,7 +15,6 @@ export const updateDiscordGroup = async (
   } else if (message.guildId) {
     guildId = message.guildId;
   }
-  console.log(guildId);
 
   await db.sequelize.transaction({
     isolationLevel: Transaction.ISOLATION_LEVELS.SERIALIZABLE,
@@ -32,7 +31,6 @@ export const updateDiscordGroup = async (
           lock: t.LOCK.UPDATE,
         },
       );
-      console.log('after group find one');
       if (!group) {
         group = await db.group.create({
           groupId: `${guildId}`,

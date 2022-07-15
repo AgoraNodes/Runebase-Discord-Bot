@@ -22,9 +22,12 @@ module.exports = (sequelize, DataTypes) => {
   const UserGroupModel = sequelize.define('UserGroup', modelDefinition, modelOptions);
 
   UserGroupModel.associate = (model) => {
-    UserGroupModel.belongsTo(model.user, {
-      foreignKey: 'userId',
-    });
+    UserGroupModel.belongsToMany(
+      model.rank,
+      {
+        through: 'UserGroupRank',
+      },
+    );
   };
 
   return UserGroupModel;

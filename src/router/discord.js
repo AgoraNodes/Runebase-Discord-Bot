@@ -27,8 +27,9 @@ import { discordStartDagger } from '../controllers/generateStartDagger';
 import { discordResetStats } from '../controllers/resetStats';
 import { discordResetSkills } from '../controllers/resetSkills';
 import { discordSkills } from '../controllers/skill';
-
+import { findOrCreateUserGroupRecord } from "../controllers/userGroup";
 import { discordAccount } from '../controllers/account';
+import { discordChangeRealm } from "../controllers/changeRealm";
 
 import { myRateLimiter } from '../helpers/rateLimit';
 import { preWithdraw } from '../helpers/withdraw/preWithdraw';
@@ -712,7 +713,6 @@ export const discordRouter = async (
             });
           }
           if (setting.roleDiceChannelId === interaction.channelId) {
-            console.log('found channel');
             const limited = await myRateLimiter(
               discordClient,
               interaction,
@@ -721,7 +721,6 @@ export const discordRouter = async (
             if (limited) return;
 
             await queue.add(async () => {
-              console.log('start_task');
               const task = await discordRollDice(
                 discordClient,
                 interaction,
@@ -745,13 +744,14 @@ export const discordRouter = async (
     let channelTask;
     let channelTaskId;
     let lastSeenDiscordTask;
-    let disallow;
+    // let disallow;
     if (!message.author.bot) {
-      const walletExists = await createUpdateDiscordUser(
+      const user = await createUpdateDiscordUser(
         discordClient,
         message.author,
         queue,
       );
+
       await queue.add(async () => {
         groupTask = await updateDiscordGroup(discordClient, message);
         channelTask = await updateDiscordChannel(message, groupTask);
@@ -762,12 +762,19 @@ export const discordRouter = async (
       });
       groupTaskId = groupTask && groupTask.id;
       channelTaskId = channelTask && channelTask.id;
+      console.log(user);
+      console.log(user.id);
+      console.log(groupTaskId);
+      await findOrCreateUserGroupRecord(
+        user.id,
+        groupTaskId,
+      );
     }
 
     const messageReplaceBreaksWithSpaces = message.content.replace(/\n/g, " ");
     const preFilteredMessageDiscord = messageReplaceBreaksWithSpaces.split(' ');
     const filteredMessageDiscord = preFilteredMessageDiscord.filter((el) => el !== '');
-
+    console.log('1-1');
     if (!message.author.bot) {
       const setting = await db.setting.findOne();
       await queue.add(async () => {
@@ -781,7 +788,7 @@ export const discordRouter = async (
         }
       });
     }
-
+    console.log('1-2');
     if (!message.content.startsWith(settings.bot.command) || message.author.bot) return;
     const maintenance = await isMaintenanceOrDisabled(message, 'discord');
     if (maintenance.maintenance || !maintenance.enabled) return;
@@ -797,7 +804,7 @@ export const discordRouter = async (
       });
       return;
     }
-
+    console.log('1-3');
     if (channelTask && channelTask.banned) {
       await message.channel.send({
         embeds: [
@@ -810,7 +817,7 @@ export const discordRouter = async (
       });
       return;
     }
-
+    console.log('1-4');
     if (lastSeenDiscordTask && lastSeenDiscordTask.banned) {
       await message.channel.send({
         embeds: [
@@ -823,7 +830,7 @@ export const discordRouter = async (
       });
       return;
     }
-
+    console.log('1-5');
     if (filteredMessageDiscord[1] === undefined) {
       const limited = await myRateLimiter(
         discordClient,
@@ -850,6 +857,23 @@ export const discordRouter = async (
       if (limited) return;
       await queue.add(async () => {
         const task = await discordHelp(
+          discordClient,
+          message,
+          io,
+        );
+      });
+    }
+
+    if (filteredMessageDiscord[1] && filteredMessageDiscord[1].toLowerCase() === 'changerealm') {
+      console.log('used help');
+      const limited = await myRateLimiter(
+        discordClient,
+        message,
+        'Help',
+      );
+      if (limited) return;
+      await queue.add(async () => {
+        const task = await discordChangeRealm(
           discordClient,
           message,
           io,
