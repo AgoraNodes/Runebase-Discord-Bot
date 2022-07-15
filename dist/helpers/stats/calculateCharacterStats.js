@@ -27,6 +27,8 @@ var _calculatePassives = _interopRequireDefault(require("./calculatePassives"));
 
 var _calculateBuffs = _interopRequireDefault(require("./calculateBuffs"));
 
+var _calculateItemStats = _interopRequireDefault(require("./calculateItemStats"));
+
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
 
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { (0, _defineProperty2["default"])(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
@@ -46,22 +48,39 @@ var calculateCharacterStats = /*#__PURE__*/function () {
         block,
         defense,
         totalLifeBonus,
+        totalManaBonus,
+        lifeSteal,
+        manaSteal,
+        initialStrength,
+        initialDexterity,
+        initialVitality,
+        initialEnergy,
         strength,
         dexterity,
         vitality,
         energy,
-        shieldBlock,
-        blocking,
         maxStamina,
         currentStaminaPoints,
-        kick,
-        regularAttack,
-        _yield$calculatePassi,
-        _yield$calculatePassi2,
         currentHp,
         maxHp,
         currentMp,
         maxMp,
+        canWearHelm,
+        canWearMainHand,
+        canWearOffHand,
+        canWearArmor,
+        canWearGloves,
+        canWearBelt,
+        canWearBoots,
+        _yield$calculateItemS,
+        _yield$calculateItemS2,
+        addedLifeByItemVitality,
+        addedManaByItemEnergy,
+        addedStrengthDamagePercentage,
+        kick,
+        regularAttack,
+        _yield$calculatePassi,
+        _yield$calculatePassi2,
         _yield$calculateBuffs,
         _yield$calculateBuffs2,
         selectedSkills,
@@ -101,67 +120,130 @@ var calculateCharacterStats = /*#__PURE__*/function () {
             block = 0;
             defense = 0;
             totalLifeBonus = 0;
-            strength = currentCharacter.user.currentClass.strength + currentCharacter.stats.strength;
-            dexterity = currentCharacter.user.currentClass.dexterity + currentCharacter.stats.dexterity;
-            vitality = currentCharacter.user.currentClass.vitality + currentCharacter.stats.vitality;
-            energy = currentCharacter.user.currentClass.energy + currentCharacter.stats.energy;
-
-            if (currentCharacter.equipment.offHand && currentCharacter.equipment.offHand.itemBase.itemFamily.itemType.name === 'Shields') {
-              shieldBlock = currentCharacter.equipment.offHand.itemBase.block;
-              blocking = shieldBlock * (dexterity - 15) / (userCurrentRank.id * 2);
-              block = blocking > 50 ? 50 : blocking;
-            }
-
+            totalManaBonus = 0;
+            lifeSteal = 0;
+            manaSteal = 0;
+            initialStrength = currentCharacter.user.currentClass.strength + currentCharacter.stats.strength;
+            initialDexterity = currentCharacter.user.currentClass.dexterity + currentCharacter.stats.dexterity;
+            initialVitality = currentCharacter.user.currentClass.vitality + currentCharacter.stats.vitality;
+            initialEnergy = currentCharacter.user.currentClass.energy + currentCharacter.stats.energy;
+            strength = initialStrength;
+            dexterity = initialDexterity;
+            vitality = initialVitality;
+            energy = initialEnergy;
             maxStamina = currentCharacter.user.currentClass.stamina + currentCharacter.stats.stamina;
             currentStaminaPoints = currentCharacter.condition.stamina;
+            currentHp = currentCharacter.condition.life;
+            maxHp = currentCharacter.user.currentClass.life + currentCharacter.stats.life;
+            currentMp = currentCharacter.condition.mana;
+            maxMp = currentCharacter.user.currentClass.mana + currentCharacter.stats.mana;
             defense += currentCharacter.user.currentClass.defense;
-            Object.keys(currentCharacter.equipment).forEach(function (key) {
-              if ((key === 'helm' || key === 'belt' || key === 'boots' || key === 'gloves' || key === 'armor' || key === 'offHand' || key === 'amulet' || key === 'ringSlotTwo' || key === 'ringSlotOne') && currentCharacter.equipment[key] && currentCharacter.equipment[key].defense) {
-                var realDefenseValue = Math.round(currentCharacter.equipment[key].defense * (1 + (currentCharacter.equipment[key].eDefense ? currentCharacter.equipment[key].eDefense / 100 : 0)));
-                defense += realDefenseValue;
-              }
-            });
-            kick = currentCharacter.equipment.boots ? {
+            canWearHelm = false;
+            canWearMainHand = false;
+            canWearOffHand = false;
+            canWearArmor = false;
+            canWearGloves = false;
+            canWearBelt = false;
+            canWearBoots = false;
+            _context.next = 42;
+            return (0, _calculateItemStats["default"])(currentCharacter, userCurrentRank, strength, dexterity, vitality, energy, defense, block);
+
+          case 42:
+            _yield$calculateItemS = _context.sent;
+            _yield$calculateItemS2 = (0, _slicedToArray2["default"])(_yield$calculateItemS, 13);
+            strength = _yield$calculateItemS2[0];
+            dexterity = _yield$calculateItemS2[1];
+            vitality = _yield$calculateItemS2[2];
+            energy = _yield$calculateItemS2[3];
+            defense = _yield$calculateItemS2[4];
+            block = _yield$calculateItemS2[5];
+            canWearHelm = _yield$calculateItemS2[6];
+            canWearMainHand = _yield$calculateItemS2[7];
+            canWearOffHand = _yield$calculateItemS2[8];
+            canWearArmor = _yield$calculateItemS2[9];
+            canWearGloves = _yield$calculateItemS2[10];
+            canWearBelt = _yield$calculateItemS2[11];
+            canWearBoots = _yield$calculateItemS2[12];
+            addedLifeByItemVitality = 0;
+            addedManaByItemEnergy = 0;
+
+            if (currentCharacter["class"].name === 'Warrior') {
+              // const totalLoops = (vitality - initialVitality);
+              // Consider looping over points to calculate for example: +1.5 value
+              // EXAMPLE GIVEN: if loopcount % 2 === 0 then life 2 else 1
+              // FOR NOW WE USE Math.round.. perhaps we keep it this way
+              addedLifeByItemVitality = (vitality - initialVitality) * 4;
+              addedManaByItemEnergy = (energy - initialEnergy) * 1;
+            }
+
+            if (currentCharacter["class"].name === 'Amazon') {
+              addedLifeByItemVitality = (vitality - initialVitality) * 3;
+              addedManaByItemEnergy = Math.round((energy - initialEnergy) * 1.5);
+            }
+
+            if (currentCharacter["class"].name === 'Assasin') {
+              addedLifeByItemVitality = (vitality - initialVitality) * 3;
+              addedManaByItemEnergy = Math.round((energy - initialEnergy) * 1.75);
+            }
+
+            if (currentCharacter["class"].name === 'Paladin') {
+              addedLifeByItemVitality = (vitality - initialVitality) * 3;
+              addedManaByItemEnergy = Math.round((energy - initialEnergy) * 1.5);
+            }
+
+            if (currentCharacter["class"].name === 'Druid') {
+              addedLifeByItemVitality = (vitality - initialVitality) * 2;
+              addedManaByItemEnergy = Math.round((energy - initialEnergy) * 2);
+            }
+
+            if (currentCharacter["class"].name === 'Necromancer') {
+              addedLifeByItemVitality = (vitality - initialVitality) * 2;
+              addedManaByItemEnergy = Math.round((energy - initialEnergy) * 2);
+            }
+
+            if (currentCharacter["class"].name === 'Sorceress') {
+              addedLifeByItemVitality = (vitality - initialVitality) * 2;
+              addedManaByItemEnergy = Math.round((energy - initialEnergy) * 2);
+            }
+
+            maxHp += addedLifeByItemVitality;
+            maxMp += addedManaByItemEnergy; // Added Damage % by Strength
+
+            addedStrengthDamagePercentage = 1 + strength / 100; // Should we substract starting strength from this? (YES/NO)
+            // Kick Attack
+
+            kick = {
               name: 'Kick',
               attackType: 'Physical',
-              min: currentCharacter.equipment.boots.minDamage,
-              max: currentCharacter.equipment.boots.maxDamage,
+              min: canWearBoots && currentCharacter.equipment.boots ? Math.round(currentCharacter.equipment.boots.minDamage * addedStrengthDamagePercentage) : Math.round(1 * addedStrengthDamagePercentage),
+              max: canWearBoots && currentCharacter.equipment.boots ? Math.round(currentCharacter.equipment.boots.maxDamage * addedStrengthDamagePercentage) : Math.round(2 * addedStrengthDamagePercentage),
               ar: currentCharacter.user.currentClass.attackRating + currentCharacter.stats.dexterity * 5,
               crit: 0,
-              lifeSteal: 0,
-              manaSteal: 0,
+              lifeSteal: lifeSteal,
+              manaSteal: manaSteal,
               cost: 0
-            } : {
-              name: 'Kick',
-              attackType: 'Physical',
-              min: 1,
-              max: 2,
-              ar: currentCharacter.user.currentClass.attackRating + currentCharacter.stats.dexterity * 5,
-              crit: 0,
-              lifeSteal: 0,
-              manaSteal: 0,
-              cost: 0
-            };
+            }; // Regular Weapon Attack
+
             regularAttack = {
               name: 'Attack',
               attackType: 'Physical',
-              min: currentCharacter.equipment.mainHand ? currentCharacter.equipment.mainHand.minDamage : 1,
-              max: currentCharacter.equipment.mainHand ? currentCharacter.equipment.mainHand.maxDamage : 2,
-              minThrow: currentCharacter.equipment.mainHand && currentCharacter.equipment.mainHand.minThrowDamage ? currentCharacter.equipment.mainHand.minThrowDamage : 0,
-              maxThrow: currentCharacter.equipment.mainHand && currentCharacter.equipment.mainHand.maxThrowDamage ? currentCharacter.equipment.mainHand.maxThrowDamage : 0,
+              min: canWearMainHand && currentCharacter.equipment.mainHand ? Math.round(currentCharacter.equipment.mainHand.minDamage * addedStrengthDamagePercentage) : Math.round(1 * addedStrengthDamagePercentage),
+              max: canWearMainHand && currentCharacter.equipment.mainHand ? Math.round(currentCharacter.equipment.mainHand.maxDamage * addedStrengthDamagePercentage) : Math.round(2 * addedStrengthDamagePercentage),
+              minThrow: canWearMainHand && currentCharacter.equipment.mainHand && currentCharacter.equipment.mainHand.minThrowDamage ? Math.round(currentCharacter.equipment.mainHand.minThrowDamage * addedStrengthDamagePercentage) : Math.round(0 * addedStrengthDamagePercentage),
+              maxThrow: canWearMainHand && currentCharacter.equipment.mainHand && currentCharacter.equipment.mainHand.maxThrowDamage ? Math.round(currentCharacter.equipment.mainHand.maxThrowDamage * addedStrengthDamagePercentage) : Math.round(0 * addedStrengthDamagePercentage),
               ar: currentCharacter.user.currentClass.attackRating + currentCharacter.stats.dexterity * 5,
               crit: 0,
               stun: 0,
               parry: 0,
-              lifeSteal: 0,
-              manaSteal: 0,
+              lifeSteal: lifeSteal,
+              manaSteal: manaSteal,
               cost: 0
             }; // Add Passive Skill stats
 
-            _context.next = 28;
+            _context.next = 73;
             return (0, _calculatePassives["default"])(currentCharacter, defense, regularAttack, kick, FR, PR, LR, CR);
 
-          case 28:
+          case 73:
             _yield$calculatePassi = _context.sent;
             _yield$calculatePassi2 = (0, _slicedToArray2["default"])(_yield$calculatePassi, 7);
             defense = _yield$calculatePassi2[0];
@@ -171,16 +253,12 @@ var calculateCharacterStats = /*#__PURE__*/function () {
             PR = _yield$calculatePassi2[4];
             LR = _yield$calculatePassi2[5];
             CR = _yield$calculatePassi2[6];
-            currentHp = currentCharacter.condition.life;
-            maxHp = currentCharacter.user.currentClass.life + currentCharacter.stats.life;
-            currentMp = currentCharacter.condition.mana;
-            maxMp = currentCharacter.user.currentClass.mana + currentCharacter.stats.mana;
             console.log('before calculating buffs'); // Calculate Buffs
 
-            _context.next = 44;
+            _context.next = 85;
             return (0, _calculateBuffs["default"])(currentCharacter, defense, regularAttack, currentHp, maxHp);
 
-          case 44:
+          case 85:
             _yield$calculateBuffs = _context.sent;
             _yield$calculateBuffs2 = (0, _slicedToArray2["default"])(_yield$calculateBuffs, 5);
             defense = _yield$calculateBuffs2[0];
@@ -190,24 +268,24 @@ var calculateCharacterStats = /*#__PURE__*/function () {
             totalLifeBonus = _yield$calculateBuffs2[4];
             console.log('after calculating buffs'); // Fetch Selected Skills
 
-            _context.next = 54;
+            _context.next = 95;
             return (0, _selectedSkills.fetchUserCurrentSelectedSkills)(currentCharacter.user.user_id, t);
 
-          case 54:
+          case 95:
             selectedSkills = _context.sent;
             console.log('after skill selection'); // calculate Skill damage
 
-            _context.next = 58;
+            _context.next = 99;
             return (0, _calculateSkills.calculateSkillDamage)(currentCharacter, selectedSkills.selectedMainSkill, regularAttack, t);
 
-          case 58:
+          case 99:
             attackOne = _context.sent;
             console.log('after main skill damage'); // calculate Skill damage
 
-            _context.next = 62;
+            _context.next = 103;
             return (0, _calculateSkills.calculateSkillDamage)(currentCharacter, selectedSkills.selectedSecondarySkill, regularAttack, t);
 
-          case 62:
+          case 103:
             attackTwo = _context.sent;
             console.log('done calculating character stats'); // TODO: APPLY CAPS BEFORE APPLYING THEM TO FINAL RETURN
 
@@ -229,13 +307,14 @@ var calculateCharacterStats = /*#__PURE__*/function () {
               defense: defense,
               block: block,
               hp: {
-                current: currentHp,
+                current: currentHp > maxHp ? maxHp : currentHp,
                 max: maxHp,
                 totalLifeBonus: totalLifeBonus
               },
               mp: {
-                current: currentMp,
-                max: maxMp
+                current: currentMp > maxMp ? maxMp : currentMp,
+                max: maxMp,
+                totalManaBonus: totalManaBonus
               },
               FR: FR,
               PR: PR,
@@ -244,10 +323,19 @@ var calculateCharacterStats = /*#__PURE__*/function () {
               attackOne: attackOne,
               attackTwo: attackTwo,
               regularAttack: regularAttack,
-              kick: kick
+              kick: kick,
+              equipment: {
+                canWearHelm: canWearHelm,
+                canWearMainHand: canWearMainHand,
+                canWearOffHand: canWearOffHand,
+                canWearArmor: canWearArmor,
+                canWearGloves: canWearGloves,
+                canWearBelt: canWearBelt,
+                canWearBoots: canWearBoots
+              }
             });
 
-          case 65:
+          case 106:
           case "end":
             return _context.stop();
         }

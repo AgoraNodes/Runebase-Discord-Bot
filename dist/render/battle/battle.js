@@ -192,6 +192,17 @@ var renderBattleGif = /*#__PURE__*/function () {
             // Maybe additional array comming from battle processor with all of the effects fired during processing
 
             loadPromises.push(new Promise(function (resolve, reject) {
+              (0, _loadOrbs.loadOrbs)(userState, stageZeroInfoArray, stageOneInfoArray, stageTwoInfoArray, stageThreeInfoArray, stageFourInfoArray, stageFiveInfoArray, stageSixInfoArray, stageSevenInfoArray, orbsStartingPositionStageZero, orbsStartingPositionStageOne, orbsStartingPositionStageTwo, orbsStartingPositionStageThree, orbsStartingPositionStageFour, orbsStartingPositionStageFive, orbsStartingPositionStageSix, orbsStartingPositionStageSeven).then(function (_ref2) {
+                var _ref3 = (0, _slicedToArray2["default"])(_ref2, 2),
+                    hpOrbsReturn = _ref3[0],
+                    mpOrbsReturn = _ref3[1];
+
+                hpOrbs = hpOrbsReturn;
+                mpOrbs = mpOrbsReturn;
+                resolve();
+              });
+            }));
+            loadPromises.push(new Promise(function (resolve, reject) {
               (0, _canvas.loadImage)(_path["default"].join(__dirname, "../../assets/images/skills/".concat(userCurrentSelectedSkills.selectedMainSkill.skill.skillTree ? "".concat(userCurrentSelectedSkills.selectedMainSkill.skill.skillTree["class"].name, "/").concat(userCurrentSelectedSkills.selectedMainSkill.skill.skillTree.name) : ""), "".concat(userCurrentSelectedSkills.selectedMainSkill.skill.name, ".png"))).then(function (image) {
                 mainSkill = image;
                 resolve();
@@ -337,17 +348,6 @@ var renderBattleGif = /*#__PURE__*/function () {
               _iterator4.f();
             }
 
-            loadPromises.push(new Promise(function (resolve, reject) {
-              (0, _loadOrbs.loadOrbs)(userState, stageZeroInfoArray, stageOneInfoArray, stageTwoInfoArray, stageThreeInfoArray, stageFourInfoArray, stageFiveInfoArray, stageSixInfoArray, stageSevenInfoArray, orbsStartingPositionStageZero, orbsStartingPositionStageOne, orbsStartingPositionStageTwo, orbsStartingPositionStageThree, orbsStartingPositionStageFour, orbsStartingPositionStageFive, orbsStartingPositionStageSix, orbsStartingPositionStageSeven).then(function (_ref2) {
-                var _ref3 = (0, _slicedToArray2["default"])(_ref2, 2),
-                    hpOrbsReturn = _ref3[0],
-                    mpOrbsReturn = _ref3[1];
-
-                hpOrbs = hpOrbsReturn;
-                mpOrbs = mpOrbsReturn;
-                resolve();
-              });
-            }));
             _context.next = 45;
             return Promise.all(loadPromises);
 
@@ -2708,12 +2708,16 @@ var renderBattleGif = /*#__PURE__*/function () {
               }
             }
 
+            console.log('1');
             gif.finish();
+            console.log('2');
             bytes = gif.bytesView();
+            console.log('3');
             finalImage = Buffer.from(bytes);
+            console.log('4');
             return _context.abrupt("return", finalImage);
 
-          case 78:
+          case 82:
           case "end":
             return _context.stop();
         }

@@ -270,8 +270,8 @@ var calculateWarriorSkillDamage = function calculateWarriorSkillDamage(skillToCa
     newAttack = {
       name: skillToCalculate.skill.name,
       attackType: 'Physical',
-      min: _newMinDamage5,
-      max: _newMaxDamage5,
+      min: Math.round(_newMinDamage5),
+      max: Math.round(_newMaxDamage5),
       minThrow: newAttack.minThrow,
       maxThrow: newAttack.maxThrow,
       ar: newAttack.ar,

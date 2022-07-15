@@ -27,6 +27,8 @@ var _buttons = require("../buttons");
 
 var _messages = require("../messages");
 
+var _calculateCharacterStats = require("../helpers/stats/calculateCharacterStats");
+
 /* eslint-disable import/prefer-default-export */
 var discordHeal = /*#__PURE__*/function () {
   var _ref = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee5(discordClient, message, io, queue) {
@@ -167,7 +169,8 @@ var discordHeal = /*#__PURE__*/function () {
                                     isolationLevel: _sequelize.Transaction.ISOLATION_LEVELS.SERIALIZABLE
                                   }, /*#__PURE__*/function () {
                                     var _ref4 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(t) {
-                                      var findWallet, userToUpdate;
+                                      var findWallet, userToUpdate, _yield$calculateChara, hp, mp;
+
                                       return _regenerator["default"].wrap(function _callee$(_context) {
                                         while (1) {
                                           switch (_context.prev = _context.next) {
@@ -240,21 +243,28 @@ var discordHeal = /*#__PURE__*/function () {
                                             case 18:
                                               userToUpdate = _context.sent;
                                               _context.next = 21;
+                                              return (0, _calculateCharacterStats.calculateCharacterStats)(userCurrentCharacter);
+
+                                            case 21:
+                                              _yield$calculateChara = _context.sent;
+                                              hp = _yield$calculateChara.hp;
+                                              mp = _yield$calculateChara.mp;
+                                              _context.next = 26;
                                               return userToUpdate.condition.update({
-                                                life: userToUpdate["class"].life + userToUpdate.stats.life,
-                                                mana: userToUpdate["class"].mana + userToUpdate.stats.mana
+                                                life: hp.max,
+                                                mana: mp.max
                                               }, {
                                                 lock: t.LOCK.UPDATE,
                                                 transaction: t
                                               });
 
-                                            case 21:
+                                            case 26:
                                               _context.t5 = interaction;
                                               _context.t6 = "<@".concat(userCurrentCharacter.user.user_id, ">");
-                                              _context.next = 25;
+                                              _context.next = 30;
                                               return (0, _messages.healCompleteMessage)(userCurrentCharacter.user.user_id);
 
-                                            case 25:
+                                            case 30:
                                               _context.t7 = _context.sent;
                                               _context.t8 = [_context.t7];
                                               _context.t9 = [];
@@ -263,10 +273,10 @@ var discordHeal = /*#__PURE__*/function () {
                                                 embeds: _context.t8,
                                                 components: _context.t9
                                               };
-                                              _context.next = 31;
+                                              _context.next = 36;
                                               return _context.t5.editReply.call(_context.t5, _context.t10);
 
-                                            case 31:
+                                            case 36:
                                             case "end":
                                               return _context.stop();
                                           }

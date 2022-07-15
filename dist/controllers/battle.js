@@ -1134,25 +1134,33 @@ var discordBattle = /*#__PURE__*/function () {
                                             case 32:
                                               userToUpdate = _context4.sent;
                                               _context4.next = 35;
+                                              return (0, _calculateCharacterStats.calculateCharacterStats)(userCurrentCharacter);
+
+                                            case 35:
+                                              _yield$calculateChara2 = _context4.sent;
+                                              hp = _yield$calculateChara2.hp;
+                                              mp = _yield$calculateChara2.mp;
+                                              _context4.next = 40;
                                               return userCurrentCharacter.condition.update({
-                                                life: userToUpdate["class"].life + userToUpdate.stats.life,
-                                                mana: userToUpdate["class"].mana + userToUpdate.stats.mana
+                                                life: hp.max,
+                                                mana: mp.max
                                               }, {
                                                 lock: t.LOCK.UPDATE,
                                                 transaction: t
                                               });
 
-                                            case 35:
-                                              _context4.next = 37;
-                                              return (0, _calculateCharacterStats.calculateCharacterStats)(userCurrentCharacter);
-
-                                            case 37:
-                                              _yield$calculateChara2 = _context4.sent;
-                                              hp = _yield$calculateChara2.hp;
-                                              mp = _yield$calculateChara2.mp;
+                                            case 40:
                                               myInitialUserState = JSON.parse(JSON.stringify(userCurrentCharacter));
-                                              myInitialUserState.hp = hp;
-                                              myInitialUserState.mp = mp;
+                                              myInitialUserState.hp = {
+                                                current: hp.max,
+                                                max: hp.max,
+                                                totalLifeBonus: hp.totalLifeBonus
+                                              };
+                                              myInitialUserState.mp = {
+                                                current: mp.max,
+                                                max: mp.max,
+                                                totalManaBonus: mp.totalManaBonus
+                                              };
                                               _context4.next = 45;
                                               return (0, _character.fetchUserCurrentCharacter)(userId, // user discord id
                                               false, // Need inventory?
