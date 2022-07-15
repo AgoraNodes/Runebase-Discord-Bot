@@ -7,6 +7,11 @@ module.exports = (sequelize, DataTypes) => {
       primaryKey: true,
       autoIncrement: true,
     },
+    level: {
+      type: DataTypes.INTEGER,
+      defaultValue: 1,
+      allowNull: false,
+    },
     name: {
       type: DataTypes.STRING,
       allowNull: false,
@@ -30,6 +35,7 @@ module.exports = (sequelize, DataTypes) => {
   const RankModel = sequelize.define('rank', modelDefinition, modelOptions);
 
   RankModel.associate = (model) => {
+    RankModel.belongsTo(model.group);
     RankModel.belongsToMany(
       model.user,
       { through: 'UserRank' },

@@ -103,9 +103,10 @@ var fetchServers = /*#__PURE__*/function () {
 
           case 11:
             res.locals.result = _context2.sent;
+            console.log(res.locals.result);
             next();
 
-          case 13:
+          case 14:
           case "end":
             return _context2.stop();
         }

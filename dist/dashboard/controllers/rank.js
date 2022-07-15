@@ -36,45 +36,54 @@ var updateRank = /*#__PURE__*/function () {
             throw new Error("expNeeded is required");
 
           case 4:
-            if (req.body.roleId) {
+            if (req.body.level) {
               _context.next = 6;
+              break;
+            }
+
+            throw new Error("Level is required");
+
+          case 6:
+            if (req.body.roleId) {
+              _context.next = 8;
               break;
             }
 
             throw new Error("roleId is required");
 
-          case 6:
-            _context.next = 8;
+          case 8:
+            _context.next = 10;
             return _models["default"].rank.findOne({
               where: {
                 id: req.body.id
               }
             });
 
-          case 8:
+          case 10:
             rank = _context.sent;
-            _context.next = 11;
+            _context.next = 13;
             return rank.update({
               name: req.body.name,
+              level: Number(req.body.level),
               expNeeded: req.body.expNeeded,
               discordRankRoleId: req.body.roleId
             });
 
-          case 11:
+          case 13:
             updatedRank = _context.sent;
             res.locals.name = 'updateRank';
-            _context.next = 15;
+            _context.next = 17;
             return _models["default"].rank.findOne({
               where: {
                 id: updatedRank.id
               }
             });
 
-          case 15:
+          case 17:
             res.locals.result = _context.sent;
             next();
 
-          case 17:
+          case 19:
           case "end":
             return _context.stop();
         }
@@ -133,7 +142,10 @@ var fetchRanks = /*#__PURE__*/function () {
         switch (_context3.prev = _context3.next) {
           case 0:
             options = {
-              order: [['id', 'DESC']]
+              order: [['id', 'DESC']],
+              where: {
+                groupId: req.body.serverId
+              }
             };
             res.locals.name = 'fetchRanks';
             _context3.next = 4;
@@ -188,45 +200,54 @@ var addRank = /*#__PURE__*/function () {
             throw new Error("ExpNeeded is required");
 
           case 5:
-            if (req.body.roleId) {
+            if (req.body.level) {
               _context4.next = 7;
+              break;
+            }
+
+            throw new Error("Level is required");
+
+          case 7:
+            if (req.body.roleId) {
+              _context4.next = 9;
               break;
             }
 
             throw new Error("RoleId is required");
 
-          case 7:
-            _context4.next = 9;
+          case 9:
+            _context4.next = 11;
             return _models["default"].rank.findOne({
               where: {
                 name: req.body.name
               }
             });
 
-          case 9:
+          case 11:
             rank = _context4.sent;
 
             if (!rank) {
-              _context4.next = 12;
+              _context4.next = 14;
               break;
             }
 
             throw new Error("Already Exists");
 
-          case 12:
+          case 14:
             res.locals.name = 'addRank';
-            _context4.next = 15;
+            _context4.next = 17;
             return _models["default"].rank.create({
               name: req.body.name,
+              level: Number(req.body.level),
               expNeeded: req.body.expNeeded,
               discordRankRoleId: req.body.roleId
             });
 
-          case 15:
+          case 17:
             res.locals.result = _context4.sent;
             next();
 
-          case 17:
+          case 19:
           case "end":
             return _context4.stop();
         }

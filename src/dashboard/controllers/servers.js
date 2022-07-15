@@ -49,5 +49,6 @@ export const fetchServers = async (req, res, next) => {
   res.locals.name = 'server';
   res.locals.count = await db.group.count(options);
   res.locals.result = await db.group.findAll(options);
+  console.log(res.locals.result);
   next();
 };

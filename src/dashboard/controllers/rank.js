@@ -11,6 +11,9 @@ export const updateRank = async (
   if (!req.body.expNeeded) {
     throw new Error("expNeeded is required");
   }
+  if (!req.body.level) {
+    throw new Error("Level is required");
+  }
   if (!req.body.roleId) {
     throw new Error("roleId is required");
   }
@@ -21,6 +24,7 @@ export const updateRank = async (
   });
   const updatedRank = await rank.update({
     name: req.body.name,
+    level: Number(req.body.level),
     expNeeded: req.body.expNeeded,
     discordRankRoleId: req.body.roleId,
   });
@@ -58,6 +62,9 @@ export const fetchRanks = async (
     order: [
       ['id', 'DESC'],
     ],
+    where: {
+      groupId: req.body.serverId,
+    },
   };
   res.locals.name = 'fetchRanks';
   res.locals.count = await db.rank.count(options);
@@ -77,6 +84,9 @@ export const addRank = async (
   if (!req.body.expNeeded) {
     throw new Error("ExpNeeded is required");
   }
+  if (!req.body.level) {
+    throw new Error("Level is required");
+  }
   if (!req.body.roleId) {
     throw new Error("RoleId is required");
   }
@@ -94,6 +104,7 @@ export const addRank = async (
   res.locals.name = 'addRank';
   res.locals.result = await db.rank.create({
     name: req.body.name,
+    level: Number(req.body.level),
     expNeeded: req.body.expNeeded,
     discordRankRoleId: req.body.roleId,
   });

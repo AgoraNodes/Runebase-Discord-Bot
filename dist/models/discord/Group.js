@@ -39,6 +39,7 @@ module.exports = function (sequelize, DataTypes) {
 
   GroupModel.associate = function (model) {
     GroupModel.hasMany(model.active);
+    GroupModel.hasMany(model.rank);
     GroupModel.hasMany(model.channel);
     GroupModel.hasMany(model.featureSetting);
   };
