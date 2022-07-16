@@ -46,14 +46,14 @@ export const discordHeal = async (
 
   const userWallet = await db.wallet.findOne({
     where: {
-      userId: userCurrentCharacter.user.id,
+      userId: userCurrentCharacter.UserGroup.user.id,
     },
   });
 
   const embedMessage = await discordChannel.send({
     embeds: [
       await confirmationHealMessage(
-        userCurrentCharacter.user.user_id,
+        userCurrentCharacter.UserGroup.user.user_id,
         userWallet.available,
       ),
     ],
@@ -73,7 +73,7 @@ export const discordHeal = async (
 
   collector.on('collect', async (interaction) => {
     if (interaction.isButton()) {
-      if (interaction.user.id !== userCurrentCharacter.user.user_id) {
+      if (interaction.user.id !== userCurrentCharacter.UserGroup.user.user_id) {
         await interaction.reply({
           content: `<@${interaction.user.id}>, These buttons aren't for you!`,
           ephemeral: true,
@@ -86,7 +86,7 @@ export const discordHeal = async (
         await interaction.editReply({
           embeds: [
             await declineHealMessage(
-              userCurrentCharacter.user.user_id,
+              userCurrentCharacter.UserGroup.user.user_id,
             ),
           ],
           components: [
@@ -101,7 +101,7 @@ export const discordHeal = async (
           }, async (t) => {
             const findWallet = await db.wallet.findOne({
               where: {
-                userId: userCurrentCharacter.user.id,
+                userId: userCurrentCharacter.UserGroup.user.id,
               },
               lock: t.LOCK.UPDATE,
               transaction: t,
@@ -110,7 +110,7 @@ export const discordHeal = async (
               await interaction.editReply({
                 embeds: [
                   await insufficientBalanceMessage(
-                    userCurrentCharacter.user.user_id,
+                    userCurrentCharacter.UserGroup.user.user_id,
                     'Heal',
                   ),
                 ],
@@ -125,10 +125,11 @@ export const discordHeal = async (
               lock: t.LOCK.UPDATE,
               transaction: t,
             });
-            const userToUpdate = await db.UserClass.findOne({
+            console.log('fetch usergroupclass');
+            const userToUpdate = await db.UserGroupClass.findOne({
               where: {
-                userId: userCurrentCharacter.user.id,
-                classId: userCurrentCharacter.user.currentClassId,
+                UserGroupId: userCurrentCharacter.UserGroup.id,
+                classId: userCurrentCharacter.UserGroup.user.currentClassId,
               },
               include: [
                 {
@@ -153,6 +154,7 @@ export const discordHeal = async (
             } = await calculateCharacterStats(
               userCurrentCharacter,
             );
+            console.log('before condition update');
             await userToUpdate.condition.update({
               life: hp.max,
               mana: mp.max,
@@ -161,10 +163,10 @@ export const discordHeal = async (
               transaction: t,
             });
             await interaction.editReply({
-              content: `<@${userCurrentCharacter.user.user_id}>`,
+              content: `<@${userCurrentCharacter.UserGroup.user.user_id}>`,
               embeds: [
                 await healCompleteMessage(
-                  userCurrentCharacter.user.user_id,
+                  userCurrentCharacter.UserGroup.user.user_id,
                 ),
               ],
               components: [
