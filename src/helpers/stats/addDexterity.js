@@ -20,7 +20,7 @@ export const addDexterity = async (
     }, async (t) => {
       const user = await db.user.findOne({
         where: {
-          id: currentUserCharacter.user.id,
+          id: currentUserCharacter.UserGroup.user.id,
         },
         include: [
           {
@@ -28,47 +28,59 @@ export const addDexterity = async (
             as: 'currentClass',
           },
           {
-            model: db.rank,
-            as: 'ranks',
-          },
-          {
-            model: db.UserClass,
-            as: 'UserClass',
+            model: db.UserGroup,
+            as: 'UserGroup',
             where: {
-              classId: {
-                [Op.col]: 'user.currentClassId',
+              groupId: {
+                [Op.col]: 'user.currentRealmId',
               },
             },
             include: [
               {
-                model: db.stats,
-                as: 'stats',
+                model: db.rank,
+                as: 'ranks',
               },
               {
-                model: db.condition,
-                as: 'condition',
+                model: db.UserGroupClass,
+                as: 'UserGroupClass',
+                where: {
+                  classId: {
+                    [Op.col]: 'user.currentClassId',
+                  },
+                },
+                include: [
+                  {
+                    model: db.stats,
+                    as: 'stats',
+                  },
+                  {
+                    model: db.condition,
+                    as: 'condition',
+                  },
+                ],
               },
             ],
           },
+
         ],
         lock: t.LOCK.UPDATE,
         transaction: t,
       });
 
       const calc = (
-        user.UserClass.stats.strength
-        + user.UserClass.stats.dexterity
-        + user.UserClass.stats.vitality
-        + user.UserClass.stats.energy
-      ) < (user.ranks[0].level * 5);
+        user.UserGroup.UserGroupClass.stats.strength
+        + user.UserGroup.UserGroupClass.stats.dexterity
+        + user.UserGroup.UserGroupClass.stats.vitality
+        + user.UserGroup.UserGroupClass.stats.energy
+      ) < (user.UserGroup.ranks[0].level * 5);
 
       if (!calc) {
         cannotSpend = true;
         return;
       }
 
-      const updateDexterity = await user.UserClass.stats.update({
-        dexterity: user.UserClass.stats.dexterity + 1,
+      const updateDexterity = await user.UserGroup.UserGroupClass.stats.update({
+        dexterity: user.UserGroup.UserGroupClass.stats.dexterity + 1,
       }, {
         lock: t.LOCK.UPDATE,
         transaction: t,
@@ -76,7 +88,7 @@ export const addDexterity = async (
 
       const preActivity = await db.activity.create({
         type: 'addDexterity_s',
-        earnerId: currentUserCharacter.user.id,
+        earnerId: currentUserCharacter.UserGroup.user.id,
       }, {
         lock: t.LOCK.UPDATE,
         transaction: t,
@@ -118,7 +130,7 @@ export const addDexterity = async (
   });
 
   const myUpdatedUser = await fetchUserCurrentCharacter(
-    currentUserCharacter.user.user_id, // user discord id
+    currentUserCharacter.UserGroup.user.user_id, // user discord id
     false, // Need inventory?
   );
 

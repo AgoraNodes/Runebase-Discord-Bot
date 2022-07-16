@@ -154,7 +154,6 @@ export const discordStats = async (
       components: [],
     });
     if (interaction.customId === 'strength') {
-      console.log('starting add strength');
       [
         updatedUser,
         cannotSpend,
@@ -205,7 +204,7 @@ export const discordStats = async (
         + updatedUser.stats.dexterity
         + updatedUser.stats.vitality
         + updatedUser.stats.energy
-      ) < (updatedUser.user.ranks[0].level * 5);
+      ) < (updatedUser.UserGroup.ranks[0].level * 5);
 
       await interaction.editReply({
         embeds: [],
