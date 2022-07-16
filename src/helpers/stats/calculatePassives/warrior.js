@@ -16,18 +16,18 @@ const calculatePassivesWarrior = async (
   let newCR = CR;
   let newKick = kick;
 
-  const thoughSkin = currentCharacter.UserClassSkills.find((x) => x.skill.name === 'Though Skin');
-  const resistance = currentCharacter.UserClassSkills.find((x) => x.skill.name === 'Resistance');
-  const swordsman = currentCharacter.UserClassSkills.find((x) => x.skill.name === 'Swordsman');
-  const axeman = currentCharacter.UserClassSkills.find((x) => x.skill.name === 'Axeman');
-  const maceman = currentCharacter.UserClassSkills.find((x) => x.skill.name === 'Maceman');
-  const polearmMaster = currentCharacter.UserClassSkills.find((x) => x.skill.name === 'Polearm Master');
-  const throwingMaster = currentCharacter.UserClassSkills.find((x) => x.skill.name === 'Throwing Master');
-  const spearman = currentCharacter.UserClassSkills.find((x) => x.skill.name === 'Spearman');
-  const parry = currentCharacter.UserClassSkills.find((x) => x.skill.name === 'Parry');
-  const criticalHit = currentCharacter.UserClassSkills.find((x) => x.skill.name === 'Critical Hit');
-  const criticalKick = currentCharacter.UserClassSkills.find((x) => x.skill.name === 'Critical Kick');
-  const healingHit = currentCharacter.UserClassSkills.find((x) => x.skill.name === 'Healing Hit');
+  const thoughSkin = currentCharacter.UserGroupClassSkills.find((x) => x.skill.name === 'Though Skin');
+  const resistance = currentCharacter.UserGroupClassSkills.find((x) => x.skill.name === 'Resistance');
+  const swordsman = currentCharacter.UserGroupClassSkills.find((x) => x.skill.name === 'Swordsman');
+  const axeman = currentCharacter.UserGroupClassSkills.find((x) => x.skill.name === 'Axeman');
+  const maceman = currentCharacter.UserGroupClassSkills.find((x) => x.skill.name === 'Maceman');
+  const polearmMaster = currentCharacter.UserGroupClassSkills.find((x) => x.skill.name === 'Polearm Master');
+  const throwingMaster = currentCharacter.UserGroupClassSkills.find((x) => x.skill.name === 'Throwing Master');
+  const spearman = currentCharacter.UserGroupClassSkills.find((x) => x.skill.name === 'Spearman');
+  const parry = currentCharacter.UserGroupClassSkills.find((x) => x.skill.name === 'Parry');
+  const criticalHit = currentCharacter.UserGroupClassSkills.find((x) => x.skill.name === 'Critical Hit');
+  const criticalKick = currentCharacter.UserGroupClassSkills.find((x) => x.skill.name === 'Critical Kick');
+  const healingHit = currentCharacter.UserGroupClassSkills.find((x) => x.skill.name === 'Healing Hit');
 
   if (thoughSkin) {
     const addedPercentageDefense = 30 + ((thoughSkin.points - 1) * 10);

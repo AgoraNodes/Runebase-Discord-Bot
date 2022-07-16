@@ -71,7 +71,7 @@ const userApplyDebuffAoE = async (
       });
 
       // Generate Battle Log
-      const log = `${userState.user.username} used ${useAttack.name} on ${selectedMonster.monster.name}`;
+      const log = `${userState.UserGroup.user.username} used ${useAttack.name} on ${selectedMonster.monster.name}`;
       saveToDatabasePromises.push(
         new Promise((resolve, reject) => {
           db.battleLog.create({

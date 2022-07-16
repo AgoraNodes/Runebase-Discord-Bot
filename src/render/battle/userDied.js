@@ -18,8 +18,8 @@ export const renderUserDied = async (
   ctx.strokeStyle = 'black';
   ctx.lineWidth = 3;
   // Picking a class
-  ctx.strokeText(`${currentCharacter.user.username} you have died, please go heal first`, 700, 150, 1400);
-  ctx.fillText(`${currentCharacter.user.username} you have died, please go heal first`, 700, 150, 1400);
+  ctx.strokeText(`${currentCharacter.UserGroup.user.username} you have died, please go heal first`, 700, 150, 1400);
+  ctx.fillText(`${currentCharacter.UserGroup.user.username} you have died, please go heal first`, 700, 150, 1400);
 
   return new MessageAttachment(canvas.toBuffer(), 'userDied.png');
 };

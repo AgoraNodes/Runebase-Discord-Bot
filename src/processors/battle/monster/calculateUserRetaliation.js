@@ -5,7 +5,7 @@ const calculateUserRetaliation = (
   const retaliate = [];
 
   if (userCurrentCharacter.class.name === 'Warrior') {
-    const warriorRetaliation = userCurrentCharacter.UserClassSkills.find((x) => x.skill.name === 'Retaliate');
+    const warriorRetaliation = userCurrentCharacter.UserGroupClassSkills.find((x) => x.skill.name === 'Retaliate');
 
     if (warriorRetaliation) {
       const warriorRetaliationChance = 5 + ((warriorRetaliation.points - 1) * 2);

@@ -33,7 +33,7 @@ const isFailedAttack = async (
       });
 
       // Create battleLog
-      const log = `${userState.user.username} ${useAttack.name} missed ${updatedMonster.monster.name}`;
+      const log = `${userState.UserGroup.user.username} ${useAttack.name} missed ${updatedMonster.monster.name}`;
       saveToDatabasePromises.push(
         new Promise((resolve, reject) => {
           db.battleLog.create({
@@ -57,7 +57,7 @@ const isFailedAttack = async (
         attackType: 'Blocked', // TODO: Attack Type should be used to determin the animation to pick
       });
 
-      const log = `${updatedMonster.monster.name} blocked ${userState.user.username} ${useAttack.name}`;
+      const log = `${updatedMonster.monster.name} blocked ${userState.UserGroup.user.username} ${useAttack.name}`;
       saveToDatabasePromises.push(
         new Promise((resolve, reject) => {
           db.battleLog.create({
@@ -80,7 +80,7 @@ const isFailedAttack = async (
         attackType: 'Parried',
       });
 
-      const log = `${updatedMonster.monster.name} parried ${userState.user.username} ${useAttack.name}`;
+      const log = `${updatedMonster.monster.name} parried ${userState.UserGroup.user.username} ${useAttack.name}`;
       saveToDatabasePromises.push(
         new Promise((resolve, reject) => {
           db.battleLog.create({

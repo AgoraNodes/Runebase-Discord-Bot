@@ -43,7 +43,7 @@ const userApplyDebuffDamage = async (
             });
 
             if (updatedMonster.currentHp < 1) {
-              const log = `${userState.user.username} killed ${updatedMonster.monster.name}`;
+              const log = `${userState.UserGroup.user.username} killed ${updatedMonster.monster.name}`;
               saveToDatabasePromises.push(
                 new Promise((resolve, reject) => {
                   db.battleLog.create({

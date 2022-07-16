@@ -58,7 +58,7 @@ const userApplyDebuffSingle = async (
       debuffObject,
     );
 
-    const log = `${userState.user.username} used ${useAttack.name} on ${updatedMonster.monster.name}`;
+    const log = `${userState.UserGroup.user.username} used ${useAttack.name} on ${updatedMonster.monster.name}`;
     saveToDatabasePromises.push(
       new Promise((resolve, reject) => {
         db.battleLog.create({

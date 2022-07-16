@@ -72,6 +72,7 @@ export const discordBattle = async (
   let userCurrentSelectedSkills = await fetchUserCurrentSelectedSkills(
     userId,
   );
+  console.log('battle1');
 
   if (!userCurrentCharacter) {
     await message.reply({
@@ -92,7 +93,7 @@ export const discordBattle = async (
     });
     return;
   }
-
+  console.log('battle2');
   if (userCurrentCharacter.condition.life < 1) {
     await discordChannel.send({
       files: [
@@ -104,6 +105,7 @@ export const discordBattle = async (
     });
     return;
   }
+
   await userCurrentCharacter.condition.update({
     stamina: userCurrentCharacter.condition.stamina - 20,
   });
@@ -112,17 +114,17 @@ export const discordBattle = async (
     userId, // user discord id
     false, // Need inventory?
   );
-
+  console.log('3');
   const userWallet = await db.wallet.findOne({
     where: {
-      userId: userCurrentCharacter.user.id,
+      userId: userCurrentCharacter.UserGroup.user.id,
     },
   });
 
   let battle = await db.battle.findOne({
     where: {
       complete: false,
-      UserClassId: userCurrentCharacter.id,
+      UserGroupClassId: userCurrentCharacter.id,
     },
     order: [
       [db.battleLog, 'id', 'DESC'],
@@ -166,10 +168,11 @@ export const discordBattle = async (
       },
     ],
   });
+  console.log('battle4');
   if (!battle) {
     const newBattle = await db.battle.create({
       complete: false,
-      UserClassId: userCurrentCharacter.id,
+      UserGroupClassId: userCurrentCharacter.id,
     });
     const monster = await db.monster.findOne({
       where: {
@@ -237,8 +240,8 @@ export const discordBattle = async (
       ],
     });
   }
-
-  let mainSkillMap = userCurrentSelectedSkills.UserClassSkills.reduce((filtered, mySkill) => {
+  console.log('battle5');
+  let mainSkillMap = userCurrentSelectedSkills.UserGroupClassSkills.reduce((filtered, mySkill) => {
     if (!mySkill.skill.passive) {
       const emoji = skillEmoji.find((a) => a.name === mySkill.skill.name);
       const mapped = {
@@ -255,7 +258,7 @@ export const discordBattle = async (
     return filtered;
   }, []);
 
-  let secondarySkillMap = userCurrentSelectedSkills.UserClassSkills.reduce((filtered, mySkill) => {
+  let secondarySkillMap = userCurrentSelectedSkills.UserGroupClassSkills.reduce((filtered, mySkill) => {
     if (!mySkill.skill.passive) {
       const emoji = skillEmoji.find((a) => a.name === mySkill.skill.name);
       const mapped = {
@@ -271,7 +274,7 @@ export const discordBattle = async (
     }
     return filtered;
   }, []);
-
+  console.log('battle6');
   if (
     !currentSelectedMonster
     || (currentSelectedMonster && currentSelectedMonster.currentHp < 1)
@@ -292,7 +295,7 @@ export const discordBattle = async (
     }
     return filtered;
   }, []);
-
+  console.log('battle7');
   const {
     hp,
     mp,
@@ -331,8 +334,9 @@ export const discordBattle = async (
   allRoundBuffsInfoArray = [...new Set(allRoundBuffsInfoArray)];
   allRoundDebuffsInfoArray = [...new Set(allRoundDebuffsInfoArray)];
 
+  console.log('battle9');
   const embedMessage = await discordChannel.send({
-    content: `<@${userCurrentCharacter.user.user_id}>`,
+    content: `<@${userCurrentCharacter.UserGroup.user.user_id}>`,
     files: [
       new MessageAttachment(
         await renderBattleGif(
@@ -423,7 +427,7 @@ export const discordBattle = async (
 
   const loadingBattleMoveEmbed = new MessageEmbed()
     .setTitle('Battle')
-    .setDescription(`${userCurrentCharacter.user.username}, Your next move is calculating..`);
+    .setDescription(`${userCurrentCharacter.UserGroup.user.username}, Your next move is calculating..`);
 
   const battleCompleteEmbed = async (
     userCurrentCharacter,
@@ -435,19 +439,19 @@ export const discordBattle = async (
       itemString += `\n- **${looot.name}** [${looot.itemQuality.name}]`;
     }
     return new MessageEmbed()
-      .setTitle(`${userCurrentCharacter.user.username} battle#${battle.id} results`)
+      .setTitle(`${userCurrentCharacter.UserGroup.user.username} battle#${battle.id} results`)
       .setDescription(`Exp earned: **${expEarned}**
 
 ${newLootC.length > 0 ? `__found ${newLootC.length} ${newLootC.length === 1 ? `item` : `items`}__` : ``}${itemString}`);
   };
-
+  console.log('battle 10');
   const collector = embedMessage.createMessageComponentCollector({});
   let newLoot = [];
   collector.on('collect', async (interaction) => {
     // If someobody clicks loot that isn't hes/hers
     if (interaction.isButton()) {
       if (interaction.customId.startsWith('lootItem:')) {
-        if (interaction.user.id !== userCurrentCharacter.user.user_id) {
+        if (interaction.user.id !== userCurrentCharacter.UserGroup.user.user_id) {
           await interaction.reply({
             content: `<@${interaction.user.id}>, This loot isn't ment for you!`,
             ephemeral: true,
@@ -456,7 +460,7 @@ ${newLootC.length > 0 ? `__found ${newLootC.length} ${newLootC.length === 1 ? `i
         }
       }
     }
-    if (interaction.user.id !== userCurrentCharacter.user.user_id) {
+    if (interaction.user.id !== userCurrentCharacter.UserGroup.user.user_id) {
       await interaction.reply({
         content: `<@${interaction.user.id}>, These buttons aren't for you!`,
         ephemeral: true,
@@ -464,7 +468,7 @@ ${newLootC.length > 0 ? `__found ${newLootC.length} ${newLootC.length === 1 ? `i
       return;
     }
 
-    if (battle.UserClassId !== userCurrentCharacter.id) {
+    if (battle.UserGroupClassId !== userCurrentCharacter.id) {
       await interaction.reply({
         content: `<@${interaction.user.id}>, This battle belongs to a different character!`,
         ephemeral: true,
@@ -485,10 +489,10 @@ ${newLootC.length > 0 ? `__found ${newLootC.length} ${newLootC.length === 1 ? `i
       await interaction.deferUpdate();
       console.log(userWallet);
       await interaction.editReply({
-        content: `<@${userCurrentCharacter.user.user_id}>`,
+        content: `<@${userCurrentCharacter.UserGroup.user.user_id}>`,
         embeds: [
           await confirmationHealMessage(
-            userCurrentCharacter.user.user_id,
+            userCurrentCharacter.UserGroup.user.user_id,
             userWallet.available,
           ),
         ],
@@ -506,7 +510,7 @@ ${newLootC.length > 0 ? `__found ${newLootC.length} ${newLootC.length === 1 ? `i
     if (interaction.isButton() && interaction.customId === 'decline') {
       await interaction.deferUpdate();
       await interaction.editReply({
-        content: `<@${userCurrentCharacter.user.user_id}>`,
+        content: `<@${userCurrentCharacter.UserGroup.user.user_id}>`,
         embeds: [],
         components: [
           new MessageActionRow({
@@ -564,17 +568,17 @@ ${newLootC.length > 0 ? `__found ${newLootC.length} ${newLootC.length === 1 ? `i
         }, async (t) => {
           const findWallet = await db.wallet.findOne({
             where: {
-              userId: userCurrentCharacter.user.id,
+              userId: userCurrentCharacter.UserGroup.user.id,
             },
             lock: t.LOCK.UPDATE,
             transaction: t,
           });
           if (findWallet.available < 10000000) {
             await interaction.editReply({
-              content: `<@${userCurrentCharacter.user.user_id}>`,
+              content: `<@${userCurrentCharacter.UserGroup.user.user_id}>`,
               embeds: [
                 await insufficientBalanceMessage(
-                  userCurrentCharacter.user.user_id,
+                  userCurrentCharacter.UserGroup.user.user_id,
                   'Heal',
                 ),
               ],
@@ -629,9 +633,9 @@ ${newLootC.length > 0 ? `__found ${newLootC.length} ${newLootC.length === 1 ? `i
             lock: t.LOCK.UPDATE,
             transaction: t,
           });
-          const userToUpdate = await db.UserClass.findOne({
+          const userToUpdate = await db.UserGroupClass.findOne({
             where: {
-              userId: userCurrentCharacter.user.id,
+              UserGroupId: userCurrentCharacter.UserGroup.id,
               classId: userCurrentCharacter.user.currentClassId,
             },
             include: [
@@ -741,7 +745,7 @@ ${newLootC.length > 0 ? `__found ${newLootC.length} ${newLootC.length === 1 ? `i
               }),
             ],
             embeds: [],
-            content: `<@${userCurrentCharacter.user.user_id}>, you are now healed!`,
+            content: `<@${userCurrentCharacter.UserGroup.user.user_id}>, you are now healed!`,
           });
         }).catch(async (err) => {
           console.log(err);
@@ -835,7 +839,7 @@ ${newLootC.length > 0 ? `__found ${newLootC.length} ${newLootC.length === 1 ? `i
             });
             newLoot = newLoot.filter((data) => data.id !== itemId);
             await interaction.editReply({
-              content: `<@${userCurrentCharacter.user.user_id}>`,
+              content: `<@${userCurrentCharacter.UserGroup.user.user_id}>`,
               files: [
                 await renderBattleComplete(
                   userCurrentCharacter,
@@ -862,7 +866,7 @@ ${newLootC.length > 0 ? `__found ${newLootC.length} ${newLootC.length === 1 ? `i
             t,
           );
           await interaction.editReply({
-            content: `<@${userCurrentCharacter.user.user_id}>`,
+            content: `<@${userCurrentCharacter.UserGroup.user.user_id}>`,
             embeds: [
               loadingBattleMoveEmbed,
             ],
@@ -920,7 +924,7 @@ ${newLootC.length > 0 ? `__found ${newLootC.length} ${newLootC.length === 1 ? `i
               currentSelectedMonster = null;
               const newExp = await gainExp(
                 discordClient,
-                userCurrentCharacter.user.user_id,
+                userCurrentCharacter.UserGroup.user.user_id,
                 sumExp,
                 'battle',
                 t,
@@ -941,7 +945,7 @@ ${newLootC.length > 0 ? `__found ${newLootC.length} ${newLootC.length === 1 ? `i
             console.log(initialUserState);
             console.log('before final renderbattleGif complete');
             await interaction.editReply({
-              content: `<@${userCurrentCharacter.user.user_id}>`,
+              content: `<@${userCurrentCharacter.UserGroup.user.user_id}>`,
               embeds: [],
               files: [
                 new MessageAttachment(
@@ -984,7 +988,7 @@ ${newLootC.length > 0 ? `__found ${newLootC.length} ${newLootC.length === 1 ? `i
             }, []);
 
             await interaction.editReply({
-              content: `<@${userCurrentCharacter.user.user_id}>`,
+              content: `<@${userCurrentCharacter.UserGroup.user.user_id}>`,
               embeds: [],
               files: [
                 new MessageAttachment(
@@ -1057,7 +1061,7 @@ ${newLootC.length > 0 ? `__found ${newLootC.length} ${newLootC.length === 1 ? `i
           if (userCurrentCharacter.condition.life < 1) {
             setTimeout(async () => {
               await interaction.editReply({
-                content: `<@${userCurrentCharacter.user.user_id}>`,
+                content: `<@${userCurrentCharacter.UserGroup.user.user_id}>`,
                 embeds: [],
                 files: [
                   await renderUserDied(
@@ -1071,7 +1075,7 @@ ${newLootC.length > 0 ? `__found ${newLootC.length} ${newLootC.length === 1 ? `i
           if (battle.complete) {
             setTimeout(async () => {
               await interaction.editReply({
-                content: `<@${userCurrentCharacter.user.user_id}>`,
+                content: `<@${userCurrentCharacter.UserGroup.user.user_id}>`,
                 embeds: [
                   await battleCompleteEmbed(
                     userCurrentCharacter,
@@ -1130,7 +1134,7 @@ ${newLootC.length > 0 ? `__found ${newLootC.length} ${newLootC.length === 1 ? `i
             }
           }
 
-          mainSkillMap = userCurrentSelectedSkills.UserClassSkills.reduce((filtered, mySkill) => {
+          mainSkillMap = userCurrentSelectedSkills.UserGroupClassSkills.reduce((filtered, mySkill) => {
             if (!mySkill.skill.passive) {
               const emoji = skillEmoji.find((a) => a.name === mySkill.skill.name);
               const mapped = {
@@ -1147,7 +1151,7 @@ ${newLootC.length > 0 ? `__found ${newLootC.length} ${newLootC.length === 1 ? `i
             return filtered;
           }, []);
 
-          secondarySkillMap = userCurrentSelectedSkills.UserClassSkills.reduce((filtered, mySkill) => {
+          secondarySkillMap = userCurrentSelectedSkills.UserGroupClassSkills.reduce((filtered, mySkill) => {
             if (!mySkill.skill.passive) {
               const emoji = skillEmoji.find((a) => a.name === mySkill.skill.name);
               const mapped = {
@@ -1175,7 +1179,7 @@ ${newLootC.length > 0 ? `__found ${newLootC.length} ${newLootC.length === 1 ? `i
           myInitialUserState.mp = mp;
 
           await interaction.editReply({
-            content: `<@${userCurrentCharacter.user.user_id}>`,
+            content: `<@${userCurrentCharacter.UserGroup.user.user_id}>`,
             embeds: [],
             files: [
               new MessageAttachment(

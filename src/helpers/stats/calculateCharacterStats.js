@@ -30,7 +30,7 @@ export const calculateCharacterStats = async (
       }]
     ),
   });
-  console.log('1');
+  console.log('calcstats 1');
   const userCurrentRank = currentCharacter.UserGroup.ranks[0] ? currentCharacter.UserGroup.ranks[0] : { level: 0, expNeeded: nextRank.expNeeded };
   const nextRankExp = nextRank && nextRank.expNeeded ? nextRank.expNeeded : userCurrentRank.expNeeded;
   const countedSpendAttributes = currentCharacter.stats.strength
@@ -48,7 +48,7 @@ export const calculateCharacterStats = async (
   const totalManaBonus = 0;
   const lifeSteal = 0;
   const manaSteal = 0;
-  console.log('2');
+  console.log('calcstats 2');
   const initialStrength = currentCharacter.UserGroup.user.currentClass.strength + currentCharacter.stats.strength;
   const initialDexterity = currentCharacter.UserGroup.user.currentClass.dexterity + currentCharacter.stats.dexterity;
   const initialVitality = currentCharacter.UserGroup.user.currentClass.vitality + currentCharacter.stats.vitality;
@@ -57,7 +57,7 @@ export const calculateCharacterStats = async (
   let dexterity = initialDexterity;
   let vitality = initialVitality;
   let energy = initialEnergy;
-  console.log('3');
+  console.log('calcstats 3');
   const maxStamina = currentCharacter.UserGroup.user.currentClass.stamina + currentCharacter.stats.stamina;
   const currentStaminaPoints = currentCharacter.condition.stamina;
   let currentHp = currentCharacter.condition.life;
@@ -66,7 +66,7 @@ export const calculateCharacterStats = async (
   let maxMp = currentCharacter.UserGroup.user.currentClass.mana + currentCharacter.stats.mana;
 
   defense += currentCharacter.UserGroup.user.currentClass.defense;
-  console.log('4');
+  console.log('calcstats 4');
   let canWearHelm = false;
   let canWearMainHand = false;
   let canWearOffHand = false;
@@ -74,7 +74,7 @@ export const calculateCharacterStats = async (
   let canWearGloves = false;
   let canWearBelt = false;
   let canWearBoots = false;
-  console.log('4-1');
+  console.log('calcstats 4-1');
   [
     strength,
     dexterity,
@@ -99,7 +99,7 @@ export const calculateCharacterStats = async (
     defense,
     block,
   );
-  console.log('5');
+  console.log('calcstats 5');
   let addedLifeByItemVitality = 0;
   let addedManaByItemEnergy = 0;
   if (currentCharacter.class.name === 'Warrior') {
@@ -151,6 +151,7 @@ export const calculateCharacterStats = async (
   // Added Damage % by Strength
   const addedStrengthDamagePercentage = 1 + (strength / 100); // Should we substract starting strength from this? (YES/NO)
 
+  console.log('after addsss');
   // Kick Attack
   let kick = {
     name: 'Kick',
@@ -201,6 +202,7 @@ export const calculateCharacterStats = async (
     cost: 0,
   };
 
+  console.log('beore passives calc');
   // Add Passive Skill stats
   [
     defense,

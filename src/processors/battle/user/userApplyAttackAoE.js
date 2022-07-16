@@ -71,7 +71,7 @@ const userApplyAttackAoE = async (
         updatedMonster.currentHp -= randomAttackDamage;
 
         // Generate Battle log
-        const log = `${userState.user.username} used ${useAttack.name} on ${updatedMonster.monster.name} for ${randomAttackDamage} damage${didUserCrit ? ' (crit)' : ''}`;
+        const log = `${userState.UserGroup.user.username} used ${useAttack.name} on ${updatedMonster.monster.name} for ${randomAttackDamage} damage${didUserCrit ? ' (crit)' : ''}`;
         saveToDatabasePromises.push(
           new Promise((resolve, reject) => {
             db.battleLog.create({
@@ -88,7 +88,7 @@ const userApplyAttackAoE = async (
         });
 
         if (updatedMonster.currentHp < 1) {
-          const log = `${userState.user.username} killed ${updatedMonster.monster.name}`;
+          const log = `${userState.UserGroup.user.username} killed ${updatedMonster.monster.name}`;
           saveToDatabasePromises.push(
             new Promise((resolve, reject) => {
               db.battleLog.create({

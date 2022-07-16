@@ -60,7 +60,7 @@ const userApplyRetliation = async (
         );
 
         // Generate Battle log
-        const log = `${userState.user.username} used ${useAttack.name} on ${updatedMonster.monster.name} for ${randomAttackDamage} damage`;
+        const log = `${userState.UserGroup.user.username} used ${useAttack.name} on ${updatedMonster.monster.name} for ${randomAttackDamage} damage`;
         saveToDatabasePromises.push(
           new Promise((resolve, reject) => {
             db.battleLog.create({
@@ -78,7 +78,7 @@ const userApplyRetliation = async (
         });
 
         if (updatedMonster.currentHp < 1) {
-          const log = `${userState.user.username} killed ${updatedMonster.monster.name}`;
+          const log = `${userState.UserGroup.user.username} killed ${updatedMonster.monster.name}`;
           saveToDatabasePromises.push(
             new Promise((resolve, reject) => {
               db.battleLog.create({

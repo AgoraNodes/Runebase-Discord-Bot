@@ -58,7 +58,7 @@ const monstersApplyAttack = async (
         );
 
         if (!attackFailed) {
-          const log = `${remainingMonster.monster.name} used ${useAttack.name} on ${userState.user.username} for ${randomMonsterAttackDamage} damage`;
+          const log = `${remainingMonster.monster.name} used ${useAttack.name} on ${userState.UserGroup.user.username} for ${randomMonsterAttackDamage} damage`;
           saveToDatabasePromises.push(
             new Promise((resolve, reject) => {
               db.battleLog.create({
@@ -87,7 +87,7 @@ const monstersApplyAttack = async (
         }
 
         if (userState.hp.current < 1) {
-          const log = `${remainingMonster.monster.name} killed ${userState.user.username}`;
+          const log = `${remainingMonster.monster.name} killed ${userState.UserGroup.user.username}`;
           saveToDatabasePromises.push(
             new Promise((resolve, reject) => {
               db.battleLog.create({

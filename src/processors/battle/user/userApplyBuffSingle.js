@@ -52,7 +52,7 @@ const userApplyBuffSingle = async (
     buffObject,
   );
 
-  const log = `${userState.user.username} used ${useAttack.name}`;
+  const log = `${userState.UserGroup.user.username} used ${useAttack.name}`;
   saveToDatabasePromises.push(
     new Promise((resolve, reject) => {
       db.battleLog.create({

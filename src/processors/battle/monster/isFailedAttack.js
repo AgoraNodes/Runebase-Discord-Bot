@@ -32,7 +32,7 @@ const isFailedAttack = async (
     const isNotMissed = Math.random() < Number(monsterHitChance) / 100; // Did Monster hit user?
 
     if (!isNotMissed) {
-      const log = `${remainingMonster.monster.name} ${useAttack.name} missed ${userState.user.username}`;
+      const log = `${remainingMonster.monster.name} ${useAttack.name} missed ${userState.UserGroup.user.username}`;
       saveToDatabasePromises.push(
         new Promise((resolve, reject) => {
           db.battleLog.create({
@@ -59,7 +59,7 @@ const isFailedAttack = async (
       };
       attackFailed = true;
     } else if (isBlocked) {
-      const log = `${userState.user.username} blocked ${remainingMonster.monster.name} ${useAttack.name}`;
+      const log = `${userState.UserGroup.user.username} blocked ${remainingMonster.monster.name} ${useAttack.name}`;
       saveToDatabasePromises.push(
         new Promise((resolve, reject) => {
           db.battleLog.create({
@@ -86,7 +86,7 @@ const isFailedAttack = async (
       };
       attackFailed = true;
     } else if (isParried) {
-      const log = `${userState.user.username} parried ${remainingMonster.monster.name} ${useAttack.name}`;
+      const log = `${userState.UserGroup.user.username} parried ${remainingMonster.monster.name} ${useAttack.name}`;
       saveToDatabasePromises.push(
         new Promise((resolve, reject) => {
           db.battleLog.create({

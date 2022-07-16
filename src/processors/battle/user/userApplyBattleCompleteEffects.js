@@ -22,7 +22,7 @@ const userApplyBattleCompleteEffects = async (
       userState.hp.current = (userState.hp.current + totalRelieveHealing) > userState.hp.max ? userState.hp.max : (userState.hp.current + totalRelieveHealing);
 
       // Create Battle Log
-      const log = `Relieve healed ${userState.user.username} for ${totalRelieveHealing}`;
+      const log = `Relieve healed ${userState.UserGroup.user.username} for ${totalRelieveHealing}`;
       saveToDatabasePromises.push(
         new Promise((resolve, reject) => {
           db.battleLog.create({
