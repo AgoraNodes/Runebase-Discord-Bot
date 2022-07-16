@@ -68,9 +68,6 @@ export const addStrength = async (
         transaction: t,
       });
 
-      console.log(user);
-      console.log('user!!');
-
       const calc = (
         user.UserGroup.UserGroupClass.stats.strength
         + user.UserGroup.UserGroupClass.stats.dexterity
