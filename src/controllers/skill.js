@@ -73,7 +73,7 @@ export const discordSkills = async (
   }));
 
   const embedMessage = await discordChannel.send({
-    content: `<@${userCurrentCharacter.user.user_id}>`,
+    content: `<@${userCurrentCharacter.UserGroup.user.user_id}>`,
     files: [
       await renderSkillScreen(
         userCurrentCharacter,
@@ -113,6 +113,7 @@ export const discordSkills = async (
       ],
   });
 
+  console.log('after init embed message');
   const collector = embedMessage.createMessageComponentCollector({});
 
   let skillTreeIndex = 0;
@@ -120,7 +121,7 @@ export const discordSkills = async (
   let selectedSkill;
   collector.on('collect', async (interaction) => {
     let failAddSkillReason;
-    if (interaction.user.id !== userCurrentCharacter.user.user_id) {
+    if (interaction.user.id !== userCurrentCharacter.UserGroup.user.user_id) {
       await interaction.reply({
         content: `<@${interaction.user.id}>, These buttons aren't for you!`,
         ephemeral: true,
@@ -131,10 +132,10 @@ export const discordSkills = async (
     if (interaction.isButton()) {
       if (interaction.customId.startsWith('addSkill:')) {
         await interaction.editReply({
-          content: `<@${userCurrentCharacter.user.user_id}>`,
+          content: `<@${userCurrentCharacter.UserGroup.user.user_id}>`,
           embeds: [
             await loadingSkillAddEmbed(
-              userCurrentCharacter.user.username,
+              userCurrentCharacter.UserGroup.user.username,
             ),
           ],
         });
@@ -164,7 +165,7 @@ export const discordSkills = async (
       await interaction.editReply({
         embeds: [
           await loadingSkillSelectEmbed(
-            userCurrentCharacter.user.username,
+            userCurrentCharacter.UserGroup.user.username,
           ),
         ],
       });
@@ -182,6 +183,8 @@ export const discordSkills = async (
         }
       }
     }
+    console.log(skills);
+    console.log('skills');
     const jsonSkillInfo = skills.find((x) => x.name === selectedSkill.name);
 
     const skillTreeMapEdit = userCurrentCharacter.class.skillTrees.map((
@@ -204,7 +207,7 @@ export const discordSkills = async (
     }));
 
     await interaction.editReply({
-      content: `<@${userCurrentCharacter.user.user_id}>`,
+      content: `<@${userCurrentCharacter.UserGroup.user.user_id}>`,
       embeds: [
         ...(jsonSkillInfo
           ? [

@@ -23,8 +23,9 @@ export const renderSkillScreen = async (
     skillTreeIndex,
     selectedSkill,
   );
+  console.log('1');
 
-  const userHasSkill = userCharacter.UserClassSkills.find((o) => o.skillId === selectedSkill.id);
+  const userHasSkill = userCharacter.UserGroupClassSkills.find((o) => o.skillId === selectedSkill.id);
   const skillDescriptionImageBuffer = await renderSkillDescriptionImage(
     jsonSkillInfo,
     userHasSkill,
@@ -78,6 +79,6 @@ export const renderSkillScreen = async (
       skillTreeImage.width,
     );
   }
-
+  console.log('5');
   return new MessageAttachment(canvas.toBuffer(), 'skillTree.png');
 };

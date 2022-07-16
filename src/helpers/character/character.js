@@ -429,6 +429,6 @@ export const fetchUserCurrentCharacter = async (
       }] : []),
     ],
   });
-  console.log(userCurrentCharacter);
+  // console.log(userCurrentCharacter);
   return userCurrentCharacter;
 };

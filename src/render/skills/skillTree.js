@@ -43,7 +43,9 @@ export const renderSkillTreeImage = async (
   skillTreeIndex,
   selectedSkill,
 ) => {
-  const userCurrentRank = userCharacter.user.ranks[0] ? userCharacter.user.ranks[0] : { id: 0 };
+  console.log('before render skill tree');
+  console.log(userCharacter);
+  const userCurrentRank = userCharacter.UserGroup.ranks[0] ? userCharacter.UserGroup.ranks[0] : { level: 0 };
   const skillTreeMenuImage = await loadImage(path.join(__dirname, `../../assets/images/skilltree/`, `skillTreeMenu.png`));
   const skillTreeImage = await loadImage(path.join(__dirname, `../../assets/images/skilltree/`, `skilltree${skillTreeIndex}.png`));
   const canvas = createCanvas(
@@ -107,6 +109,7 @@ export const renderSkillTreeImage = async (
   ctx.strokeStyle = 'black';
   ctx.lineWidth = 3;
 
+  console.log(userCharacter);
   printAtWordWrap(
     ctx,
     userCharacter.class.skillTrees[0].name,
@@ -133,7 +136,7 @@ export const renderSkillTreeImage = async (
     15,
     skillTreeMenuImage.width - 10,
   );
-
+  console.log('before render skill tree 1');
   ctx.shadowBlur = 30;
   ctx.shadowColor = "blue";
   ctx.beginPath();
@@ -161,8 +164,8 @@ export const renderSkillTreeImage = async (
   for (let i = 0; i < skillTree.skills.length; i++) {
     for (let y = 0; y < skillTree.skills[i].PreviousSkill.length; y++) {
       if (skillTree.skills[i].PreviousSkill[y]) {
-        const userHasPreviousSkill = userCharacter.UserClassSkills.find((o) => o.skillId === skillTree.skills[i].PreviousSkill[y].id);
-        const userHasCurrentSkill = userCharacter.UserClassSkills.find((o) => o.skillId === skillTree.skills[i].id);
+        const userHasPreviousSkill = userCharacter.UserGroupClassSkills.find((o) => o.skillId === skillTree.skills[i].PreviousSkill[y].id);
+        const userHasCurrentSkill = userCharacter.UserGroupClassSkills.find((o) => o.skillId === skillTree.skills[i].id);
         if (userHasPreviousSkill && userHasCurrentSkill) {
           ctx.shadowBlur = 30;
           ctx.shadowColor = "#FFD700";
@@ -239,23 +242,23 @@ export const renderSkillTreeImage = async (
   ctx.shadowColor = "none";
   ctx.lineWidth = "3";
   ctx.strokeStyle = "black";
-
+  console.log('before render skill tree 2');
   for (let i = 0; i < skillTree.skills.length; i++) {
-    const skillIcon = await loadImage(path.join(__dirname, `../../assets/images/skills/${userCharacter.user.currentClass.name}/${skillTree.name}`, `${skillTree.skills[i].name}.png`));
+    const skillIcon = await loadImage(path.join(__dirname, `../../assets/images/skills/${userCharacter.UserGroup.user.currentClass.name}/${skillTree.name}`, `${skillTree.skills[i].name}.png`));
     let skillImage;
-    const userHasSkill = userCharacter.UserClassSkills.find((o) => o.skillId === skillTree.skills[i].id);
+    const userHasSkill = userCharacter.UserGroupClassSkills.find((o) => o.skillId === skillTree.skills[i].id);
     let userHasPreviousSkills = true;
 
     // check if user has the previous skills
     if (skillTree.skills[i].PreviousSkill.length === 1) {
-      const userHasSkillOne = userCharacter.UserClassSkills.find((o) => o.skillId === skillTree.skills[i].PreviousSkill[0].id);
+      const userHasSkillOne = userCharacter.UserGroupClassSkills.find((o) => o.skillId === skillTree.skills[i].PreviousSkill[0].id);
       if (!userHasSkillOne) {
         userHasPreviousSkills = false;
       }
     }
     if (skillTree.skills[i].PreviousSkill.length === 2) {
-      const userHasSkillOne = userCharacter.UserClassSkills.find((o) => o.skillId === skillTree.skills[i].PreviousSkill[0].id);
-      const userHasSkillTwo = userCharacter.UserClassSkills.find((o) => o.skillId === skillTree.skills[i].PreviousSkill[1].id);
+      const userHasSkillOne = userCharacter.UserGroupClassSkills.find((o) => o.skillId === skillTree.skills[i].PreviousSkill[0].id);
+      const userHasSkillTwo = userCharacter.UserGroupClassSkills.find((o) => o.skillId === skillTree.skills[i].PreviousSkill[1].id);
       if (!userHasSkillOne || !userHasSkillTwo) {
         userHasPreviousSkills = false;
       }
@@ -263,7 +266,7 @@ export const renderSkillTreeImage = async (
 
     // check if we need gray scaled icon
     if (
-      skillTree.skills[i].level > userCurrentRank.id
+      skillTree.skills[i].level > userCurrentRank.level
       || !userHasPreviousSkills
     ) {
       const grayScaleIconBuffer = await renderGrayScaleIcon(skillIcon);
@@ -349,8 +352,8 @@ export const renderSkillTreeImage = async (
       );
     }
   }
-
-  const totalSkillsPointsSpend = _.sumBy(userCharacter.UserClassSkills, 'points');
+  console.log('before render skill tree 3');
+  const totalSkillsPointsSpend = _.sumBy(userCharacter.UserGroupClassSkills, 'points');
   const skillPointsLeftToSpend = (userCurrentRank.level - totalSkillsPointsSpend);
 
   if (skillPointsLeftToSpend > 0) {
@@ -370,7 +373,8 @@ export const renderSkillTreeImage = async (
     ctx.strokeText('Skillpoints', 300, 70, 70);
     ctx.fillText('Skillpoints', 300, 70, 70);
   }
-
+  console.log('before render skill tree 5');
   const finalImage = await canvas.toBuffer();
+  console.log('before send back render skill message');
   return finalImage;
 };

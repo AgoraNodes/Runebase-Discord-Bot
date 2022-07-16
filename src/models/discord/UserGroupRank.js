@@ -20,6 +20,7 @@ module.exports = (sequelize, DataTypes) => {
     UserGroupRankModel.belongsTo(model.UserGroup, {
       foreignKey: 'UserGroupId',
     });
+    UserGroupRankModel.belongsTo(model.rank);
   };
 
   return UserGroupRankModel;
