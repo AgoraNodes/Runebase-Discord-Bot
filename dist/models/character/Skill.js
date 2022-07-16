@@ -40,8 +40,8 @@ module.exports = function (sequelize, DataTypes) {
   SkillModell.associate = function (model) {
     SkillModell.belongsTo(model.skillTree); // SkillModell.hasMany(model.UserClassSkill);
 
-    SkillModell.belongsToMany(model.UserClass, {
-      through: 'UserClassSkill'
+    SkillModell.belongsToMany(model.UserGroupClass, {
+      through: 'UserGroupClassSkill'
     });
     SkillModell.belongsToMany(model.skill, {
       through: model.SkillSkill,

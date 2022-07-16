@@ -14,7 +14,7 @@ var _asyncToGenerator2 = _interopRequireDefault(require("@babel/runtime/helpers/
 var _messages = require("../../../messages");
 
 var handleExperienceMessage = /*#__PURE__*/function () {
-  var _ref = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(discordChannel, updatedUser, amount, gainExpType) {
+  var _ref = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(discordChannel, updatedUserGroup, amount, gainExpType) {
     var userJoined,
         _args = arguments;
     return _regenerator["default"].wrap(function _callee$(_context) {
@@ -30,8 +30,8 @@ var handleExperienceMessage = /*#__PURE__*/function () {
 
             _context.next = 4;
             return discordChannel.send({
-              content: "<@".concat(updatedUser.user_id, ">"),
-              embeds: [(0, _messages.gainBattleExpExpMessage)(updatedUser.user_id, amount)]
+              content: "<@".concat(updatedUserGroup.user.user_id, ">"),
+              embeds: [(0, _messages.gainBattleExpExpMessage)(updatedUserGroup.user.user_id, amount)]
             });
 
           case 4:
@@ -42,8 +42,8 @@ var handleExperienceMessage = /*#__PURE__*/function () {
 
             _context.next = 7;
             return discordChannel.send({
-              content: "<@".concat(updatedUser.user_id, ">"),
-              embeds: [(0, _messages.gainActiveTalkerExpMessage)(updatedUser.user_id, amount)]
+              content: "<@".concat(updatedUserGroup.user.user_id, ">"),
+              embeds: [(0, _messages.gainActiveTalkerExpMessage)(updatedUserGroup.user.user_id, amount)]
             });
 
           case 7:
@@ -54,8 +54,8 @@ var handleExperienceMessage = /*#__PURE__*/function () {
 
             _context.next = 10;
             return discordChannel.send({
-              content: "<@".concat(updatedUser.user_id, ">"),
-              embeds: [(0, _messages.gainVoteTopggExpMessage)(updatedUser.user_id, amount)]
+              content: "<@".concat(updatedUserGroup.user.user_id, ">"),
+              embeds: [(0, _messages.gainVoteTopggExpMessage)(updatedUserGroup.user.user_id, amount)]
             });
 
           case 10:
@@ -66,8 +66,8 @@ var handleExperienceMessage = /*#__PURE__*/function () {
 
             _context.next = 13;
             return discordChannel.send({
-              content: "<@".concat(updatedUser.user_id, ">"),
-              embeds: [(0, _messages.invitedNewUserRewardMessage)(updatedUser.user_id, userJoined, amount)]
+              content: "<@".concat(updatedUserGroup.user.user_id, ">"),
+              embeds: [(0, _messages.invitedNewUserRewardMessage)(updatedUserGroup.user.user_id, userJoined, amount)]
             });
 
           case 13:

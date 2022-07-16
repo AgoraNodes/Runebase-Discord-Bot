@@ -71,7 +71,7 @@ var userApplyBuffSingle = /*#__PURE__*/function () {
               });
             }));
             userState.buffs.unshift(buffObject);
-            log = "".concat(userState.user.username, " used ").concat(useAttack.name);
+            log = "".concat(userState.UserGroup.user.username, " used ").concat(useAttack.name);
             saveToDatabasePromises.push(new Promise(function (resolve, reject) {
               _models["default"].battleLog.create({
                 battleId: battle.id,

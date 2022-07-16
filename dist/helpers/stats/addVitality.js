@@ -48,26 +48,33 @@ var addVitality = /*#__PURE__*/function () {
                                   _context.next = 2;
                                   return _models["default"].user.findOne({
                                     where: {
-                                      id: currentUserCharacter.user.id
+                                      id: currentUserCharacter.UserGroup.user.id
                                     },
                                     include: [{
                                       model: _models["default"]["class"],
                                       as: 'currentClass'
                                     }, {
-                                      model: _models["default"].rank,
-                                      as: 'ranks'
-                                    }, {
-                                      model: _models["default"].UserClass,
-                                      as: 'UserClass',
+                                      model: _models["default"].UserGroup,
+                                      as: 'UserGroup',
                                       where: {
-                                        classId: (0, _defineProperty2["default"])({}, _sequelize.Op.col, 'user.currentClassId')
+                                        groupId: (0, _defineProperty2["default"])({}, _sequelize.Op.col, 'user.currentRealmId')
                                       },
                                       include: [{
-                                        model: _models["default"].stats,
-                                        as: 'stats'
+                                        model: _models["default"].rank,
+                                        as: 'ranks'
                                       }, {
-                                        model: _models["default"].condition,
-                                        as: 'condition'
+                                        model: _models["default"].UserGroupClass,
+                                        as: 'UserGroupClass',
+                                        where: {
+                                          classId: (0, _defineProperty2["default"])({}, _sequelize.Op.col, 'user.currentClassId')
+                                        },
+                                        include: [{
+                                          model: _models["default"].stats,
+                                          as: 'stats'
+                                        }, {
+                                          model: _models["default"].condition,
+                                          as: 'condition'
+                                        }]
                                       }]
                                     }],
                                     lock: t.LOCK.UPDATE,
@@ -76,7 +83,7 @@ var addVitality = /*#__PURE__*/function () {
 
                                 case 2:
                                   user = _context.sent;
-                                  calc = user.UserClass.stats.strength + user.UserClass.stats.dexterity + user.UserClass.stats.vitality + user.UserClass.stats.energy < user.ranks[0].id * 5;
+                                  calc = user.UserGroup.UserGroupClass.stats.strength + user.UserGroup.UserGroupClass.stats.dexterity + user.UserGroup.UserGroupClass.stats.vitality + user.UserGroup.UserGroupClass.stats.energy < user.UserGroup.ranks[0].level * 5;
 
                                   if (calc) {
                                     _context.next = 7;
@@ -91,7 +98,7 @@ var addVitality = /*#__PURE__*/function () {
                                   addStamina = 1;
 
                                   if (user.currentClass.name === 'Assasin') {
-                                    if (user.UserClass.stats.vitality % 4 === 0) {
+                                    if (user.UserGroup.UserGroupClass.stats.vitality % 4 === 0) {
                                       addStamina = 2;
                                     }
                                   }
@@ -107,10 +114,10 @@ var addVitality = /*#__PURE__*/function () {
                                   }
 
                                   _context.next = 14;
-                                  return user.UserClass.stats.update({
-                                    vitality: user.UserClass.stats.vitality + 1,
-                                    life: user.UserClass.stats.life + addLife,
-                                    stamina: user.UserClass.stats.stamina + addStamina
+                                  return user.UserGroup.UserGroupClass.stats.update({
+                                    vitality: user.UserGroup.UserGroupClass.stats.vitality + 1,
+                                    life: user.UserGroup.UserGroupClass.stats.life + addLife,
+                                    stamina: user.UserGroup.UserGroupClass.stats.stamina + addStamina
                                   }, {
                                     lock: t.LOCK.UPDATE,
                                     transaction: t
@@ -119,9 +126,9 @@ var addVitality = /*#__PURE__*/function () {
                                 case 14:
                                   updateVitality = _context.sent;
                                   _context.next = 17;
-                                  return user.UserClass.condition.update({
-                                    life: user.UserClass.condition.life + addLife,
-                                    stamina: user.UserClass.condition.stamina + addStamina
+                                  return user.UserGroup.UserGroupClass.condition.update({
+                                    life: user.UserGroup.UserGroupClass.condition.life + addLife,
+                                    stamina: user.UserGroup.UserGroupClass.condition.stamina + addStamina
                                   }, {
                                     lock: t.LOCK.UPDATE,
                                     transaction: t
@@ -132,7 +139,7 @@ var addVitality = /*#__PURE__*/function () {
                                   _context.next = 20;
                                   return _models["default"].activity.create({
                                     type: 'addVitality_s',
-                                    earnerId: currentUserCharacter.user.id
+                                    earnerId: currentUserCharacter.UserGroup.user.id
                                   }, {
                                     lock: t.LOCK.UPDATE,
                                     transaction: t
@@ -222,7 +229,7 @@ var addVitality = /*#__PURE__*/function () {
 
           case 3:
             _context4.next = 5;
-            return (0, _character.fetchUserCurrentCharacter)(currentUserCharacter.user.user_id, // user discord id
+            return (0, _character.fetchUserCurrentCharacter)(currentUserCharacter.UserGroup.user.user_id, // user discord id
             false // Need inventory?
             );
 

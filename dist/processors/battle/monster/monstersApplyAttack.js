@@ -96,7 +96,7 @@ var monstersApplyAttack = /*#__PURE__*/function () {
 
             if (!attackFailed) {
               (function () {
-                var log = "".concat(remainingMonster.monster.name, " used ").concat(useAttack.name, " on ").concat(userState.user.username, " for ").concat(randomMonsterAttackDamage, " damage");
+                var log = "".concat(remainingMonster.monster.name, " used ").concat(useAttack.name, " on ").concat(userState.UserGroup.user.username, " for ").concat(randomMonsterAttackDamage, " damage");
                 saveToDatabasePromises.push(new Promise(function (resolve, reject) {
                   _models["default"].battleLog.create({
                     battleId: battle.id,
@@ -126,7 +126,7 @@ var monstersApplyAttack = /*#__PURE__*/function () {
 
             if (userState.hp.current < 1) {
               (function () {
-                var log = "".concat(remainingMonster.monster.name, " killed ").concat(userState.user.username);
+                var log = "".concat(remainingMonster.monster.name, " killed ").concat(userState.UserGroup.user.username);
                 saveToDatabasePromises.push(new Promise(function (resolve, reject) {
                   _models["default"].battleLog.create({
                     battleId: battle.id,

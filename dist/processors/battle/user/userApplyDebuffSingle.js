@@ -83,7 +83,7 @@ var userApplyDebuffSingle = /*#__PURE__*/function () {
               });
             }));
             updatedMonster.debuffs.unshift(debuffObject);
-            log = "".concat(userState.user.username, " used ").concat(useAttack.name, " on ").concat(updatedMonster.monster.name);
+            log = "".concat(userState.UserGroup.user.username, " used ").concat(useAttack.name, " on ").concat(updatedMonster.monster.name);
             saveToDatabasePromises.push(new Promise(function (resolve, reject) {
               _models["default"].battleLog.create({
                 battleId: battle.id,

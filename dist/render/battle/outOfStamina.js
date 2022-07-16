@@ -32,8 +32,8 @@ var renderOutOfStamina = /*#__PURE__*/function () {
             ctx.strokeStyle = 'black';
             ctx.lineWidth = 3; // Picking a class
 
-            ctx.strokeText("".concat(currentCharacter.user.username, " you are out of stamina, come back tomorrow"), 700, 150, 1400);
-            ctx.fillText("".concat(currentCharacter.user.username, " you are out of stamina, come back tomorrow"), 700, 150, 1400);
+            ctx.strokeText("".concat(currentCharacter.UserGroup.user.username, " you are out of stamina, come back tomorrow"), 700, 150, 1400);
+            ctx.fillText("".concat(currentCharacter.UserGroup.user.username, " you are out of stamina, come back tomorrow"), 700, 150, 1400);
             return _context.abrupt("return", new _discord.MessageAttachment(canvas.toBuffer(), 'outOfStamina.png'));
 
           case 10:

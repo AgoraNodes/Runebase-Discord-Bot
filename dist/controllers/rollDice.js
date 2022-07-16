@@ -467,98 +467,99 @@ var discordRollDice = /*#__PURE__*/function () {
                   while (1) {
                     switch (_context2.prev = _context2.next) {
                       case 0:
-                        _context2.prev = 0;
-                        _context2.next = 3;
+                        console.log(err);
+                        _context2.prev = 1;
+                        _context2.next = 4;
                         return _models["default"].error.create({
                           type: 'rollDice',
                           error: "".concat(err)
                         });
 
-                      case 3:
-                        _context2.next = 8;
+                      case 4:
+                        _context2.next = 9;
                         break;
 
-                      case 5:
-                        _context2.prev = 5;
-                        _context2.t0 = _context2["catch"](0);
+                      case 6:
+                        _context2.prev = 6;
+                        _context2.t0 = _context2["catch"](1);
 
                         _logger["default"].error("Error Discord: ".concat(_context2.t0));
 
-                      case 8:
+                      case 9:
                         if (!(err.code && err.code === 50007)) {
-                          _context2.next = 21;
+                          _context2.next = 22;
                           break;
                         }
 
                         if (!(message.type && message.type === 'APPLICATION_COMMAND')) {
-                          _context2.next = 17;
+                          _context2.next = 18;
                           break;
                         }
 
-                        _context2.next = 12;
+                        _context2.next = 13;
                         return discordClient.channels.cache.get(message.channelId);
 
-                      case 12:
+                      case 13:
                         discordChannel = _context2.sent;
-                        _context2.next = 15;
+                        _context2.next = 16;
                         return discordChannel.send({
                           embeds: [(0, _messages.cannotSendMessageUser)("RollDice", message)]
                         })["catch"](function (e) {
                           console.log(e);
                         });
 
-                      case 15:
-                        _context2.next = 19;
+                      case 16:
+                        _context2.next = 20;
                         break;
 
-                      case 17:
-                        _context2.next = 19;
+                      case 18:
+                        _context2.next = 20;
                         return message.channel.send({
                           embeds: [(0, _messages.cannotSendMessageUser)("RollDice", message)]
                         })["catch"](function (e) {
                           console.log(e);
                         });
 
-                      case 19:
-                        _context2.next = 31;
+                      case 20:
+                        _context2.next = 32;
                         break;
 
-                      case 21:
+                      case 22:
                         if (!(message.type && message.type === 'APPLICATION_COMMAND')) {
-                          _context2.next = 29;
+                          _context2.next = 30;
                           break;
                         }
 
-                        _context2.next = 24;
+                        _context2.next = 25;
                         return discordClient.channels.cache.get(message.channelId);
 
-                      case 24:
+                      case 25:
                         _discordChannel = _context2.sent;
-                        _context2.next = 27;
+                        _context2.next = 28;
                         return _discordChannel.send({
                           embeds: [(0, _messages.discordErrorMessage)("RollDice")]
                         })["catch"](function (e) {
                           console.log(e);
                         });
 
-                      case 27:
-                        _context2.next = 31;
+                      case 28:
+                        _context2.next = 32;
                         break;
 
-                      case 29:
-                        _context2.next = 31;
+                      case 30:
+                        _context2.next = 32;
                         return message.channel.send({
                           embeds: [(0, _messages.discordErrorMessage)("RollDice")]
                         })["catch"](function (e) {
                           console.log(e);
                         });
 
-                      case 31:
+                      case 32:
                       case "end":
                         return _context2.stop();
                     }
                   }
-                }, _callee2, null, [[0, 5]]);
+                }, _callee2, null, [[1, 6]]);
               }));
 
               return function (_x6) {

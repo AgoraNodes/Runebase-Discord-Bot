@@ -84,7 +84,7 @@ var discordStats = /*#__PURE__*/function () {
 
             _context3.next = 13;
             return message.reply({
-              content: 'You have not selected a class yet\n`!runebase pickclass`\n/`pickclass`',
+              content: 'You have not selected a class yet\n`!runebase pickclass`\n`/pickclass`',
               ephemeral: true
             });
 
@@ -113,8 +113,8 @@ var discordStats = /*#__PURE__*/function () {
                         ctx.strokeStyle = 'black';
                         ctx.lineWidth = 3;
                         ctx.textAlign = "center";
-                        ctx.strokeText("".concat(userCurrentCharacter.user.username, " canceled stats selection"), 250, 60, 500);
-                        ctx.fillText("".concat(userCurrentCharacter.user.username, " canceled stats selection"), 250, 60, 500);
+                        ctx.strokeText("".concat(userCurrentCharacter.UserGroup.user.username, " canceled stats selection"), 250, 60, 500);
+                        ctx.fillText("".concat(userCurrentCharacter.UserGroup.user.username, " canceled stats selection"), 250, 60, 500);
                         return _context.abrupt("return", new _discord.MessageAttachment(canvas.toBuffer(), 'cancelSelection.png'));
 
                       case 10:
@@ -130,7 +130,7 @@ var discordStats = /*#__PURE__*/function () {
               };
             }();
 
-            loadingEmbed = new _discord.MessageEmbed().setTitle('Adding Attribute').setDescription("".concat(userCurrentCharacter.user.username, ", Loading..")); // const calc = (
+            loadingEmbed = new _discord.MessageEmbed().setTitle('Adding Attribute').setDescription("".concat(userCurrentCharacter.UserGroup.user.username, ", Loading..")); // const calc = (
             //   userCurrentCharacter.stats.strength
             //   + userCurrentCharacter.stats.dexterity
             //   + userCurrentCharacter.stats.vitality
@@ -173,7 +173,7 @@ var discordStats = /*#__PURE__*/function () {
                   while (1) {
                     switch (_context2.prev = _context2.next) {
                       case 0:
-                        if (!(interaction.user.id !== userCurrentCharacter.user.user_id)) {
+                        if (!(interaction.user.id !== userCurrentCharacter.UserGroup.user.user_id)) {
                           _context2.next = 4;
                           break;
                         }
@@ -264,7 +264,7 @@ var discordStats = /*#__PURE__*/function () {
                           break;
                         }
 
-                        newCalc = updatedUser.stats.strength + updatedUser.stats.dexterity + updatedUser.stats.vitality + updatedUser.stats.energy < updatedUser.user.ranks[0].id * 5;
+                        newCalc = updatedUser.stats.strength + updatedUser.stats.dexterity + updatedUser.stats.vitality + updatedUser.stats.energy < updatedUser.UserGroup.ranks[0].level * 5;
                         _context2.t0 = interaction;
                         _context2.t1 = [];
                         _context2.t2 = _discord.MessageAttachment;

@@ -39,6 +39,9 @@ module.exports = function (sequelize, DataTypes) {
     RankModel.belongsToMany(model.user, {
       through: 'UserRank'
     });
+    RankModel.belongsToMany(model.UserGroup, {
+      through: 'UserGroupRank'
+    });
   };
 
   return RankModel;

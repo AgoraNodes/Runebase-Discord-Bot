@@ -55,32 +55,48 @@ var discordHeal = /*#__PURE__*/function () {
 
           case 9:
             userCurrentCharacter = _context5.sent;
-            _context5.next = 12;
+
+            if (userCurrentCharacter) {
+              _context5.next = 14;
+              break;
+            }
+
+            _context5.next = 13;
+            return message.reply({
+              content: 'You have not selected a class yet\n`!runebase pickclass`\n`/pickclass`',
+              ephemeral: true
+            });
+
+          case 13:
+            return _context5.abrupt("return");
+
+          case 14:
+            _context5.next = 16;
             return _models["default"].wallet.findOne({
               where: {
-                userId: userCurrentCharacter.user.id
+                userId: userCurrentCharacter.UserGroup.user.id
               }
             });
 
-          case 12:
+          case 16:
             userWallet = _context5.sent;
             _context5.t0 = discordChannel;
-            _context5.next = 16;
-            return (0, _messages.confirmationHealMessage)(userCurrentCharacter.user.user_id, userWallet.available);
+            _context5.next = 20;
+            return (0, _messages.confirmationHealMessage)(userCurrentCharacter.UserGroup.user.user_id, userWallet.available);
 
-          case 16:
+          case 20:
             _context5.t1 = _context5.sent;
             _context5.t2 = [_context5.t1];
             _context5.t3 = _discord.MessageActionRow;
-            _context5.next = 21;
+            _context5.next = 25;
             return (0, _buttons.generateAcceptButton)();
 
-          case 21:
+          case 25:
             _context5.t4 = _context5.sent;
-            _context5.next = 24;
+            _context5.next = 28;
             return (0, _buttons.generateDeclineButton)();
 
-          case 24:
+          case 28:
             _context5.t5 = _context5.sent;
             _context5.t6 = [_context5.t4, _context5.t5];
             _context5.t7 = {
@@ -92,10 +108,10 @@ var discordHeal = /*#__PURE__*/function () {
               embeds: _context5.t2,
               components: _context5.t9
             };
-            _context5.next = 32;
+            _context5.next = 36;
             return _context5.t0.send.call(_context5.t0, _context5.t10);
 
-          case 32:
+          case 36:
             embedMessage = _context5.sent;
             collector = embedMessage.createMessageComponentCollector({// filter: ({ user: discordUser }) => discordUser.id === userCurrentCharacter.user.user_id,
             });
@@ -110,7 +126,7 @@ var discordHeal = /*#__PURE__*/function () {
                           break;
                         }
 
-                        if (!(interaction.user.id !== userCurrentCharacter.user.user_id)) {
+                        if (!(interaction.user.id !== userCurrentCharacter.UserGroup.user.user_id)) {
                           _context4.next = 5;
                           break;
                         }
@@ -136,7 +152,7 @@ var discordHeal = /*#__PURE__*/function () {
 
                         _context4.t0 = interaction;
                         _context4.next = 11;
-                        return (0, _messages.declineHealMessage)(userCurrentCharacter.user.user_id);
+                        return (0, _messages.declineHealMessage)(userCurrentCharacter.UserGroup.user.user_id);
 
                       case 11:
                         _context4.t1 = _context4.sent;
@@ -178,7 +194,7 @@ var discordHeal = /*#__PURE__*/function () {
                                               _context.next = 2;
                                               return _models["default"].wallet.findOne({
                                                 where: {
-                                                  userId: userCurrentCharacter.user.id
+                                                  userId: userCurrentCharacter.UserGroup.user.id
                                                 },
                                                 lock: t.LOCK.UPDATE,
                                                 transaction: t
@@ -194,7 +210,7 @@ var discordHeal = /*#__PURE__*/function () {
 
                                               _context.t0 = interaction;
                                               _context.next = 7;
-                                              return (0, _messages.insufficientBalanceMessage)(userCurrentCharacter.user.user_id, 'Heal');
+                                              return (0, _messages.insufficientBalanceMessage)(userCurrentCharacter.UserGroup.user.user_id, 'Heal');
 
                                             case 7:
                                               _context.t1 = _context.sent;
@@ -220,11 +236,12 @@ var discordHeal = /*#__PURE__*/function () {
                                               });
 
                                             case 16:
-                                              _context.next = 18;
-                                              return _models["default"].UserClass.findOne({
+                                              console.log('fetch usergroupclass');
+                                              _context.next = 19;
+                                              return _models["default"].UserGroupClass.findOne({
                                                 where: {
-                                                  userId: userCurrentCharacter.user.id,
-                                                  classId: userCurrentCharacter.user.currentClassId
+                                                  UserGroupId: userCurrentCharacter.UserGroup.id,
+                                                  classId: userCurrentCharacter.UserGroup.user.currentClassId
                                                 },
                                                 include: [{
                                                   model: _models["default"].condition,
@@ -240,16 +257,17 @@ var discordHeal = /*#__PURE__*/function () {
                                                 transaction: t
                                               });
 
-                                            case 18:
+                                            case 19:
                                               userToUpdate = _context.sent;
-                                              _context.next = 21;
+                                              _context.next = 22;
                                               return (0, _calculateCharacterStats.calculateCharacterStats)(userCurrentCharacter);
 
-                                            case 21:
+                                            case 22:
                                               _yield$calculateChara = _context.sent;
                                               hp = _yield$calculateChara.hp;
                                               mp = _yield$calculateChara.mp;
-                                              _context.next = 26;
+                                              console.log('before condition update');
+                                              _context.next = 28;
                                               return userToUpdate.condition.update({
                                                 life: hp.max,
                                                 mana: mp.max
@@ -258,13 +276,13 @@ var discordHeal = /*#__PURE__*/function () {
                                                 transaction: t
                                               });
 
-                                            case 26:
+                                            case 28:
                                               _context.t5 = interaction;
-                                              _context.t6 = "<@".concat(userCurrentCharacter.user.user_id, ">");
-                                              _context.next = 30;
-                                              return (0, _messages.healCompleteMessage)(userCurrentCharacter.user.user_id);
+                                              _context.t6 = "<@".concat(userCurrentCharacter.UserGroup.user.user_id, ">");
+                                              _context.next = 32;
+                                              return (0, _messages.healCompleteMessage)(userCurrentCharacter.UserGroup.user.user_id);
 
-                                            case 30:
+                                            case 32:
                                               _context.t7 = _context.sent;
                                               _context.t8 = [_context.t7];
                                               _context.t9 = [];
@@ -273,10 +291,10 @@ var discordHeal = /*#__PURE__*/function () {
                                                 embeds: _context.t8,
                                                 components: _context.t9
                                               };
-                                              _context.next = 36;
+                                              _context.next = 38;
                                               return _context.t5.editReply.call(_context.t5, _context.t10);
 
-                                            case 36:
+                                            case 38:
                                             case "end":
                                               return _context.stop();
                                           }
@@ -351,7 +369,7 @@ var discordHeal = /*#__PURE__*/function () {
               };
             }());
 
-          case 35:
+          case 39:
           case "end":
             return _context5.stop();
         }

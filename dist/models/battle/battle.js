@@ -23,7 +23,7 @@ module.exports = function (sequelize, DataTypes) {
   var BattleModel = sequelize.define('battle', modelDefinition, modelOptions);
 
   BattleModel.associate = function (model) {
-    BattleModel.belongsTo(model.UserClass);
+    BattleModel.belongsTo(model.UserGroupClass);
     BattleModel.hasMany(model.battleLog);
     BattleModel.hasMany(model.BattleMonster); // BattleModel.belongsTo(model.BattleMonster, {
     //   as: 'currentSelectedMonster',

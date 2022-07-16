@@ -64,8 +64,8 @@ module.exports = function (sequelize, DataTypes) {
       foreignKey: "currentClassId"
     });
     ClassModel.belongsTo(model.classDescription);
-    ClassModel.belongsToMany(model.user, {
-      through: 'UserClass'
+    ClassModel.belongsToMany(model.UserGroup, {
+      through: 'UserGroupClass'
     });
     ClassModel.hasMany(model.skillTree);
   };

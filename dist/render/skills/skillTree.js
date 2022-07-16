@@ -64,18 +64,20 @@ var renderSkillTreeImage = /*#__PURE__*/function () {
       while (1) {
         switch (_context2.prev = _context2.next) {
           case 0:
-            userCurrentRank = userCharacter.user.ranks[0] ? userCharacter.user.ranks[0] : {
-              id: 0
+            console.log('before render skill tree');
+            console.log(userCharacter);
+            userCurrentRank = userCharacter.UserGroup.UserGroupRank.rank ? userCharacter.UserGroup.UserGroupRank.rank : {
+              level: 0
             };
-            _context2.next = 3;
+            _context2.next = 5;
             return (0, _canvas.loadImage)(_path["default"].join(__dirname, "../../assets/images/skilltree/", "skillTreeMenu.png"));
 
-          case 3:
+          case 5:
             skillTreeMenuImage = _context2.sent;
-            _context2.next = 6;
+            _context2.next = 8;
             return (0, _canvas.loadImage)(_path["default"].join(__dirname, "../../assets/images/skilltree/", "skilltree".concat(skillTreeIndex, ".png")));
 
-          case 6:
+          case 8:
             skillTreeImage = _context2.sent;
             canvas = (0, _canvas.createCanvas)(skillTreeImage.width + 25, skillTreeImage.height + 25);
             ctx = canvas.getContext('2d');
@@ -112,9 +114,11 @@ var renderSkillTreeImage = /*#__PURE__*/function () {
             ctx.textAlign = "center";
             ctx.strokeStyle = 'black';
             ctx.lineWidth = 3;
+            console.log(userCharacter);
             printAtWordWrap(ctx, userCharacter["class"].skillTrees[0].name, 295, 175, 15, skillTreeMenuImage.width - 10);
             printAtWordWrap(ctx, userCharacter["class"].skillTrees[1].name, 295, 280, 15, skillTreeMenuImage.width - 10);
             printAtWordWrap(ctx, userCharacter["class"].skillTrees[2].name, 295, 385, 15, skillTreeMenuImage.width - 10);
+            console.log('before render skill tree 1');
             ctx.shadowBlur = 30;
             ctx.shadowColor = "blue";
             ctx.beginPath();
@@ -126,10 +130,10 @@ var renderSkillTreeImage = /*#__PURE__*/function () {
             _loop = function _loop(i) {
               var _loop3 = function _loop3(y) {
                 if (skillTree.skills[i].PreviousSkill[y]) {
-                  var userHasPreviousSkill = userCharacter.UserClassSkills.find(function (o) {
+                  var userHasPreviousSkill = userCharacter.UserGroupClassSkills.find(function (o) {
                     return o.skillId === skillTree.skills[i].PreviousSkill[y].id;
                   });
-                  var userHasCurrentSkill = userCharacter.UserClassSkills.find(function (o) {
+                  var userHasCurrentSkill = userCharacter.UserGroupClassSkills.find(function (o) {
                     return o.skillId === skillTree.skills[i].id;
                   });
 
@@ -171,6 +175,7 @@ var renderSkillTreeImage = /*#__PURE__*/function () {
             ctx.shadowColor = "none";
             ctx.lineWidth = "3";
             ctx.strokeStyle = "black";
+            console.log('before render skill tree 2');
             _loop2 = /*#__PURE__*/_regenerator["default"].mark(function _loop2(_i) {
               var skillIcon, skillImage, userHasSkill, userHasPreviousSkills, userHasSkillOne, _userHasSkillOne, userHasSkillTwo, grayScaleIconBuffer;
 
@@ -179,18 +184,18 @@ var renderSkillTreeImage = /*#__PURE__*/function () {
                   switch (_context.prev = _context.next) {
                     case 0:
                       _context.next = 2;
-                      return (0, _canvas.loadImage)(_path["default"].join(__dirname, "../../assets/images/skills/".concat(userCharacter.user.currentClass.name, "/").concat(skillTree.name), "".concat(skillTree.skills[_i].name, ".png")));
+                      return (0, _canvas.loadImage)(_path["default"].join(__dirname, "../../assets/images/skills/".concat(userCharacter.UserGroup.user.currentClass.name, "/").concat(skillTree.name), "".concat(skillTree.skills[_i].name, ".png")));
 
                     case 2:
                       skillIcon = _context.sent;
                       skillImage = void 0;
-                      userHasSkill = userCharacter.UserClassSkills.find(function (o) {
+                      userHasSkill = userCharacter.UserGroupClassSkills.find(function (o) {
                         return o.skillId === skillTree.skills[_i].id;
                       });
                       userHasPreviousSkills = true; // check if user has the previous skills
 
                       if (skillTree.skills[_i].PreviousSkill.length === 1) {
-                        userHasSkillOne = userCharacter.UserClassSkills.find(function (o) {
+                        userHasSkillOne = userCharacter.UserGroupClassSkills.find(function (o) {
                           return o.skillId === skillTree.skills[_i].PreviousSkill[0].id;
                         });
 
@@ -200,10 +205,10 @@ var renderSkillTreeImage = /*#__PURE__*/function () {
                       }
 
                       if (skillTree.skills[_i].PreviousSkill.length === 2) {
-                        _userHasSkillOne = userCharacter.UserClassSkills.find(function (o) {
+                        _userHasSkillOne = userCharacter.UserGroupClassSkills.find(function (o) {
                           return o.skillId === skillTree.skills[_i].PreviousSkill[0].id;
                         });
-                        userHasSkillTwo = userCharacter.UserClassSkills.find(function (o) {
+                        userHasSkillTwo = userCharacter.UserGroupClassSkills.find(function (o) {
                           return o.skillId === skillTree.skills[_i].PreviousSkill[1].id;
                         });
 
@@ -213,7 +218,7 @@ var renderSkillTreeImage = /*#__PURE__*/function () {
                       } // check if we need gray scaled icon
 
 
-                      if (!(skillTree.skills[_i].level > userCurrentRank.id || !userHasPreviousSkills)) {
+                      if (!(skillTree.skills[_i].level > userCurrentRank.level || !userHasPreviousSkills)) {
                         _context.next = 17;
                         break;
                       }
@@ -259,22 +264,23 @@ var renderSkillTreeImage = /*#__PURE__*/function () {
             });
             _i = 0;
 
-          case 56:
+          case 61:
             if (!(_i < skillTree.skills.length)) {
-              _context2.next = 61;
+              _context2.next = 66;
               break;
             }
 
-            return _context2.delegateYield(_loop2(_i), "t0", 58);
+            return _context2.delegateYield(_loop2(_i), "t0", 63);
 
-          case 58:
+          case 63:
             _i++;
-            _context2.next = 56;
+            _context2.next = 61;
             break;
 
-          case 61:
-            totalSkillsPointsSpend = _lodash["default"].sumBy(userCharacter.UserClassSkills, 'points');
-            skillPointsLeftToSpend = userCurrentRank.id - totalSkillsPointsSpend;
+          case 66:
+            console.log('before render skill tree 3');
+            totalSkillsPointsSpend = _lodash["default"].sumBy(userCharacter.UserGroupClassSkills, 'points');
+            skillPointsLeftToSpend = userCurrentRank.level - totalSkillsPointsSpend;
 
             if (skillPointsLeftToSpend > 0) {
               ctx.font = 'bold 18px "HeartWarming"';
@@ -293,14 +299,16 @@ var renderSkillTreeImage = /*#__PURE__*/function () {
               ctx.fillText('Skillpoints', 300, 70, 70);
             }
 
-            _context2.next = 66;
+            console.log('before render skill tree 5');
+            _context2.next = 73;
             return canvas.toBuffer();
 
-          case 66:
+          case 73:
             finalImage = _context2.sent;
+            console.log('before send back render skill message');
             return _context2.abrupt("return", finalImage);
 
-          case 68:
+          case 76:
           case "end":
             return _context2.stop();
         }

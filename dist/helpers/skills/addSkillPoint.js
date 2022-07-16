@@ -17,6 +17,8 @@ var _models = _interopRequireDefault(require("../../models"));
 
 var _logger = _interopRequireDefault(require("../logger"));
 
+var _character = require("../character/character");
+
 var _messages = require("../../messages");
 
 var addSkillPoint = /*#__PURE__*/function () {
@@ -45,53 +47,61 @@ var addSkillPoint = /*#__PURE__*/function () {
                               switch (_context.prev = _context.next) {
                                 case 0:
                                   _context.next = 2;
-                                  return _models["default"].UserRank.findOne({
+                                  return _models["default"].UserGroupRank.findOne({
                                     where: {
-                                      userId: userCurrentCharacter.user.id
+                                      // userId: userCurrentCharacter.UserGroup.user.id,
+                                      UserGroupId: userCurrentCharacter.UserGroup.id
                                     },
+                                    include: [{
+                                      model: _models["default"].rank,
+                                      as: 'rank'
+                                    }],
                                     lock: t.LOCK.UPDATE,
                                     transaction: t
                                   });
 
                                 case 2:
                                   findUserRank = _context.sent;
-                                  _context.next = 5;
-                                  return _models["default"].UserClassSkill.findAll({
-                                    attributes: ['userClassId', [_sequelize.Sequelize.fn('sum', _sequelize.Sequelize.col('points')), 'totalSpendPoints']],
-                                    where: {
-                                      userClassId: userCurrentCharacter.id
-                                    },
-                                    group: ['userClassId'],
-                                    raw: true,
-                                    lock: t.LOCK.UPDATE,
-                                    transaction: t
-                                  });
-
-                                case 5:
-                                  sumOfSkills = _context.sent;
-                                  console.log(userCurrentCharacter.id);
-                                  console.log(sumOfSkills);
-                                  console.log('sumOfSkills');
 
                                   if (findUserRank) {
-                                    _context.next = 12;
+                                    _context.next = 6;
                                     break;
                                   }
 
                                   failAddSkillReason = 'Unable to add skills, user has no rank!';
                                   return _context.abrupt("return");
 
-                                case 12:
-                                  if (!(findUserRank.rankId <= Number(sumOfSkills[0].totalSpendPoints) && Number(sumOfSkills[0].totalSpendPoints) !== 0)) {
-                                    _context.next = 15;
+                                case 6:
+                                  // console.log(userCurrentCharacter);
+                                  console.log('before user groupclasskillss');
+                                  _context.next = 9;
+                                  return _models["default"].UserGroupClassSkill.findAll({
+                                    attributes: ['UserGroupClassId', [_sequelize.Sequelize.fn('sum', _sequelize.Sequelize.col('points')), 'totalSpendPoints']],
+                                    where: {
+                                      UserGroupClassId: userCurrentCharacter.id
+                                    },
+                                    group: ['UserGroupClassId'],
+                                    raw: true,
+                                    lock: t.LOCK.UPDATE,
+                                    transaction: t
+                                  });
+
+                                case 9:
+                                  sumOfSkills = _context.sent;
+                                  console.log(userCurrentCharacter.id);
+                                  console.log(sumOfSkills);
+                                  console.log('sumOfSkills');
+
+                                  if (!(findUserRank.rank.level <= Number(sumOfSkills[0].totalSpendPoints) && Number(sumOfSkills[0].totalSpendPoints) !== 0)) {
+                                    _context.next = 16;
                                     break;
                                   }
 
                                   failAddSkillReason = 'User already spend all of the skillpoints!';
                                   return _context.abrupt("return");
 
-                                case 15:
-                                  _context.next = 17;
+                                case 16:
+                                  _context.next = 18;
                                   return _models["default"].skill.findOne({
                                     where: {
                                       id: skillToAddId
@@ -104,50 +114,52 @@ var addSkillPoint = /*#__PURE__*/function () {
                                     transaction: t
                                   });
 
-                                case 17:
+                                case 18:
                                   findSkillToAdd = _context.sent;
 
-                                  if (!(findUserRank.rankId < findSkillToAdd.level)) {
-                                    _context.next = 21;
+                                  if (!(findUserRank.rank.level < findSkillToAdd.level)) {
+                                    _context.next = 22;
                                     break;
                                   }
 
                                   failAddSkillReason = 'Unable to add, user has insuffiecent level!';
                                   return _context.abrupt("return");
 
-                                case 21:
-                                  _context.next = 23;
-                                  return _models["default"].UserClassSkill.findOne({
+                                case 22:
+                                  console.log(userCurrentCharacter.UserGroup);
+                                  console.log('before adding the skill');
+                                  _context.next = 26;
+                                  return _models["default"].UserGroupClassSkill.findOne({
                                     where: {
-                                      userClassId: userCurrentCharacter.id,
+                                      userGroupClassId: userCurrentCharacter.id,
                                       skillId: skillToAddId
                                     },
                                     lock: t.LOCK.UPDATE,
                                     transaction: t
                                   });
 
-                                case 23:
+                                case 26:
                                   findUserSkillToAdd = _context.sent;
 
                                   if (!(findUserSkillToAdd && findUserSkillToAdd.points >= 20)) {
-                                    _context.next = 27;
+                                    _context.next = 30;
                                     break;
                                   }
 
                                   failAddSkillReason = 'skill already maxed out!';
                                   return _context.abrupt("return");
 
-                                case 27:
-                                  _context.next = 29;
-                                  return _models["default"].UserClassSkill.findAll({
+                                case 30:
+                                  _context.next = 32;
+                                  return _models["default"].UserGroupClassSkill.findAll({
                                     where: {
-                                      userClassId: userCurrentCharacter.id
+                                      UserGroupClassId: userCurrentCharacter.id
                                     },
                                     lock: t.LOCK.UPDATE,
                                     transaction: t
                                   });
 
-                                case 29:
+                                case 32:
                                   findAllUserSkills = _context.sent;
                                   userHasPreviousSkills = true; // check if user has the previous skills
 
@@ -175,22 +187,24 @@ var addSkillPoint = /*#__PURE__*/function () {
                                   }
 
                                   if (userHasPreviousSkills) {
-                                    _context.next = 36;
+                                    _context.next = 39;
                                     break;
                                   }
 
                                   failAddSkillReason = 'user doesnt have the prerequisite skills!';
                                   return _context.abrupt("return");
 
-                                case 36:
+                                case 39:
                                   if (findUserSkillToAdd) {
-                                    _context.next = 41;
+                                    _context.next = 44;
                                     break;
                                   }
 
-                                  _context.next = 39;
-                                  return _models["default"].UserClassSkill.create({
-                                    UserClassId: userCurrentCharacter.id,
+                                  _context.next = 42;
+                                  return _models["default"].UserGroupClassSkill.create({
+                                    UserClassId: 1,
+                                    // This needs to be removed after successful migrations to new realm based setup
+                                    UserGroupClassId: userCurrentCharacter.id,
                                     skillId: skillToAddId,
                                     points: 1
                                   }, {
@@ -198,12 +212,12 @@ var addSkillPoint = /*#__PURE__*/function () {
                                     transaction: t
                                   });
 
-                                case 39:
-                                  _context.next = 43;
+                                case 42:
+                                  _context.next = 46;
                                   break;
 
-                                case 41:
-                                  _context.next = 43;
+                                case 44:
+                                  _context.next = 46;
                                   return findUserSkillToAdd.update({
                                     points: findUserSkillToAdd.points + 1
                                   }, {
@@ -211,19 +225,19 @@ var addSkillPoint = /*#__PURE__*/function () {
                                     transaction: t
                                   });
 
-                                case 43:
-                                  _context.next = 45;
+                                case 46:
+                                  _context.next = 48;
                                   return _models["default"].activity.create({
                                     type: 'destroyItem_s',
-                                    earnerId: userCurrentCharacter.user.id
+                                    earnerId: userCurrentCharacter.UserGroup.user.id
                                   }, {
                                     lock: t.LOCK.UPDATE,
                                     transaction: t
                                   });
 
-                                case 45:
+                                case 48:
                                   preActivity = _context.sent;
-                                  _context.next = 48;
+                                  _context.next = 51;
                                   return _models["default"].activity.findOne({
                                     where: {
                                       id: preActivity.id
@@ -236,11 +250,11 @@ var addSkillPoint = /*#__PURE__*/function () {
                                     transaction: t
                                   });
 
-                                case 48:
+                                case 51:
                                   finalActivity = _context.sent;
                                   activity.unshift(finalActivity);
 
-                                case 50:
+                                case 53:
                                 case "end":
                                   return _context.stop();
                               }
@@ -305,77 +319,9 @@ var addSkillPoint = /*#__PURE__*/function () {
 
           case 3:
             _context4.next = 5;
-            return _models["default"].UserClass.findOne({
-              where: {
-                classId: userCurrentCharacter.user.currentClassId
-              },
-              include: [{
-                model: _models["default"].UserClassSkill,
-                as: 'UserClassSkills',
-                separate: true
-              }, {
-                model: _models["default"]["class"],
-                as: 'class',
-                include: [{
-                  model: _models["default"].skillTree,
-                  as: 'skillTrees',
-                  separate: true,
-                  include: [{
-                    model: _models["default"].skill,
-                    as: 'skills',
-                    include: [{
-                      model: _models["default"].skill,
-                      as: 'PreviousSkill'
-                    }]
-                  }]
-                }]
-              }, {
-                model: _models["default"].user,
-                as: 'user',
-                where: {
-                  id: "".concat(userCurrentCharacter.user.id)
-                },
-                include: [{
-                  model: _models["default"]["class"],
-                  as: 'currentClass'
-                }, {
-                  model: _models["default"].rank,
-                  as: 'ranks'
-                }]
-              }, {
-                model: _models["default"].stats,
-                as: 'stats'
-              }, {
-                model: _models["default"].condition,
-                as: 'condition'
-              }, {
-                model: _models["default"].equipment,
-                as: 'equipment'
-              }, {
-                model: _models["default"].inventory,
-                as: 'inventory',
-                include: [{
-                  model: _models["default"].item,
-                  as: 'items',
-                  required: false,
-                  include: [{
-                    model: _models["default"].itemBase,
-                    as: 'itemBase',
-                    include: [{
-                      model: _models["default"].itemFamily,
-                      as: 'itemFamily',
-                      include: [{
-                        model: _models["default"].itemType,
-                        as: 'itemType'
-                      }]
-                    }]
-                  }, {
-                    model: _models["default"].itemQuality,
-                    as: 'itemQuality'
-                  }]
-                }]
-              }]
-            });
+            return (0, _character.fetchUserCurrentCharacter)(userCurrentCharacter.UserGroup.user.user_id, // user discord id
+            false // Need inventory?
+            );
 
           case 5:
             myUpdatedUser = _context4.sent;

@@ -27,10 +27,6 @@ module.exports = function (sequelize, DataTypes) {
       type: DataTypes.STRING,
       allowNull: true
     },
-    expRewardChannelId: {
-      type: DataTypes.STRING,
-      allowNull: true
-    },
     joinedRoleId: {
       type: DataTypes.STRING,
       allowNull: true

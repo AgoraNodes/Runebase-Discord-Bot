@@ -1,7 +1,8 @@
 import db from '../models';
 
+// Should be keep the user condition on redis? real time buffer on RAM <- Breaking changes
 export const replenishEveryonesStamina = async () => {
-  const allUserCharacters = await db.UserClass.findAll({
+  const allUserCharacters = await db.UserGroupClass.findAll({
     include: [
       {
         model: db.class,

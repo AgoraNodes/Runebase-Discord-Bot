@@ -30,7 +30,7 @@ module.exports = function (sequelize, DataTypes) {
   var ConditionModel = sequelize.define('condition', modelDefinition, modelOptions);
 
   ConditionModel.associate = function (model) {
-    ConditionModel.hasOne(model.UserClass, {
+    ConditionModel.hasOne(model.UserGroupClass, {
       as: 'condition',
       foreignKey: 'conditionId'
     });

@@ -36,7 +36,7 @@ var userApplyBattleCompleteEffects = /*#__PURE__*/function () {
                 totalHealedByLifeSteal += totalRelieveHealing;
                 userState.hp.current = userState.hp.current + totalRelieveHealing > userState.hp.max ? userState.hp.max : userState.hp.current + totalRelieveHealing; // Create Battle Log
 
-                log = "Relieve healed ".concat(userState.user.username, " for ").concat(totalRelieveHealing);
+                log = "Relieve healed ".concat(userState.UserGroup.user.username, " for ").concat(totalRelieveHealing);
                 saveToDatabasePromises.push(new Promise(function (resolve, reject) {
                   _models["default"].battleLog.create({
                     battleId: battle.id,

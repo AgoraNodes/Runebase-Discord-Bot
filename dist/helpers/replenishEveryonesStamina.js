@@ -19,6 +19,7 @@ function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o =
 
 function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
 
+// Should be keep the user condition on redis? real time buffer on RAM <- Breaking changes
 var replenishEveryonesStamina = /*#__PURE__*/function () {
   var _ref = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee() {
     var allUserCharacters, _iterator, _step, userChar;
@@ -28,7 +29,7 @@ var replenishEveryonesStamina = /*#__PURE__*/function () {
         switch (_context.prev = _context.next) {
           case 0:
             _context.next = 2;
-            return _models["default"].UserClass.findAll({
+            return _models["default"].UserGroupClass.findAll({
               include: [{
                 model: _models["default"]["class"],
                 as: 'class'

@@ -257,7 +257,7 @@ var calculateItemStats = /*#__PURE__*/function () {
 
                 if (currentCharacter.equipment.offHand && currentCharacter.equipment.offHand.itemBase.itemFamily.itemType.name === 'Shields') {
                   shieldBlock = currentCharacter.equipment.offHand.itemBase.block;
-                  blocking = shieldBlock * (dexterity - 15) / (userCurrentRank.id * 2);
+                  blocking = shieldBlock * (dexterity - 15) / (userCurrentRank.level * 2);
                   newBlock = blocking > 50 ? 50 : blocking;
                 }
               }
@@ -338,9 +338,10 @@ var calculateItemStats = /*#__PURE__*/function () {
               }
             }
 
+            console.log('end calc item stats');
             return _context.abrupt("return", [newStrength, newDexterity, newVitality, newEnergy, newDefense, newBlock, canWearHelm, canWearMainHand, canWearOffHand, canWearArmor, canWearGloves, canWearBelt, canWearBoots]);
 
-          case 30:
+          case 31:
           case "end":
             return _context.stop();
         }

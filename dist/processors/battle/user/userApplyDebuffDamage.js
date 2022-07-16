@@ -102,7 +102,7 @@ var userApplyDebuffDamage = /*#__PURE__*/function () {
                 });
 
                 if (updatedMonster.currentHp < 1) {
-                  var _log = "".concat(userState.user.username, " killed ").concat(updatedMonster.monster.name);
+                  var _log = "".concat(userState.UserGroup.user.username, " killed ").concat(updatedMonster.monster.name);
 
                   saveToDatabasePromises.push(new Promise(function (resolve, reject) {
                     _models["default"].battleLog.create({

@@ -9,7 +9,7 @@ var calculateUserRetaliation = function calculateUserRetaliation(userCurrentChar
   var retaliate = [];
 
   if (userCurrentCharacter["class"].name === 'Warrior') {
-    var warriorRetaliation = userCurrentCharacter.UserClassSkills.find(function (x) {
+    var warriorRetaliation = userCurrentCharacter.UserGroupClassSkills.find(function (x) {
       return x.skill.name === 'Retaliate';
     });
 

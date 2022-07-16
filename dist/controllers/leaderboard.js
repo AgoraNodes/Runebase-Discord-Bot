@@ -202,7 +202,7 @@ var discordLeaderboard = /*#__PURE__*/function () {
                                     _context.t8 = currentExp;
                                     _context.t9 = nextRankExp;
                                     _context.t10 = currentRank ? currentRank.name : 'Unranked';
-                                    _context.t11 = currentRank ? currentRank.id : 0;
+                                    _context.t11 = currentRank ? currentRank.level : 0;
                                     return _context.abrupt("return", {
                                       position: _context.t0,
                                       username: _context.t1,

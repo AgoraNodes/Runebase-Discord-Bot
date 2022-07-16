@@ -60,16 +60,32 @@ var discordResetSkills = /*#__PURE__*/function () {
 
           case 9:
             userCurrentCharacter = _context5.sent;
-            _context5.next = 12;
+
+            if (userCurrentCharacter) {
+              _context5.next = 14;
+              break;
+            }
+
+            _context5.next = 13;
+            return message.reply({
+              content: 'You have not selected a class yet\n`!runebase pickclass`\n`/pickclass`',
+              ephemeral: true
+            });
+
+          case 13:
+            return _context5.abrupt("return");
+
+          case 14:
+            _context5.next = 16;
             return _models["default"].wallet.findOne({
               where: {
                 userId: userCurrentCharacter.user.id
               }
             });
 
-          case 12:
+          case 16:
             userWallet = _context5.sent;
-            _context5.next = 15;
+            _context5.next = 19;
             return _models["default"].UserClassSkill.findAll({
               where: {
                 UserClassId: userCurrentCharacter.id
@@ -83,29 +99,29 @@ var discordResetSkills = /*#__PURE__*/function () {
               }]
             });
 
-          case 15:
+          case 19:
             userSkills = _context5.sent;
             sumSkillPoints = userSkills.reduce(function (accumulator, object) {
               return accumulator + object.points;
             }, 0);
             totalSkillsCost = sumSkillPoints * 1;
             _context5.t0 = discordChannel;
-            _context5.next = 21;
+            _context5.next = 25;
             return (0, _messages.skillConfirmationMessage)(userId, userWallet.available, totalSkillsCost);
 
-          case 21:
+          case 25:
             _context5.t1 = _context5.sent;
             _context5.t2 = [_context5.t1];
             _context5.t3 = _discord.MessageActionRow;
-            _context5.next = 26;
+            _context5.next = 30;
             return (0, _buttons.generateAcceptButton)();
 
-          case 26:
+          case 30:
             _context5.t4 = _context5.sent;
-            _context5.next = 29;
+            _context5.next = 33;
             return (0, _buttons.generateDeclineButton)();
 
-          case 29:
+          case 33:
             _context5.t5 = _context5.sent;
             _context5.t6 = [_context5.t4, _context5.t5];
             _context5.t7 = {
@@ -117,10 +133,10 @@ var discordResetSkills = /*#__PURE__*/function () {
               embeds: _context5.t2,
               components: _context5.t9
             };
-            _context5.next = 37;
+            _context5.next = 41;
             return _context5.t0.send.call(_context5.t0, _context5.t10);
 
-          case 37:
+          case 41:
             embedMessage = _context5.sent;
             collector = embedMessage.createMessageComponentCollector({// filter: ({ user: discordUser }) => discordUser.id === userCurrentCharacter.user.user_id,
             });
@@ -434,7 +450,7 @@ var discordResetSkills = /*#__PURE__*/function () {
               };
             }());
 
-          case 40:
+          case 44:
           case "end":
             return _context5.stop();
         }

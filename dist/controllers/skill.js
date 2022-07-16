@@ -68,7 +68,7 @@ var discordSkills = /*#__PURE__*/function () {
 
             _context2.next = 12;
             return message.reply({
-              content: 'You have not selected a class yet\n`!runebase pickclass`\n/`pickclass`',
+              content: 'You have not selected a class yet\n`!runebase pickclass`\n`/pickclass`',
               ephemeral: true
             });
 
@@ -93,7 +93,7 @@ var discordSkills = /*#__PURE__*/function () {
               };
             });
             _context2.t0 = discordChannel;
-            _context2.t1 = "<@".concat(userCurrentCharacter.user.user_id, ">");
+            _context2.t1 = "<@".concat(userCurrentCharacter.UserGroup.user.user_id, ">");
             _context2.next = 19;
             return (0, _skills.renderSkillScreen)(userCurrentCharacter, userCurrentCharacter["class"].skillTrees[0], 0, // skillTreeIndex
             false, // selected skill
@@ -140,6 +140,7 @@ var discordSkills = /*#__PURE__*/function () {
 
           case 34:
             embedMessage = _context2.sent;
+            console.log('after init embed message');
             collector = embedMessage.createMessageComponentCollector({});
             skillTreeIndex = 0;
             collector.on('collect', /*#__PURE__*/function () {
@@ -150,7 +151,7 @@ var discordSkills = /*#__PURE__*/function () {
                   while (1) {
                     switch (_context.prev = _context.next) {
                       case 0:
-                        if (!(interaction.user.id !== userCurrentCharacter.user.user_id)) {
+                        if (!(interaction.user.id !== userCurrentCharacter.UserGroup.user.user_id)) {
                           _context.next = 4;
                           break;
                         }
@@ -180,9 +181,9 @@ var discordSkills = /*#__PURE__*/function () {
                         }
 
                         _context.t0 = interaction;
-                        _context.t1 = "<@".concat(userCurrentCharacter.user.user_id, ">");
+                        _context.t1 = "<@".concat(userCurrentCharacter.UserGroup.user.user_id, ">");
                         _context.next = 12;
-                        return (0, _messages.loadingSkillAddEmbed)(userCurrentCharacter.user.username);
+                        return (0, _messages.loadingSkillAddEmbed)(userCurrentCharacter.UserGroup.user.username);
 
                       case 12:
                         _context.t2 = _context.sent;
@@ -239,7 +240,7 @@ var discordSkills = /*#__PURE__*/function () {
 
                         _context.t11 = interaction;
                         _context.next = 40;
-                        return (0, _messages.loadingSkillSelectEmbed)(userCurrentCharacter.user.username);
+                        return (0, _messages.loadingSkillSelectEmbed)(userCurrentCharacter.UserGroup.user.username);
 
                       case 40:
                         _context.t12 = _context.sent;
@@ -267,6 +268,8 @@ var discordSkills = /*#__PURE__*/function () {
                         }
 
                       case 47:
+                        console.log(_skillInfo["default"]);
+                        console.log('skills');
                         jsonSkillInfo = _skillInfo["default"].find(function (x) {
                           return x.name === selectedSkill.name;
                         });
@@ -286,27 +289,27 @@ var discordSkills = /*#__PURE__*/function () {
                           };
                         });
                         _context.t15 = interaction;
-                        _context.t16 = "<@".concat(userCurrentCharacter.user.user_id, ">");
+                        _context.t16 = "<@".concat(userCurrentCharacter.UserGroup.user.user_id, ">");
                         _context.t17 = (0, _toConsumableArray2["default"])(jsonSkillInfo ? [(0, _messages.skillInfoMessage)(jsonSkillInfo && jsonSkillInfo.name, jsonSkillInfo && jsonSkillInfo.description)] : []);
-                        _context.next = 55;
+                        _context.next = 57;
                         return (0, _skills.renderSkillScreen)(userCurrentCharacter, userCurrentCharacter["class"].skillTrees[skillTreeIndex], skillTreeIndex, selectedSkill, jsonSkillInfo, failAddSkillReason);
 
-                      case 55:
+                      case 57:
                         _context.t18 = _context.sent;
                         _context.t19 = [_context.t18];
                         _context.t20 = [];
                         _context.t21 = _toConsumableArray2["default"];
 
                         if (!selectedSkill) {
-                          _context.next = 70;
+                          _context.next = 72;
                           break;
                         }
 
                         _context.t23 = _discord.MessageActionRow;
-                        _context.next = 63;
+                        _context.next = 65;
                         return (0, _buttons.generateAddSkillButton)(selectedSkill);
 
-                      case 63:
+                      case 65:
                         _context.t24 = _context.sent;
                         _context.t25 = [_context.t24];
                         _context.t26 = {
@@ -314,13 +317,13 @@ var discordSkills = /*#__PURE__*/function () {
                         };
                         _context.t27 = new _context.t23(_context.t26);
                         _context.t22 = [_context.t27];
-                        _context.next = 71;
+                        _context.next = 73;
                         break;
 
-                      case 70:
+                      case 72:
                         _context.t22 = [];
 
-                      case 71:
+                      case 73:
                         _context.t28 = _context.t22;
                         _context.t29 = (0, _context.t21)(_context.t28);
                         _context.t30 = new _discord.MessageActionRow({
@@ -338,10 +341,10 @@ var discordSkills = /*#__PURE__*/function () {
                           })]
                         });
                         _context.t32 = _discord.MessageActionRow;
-                        _context.next = 78;
+                        _context.next = 80;
                         return (0, _buttons.generateCancelSkillButton)();
 
-                      case 78:
+                      case 80:
                         _context.t33 = _context.sent;
                         _context.t34 = [_context.t33];
                         _context.t35 = {
@@ -356,10 +359,10 @@ var discordSkills = /*#__PURE__*/function () {
                           files: _context.t19,
                           components: _context.t38
                         };
-                        _context.next = 87;
+                        _context.next = 89;
                         return _context.t15.editReply.call(_context.t15, _context.t39);
 
-                      case 87:
+                      case 89:
                       case "end":
                         return _context.stop();
                     }
@@ -372,7 +375,7 @@ var discordSkills = /*#__PURE__*/function () {
               };
             }());
 
-          case 38:
+          case 39:
           case "end":
             return _context2.stop();
         }

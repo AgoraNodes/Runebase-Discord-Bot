@@ -14,13 +14,14 @@ module.exports = function (sequelize, DataTypes) {
     freezeTableName: true
   }; // 3: Define the Wallet model.
 
-  var UserRankModel = sequelize.define('UserRank', modelDefinition, modelOptions);
+  var UserGroupRankModel = sequelize.define('UserGroupRank', modelDefinition, modelOptions);
 
-  UserRankModel.associate = function (model) {
-    UserRankModel.belongsTo(model.user, {
-      foreignKey: 'userId'
+  UserGroupRankModel.associate = function (model) {
+    UserGroupRankModel.belongsTo(model.UserGroup, {
+      foreignKey: 'UserGroupId'
     });
+    UserGroupRankModel.belongsTo(model.rank);
   };
 
-  return UserRankModel;
+  return UserGroupRankModel;
 };

@@ -75,7 +75,7 @@ var discordShowInventory = /*#__PURE__*/function () {
 
             _context11.next = 13;
             return message.reply({
-              content: 'You have not selected a class yet\n`!runebase pickclass`\n/`pickclass`',
+              content: 'You have not selected a class yet\n`!runebase pickclass`\n`/pickclass`',
               ephemeral: true
             });
 
@@ -226,8 +226,8 @@ var discordShowInventory = /*#__PURE__*/function () {
                         ctx.strokeStyle = 'black';
                         ctx.lineWidth = 3;
                         ctx.textAlign = "center";
-                        ctx.strokeText("".concat(userCurrentCharacter.user.username, " picked ").concat(current[0].name, "!"), 250, 40, 500);
-                        ctx.fillText("".concat(userCurrentCharacter.user.username, " picked ").concat(current[0].name, "!"), 250, 40, 500);
+                        ctx.strokeText("".concat(userCurrentCharacter.UserGroup.user.username, " picked ").concat(current[0].name, "!"), 250, 40, 500);
+                        ctx.fillText("".concat(userCurrentCharacter.UserGroup.user.username, " picked ").concat(current[0].name, "!"), 250, 40, 500);
                         return _context3.abrupt("return", new _discord.MessageAttachment(canvas.toBuffer(), 'picked.png'));
 
                       case 11:
@@ -257,8 +257,8 @@ var discordShowInventory = /*#__PURE__*/function () {
                         ctx.strokeStyle = 'black';
                         ctx.lineWidth = 3;
                         ctx.textAlign = "center";
-                        ctx.strokeText("".concat(userCurrentCharacter.user.username, " canceled inventory"), 250, 60, 500);
-                        ctx.fillText("".concat(userCurrentCharacter.user.username, " canceled inventory"), 250, 60, 500);
+                        ctx.strokeText("".concat(userCurrentCharacter.UserGroup.user.username, " canceled inventory"), 250, 60, 500);
+                        ctx.fillText("".concat(userCurrentCharacter.UserGroup.user.username, " canceled inventory"), 250, 60, 500);
                         return _context4.abrupt("return", new _discord.MessageAttachment(canvas.toBuffer(), 'cancelSelection.png'));
 
                       case 10:
@@ -288,8 +288,8 @@ var discordShowInventory = /*#__PURE__*/function () {
                         ctx.strokeStyle = 'black';
                         ctx.lineWidth = 3;
                         ctx.textAlign = "center";
-                        ctx.strokeText("".concat(userCurrentCharacter.user.username, " Your inventory is empty"), 250, 60, 500);
-                        ctx.fillText("".concat(userCurrentCharacter.user.username, " Your inventory is empty"), 250, 60, 500);
+                        ctx.strokeText("".concat(userCurrentCharacter.UserGroup.user.username, " Your inventory is empty"), 250, 60, 500);
+                        ctx.fillText("".concat(userCurrentCharacter.UserGroup.user.username, " Your inventory is empty"), 250, 60, 500);
                         return _context5.abrupt("return", new _discord.MessageAttachment(canvas.toBuffer(), 'emptyInventory.png'));
 
                       case 10:

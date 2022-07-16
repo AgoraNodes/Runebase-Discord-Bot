@@ -78,7 +78,7 @@ var userApplyAttackSingle = /*#__PURE__*/function () {
               didUserStun = Math.random() < Number(useAttack.stun) / 100;
               updatedMonster.currentHp -= randomAttackDamage; // Generate Battle log
 
-              log = "".concat(userState.user.username, " used ").concat(useAttack.name, " on ").concat(updatedMonster.monster.name, " for ").concat(randomAttackDamage, " damage").concat(didUserCrit ? ' (crit)' : '');
+              log = "".concat(userState.UserGroup.user.username, " used ").concat(useAttack.name, " on ").concat(updatedMonster.monster.name, " for ").concat(randomAttackDamage, " damage").concat(didUserCrit ? ' (crit)' : '');
               saveToDatabasePromises.push(new Promise(function (resolve, reject) {
                 _models["default"].battleLog.create({
                   battleId: battle.id,
@@ -95,7 +95,7 @@ var userApplyAttackSingle = /*#__PURE__*/function () {
               });
 
               if (updatedMonster.currentHp < 1) {
-                _log = "".concat(userState.user.username, " killed ").concat(updatedMonster.monster.name);
+                _log = "".concat(userState.UserGroup.user.username, " killed ").concat(updatedMonster.monster.name);
                 saveToDatabasePromises.push(new Promise(function (resolve, reject) {
                   _models["default"].battleLog.create({
                     battleId: battle.id,

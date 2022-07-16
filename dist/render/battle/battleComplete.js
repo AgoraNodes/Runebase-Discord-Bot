@@ -31,8 +31,8 @@ var renderBattleComplete = /*#__PURE__*/function () {
             ctx.textAlign = "center";
             ctx.strokeStyle = 'black';
             ctx.lineWidth = 3;
-            ctx.strokeText("".concat(currentCharacter.user.username, " won battle#").concat(battle.id), 700, 150, 1400);
-            ctx.fillText("".concat(currentCharacter.user.username, " won battle#").concat(battle.id), 700, 150, 1400);
+            ctx.strokeText("".concat(currentCharacter.UserGroup.user.username, " won battle#").concat(battle.id), 700, 150, 1400);
+            ctx.fillText("".concat(currentCharacter.UserGroup.user.username, " won battle#").concat(battle.id), 700, 150, 1400);
             return _context.abrupt("return", new _discord.MessageAttachment(canvas.toBuffer(), 'class.png'));
 
           case 10:

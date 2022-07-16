@@ -41,6 +41,10 @@ var _fetchDiscordChannel = require("../helpers/client/fetchDiscordChannel");
 
 var _unEquipItem = require("../helpers/equipment/unEquipItem");
 
+var _messages = require("../messages");
+
+var _isUserInRealm = _interopRequireDefault(require("../helpers/realm/isUserInRealm"));
+
 /* eslint-disable import/prefer-default-export */
 var showEquipmentImage = /*#__PURE__*/function () {
   var _ref = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(userCurrentCharacter) {
@@ -71,7 +75,7 @@ var showEquipmentImage = /*#__PURE__*/function () {
 
 var discordShowEquipment = /*#__PURE__*/function () {
   var _ref2 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee10(discordClient, message, setting, io, queue) {
-    var activity, userId, discordChannel, userCurrentCharacter, cancelEquipmentId, backId, helmId, amuletId, mainHandId, offHandId, armorId, glovesId, beltId, bootsId, ringSlotOneId, ringSlotTwoId, ringSlotOneButton, ringSlotTwoButton, bootsButton, helmButton, amuletutton, weaponSlotOneButton, weaponSlotTwoButton, armorButton, glovesButton, beltButton, backButton, generateCancelEquipmentButton, generateUnEquipItemButton, generateCurrentEquipmentImage, generateCancelEquipmentImage, isRowOneActive, isRowTwoActive, embedMessage, collector, currentIndex;
+    var activity, userId, discordChannel, userCurrentCharacter, isInRealm, cancelEquipmentId, backId, helmId, amuletId, mainHandId, offHandId, armorId, glovesId, beltId, bootsId, ringSlotOneId, ringSlotTwoId, ringSlotOneButton, ringSlotTwoButton, bootsButton, helmButton, amuletutton, weaponSlotOneButton, weaponSlotTwoButton, armorButton, glovesButton, beltButton, backButton, generateCancelEquipmentButton, generateUnEquipItemButton, generateCurrentEquipmentImage, generateCancelEquipmentImage, isRowOneActive, isRowTwoActive, embedMessage, collector, currentIndex;
     return _regenerator["default"].wrap(function _callee10$(_context10) {
       while (1) {
         switch (_context10.prev = _context10.next) {
@@ -94,22 +98,52 @@ var discordShowEquipment = /*#__PURE__*/function () {
 
           case 9:
             userCurrentCharacter = _context10.sent;
+            _context10.next = 12;
+            return (0, _isUserInRealm["default"])(discordClient, userCurrentCharacter);
 
-            if (userCurrentCharacter) {
-              _context10.next = 14;
+          case 12:
+            isInRealm = _context10.sent;
+
+            if (isInRealm) {
+              _context10.next = 24;
               break;
             }
 
-            _context10.next = 13;
+            _context10.t0 = message;
+            _context10.t1 = "<@".concat(userCurrentCharacter.UserGroup.user.user_id, ">, ").concat(userCurrentCharacter.UserGroup.group.inviteLink);
+            _context10.next = 18;
+            return (0, _messages.needToBeInDiscordRealmEmbed)(userCurrentCharacter.UserGroup.group);
+
+          case 18:
+            _context10.t2 = _context10.sent;
+            _context10.t3 = [_context10.t2];
+            _context10.t4 = {
+              content: _context10.t1,
+              embeds: _context10.t3,
+              ephemeral: true
+            };
+            _context10.next = 23;
+            return _context10.t0.reply.call(_context10.t0, _context10.t4);
+
+          case 23:
+            return _context10.abrupt("return");
+
+          case 24:
+            if (userCurrentCharacter) {
+              _context10.next = 28;
+              break;
+            }
+
+            _context10.next = 27;
             return message.reply({
-              content: 'You have not selected a class yet\n`!runebase pickclass`\n/`pickclass`',
+              content: 'You have not selected a class yet\n`!runebase pickclass`\n`/pickclass`',
               ephemeral: true
             });
 
-          case 13:
+          case 27:
             return _context10.abrupt("return");
 
-          case 14:
+          case 28:
             cancelEquipmentId = 'cancelEquipment';
             backId = 'back';
             helmId = 'helm';
@@ -243,12 +277,12 @@ var discordShowEquipment = /*#__PURE__*/function () {
               };
             }();
 
-            _context10.next = 41;
+            _context10.next = 55;
             return (0, _canvas.registerFont)(_path["default"].join(__dirname, '../assets/fonts/', 'Heart_warming.otf'), {
               family: 'HeartWarming'
             });
 
-          case 41:
+          case 55:
             generateCurrentEquipmentImage = /*#__PURE__*/function () {
               var _ref5 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee4(userCurrentCharacter) {
                 var statsImageBuffer, statsImage, equipmentImageBuffer, equipmentImage, canvas, ctx;
@@ -320,8 +354,8 @@ var discordShowEquipment = /*#__PURE__*/function () {
                         ctx.strokeStyle = 'black';
                         ctx.lineWidth = 3;
                         ctx.textAlign = "center";
-                        ctx.strokeText("".concat(userCurrentCharacter.user.username, " canceled equipment screen"), 250, 60, 500);
-                        ctx.fillText("".concat(userCurrentCharacter.user.username, " canceled equipment screen"), 250, 60, 500);
+                        ctx.strokeText("".concat(userCurrentCharacter.UserGroup.user.username, " canceled equipment screen"), 250, 60, 500);
+                        ctx.fillText("".concat(userCurrentCharacter.UserGroup.user.username, " canceled equipment screen"), 250, 60, 500);
                         return _context5.abrupt("return", new _discord.MessageAttachment(canvas.toBuffer(), 'cancelEquipment.png'));
 
                       case 10:
@@ -339,71 +373,71 @@ var discordShowEquipment = /*#__PURE__*/function () {
 
             isRowOneActive = userCurrentCharacter.equipment.helm || userCurrentCharacter.equipment.amulet || userCurrentCharacter.equipment.mainHand || userCurrentCharacter.equipment.offHand || userCurrentCharacter.equipment.armor;
             isRowTwoActive = userCurrentCharacter.equipment.gloves || userCurrentCharacter.equipment.ringSlotOne || userCurrentCharacter.equipment.ringSlotTwo || userCurrentCharacter.equipment.belt || userCurrentCharacter.equipment.boots;
-            _context10.t0 = discordChannel;
-            _context10.next = 48;
+            _context10.t5 = discordChannel;
+            _context10.next = 62;
             return generateCurrentEquipmentImage(userCurrentCharacter);
 
-          case 48:
-            _context10.t1 = _context10.sent;
-            _context10.t2 = [_context10.t1];
+          case 62:
+            _context10.t6 = _context10.sent;
+            _context10.t7 = [_context10.t6];
 
             if (!(isRowOneActive || isRowTwoActive)) {
-              _context10.next = 65;
+              _context10.next = 79;
               break;
             }
 
-            _context10.t4 = [];
-            _context10.t5 = (0, _toConsumableArray2["default"])(isRowOneActive ? [new _discord.MessageActionRow({
+            _context10.t9 = [];
+            _context10.t10 = (0, _toConsumableArray2["default"])(isRowOneActive ? [new _discord.MessageActionRow({
               components: [].concat((0, _toConsumableArray2["default"])(userCurrentCharacter.equipment.helm ? [helmButton] : []), (0, _toConsumableArray2["default"])(userCurrentCharacter.equipment.amulet ? [amuletutton] : []), (0, _toConsumableArray2["default"])(userCurrentCharacter.equipment.mainHand ? [weaponSlotOneButton] : []), (0, _toConsumableArray2["default"])(userCurrentCharacter.equipment.offHand ? [weaponSlotTwoButton] : []), (0, _toConsumableArray2["default"])(userCurrentCharacter.equipment.armor ? [armorButton] : []))
             })] : []);
-            _context10.t6 = (0, _toConsumableArray2["default"])(isRowTwoActive ? [new _discord.MessageActionRow({
+            _context10.t11 = (0, _toConsumableArray2["default"])(isRowTwoActive ? [new _discord.MessageActionRow({
               components: [].concat((0, _toConsumableArray2["default"])(userCurrentCharacter.equipment.gloves ? [glovesButton] : []), (0, _toConsumableArray2["default"])(userCurrentCharacter.equipment.ringSlotOne ? [ringSlotOneButton] : []), (0, _toConsumableArray2["default"])(userCurrentCharacter.equipment.ringSlotTwo ? [ringSlotTwoButton] : []), (0, _toConsumableArray2["default"])(userCurrentCharacter.equipment.belt ? [beltButton] : []), (0, _toConsumableArray2["default"])(userCurrentCharacter.equipment.boots ? [bootsButton] : []))
             })] : []);
-            _context10.t7 = _discord.MessageActionRow;
-            _context10.next = 57;
+            _context10.t12 = _discord.MessageActionRow;
+            _context10.next = 71;
             return generateCancelEquipmentButton();
 
-          case 57:
-            _context10.t8 = _context10.sent;
-            _context10.t9 = [_context10.t8];
-            _context10.t10 = {
-              components: _context10.t9
+          case 71:
+            _context10.t13 = _context10.sent;
+            _context10.t14 = [_context10.t13];
+            _context10.t15 = {
+              components: _context10.t14
             };
-            _context10.t11 = new _context10.t7(_context10.t10);
-            _context10.t12 = [_context10.t11];
-            _context10.t3 = _context10.t4.concat.call(_context10.t4, _context10.t5, _context10.t6, _context10.t12);
-            _context10.next = 73;
+            _context10.t16 = new _context10.t12(_context10.t15);
+            _context10.t17 = [_context10.t16];
+            _context10.t8 = _context10.t9.concat.call(_context10.t9, _context10.t10, _context10.t11, _context10.t17);
+            _context10.next = 87;
             break;
 
-          case 65:
-            _context10.t13 = _discord.MessageActionRow;
-            _context10.next = 68;
+          case 79:
+            _context10.t18 = _discord.MessageActionRow;
+            _context10.next = 82;
             return generateCancelEquipmentButton();
 
-          case 68:
-            _context10.t14 = _context10.sent;
-            _context10.t15 = [_context10.t14];
-            _context10.t16 = {
-              components: _context10.t15
+          case 82:
+            _context10.t19 = _context10.sent;
+            _context10.t20 = [_context10.t19];
+            _context10.t21 = {
+              components: _context10.t20
             };
-            _context10.t17 = new _context10.t13(_context10.t16);
-            _context10.t3 = [_context10.t17];
+            _context10.t22 = new _context10.t18(_context10.t21);
+            _context10.t8 = [_context10.t22];
 
-          case 73:
-            _context10.t18 = _context10.t3;
-            _context10.t19 = {
-              files: _context10.t2,
-              components: _context10.t18
+          case 87:
+            _context10.t23 = _context10.t8;
+            _context10.t24 = {
+              files: _context10.t7,
+              components: _context10.t23
             };
-            _context10.next = 77;
-            return _context10.t0.send.call(_context10.t0, _context10.t19);
+            _context10.next = 91;
+            return _context10.t5.send.call(_context10.t5, _context10.t24);
 
-          case 77:
+          case 91:
             embedMessage = _context10.sent;
             collector = embedMessage.createMessageComponentCollector({
               filter: function filter(_ref7) {
                 var discordUser = _ref7.user;
-                return discordUser.id === userCurrentCharacter.user.user_id;
+                return discordUser.id === userCurrentCharacter.UserGroup.user.user_id;
               }
             });
             currentIndex = 0;
@@ -819,7 +853,7 @@ var discordShowEquipment = /*#__PURE__*/function () {
               };
             }());
 
-          case 81:
+          case 95:
           case "end":
             return _context10.stop();
         }

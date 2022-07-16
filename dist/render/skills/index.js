@@ -32,23 +32,24 @@ var renderSkillScreen = /*#__PURE__*/function () {
 
           case 2:
             skillTreeImageBuffer = _context.sent;
-            userHasSkill = userCharacter.UserClassSkills.find(function (o) {
+            console.log('1');
+            userHasSkill = userCharacter.UserGroupClassSkills.find(function (o) {
               return o.skillId === selectedSkill.id;
             });
-            _context.next = 6;
+            _context.next = 7;
             return (0, _skillDescription.renderSkillDescriptionImage)(jsonSkillInfo, userHasSkill);
 
-          case 6:
+          case 7:
             skillDescriptionImageBuffer = _context.sent;
-            _context.next = 9;
+            _context.next = 10;
             return (0, _canvas.loadImage)(skillTreeImageBuffer);
 
-          case 9:
+          case 10:
             skillTreeImage = _context.sent;
-            _context.next = 12;
+            _context.next = 13;
             return (0, _canvas.loadImage)(skillDescriptionImageBuffer);
 
-          case 12:
+          case 13:
             skillDescriptionImage = _context.sent;
             failReasonHeight = failReason ? 25 : 0;
             canvas = (0, _canvas.createCanvas)(skillTreeImage.width + skillDescriptionImage.width, skillTreeImage.height + failReasonHeight);
@@ -69,9 +70,10 @@ var renderSkillScreen = /*#__PURE__*/function () {
               ctx.fillText(failReason, skillTreeImage.width / 2, skillTreeImage.height + 15, skillTreeImage.width);
             }
 
+            console.log('5');
             return _context.abrupt("return", new _discord.MessageAttachment(canvas.toBuffer(), 'skillTree.png'));
 
-          case 20:
+          case 22:
           case "end":
             return _context.stop();
         }

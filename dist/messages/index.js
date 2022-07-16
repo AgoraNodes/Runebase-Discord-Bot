@@ -5,7 +5,7 @@ var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefau
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.warnDirectMessage = exports.walletNotFoundMessage = exports.userNotFoundMessage = exports.unableToWithdrawToSelfMessage = exports.timeOutMessage = exports.skillInfoMessage = exports.skillConfirmationMessage = exports.rolledDiceMessage = exports.rollDiceTooFastMessage = exports.reviewMessage = exports.resetStatsDeclinedMessage = exports.resetStatsConfirmationMessage = exports.resetStatsCompletemessage = exports.resetSkillCompleteMessage = exports.priceMessage = exports.minimumMessage = exports.loadingSkillSelectEmbed = exports.loadingSkillAddEmbed = exports.levelUpMessage = exports.invitedNewUserRewardMessage = exports.invalidAmountMessage = exports.invalidAddressMessage = exports.insufficientBalanceMessage = exports.helpMessage = exports.healCompleteMessage = exports.grantRoleExpMessage = exports.gainVoteTopggExpMessage = exports.gainTestExpMessage = exports.gainBattleExpExpMessage = exports.gainActiveTalkerExpMessage = exports.featureDisabledServerMessage = exports.featureDisabledGlobalMessage = exports.featureDisabledChannelMessage = exports.enterWithdrawalAmount = exports.enterWithdrawalAddress = exports.discordWithdrawalConfirmedMessage = exports.discordWithdrawalAcceptedMessage = exports.discordWelcomeMessage = exports.discordUserWithdrawalRejectMessage = exports.discordUserBannedMessage = exports.discordServerBannedMessage = exports.discordLimitSpamMessage = exports.discordIncomingDepositMessage = exports.discordErrorMessage = exports.discordDepositConfirmedMessage = exports.discordChannelBannedMessage = exports.discordBotMaintenanceMessage = exports.discordBotDisabledMessage = exports.depositAddressMessage = exports.declineResetSkillsMessage = exports.declineHealMessage = exports.confirmationHealMessage = exports.coinInfoMessage = exports.cannotSendMessageUser = exports.balanceMessage = exports.alreadyVotedTopGG = exports.NotInDirectMessage = exports.AccountInfoMessage = void 0;
+exports.warnDirectMessage = exports.walletNotFoundMessage = exports.userNotFoundMessage = exports.unableToWithdrawToSelfMessage = exports.timeOutMessage = exports.skillInfoMessage = exports.skillConfirmationMessage = exports.rolledDiceMessage = exports.rollDiceTooFastMessage = exports.reviewMessage = exports.resetStatsDeclinedMessage = exports.resetStatsConfirmationMessage = exports.resetStatsCompletemessage = exports.resetSkillCompleteMessage = exports.realmChangeSuccessEmbed = exports.priceMessage = exports.needToBeInDiscordRealmEmbed = exports.minimumMessage = exports.loadingSkillSelectEmbed = exports.loadingSkillAddEmbed = exports.levelUpMessage = exports.invitedNewUserRewardMessage = exports.invalidAmountMessage = exports.invalidAddressMessage = exports.insufficientBalanceMessage = exports.helpMessage = exports.healCompleteMessage = exports.grantRoleExpMessage = exports.gainVoteTopggExpMessage = exports.gainTestExpMessage = exports.gainBattleExpExpMessage = exports.gainActiveTalkerExpMessage = exports.featureDisabledServerMessage = exports.featureDisabledGlobalMessage = exports.featureDisabledChannelMessage = exports.enterWithdrawalAmount = exports.enterWithdrawalAddress = exports.discordWithdrawalConfirmedMessage = exports.discordWithdrawalAcceptedMessage = exports.discordWelcomeMessage = exports.discordUserWithdrawalRejectMessage = exports.discordUserBannedMessage = exports.discordServerBannedMessage = exports.discordLimitSpamMessage = exports.discordIncomingDepositMessage = exports.discordErrorMessage = exports.discordDepositConfirmedMessage = exports.discordChannelBannedMessage = exports.discordBotMaintenanceMessage = exports.discordBotDisabledMessage = exports.depositAddressMessage = exports.declineResetSkillsMessage = exports.declineHealMessage = exports.confirmationHealMessage = exports.coinInfoMessage = exports.cannotSendMessageUser = exports.balanceMessage = exports.alreadyVotedTopGG = exports.NotInDirectMessage = exports.AccountInfoMessage = void 0;
 
 var _discord = require("discord.js");
 
@@ -332,6 +332,26 @@ var invitedNewUserRewardMessage = function invitedNewUserRewardMessage(userId, j
 
 exports.invitedNewUserRewardMessage = invitedNewUserRewardMessage;
 
+var realmChangeSuccessEmbed = function realmChangeSuccessEmbed(server) {
+  var result = new _discord.MessageEmbed().setColor(_settings["default"].bot.color).setTitle('Change Realm Success').setDescription("You are now on realm:\n".concat(server.groupName)).setTimestamp().setFooter({
+    text: "".concat(_settings["default"].bot.name, " v").concat(_package["default"].version),
+    iconURL: _settings["default"].bot.logo
+  });
+  return result;
+};
+
+exports.realmChangeSuccessEmbed = realmChangeSuccessEmbed;
+
+var needToBeInDiscordRealmEmbed = function needToBeInDiscordRealmEmbed(server) {
+  var result = new _discord.MessageEmbed().setColor(_settings["default"].bot.color).setTitle('Change Realm Failed').setDescription("You need to join the realm's discord server to be able to participate on this realm\n    \nInvite link:\n".concat(server.inviteLink, "\n\nOr choose another realm with \n`!runebase changerealm` \nor \n`/changerealm`")).setTimestamp().setFooter({
+    text: "".concat(_settings["default"].bot.name, " v").concat(_package["default"].version),
+    iconURL: _settings["default"].bot.logo
+  });
+  return result;
+};
+
+exports.needToBeInDiscordRealmEmbed = needToBeInDiscordRealmEmbed;
+
 var gainVoteTopggExpMessage = function gainVoteTopggExpMessage(userId, amount) {
   var result = new _discord.MessageEmbed().setColor(_settings["default"].bot.color).setTitle('Gain Exp').setDescription("<@".concat(userId, ">, Thank you for voting for Runebase on TopGG.\nyou have been rewarded ").concat(amount, " experience")).setTimestamp().setFooter({
     text: "".concat(_settings["default"].bot.name, " v").concat(_package["default"].version),
@@ -343,7 +363,8 @@ var gainVoteTopggExpMessage = function gainVoteTopggExpMessage(userId, amount) {
 exports.gainVoteTopggExpMessage = gainVoteTopggExpMessage;
 
 var levelUpMessage = function levelUpMessage(userId, rank) {
-  var result = new _discord.MessageEmbed().setColor(_settings["default"].bot.color).setTitle('Gain Exp').setDescription("Congratulations <@".concat(userId, ">\nYou gained a level\nYou are now a ").concat(rank.name, " (lvl ").concat(rank.id, ")")).setTimestamp().setFooter({
+  console.log('sending level up message');
+  var result = new _discord.MessageEmbed().setColor(_settings["default"].bot.color).setTitle('Gain Exp').setDescription("Congratulations <@".concat(userId, ">\nYou gained a level\nYou are now a ").concat(rank.name, " (lvl ").concat(rank.level, ")")).setTimestamp().setFooter({
     text: "".concat(_settings["default"].bot.name, " v").concat(_package["default"].version),
     iconURL: _settings["default"].bot.logo
   });

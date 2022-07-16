@@ -21,7 +21,7 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 
 var isFailedAttack = /*#__PURE__*/function () {
   var _ref = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(userState, lvl, useAttack, battle, battleLogs, updatedMonster, updatedMonstersArray, saveToDatabasePromises, t) {
-    var attackFailed, userHitChance, isBlocked, isParried, isNotMissed, log, _log, _log2;
+    var attackFailed, Alvl, userHitChance, isBlocked, isParried, isNotMissed, log, _log, _log2;
 
     return _regenerator["default"].wrap(function _callee$(_context) {
       while (1) {
@@ -36,7 +36,8 @@ var isFailedAttack = /*#__PURE__*/function () {
               // DR = Defender's Defense rating
               // Alvl = Attacker's level
               // Dlvl = Defender's level
-              userHitChance = 200 * (useAttack.ar / (useAttack.ar + updatedMonster.monster.defense)) * (lvl / (lvl + updatedMonster.monster.level)) * 100;
+              Alvl = lvl > 0 ? lvl : 1;
+              userHitChance = 200 * (useAttack.ar / (useAttack.ar + updatedMonster.monster.defense)) * (Alvl / (Alvl + updatedMonster.monster.level)) * 100;
               isBlocked = Math.random() < Number(updatedMonster.monster.block) / 100; // Did We block the attack?
 
               isParried = Math.random() < Number(updatedMonster.monster.parry) / 100; // Did monster parry the attack?
@@ -49,7 +50,7 @@ var isFailedAttack = /*#__PURE__*/function () {
                   attackType: 'Missed'
                 })); // Create battleLog
 
-                log = "".concat(userState.user.username, " ").concat(useAttack.name, " missed ").concat(updatedMonster.monster.name);
+                log = "".concat(userState.UserGroup.user.username, " ").concat(useAttack.name, " missed ").concat(updatedMonster.monster.name);
                 saveToDatabasePromises.push(new Promise(function (resolve, reject) {
                   _models["default"].battleLog.create({
                     battleId: battle.id,
@@ -73,7 +74,7 @@ var isFailedAttack = /*#__PURE__*/function () {
                   attackType: 'Blocked' // TODO: Attack Type should be used to determin the animation to pick
 
                 }));
-                _log = "".concat(updatedMonster.monster.name, " blocked ").concat(userState.user.username, " ").concat(useAttack.name);
+                _log = "".concat(updatedMonster.monster.name, " blocked ").concat(userState.UserGroup.user.username, " ").concat(useAttack.name);
                 saveToDatabasePromises.push(new Promise(function (resolve, reject) {
                   _models["default"].battleLog.create({
                     battleId: battle.id,
@@ -94,7 +95,7 @@ var isFailedAttack = /*#__PURE__*/function () {
                   userDamage: 'Parried',
                   attackType: 'Parried'
                 }));
-                _log2 = "".concat(updatedMonster.monster.name, " parried ").concat(userState.user.username, " ").concat(useAttack.name);
+                _log2 = "".concat(updatedMonster.monster.name, " parried ").concat(userState.UserGroup.user.username, " ").concat(useAttack.name);
                 saveToDatabasePromises.push(new Promise(function (resolve, reject) {
                   _models["default"].battleLog.create({
                     battleId: battle.id,

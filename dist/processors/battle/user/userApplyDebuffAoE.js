@@ -113,7 +113,7 @@ var userApplyDebuffAoE = /*#__PURE__*/function () {
                         attackType: useAttack.name
                       })); // Generate Battle Log
 
-                      log = "".concat(userState.user.username, " used ").concat(useAttack.name, " on ").concat(selectedMonster.monster.name);
+                      log = "".concat(userState.UserGroup.user.username, " used ").concat(useAttack.name, " on ").concat(selectedMonster.monster.name);
                       saveToDatabasePromises.push(new Promise(function (resolve, reject) {
                         _models["default"].battleLog.create({
                           battleId: battle.id,

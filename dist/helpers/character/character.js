@@ -49,17 +49,49 @@ var fetchUserCurrentCharacter = /*#__PURE__*/function () {
 
           case 3:
             user = _context.sent;
-            _context.next = 6;
-            return _models["default"].UserClass.findOne(_objectSpread(_objectSpread({
+            console.log(user.currentRealmId);
+            console.log(user.currentClassId);
+            console.log('user current ids');
+            _context.next = 9;
+            return _models["default"].UserGroupClass.findOne(_objectSpread(_objectSpread({
               where: {
                 // classId: { [Op.col]: 'user.currentClassId' },
-                classId: user.currentClassId
+                classId: user.currentClassId // groupId: user.currentRealmId,
+
               }
             }, t && [{
               lock: t.LOCK.UPDATE,
               transaction: t
             }]), {}, {
               include: [{
+                model: _models["default"].UserGroup,
+                as: 'UserGroup',
+                required: true,
+                where: {
+                  groupId: user.currentRealmId
+                },
+                include: [{
+                  model: _models["default"].group,
+                  as: 'group'
+                }, {
+                  model: _models["default"].UserGroupRank,
+                  as: 'UserGroupRank',
+                  include: [{
+                    model: _models["default"].rank,
+                    as: 'rank'
+                  }]
+                }, {
+                  model: _models["default"].user,
+                  as: 'user',
+                  where: {
+                    user_id: "".concat(userId)
+                  },
+                  include: [{
+                    model: _models["default"]["class"],
+                    as: 'currentClass'
+                  }]
+                }]
+              }, {
                 model: _models["default"].buff,
                 as: 'buffs',
                 separate: true
@@ -68,8 +100,8 @@ var fetchUserCurrentCharacter = /*#__PURE__*/function () {
                 as: 'debuffs',
                 separate: true
               }, {
-                model: _models["default"].UserClassSkill,
-                as: 'UserClassSkills',
+                model: _models["default"].UserGroupClassSkill,
+                as: 'UserGroupClassSkills',
                 include: [{
                   model: _models["default"].skill,
                   as: 'skill'
@@ -90,19 +122,6 @@ var fetchUserCurrentCharacter = /*#__PURE__*/function () {
                       as: 'PreviousSkill'
                     }]
                   }]
-                }]
-              }, {
-                model: _models["default"].user,
-                as: 'user',
-                where: {
-                  user_id: "".concat(userId)
-                },
-                include: [{
-                  model: _models["default"]["class"],
-                  as: 'currentClass'
-                }, {
-                  model: _models["default"].rank,
-                  as: 'ranks'
                 }]
               }, {
                 model: _models["default"].stats,
@@ -332,11 +351,13 @@ var fetchUserCurrentCharacter = /*#__PURE__*/function () {
               }] : []))
             }));
 
-          case 6:
+          case 9:
             userCurrentCharacter = _context.sent;
+            console.log(userCurrentCharacter); // console.log(userCurrentCharacter.UserGroup);
+
             return _context.abrupt("return", userCurrentCharacter);
 
-          case 8:
+          case 12:
           case "end":
             return _context.stop();
         }

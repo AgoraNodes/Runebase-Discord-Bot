@@ -177,7 +177,6 @@ exports.fetchRanks = fetchRanks;
 
 var addRank = /*#__PURE__*/function () {
   var _ref4 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee4(req, res, next) {
-    var rank;
     return _regenerator["default"].wrap(function _callee4$(_context4) {
       while (1) {
         switch (_context4.prev = _context4.next) {
@@ -216,38 +215,29 @@ var addRank = /*#__PURE__*/function () {
             throw new Error("RoleId is required");
 
           case 9:
-            _context4.next = 11;
-            return _models["default"].rank.findOne({
-              where: {
-                name: req.body.name
-              }
-            });
-
-          case 11:
-            rank = _context4.sent;
-
-            if (!rank) {
-              _context4.next = 14;
+            if (req.body.groupId) {
+              _context4.next = 11;
               break;
             }
 
-            throw new Error("Already Exists");
+            throw new Error("groupId is required");
 
-          case 14:
+          case 11:
             res.locals.name = 'addRank';
-            _context4.next = 17;
+            _context4.next = 14;
             return _models["default"].rank.create({
               name: req.body.name,
               level: Number(req.body.level),
               expNeeded: req.body.expNeeded,
-              discordRankRoleId: req.body.roleId
+              discordRankRoleId: req.body.roleId,
+              groupId: Number(req.body.groupId)
             });
 
-          case 17:
+          case 14:
             res.locals.result = _context4.sent;
             next();
 
-          case 19:
+          case 16:
           case "end":
             return _context4.stop();
         }

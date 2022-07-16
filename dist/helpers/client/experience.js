@@ -419,9 +419,11 @@ exports.gainMultiExp = gainMultiExp;
 var gainExp = /*#__PURE__*/function () {
   var _ref2 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee2(discordClient, userId, amount, gainExpType, t) {
     var userJoined,
-        user,
-        updatedUser,
+        UserGroup,
         setting,
+        user,
+        server,
+        updatedUserGroup,
         discordChannel,
         currentRank,
         allRanks,
@@ -430,7 +432,7 @@ var gainExp = /*#__PURE__*/function () {
         _iterator5,
         _step5,
         rank,
-        userRankRecord,
+        userGroupRankRecord,
         _args2 = arguments;
 
     return _regenerator["default"].wrap(function _callee2$(_context2) {
@@ -439,6 +441,14 @@ var gainExp = /*#__PURE__*/function () {
           case 0:
             userJoined = _args2.length > 5 && _args2[5] !== undefined ? _args2[5] : false;
             _context2.next = 3;
+            return _models["default"].setting.findOne({
+              transaction: t,
+              lock: t.LOCK.UPDATE
+            });
+
+          case 3:
+            setting = _context2.sent;
+            _context2.next = 6;
             return _models["default"].user.findOne({
               where: {
                 user_id: userId
@@ -447,183 +457,248 @@ var gainExp = /*#__PURE__*/function () {
               lock: t.LOCK.UPDATE
             });
 
-          case 3:
+          case 6:
             user = _context2.sent;
-            _context2.next = 6;
-            return user.update({
-              exp: user.exp + amount
+
+            if (!(gainExpType === 'userJoined' || gainExpType === 'topggVote' || gainExpType === 'activeTalker' || gainExpType === 'rollDice')) {
+              _context2.next = 13;
+              break;
+            }
+
+            _context2.next = 10;
+            return _models["default"].UserGroup.findOne({
+              where: {
+                userId: user.id
+              },
+              include: [{
+                model: _models["default"].group,
+                as: 'group',
+                required: true,
+                where: {
+                  groupId: setting.discordHomeServerGuildId
+                }
+              }, {
+                model: _models["default"].user,
+                as: 'user'
+              }]
+            });
+
+          case 10:
+            UserGroup = _context2.sent;
+            _context2.next = 16;
+            break;
+
+          case 13:
+            _context2.next = 15;
+            return _models["default"].UserGroup.findOne({
+              where: {
+                userId: user.id
+              },
+              include: [{
+                model: _models["default"].group,
+                as: 'group',
+                required: true,
+                where: {
+                  id: user.currentRealmId
+                }
+              }, {
+                model: _models["default"].user,
+                as: 'user'
+              }]
+            });
+
+          case 15:
+            UserGroup = _context2.sent;
+
+          case 16:
+            console.log(UserGroup);
+            server = discordClient.guilds.cache.get(UserGroup.group.groupId);
+
+            if (server.members.cache.get(userId)) {
+              _context2.next = 21;
+              break;
+            }
+
+            // TODO: Send a warning message?
+            // Record an error in the database
+            console.log('user left the discord realm server');
+            return _context2.abrupt("return");
+
+          case 21:
+            _context2.next = 23;
+            return UserGroup.update({
+              exp: UserGroup.exp + amount
             }, {
               transaction: t,
               lock: t.LOCK.UPDATE
             });
 
-          case 6:
-            updatedUser = _context2.sent;
-            _context2.next = 9;
-            return _models["default"].setting.findOne();
+          case 23:
+            updatedUserGroup = _context2.sent;
+            _context2.next = 26;
+            return discordClient.channels.cache.get(UserGroup.group.expRewardChannelId);
 
-          case 9:
-            setting = _context2.sent;
-            _context2.next = 12;
-            return discordClient.channels.cache.get(setting.expRewardChannelId);
-
-          case 12:
+          case 26:
             discordChannel = _context2.sent;
-            _context2.next = 15;
-            return (0, _expierenceMessageHandler.handleExperienceMessage)(discordChannel, updatedUser, amount, gainExpType, userJoined);
+            _context2.next = 29;
+            return (0, _expierenceMessageHandler.handleExperienceMessage)(discordChannel, updatedUserGroup, amount, gainExpType, userJoined);
 
-          case 15:
-            _context2.next = 17;
+          case 29:
+            _context2.next = 31;
             return _models["default"].rank.findOne({
               where: {
-                expNeeded: (0, _defineProperty2["default"])({}, _sequelize.Op.lte, updatedUser.exp)
+                expNeeded: (0, _defineProperty2["default"])({}, _sequelize.Op.lte, updatedUserGroup.exp),
+                groupId: updatedUserGroup.groupId
               },
               order: [['id', 'DESC']],
               transaction: t,
               lock: t.LOCK.UPDATE
             });
 
-          case 17:
+          case 31:
             currentRank = _context2.sent;
-            _context2.next = 20;
+            _context2.next = 34;
             return _models["default"].rank.findAll({
+              where: {
+                groupId: updatedUserGroup.groupId
+              },
               transaction: t,
               lock: t.LOCK.UPDATE
             });
 
-          case 20:
+          case 34:
             allRanks = _context2.sent;
 
             if (!currentRank) {
-              _context2.next = 63;
+              _context2.next = 77;
               break;
             }
 
-            _context2.next = 24;
-            return discordClient.guilds.cache.get(setting.discordHomeServerGuildId);
+            _context2.next = 38;
+            return discordClient.guilds.cache.get(updatedUserGroup.group.groupId);
 
-          case 24:
+          case 38:
             guild = _context2.sent;
-            _context2.next = 27;
-            return guild.members.cache.get(updatedUser.user_id);
+            _context2.next = 41;
+            return guild.members.cache.get(updatedUserGroup.user.user_id);
 
-          case 27:
+          case 41:
             member = _context2.sent;
 
             if (member.roles.cache.has(currentRank.discordRankRoleId)) {
-              _context2.next = 33;
+              _context2.next = 47;
               break;
             }
 
-            _context2.next = 31;
+            _context2.next = 45;
             return member.roles.add(currentRank.discordRankRoleId);
 
-          case 31:
-            _context2.next = 33;
+          case 45:
+            _context2.next = 47;
             return discordChannel.send({
-              embeds: [(0, _messages.levelUpMessage)(updatedUser.user_id, currentRank)]
+              embeds: [(0, _messages.levelUpMessage)(updatedUserGroup.user.user_id, currentRank)]
             });
 
-          case 33:
+          case 47:
             // eslint-disable-next-line no-restricted-syntax
             _iterator5 = _createForOfIteratorHelper(allRanks);
-            _context2.prev = 34;
+            _context2.prev = 48;
 
             _iterator5.s();
 
-          case 36:
+          case 50:
             if ((_step5 = _iterator5.n()).done) {
-              _context2.next = 44;
+              _context2.next = 58;
               break;
             }
 
             rank = _step5.value;
 
             if (!(currentRank.id !== rank.id)) {
-              _context2.next = 42;
+              _context2.next = 56;
               break;
             }
 
             if (!member.roles.cache.has(rank.discordRankRoleId)) {
-              _context2.next = 42;
+              _context2.next = 56;
               break;
             }
 
-            _context2.next = 42;
+            _context2.next = 56;
             return member.roles.remove(rank.discordRankRoleId);
 
-          case 42:
-            _context2.next = 36;
+          case 56:
+            _context2.next = 50;
             break;
-
-          case 44:
-            _context2.next = 49;
-            break;
-
-          case 46:
-            _context2.prev = 46;
-            _context2.t0 = _context2["catch"](34);
-
-            _iterator5.e(_context2.t0);
-
-          case 49:
-            _context2.prev = 49;
-
-            _iterator5.f();
-
-            return _context2.finish(49);
-
-          case 52:
-            _context2.next = 54;
-            return _models["default"].UserRank.findOne({
-              where: {
-                userId: updatedUser.id
-              },
-              transaction: t,
-              lock: t.LOCK.UPDATE
-            });
-
-          case 54:
-            userRankRecord = _context2.sent;
-
-            if (userRankRecord) {
-              _context2.next = 60;
-              break;
-            }
-
-            _context2.next = 58;
-            return _models["default"].UserRank.create({
-              userId: updatedUser.id,
-              rankId: currentRank.id
-            }, {
-              transaction: t,
-              lock: t.LOCK.UPDATE
-            });
 
           case 58:
             _context2.next = 63;
             break;
 
           case 60:
-            if (!(currentRank.id !== userRankRecord.rankId)) {
-              _context2.next = 63;
+            _context2.prev = 60;
+            _context2.t0 = _context2["catch"](48);
+
+            _iterator5.e(_context2.t0);
+
+          case 63:
+            _context2.prev = 63;
+
+            _iterator5.f();
+
+            return _context2.finish(63);
+
+          case 66:
+            _context2.next = 68;
+            return _models["default"].UserGroupRank.findOne({
+              where: {
+                UserGroupId: updatedUserGroup.id
+              },
+              transaction: t,
+              lock: t.LOCK.UPDATE
+            });
+
+          case 68:
+            userGroupRankRecord = _context2.sent;
+
+            if (userGroupRankRecord) {
+              _context2.next = 74;
               break;
             }
 
-            _context2.next = 63;
-            return userRankRecord.update({
+            _context2.next = 72;
+            return _models["default"].UserGroupRank.create({
+              UserGroupId: updatedUserGroup.id,
               rankId: currentRank.id
             }, {
               transaction: t,
               lock: t.LOCK.UPDATE
             });
 
-          case 63:
+          case 72:
+            _context2.next = 77;
+            break;
+
+          case 74:
+            if (!(currentRank.id !== userGroupRankRecord.rankId)) {
+              _context2.next = 77;
+              break;
+            }
+
+            _context2.next = 77;
+            return userGroupRankRecord.update({
+              rankId: currentRank.id
+            }, {
+              transaction: t,
+              lock: t.LOCK.UPDATE
+            });
+
+          case 77:
           case "end":
             return _context2.stop();
         }
       }
-    }, _callee2, null, [[34, 46, 49, 52]]);
+    }, _callee2, null, [[48, 60, 63, 66]]);
   }));
 
   return function gainExp(_x6, _x7, _x8, _x9, _x10) {

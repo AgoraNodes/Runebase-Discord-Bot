@@ -96,7 +96,8 @@ var calculateCharacterStats = /*#__PURE__*/function () {
             _context.next = 3;
             return _models["default"].rank.findOne(_objectSpread({
               where: {
-                expNeeded: (0, _defineProperty2["default"])({}, _sequelize.Op.gt, currentCharacter.user.exp)
+                expNeeded: (0, _defineProperty2["default"])({}, _sequelize.Op.gt, currentCharacter.UserGroup.exp),
+                groupId: currentCharacter.UserGroup.user.currentRealmId
               },
               order: [['id', 'ASC']]
             }, t && [{
@@ -106,13 +107,19 @@ var calculateCharacterStats = /*#__PURE__*/function () {
 
           case 3:
             nextRank = _context.sent;
-            userCurrentRank = currentCharacter.user.ranks[0] ? currentCharacter.user.ranks[0] : {
-              id: 0,
+            console.log(currentCharacter.UserGroup.exp);
+            console.log(currentCharacter.UserGroup.user.currentRealmId);
+            console.log('calcstats 1');
+            console.log(currentCharacter.UserGroup);
+            console.log(nextRank);
+            userCurrentRank = currentCharacter.UserGroup.UserGroupRank && currentCharacter.UserGroup.UserGroupRank.rank ? currentCharacter.UserGroup.UserGroupRank.rank : {
+              level: 0,
               expNeeded: nextRank.expNeeded
             };
+            console.log('before next rank calc');
             nextRankExp = nextRank && nextRank.expNeeded ? nextRank.expNeeded : userCurrentRank.expNeeded;
             countedSpendAttributes = currentCharacter.stats.strength + currentCharacter.stats.dexterity + currentCharacter.stats.vitality + currentCharacter.stats.energy;
-            unspendAttributes = userCurrentRank.id * 5 - countedSpendAttributes;
+            unspendAttributes = userCurrentRank.level * 5 - countedSpendAttributes;
             FR = 0;
             PR = 0;
             LR = 0;
@@ -123,21 +130,24 @@ var calculateCharacterStats = /*#__PURE__*/function () {
             totalManaBonus = 0;
             lifeSteal = 0;
             manaSteal = 0;
-            initialStrength = currentCharacter.user.currentClass.strength + currentCharacter.stats.strength;
-            initialDexterity = currentCharacter.user.currentClass.dexterity + currentCharacter.stats.dexterity;
-            initialVitality = currentCharacter.user.currentClass.vitality + currentCharacter.stats.vitality;
-            initialEnergy = currentCharacter.user.currentClass.energy + currentCharacter.stats.energy;
+            console.log('calcstats 2');
+            initialStrength = currentCharacter.UserGroup.user.currentClass.strength + currentCharacter.stats.strength;
+            initialDexterity = currentCharacter.UserGroup.user.currentClass.dexterity + currentCharacter.stats.dexterity;
+            initialVitality = currentCharacter.UserGroup.user.currentClass.vitality + currentCharacter.stats.vitality;
+            initialEnergy = currentCharacter.UserGroup.user.currentClass.energy + currentCharacter.stats.energy;
             strength = initialStrength;
             dexterity = initialDexterity;
             vitality = initialVitality;
             energy = initialEnergy;
-            maxStamina = currentCharacter.user.currentClass.stamina + currentCharacter.stats.stamina;
+            console.log('calcstats 3');
+            maxStamina = currentCharacter.UserGroup.user.currentClass.stamina + currentCharacter.stats.stamina;
             currentStaminaPoints = currentCharacter.condition.stamina;
             currentHp = currentCharacter.condition.life;
-            maxHp = currentCharacter.user.currentClass.life + currentCharacter.stats.life;
+            maxHp = currentCharacter.UserGroup.user.currentClass.life + currentCharacter.stats.life;
             currentMp = currentCharacter.condition.mana;
-            maxMp = currentCharacter.user.currentClass.mana + currentCharacter.stats.mana;
-            defense += currentCharacter.user.currentClass.defense;
+            maxMp = currentCharacter.UserGroup.user.currentClass.mana + currentCharacter.stats.mana;
+            defense += currentCharacter.UserGroup.user.currentClass.defense;
+            console.log('calcstats 4');
             canWearHelm = false;
             canWearMainHand = false;
             canWearOffHand = false;
@@ -145,10 +155,11 @@ var calculateCharacterStats = /*#__PURE__*/function () {
             canWearGloves = false;
             canWearBelt = false;
             canWearBoots = false;
-            _context.next = 42;
+            console.log('calcstats 4-1');
+            _context.next = 52;
             return (0, _calculateItemStats["default"])(currentCharacter, userCurrentRank, strength, dexterity, vitality, energy, defense, block);
 
-          case 42:
+          case 52:
             _yield$calculateItemS = _context.sent;
             _yield$calculateItemS2 = (0, _slicedToArray2["default"])(_yield$calculateItemS, 13);
             strength = _yield$calculateItemS2[0];
@@ -164,6 +175,7 @@ var calculateCharacterStats = /*#__PURE__*/function () {
             canWearGloves = _yield$calculateItemS2[10];
             canWearBelt = _yield$calculateItemS2[11];
             canWearBoots = _yield$calculateItemS2[12];
+            console.log('calcstats 5');
             addedLifeByItemVitality = 0;
             addedManaByItemEnergy = 0;
 
@@ -210,14 +222,15 @@ var calculateCharacterStats = /*#__PURE__*/function () {
             maxMp += addedManaByItemEnergy; // Added Damage % by Strength
 
             addedStrengthDamagePercentage = 1 + strength / 100; // Should we substract starting strength from this? (YES/NO)
-            // Kick Attack
+
+            console.log('after addsss'); // Kick Attack
 
             kick = {
               name: 'Kick',
               attackType: 'Physical',
               min: canWearBoots && currentCharacter.equipment.boots ? Math.round(currentCharacter.equipment.boots.minDamage * addedStrengthDamagePercentage) : Math.round(1 * addedStrengthDamagePercentage),
               max: canWearBoots && currentCharacter.equipment.boots ? Math.round(currentCharacter.equipment.boots.maxDamage * addedStrengthDamagePercentage) : Math.round(2 * addedStrengthDamagePercentage),
-              ar: currentCharacter.user.currentClass.attackRating + currentCharacter.stats.dexterity * 5,
+              ar: currentCharacter.UserGroup.user.currentClass.attackRating + currentCharacter.stats.dexterity * 5,
               crit: 0,
               lifeSteal: lifeSteal,
               manaSteal: manaSteal,
@@ -231,19 +244,20 @@ var calculateCharacterStats = /*#__PURE__*/function () {
               max: canWearMainHand && currentCharacter.equipment.mainHand ? Math.round(currentCharacter.equipment.mainHand.maxDamage * addedStrengthDamagePercentage) : Math.round(2 * addedStrengthDamagePercentage),
               minThrow: canWearMainHand && currentCharacter.equipment.mainHand && currentCharacter.equipment.mainHand.minThrowDamage ? Math.round(currentCharacter.equipment.mainHand.minThrowDamage * addedStrengthDamagePercentage) : Math.round(0 * addedStrengthDamagePercentage),
               maxThrow: canWearMainHand && currentCharacter.equipment.mainHand && currentCharacter.equipment.mainHand.maxThrowDamage ? Math.round(currentCharacter.equipment.mainHand.maxThrowDamage * addedStrengthDamagePercentage) : Math.round(0 * addedStrengthDamagePercentage),
-              ar: currentCharacter.user.currentClass.attackRating + currentCharacter.stats.dexterity * 5,
+              ar: currentCharacter.UserGroup.user.currentClass.attackRating + currentCharacter.stats.dexterity * 5,
               crit: 0,
               stun: 0,
               parry: 0,
               lifeSteal: lifeSteal,
               manaSteal: manaSteal,
               cost: 0
-            }; // Add Passive Skill stats
+            };
+            console.log('beore passives calc'); // Add Passive Skill stats
 
-            _context.next = 73;
+            _context.next = 86;
             return (0, _calculatePassives["default"])(currentCharacter, defense, regularAttack, kick, FR, PR, LR, CR);
 
-          case 73:
+          case 86:
             _yield$calculatePassi = _context.sent;
             _yield$calculatePassi2 = (0, _slicedToArray2["default"])(_yield$calculatePassi, 7);
             defense = _yield$calculatePassi2[0];
@@ -255,10 +269,10 @@ var calculateCharacterStats = /*#__PURE__*/function () {
             CR = _yield$calculatePassi2[6];
             console.log('before calculating buffs'); // Calculate Buffs
 
-            _context.next = 85;
+            _context.next = 98;
             return (0, _calculateBuffs["default"])(currentCharacter, defense, regularAttack, currentHp, maxHp);
 
-          case 85:
+          case 98:
             _yield$calculateBuffs = _context.sent;
             _yield$calculateBuffs2 = (0, _slicedToArray2["default"])(_yield$calculateBuffs, 5);
             defense = _yield$calculateBuffs2[0];
@@ -268,32 +282,35 @@ var calculateCharacterStats = /*#__PURE__*/function () {
             totalLifeBonus = _yield$calculateBuffs2[4];
             console.log('after calculating buffs'); // Fetch Selected Skills
 
-            _context.next = 95;
-            return (0, _selectedSkills.fetchUserCurrentSelectedSkills)(currentCharacter.user.user_id, t);
+            _context.next = 108;
+            return (0, _selectedSkills.fetchUserCurrentSelectedSkills)(currentCharacter.UserGroup.user.user_id, t);
 
-          case 95:
+          case 108:
             selectedSkills = _context.sent;
             console.log('after skill selection'); // calculate Skill damage
 
-            _context.next = 99;
+            _context.next = 112;
             return (0, _calculateSkills.calculateSkillDamage)(currentCharacter, selectedSkills.selectedMainSkill, regularAttack, t);
 
-          case 99:
+          case 112:
             attackOne = _context.sent;
             console.log('after main skill damage'); // calculate Skill damage
 
-            _context.next = 103;
+            _context.next = 116;
             return (0, _calculateSkills.calculateSkillDamage)(currentCharacter, selectedSkills.selectedSecondarySkill, regularAttack, t);
 
-          case 103:
+          case 116:
             attackTwo = _context.sent;
+            console.log(userCurrentRank);
+            console.log(userCurrentRank.level);
+            console.log(regularAttack);
             console.log('done calculating character stats'); // TODO: APPLY CAPS BEFORE APPLYING THEM TO FINAL RETURN
 
             return _context.abrupt("return", {
-              username: currentCharacter.user.username,
-              currentClass: currentCharacter.user.currentClass.name,
-              lvl: userCurrentRank.id,
-              exp: currentCharacter.user.exp,
+              username: currentCharacter.UserGroup.user.username,
+              currentClass: currentCharacter.UserGroup.user.currentClass.name,
+              lvl: userCurrentRank.level,
+              exp: currentCharacter.UserGroup.exp,
               expNext: nextRankExp,
               unspendAttributes: unspendAttributes,
               strength: strength,
@@ -335,7 +352,7 @@ var calculateCharacterStats = /*#__PURE__*/function () {
               }
             });
 
-          case 106:
+          case 122:
           case "end":
             return _context.stop();
         }

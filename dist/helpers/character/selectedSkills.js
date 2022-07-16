@@ -46,25 +46,32 @@ var fetchUserCurrentSelectedSkills = /*#__PURE__*/function () {
           case 3:
             user = _context.sent;
             _context.next = 6;
-            return _models["default"].UserClass.findOne(_objectSpread(_objectSpread({
+            return _models["default"].UserGroupClass.findOne(_objectSpread(_objectSpread({
               where: {
                 // classId: { [Op.col]: 'user.currentClassId' },
-                classId: user.currentClassId,
-                userId: user.id
+                classId: user.currentClassId // userId: user.id,
+
               }
             }, t && [{
               lock: t.LOCK.UPDATE,
               transaction: t
             }]), {}, {
               include: [{
-                model: _models["default"].UserClassSkill,
-                as: 'UserClassSkills',
+                model: _models["default"].UserGroup,
+                as: 'UserGroup',
+                required: true,
+                where: {
+                  groupId: user.currentRealmId
+                }
+              }, {
+                model: _models["default"].UserGroupClassSkill,
+                as: 'UserGroupClassSkills',
                 include: [{
                   model: _models["default"].skill,
                   as: 'skill'
                 }]
               }, {
-                model: _models["default"].UserClassSkill,
+                model: _models["default"].UserGroupClassSkill,
                 as: 'selectedMainSkill',
                 include: [{
                   model: _models["default"].skill,
@@ -79,7 +86,7 @@ var fetchUserCurrentSelectedSkills = /*#__PURE__*/function () {
                   }]
                 }]
               }, {
-                model: _models["default"].UserClassSkill,
+                model: _models["default"].UserGroupClassSkill,
                 as: 'selectedSecondarySkill',
                 include: [{
                   model: _models["default"].skill,
@@ -98,9 +105,10 @@ var fetchUserCurrentSelectedSkills = /*#__PURE__*/function () {
 
           case 6:
             userCurrentSelectedSkill = _context.sent;
+            console.log(userCurrentSelectedSkill);
             return _context.abrupt("return", userCurrentSelectedSkill);
 
-          case 8:
+          case 9:
           case "end":
             return _context.stop();
         }

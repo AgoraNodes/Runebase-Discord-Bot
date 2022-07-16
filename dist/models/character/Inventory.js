@@ -19,8 +19,8 @@ module.exports = function (sequelize, DataTypes) {
 
   InventoryModel.associate = function (model) {
     InventoryModel.hasMany(model.item);
-    InventoryModel.hasOne(model.UserClass, {
-      as: 'UserClass',
+    InventoryModel.hasOne(model.UserGroupClass, {
+      as: 'UserGroupClass',
       foreignKey: 'inventoryId'
     });
   };

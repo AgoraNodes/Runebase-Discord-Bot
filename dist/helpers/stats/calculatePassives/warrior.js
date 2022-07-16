@@ -26,40 +26,40 @@ var calculatePassivesWarrior = /*#__PURE__*/function () {
             newLR = LR;
             newCR = CR;
             newKick = kick;
-            thoughSkin = currentCharacter.UserClassSkills.find(function (x) {
+            thoughSkin = currentCharacter.UserGroupClassSkills.find(function (x) {
               return x.skill.name === 'Though Skin';
             });
-            resistance = currentCharacter.UserClassSkills.find(function (x) {
+            resistance = currentCharacter.UserGroupClassSkills.find(function (x) {
               return x.skill.name === 'Resistance';
             });
-            swordsman = currentCharacter.UserClassSkills.find(function (x) {
+            swordsman = currentCharacter.UserGroupClassSkills.find(function (x) {
               return x.skill.name === 'Swordsman';
             });
-            axeman = currentCharacter.UserClassSkills.find(function (x) {
+            axeman = currentCharacter.UserGroupClassSkills.find(function (x) {
               return x.skill.name === 'Axeman';
             });
-            maceman = currentCharacter.UserClassSkills.find(function (x) {
+            maceman = currentCharacter.UserGroupClassSkills.find(function (x) {
               return x.skill.name === 'Maceman';
             });
-            polearmMaster = currentCharacter.UserClassSkills.find(function (x) {
+            polearmMaster = currentCharacter.UserGroupClassSkills.find(function (x) {
               return x.skill.name === 'Polearm Master';
             });
-            throwingMaster = currentCharacter.UserClassSkills.find(function (x) {
+            throwingMaster = currentCharacter.UserGroupClassSkills.find(function (x) {
               return x.skill.name === 'Throwing Master';
             });
-            spearman = currentCharacter.UserClassSkills.find(function (x) {
+            spearman = currentCharacter.UserGroupClassSkills.find(function (x) {
               return x.skill.name === 'Spearman';
             });
-            parry = currentCharacter.UserClassSkills.find(function (x) {
+            parry = currentCharacter.UserGroupClassSkills.find(function (x) {
               return x.skill.name === 'Parry';
             });
-            criticalHit = currentCharacter.UserClassSkills.find(function (x) {
+            criticalHit = currentCharacter.UserGroupClassSkills.find(function (x) {
               return x.skill.name === 'Critical Hit';
             });
-            criticalKick = currentCharacter.UserClassSkills.find(function (x) {
+            criticalKick = currentCharacter.UserGroupClassSkills.find(function (x) {
               return x.skill.name === 'Critical Kick';
             });
-            healingHit = currentCharacter.UserClassSkills.find(function (x) {
+            healingHit = currentCharacter.UserGroupClassSkills.find(function (x) {
               return x.skill.name === 'Healing Hit';
             });
 

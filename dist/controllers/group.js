@@ -31,8 +31,7 @@ var updateDiscordGroup = /*#__PURE__*/function () {
               guildId = message.guildId;
             }
 
-            console.log(guildId);
-            _context3.next = 4;
+            _context3.next = 3;
             return _models["default"].sequelize.transaction({
               isolationLevel: _sequelize.Transaction.ISOLATION_LEVELS.SERIALIZABLE
             }, /*#__PURE__*/function () {
@@ -43,7 +42,7 @@ var updateDiscordGroup = /*#__PURE__*/function () {
                     switch (_context.prev = _context.next) {
                       case 0:
                         if (!guildId) {
-                          _context.next = 16;
+                          _context.next = 15;
                           break;
                         }
 
@@ -63,14 +62,13 @@ var updateDiscordGroup = /*#__PURE__*/function () {
 
                       case 6:
                         group = _context.sent;
-                        console.log('after group find one');
 
                         if (group) {
-                          _context.next = 12;
+                          _context.next = 11;
                           break;
                         }
 
-                        _context.next = 11;
+                        _context.next = 10;
                         return _models["default"].group.create({
                           groupId: "".concat(guildId),
                           groupName: guild.name,
@@ -80,16 +78,16 @@ var updateDiscordGroup = /*#__PURE__*/function () {
                           lock: t.LOCK.UPDATE
                         });
 
-                      case 11:
+                      case 10:
                         group = _context.sent;
 
-                      case 12:
+                      case 11:
                         if (!group) {
-                          _context.next = 16;
+                          _context.next = 15;
                           break;
                         }
 
-                        _context.next = 15;
+                        _context.next = 14;
                         return group.update({
                           groupName: guild.name,
                           lastActive: Date.now()
@@ -98,15 +96,15 @@ var updateDiscordGroup = /*#__PURE__*/function () {
                           lock: t.LOCK.UPDATE
                         });
 
-                      case 15:
+                      case 14:
                         group = _context.sent;
 
-                      case 16:
+                      case 15:
                         t.afterCommit(function () {
                           console.log('Update Group transaction done');
                         });
 
-                      case 17:
+                      case 16:
                       case "end":
                         return _context.stop();
                     }
@@ -158,10 +156,10 @@ var updateDiscordGroup = /*#__PURE__*/function () {
               };
             }());
 
-          case 4:
+          case 3:
             return _context3.abrupt("return", group);
 
-          case 5:
+          case 4:
           case "end":
             return _context3.stop();
         }

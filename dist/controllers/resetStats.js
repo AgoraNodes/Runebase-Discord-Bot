@@ -55,14 +55,30 @@ var discordResetStats = /*#__PURE__*/function () {
 
           case 9:
             userCurrentCharacter = _context5.sent;
-            _context5.next = 12;
+
+            if (userCurrentCharacter) {
+              _context5.next = 14;
+              break;
+            }
+
+            _context5.next = 13;
+            return message.reply({
+              content: 'You have not selected a class yet\n`!runebase pickclass`\n`/pickclass`',
+              ephemeral: true
+            });
+
+          case 13:
+            return _context5.abrupt("return");
+
+          case 14:
+            _context5.next = 16;
             return _models["default"].wallet.findOne({
               where: {
                 userId: userCurrentCharacter.user.id
               }
             });
 
-          case 12:
+          case 16:
             userWallet = _context5.sent;
             // const totalStatsCost = (new BigNumber((userCurrentCharacter.stats.strength
             //   + userCurrentCharacter.stats.dexterity
@@ -70,22 +86,22 @@ var discordResetStats = /*#__PURE__*/function () {
             //   + userCurrentCharacter.stats.energy))).multiply(0.1);
             totalStatsCost = new _bignumber["default"](userCurrentCharacter.stats.strength).plus(userCurrentCharacter.stats.dexterity).plus(userCurrentCharacter.stats.vitality).plus(userCurrentCharacter.stats.energy).multipliedBy(0.1);
             _context5.t0 = discordChannel;
-            _context5.next = 17;
+            _context5.next = 21;
             return (0, _messages.resetStatsConfirmationMessage)(userCurrentCharacter.user.user_id, userWallet.available, totalStatsCost);
 
-          case 17:
+          case 21:
             _context5.t1 = _context5.sent;
             _context5.t2 = [_context5.t1];
             _context5.t3 = _discord.MessageActionRow;
-            _context5.next = 22;
+            _context5.next = 26;
             return (0, _buttons.generateAcceptButton)();
 
-          case 22:
+          case 26:
             _context5.t4 = _context5.sent;
-            _context5.next = 25;
+            _context5.next = 29;
             return (0, _buttons.generateDeclineButton)();
 
-          case 25:
+          case 29:
             _context5.t5 = _context5.sent;
             _context5.t6 = [_context5.t4, _context5.t5];
             _context5.t7 = {
@@ -97,10 +113,10 @@ var discordResetStats = /*#__PURE__*/function () {
               embeds: _context5.t2,
               components: _context5.t9
             };
-            _context5.next = 33;
+            _context5.next = 37;
             return _context5.t0.send.call(_context5.t0, _context5.t10);
 
-          case 33:
+          case 37:
             embedMessage = _context5.sent;
             collector = embedMessage.createMessageComponentCollector({// filter: ({ user: discordUser }) => discordUser.id === userCurrentCharacter.user.user_id,
             });
@@ -372,7 +388,7 @@ var discordResetStats = /*#__PURE__*/function () {
               };
             }());
 
-          case 36:
+          case 40:
           case "end":
             return _context5.stop();
         }

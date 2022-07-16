@@ -41,7 +41,7 @@ var isFailedAttack = /*#__PURE__*/function () {
               isNotMissed = Math.random() < Number(monsterHitChance) / 100; // Did Monster hit user?
 
               if (!isNotMissed) {
-                log = "".concat(remainingMonster.monster.name, " ").concat(useAttack.name, " missed ").concat(userState.user.username);
+                log = "".concat(remainingMonster.monster.name, " ").concat(useAttack.name, " missed ").concat(userState.UserGroup.user.username);
                 saveToDatabasePromises.push(new Promise(function (resolve, reject) {
                   _models["default"].battleLog.create({
                     battleId: battle.id,
@@ -67,7 +67,7 @@ var isFailedAttack = /*#__PURE__*/function () {
                 };
                 attackFailed = true;
               } else if (isBlocked) {
-                _log = "".concat(userState.user.username, " blocked ").concat(remainingMonster.monster.name, " ").concat(useAttack.name);
+                _log = "".concat(userState.UserGroup.user.username, " blocked ").concat(remainingMonster.monster.name, " ").concat(useAttack.name);
                 saveToDatabasePromises.push(new Promise(function (resolve, reject) {
                   _models["default"].battleLog.create({
                     battleId: battle.id,
@@ -93,7 +93,7 @@ var isFailedAttack = /*#__PURE__*/function () {
                 };
                 attackFailed = true;
               } else if (isParried) {
-                _log2 = "".concat(userState.user.username, " parried ").concat(remainingMonster.monster.name, " ").concat(useAttack.name);
+                _log2 = "".concat(userState.UserGroup.user.username, " parried ").concat(remainingMonster.monster.name, " ").concat(useAttack.name);
                 saveToDatabasePromises.push(new Promise(function (resolve, reject) {
                   _models["default"].battleLog.create({
                     battleId: battle.id,

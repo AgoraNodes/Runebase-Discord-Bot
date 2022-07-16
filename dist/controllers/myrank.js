@@ -199,8 +199,8 @@ var discordMyRank = /*#__PURE__*/function () {
                         ctx.fillText(user.username, 120, 275, 200);
                         ctx.strokeText(currentRank ? currentRank.name : 'Unranked', 722, 90, 100);
                         ctx.fillText(currentRank ? currentRank.name : 'Unranked', 722, 90, 100);
-                        ctx.strokeText("".concat(currentRank ? currentRank.id : 0), 900, 90, 80);
-                        ctx.fillText("".concat(currentRank ? currentRank.id : 0), 900, 90, 80);
+                        ctx.strokeText("".concat(currentRank ? currentRank.level : 0), 900, 90, 80);
+                        ctx.fillText("".concat(currentRank ? currentRank.level : 0), 900, 90, 80);
                         ctx.fillStyle = 'white';
                         ctx.font = 'bold 25px "HeartWarming"';
                         ctx.strokeText("Chat Activity Score", 450, 40, 300);

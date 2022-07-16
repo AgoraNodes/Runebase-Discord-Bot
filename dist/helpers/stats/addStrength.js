@@ -29,7 +29,9 @@ var addStrength = /*#__PURE__*/function () {
         switch (_context4.prev = _context4.next) {
           case 0:
             activity = [];
-            _context4.next = 3;
+            console.log(currentUserCharacter);
+            console.log('before add strength');
+            _context4.next = 5;
             return queue.add( /*#__PURE__*/(0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee3() {
               return _regenerator["default"].wrap(function _callee3$(_context3) {
                 while (1) {
@@ -48,26 +50,33 @@ var addStrength = /*#__PURE__*/function () {
                                   _context.next = 2;
                                   return _models["default"].user.findOne({
                                     where: {
-                                      id: currentUserCharacter.user.id
+                                      id: currentUserCharacter.UserGroup.user.id
                                     },
                                     include: [{
                                       model: _models["default"]["class"],
                                       as: 'currentClass'
                                     }, {
-                                      model: _models["default"].rank,
-                                      as: 'ranks'
-                                    }, {
-                                      model: _models["default"].UserClass,
-                                      as: 'UserClass',
+                                      model: _models["default"].UserGroup,
+                                      as: 'UserGroup',
                                       where: {
-                                        classId: (0, _defineProperty2["default"])({}, _sequelize.Op.col, 'user.currentClassId')
+                                        groupId: (0, _defineProperty2["default"])({}, _sequelize.Op.col, 'user.currentRealmId')
                                       },
                                       include: [{
-                                        model: _models["default"].stats,
-                                        as: 'stats'
+                                        model: _models["default"].rank,
+                                        as: 'ranks'
                                       }, {
-                                        model: _models["default"].condition,
-                                        as: 'condition'
+                                        model: _models["default"].UserGroupClass,
+                                        as: 'UserGroupClass',
+                                        where: {
+                                          classId: (0, _defineProperty2["default"])({}, _sequelize.Op.col, 'user.currentClassId')
+                                        },
+                                        include: [{
+                                          model: _models["default"].stats,
+                                          as: 'stats'
+                                        }, {
+                                          model: _models["default"].condition,
+                                          as: 'condition'
+                                        }]
                                       }]
                                     }],
                                     lock: t.LOCK.UPDATE,
@@ -76,7 +85,7 @@ var addStrength = /*#__PURE__*/function () {
 
                                 case 2:
                                   user = _context.sent;
-                                  calc = user.UserClass.stats.strength + user.UserClass.stats.dexterity + user.UserClass.stats.vitality + user.UserClass.stats.energy < user.ranks[0].id * 5;
+                                  calc = user.UserGroup.UserGroupClass.stats.strength + user.UserGroup.UserGroupClass.stats.dexterity + user.UserGroup.UserGroupClass.stats.vitality + user.UserGroup.UserGroupClass.stats.energy < user.UserGroup.ranks[0].level * 5;
 
                                   if (calc) {
                                     _context.next = 7;
@@ -88,8 +97,8 @@ var addStrength = /*#__PURE__*/function () {
 
                                 case 7:
                                   _context.next = 9;
-                                  return user.UserClass.stats.update({
-                                    strength: user.UserClass.stats.strength + 1
+                                  return user.UserGroup.UserGroupClass.stats.update({
+                                    strength: user.UserGroup.UserGroupClass.stats.strength + 1
                                   }, {
                                     lock: t.LOCK.UPDATE,
                                     transaction: t
@@ -100,7 +109,7 @@ var addStrength = /*#__PURE__*/function () {
                                   _context.next = 12;
                                   return _models["default"].activity.create({
                                     type: 'addStrength_s',
-                                    earnerId: currentUserCharacter.user.id
+                                    earnerId: currentUserCharacter.UserGroup.user.id
                                   }, {
                                     lock: t.LOCK.UPDATE,
                                     transaction: t
@@ -188,17 +197,18 @@ var addStrength = /*#__PURE__*/function () {
               }, _callee3);
             })));
 
-          case 3:
-            _context4.next = 5;
-            return (0, _character.fetchUserCurrentCharacter)(currentUserCharacter.user.user_id, // user discord id
+          case 5:
+            console.log('addstrength');
+            _context4.next = 8;
+            return (0, _character.fetchUserCurrentCharacter)(currentUserCharacter.UserGroup.user.user_id, // user discord id
             false // Need inventory?
             );
 
-          case 5:
+          case 8:
             myUpdatedUser = _context4.sent;
             return _context4.abrupt("return", [myUpdatedUser, cannotSpend]);
 
-          case 7:
+          case 10:
           case "end":
             return _context4.stop();
         }
