@@ -65,7 +65,7 @@ export const discordRollDice = async (
       ],
     });
 
-    const dateFuture = rollDiceRecord && rollDiceRecord.createdAt.getTime() + (60 * 1000); // (3 * 60 * 60 * 1000)
+    const dateFuture = rollDiceRecord && rollDiceRecord.createdAt.getTime() + (3 * 60 * 60 * 1000); // (3 * 60 * 60 * 1000)
     const dateNow = new Date().getTime();
     const distance = dateFuture && dateFuture - dateNow;
 

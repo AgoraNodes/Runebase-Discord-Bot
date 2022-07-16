@@ -1,5 +1,8 @@
 /* eslint-disable import/prefer-default-export */
-import { Transaction } from "sequelize";
+import {
+  Transaction,
+  Op,
+} from "sequelize";
 import {
   MessageActionRow,
   MessageButton,
@@ -10,7 +13,7 @@ import {
 import {
   realmChangeSuccessEmbed,
   needToBeInDiscordRealmEmbed,
-  cannotSendMessageUser,
+  levelUpMessage,
   discordErrorMessage,
 } from '../messages';
 import db from '../models';
@@ -171,11 +174,10 @@ export const discordChangeRealm = async (
               });
               return;
             }
+
             console.log('before discord check');
             const server = discordClient.guilds.cache.get(realm.groupId);
-            console.log(server);
             if (!server.members.cache.get(user.user_id)) {
-              console.log('user is not in this server! tell him to join the server');
               await interaction.editReply({
                 content: `<@${user.user_id}>, ${realm.inviteLink}`,
                 embeds: [
@@ -197,13 +199,33 @@ export const discordChangeRealm = async (
               });
               return;
             }
+            let UserGroup = await db.UserGroup.findOne({
+              where: {
+                userId: user.id,
+                groupId: newSelectedId,
+              },
+              transaction: t,
+              lock: t.LOCK.UPDATE,
+            });
+            if (!UserGroup) {
+              UserGroup = await db.UserGroup.create({
+                userId: user.id,
+                groupId: newSelectedId,
+              }, {
+                transaction: t,
+                lock: t.LOCK.UPDATE,
+              });
+            }
+
             console.log('joining realm');
             await myUser.update({
               currentRealmId: newSelectedId,
+              currentClassId: null,
             }, {
               transaction: t,
               lock: t.LOCK.UPDATE,
             });
+
             await interaction.editReply({
               content: `<@${user.user_id}>`,
               embeds: [
@@ -211,7 +233,6 @@ export const discordChangeRealm = async (
               ],
               components: [],
             });
-            console.log('join the realm');
           }).catch(async (err) => {
             try {
               await db.error.create({

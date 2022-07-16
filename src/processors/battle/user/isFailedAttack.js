@@ -19,7 +19,8 @@ const isFailedAttack = async (
     // DR = Defender's Defense rating
     // Alvl = Attacker's level
     // Dlvl = Defender's level
-    const userHitChance = (200 * (useAttack.ar / (useAttack.ar + updatedMonster.monster.defense)) * (lvl / (lvl + updatedMonster.monster.level))) * 100;
+    const Alvl = lvl > 0 ? lvl : 1;
+    const userHitChance = (200 * (useAttack.ar / (useAttack.ar + updatedMonster.monster.defense)) * (Alvl / (Alvl + updatedMonster.monster.level))) * 100;
 
     const isBlocked = Math.random() < Number(updatedMonster.monster.block) / 100; // Did We block the attack?
     const isParried = Math.random() < Number(updatedMonster.monster.parry) / 100; // Did monster parry the attack?

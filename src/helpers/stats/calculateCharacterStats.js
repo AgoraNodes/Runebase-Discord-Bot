@@ -30,8 +30,19 @@ export const calculateCharacterStats = async (
       }]
     ),
   });
+  console.log(currentCharacter.UserGroup.exp);
+  console.log(currentCharacter.UserGroup.user.currentRealmId);
   console.log('calcstats 1');
-  const userCurrentRank = currentCharacter.UserGroup.ranks[0] ? currentCharacter.UserGroup.ranks[0] : { level: 0, expNeeded: nextRank.expNeeded };
+  console.log(currentCharacter.UserGroup);
+  console.log(nextRank);
+  const userCurrentRank = currentCharacter.UserGroup.UserGroupRank
+    && currentCharacter.UserGroup.UserGroupRank.rank
+    ? currentCharacter.UserGroup.UserGroupRank.rank
+    : {
+      level: 0,
+      expNeeded: nextRank.expNeeded,
+    };
+  console.log('before next rank calc');
   const nextRankExp = nextRank && nextRank.expNeeded ? nextRank.expNeeded : userCurrentRank.expNeeded;
   const countedSpendAttributes = currentCharacter.stats.strength
     + currentCharacter.stats.dexterity
@@ -260,6 +271,10 @@ export const calculateCharacterStats = async (
     regularAttack,
     t,
   );
+
+  console.log(userCurrentRank);
+  console.log(userCurrentRank.level);
+  console.log(regularAttack);
 
   console.log('done calculating character stats');
   // TODO: APPLY CAPS BEFORE APPLYING THEM TO FINAL RETURN

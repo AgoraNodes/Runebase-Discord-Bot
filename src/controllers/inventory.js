@@ -56,9 +56,10 @@ export const discordShowInventory = async (
     userId, // user discord id
     true, // Need inventory?
   );
+
   if (!userCurrentCharacter) {
     await message.reply({
-      content: 'You have not selected a class yet\n`!runebase pickclass`\n/`pickclass`',
+      content: 'You have not selected a class yet\n`!runebase pickclass`\n`/pickclass`',
       ephemeral: true,
     });
     return;

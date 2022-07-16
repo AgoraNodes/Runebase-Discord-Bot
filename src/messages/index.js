@@ -549,8 +549,15 @@ export const needToBeInDiscordRealmEmbed = (
   const result = new MessageEmbed()
     .setColor(settings.bot.color)
     .setTitle('Change Realm Failed')
-    .setDescription(`You need to join the realm discord server to be able to participate on this realm
-${server.inviteLink}`)
+    .setDescription(`You need to join the realm's discord server to be able to participate on this realm
+    
+Invite link:
+${server.inviteLink}
+
+Or choose another realm with 
+\`!runebase changerealm\` 
+or 
+\`/changerealm\``)
     .setTimestamp()
     .setFooter({
       text: `${settings.bot.name} v${pjson.version}`,
@@ -582,6 +589,7 @@ export const levelUpMessage = (
   userId,
   rank,
 ) => {
+  console.log('sending level up message');
   const result = new MessageEmbed()
     .setColor(settings.bot.color)
     .setTitle('Gain Exp')

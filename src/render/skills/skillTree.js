@@ -45,7 +45,7 @@ export const renderSkillTreeImage = async (
 ) => {
   console.log('before render skill tree');
   console.log(userCharacter);
-  const userCurrentRank = userCharacter.UserGroup.ranks[0] ? userCharacter.UserGroup.ranks[0] : { level: 0 };
+  const userCurrentRank = userCharacter.UserGroup.UserGroupRank.rank ? userCharacter.UserGroup.UserGroupRank.rank : { level: 0 };
   const skillTreeMenuImage = await loadImage(path.join(__dirname, `../../assets/images/skilltree/`, `skillTreeMenu.png`));
   const skillTreeImage = await loadImage(path.join(__dirname, `../../assets/images/skilltree/`, `skilltree${skillTreeIndex}.png`));
   const canvas = createCanvas(

@@ -44,6 +44,14 @@ export const discordHeal = async (
     false, // Need inventory?
   );
 
+  if (!userCurrentCharacter) {
+    await message.reply({
+      content: 'You have not selected a class yet\n`!runebase pickclass`\n`/pickclass`',
+      ephemeral: true,
+    });
+    return;
+  }
+
   const userWallet = await db.wallet.findOne({
     where: {
       userId: userCurrentCharacter.UserGroup.user.id,

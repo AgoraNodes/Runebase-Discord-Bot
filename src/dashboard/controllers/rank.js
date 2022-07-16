@@ -90,15 +90,8 @@ export const addRank = async (
   if (!req.body.roleId) {
     throw new Error("RoleId is required");
   }
-
-  const rank = await db.rank.findOne({
-    where: {
-      name: req.body.name,
-    },
-  });
-
-  if (rank) {
-    throw new Error("Already Exists");
+  if (!req.body.groupId) {
+    throw new Error("groupId is required");
   }
 
   res.locals.name = 'addRank';
@@ -107,6 +100,7 @@ export const addRank = async (
     level: Number(req.body.level),
     expNeeded: req.body.expNeeded,
     discordRankRoleId: req.body.roleId,
+    groupId: Number(req.body.groupId),
   });
 
   next();

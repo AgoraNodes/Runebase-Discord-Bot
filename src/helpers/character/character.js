@@ -22,6 +22,9 @@ export const fetchUserCurrentCharacter = async (
       }]
     ),
   });
+  console.log(user.currentRealmId);
+  console.log(user.currentClassId);
+  console.log('user current ids');
   const userCurrentCharacter = await db.UserGroupClass.findOne({
     where: {
       // classId: { [Op.col]: 'user.currentClassId' },
@@ -44,8 +47,18 @@ export const fetchUserCurrentCharacter = async (
         },
         include: [
           {
-            model: db.rank,
-            as: 'ranks',
+            model: db.group,
+            as: 'group',
+          },
+          {
+            model: db.UserGroupRank,
+            as: 'UserGroupRank',
+            include: [
+              {
+                model: db.rank,
+                as: 'rank',
+              },
+            ],
           },
           {
             model: db.user,
@@ -429,6 +442,7 @@ export const fetchUserCurrentCharacter = async (
       }] : []),
     ],
   });
-  // console.log(userCurrentCharacter);
+  console.log(userCurrentCharacter);
+  // console.log(userCurrentCharacter.UserGroup);
   return userCurrentCharacter;
 };

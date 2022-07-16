@@ -26,6 +26,9 @@ import { fetchDiscordUserIdFromMessageOrInteraction } from '../helpers/client/fe
 import { fetchDiscordChannel } from '../helpers/client/fetchDiscordChannel';
 import { unEquipItem } from '../helpers/equipment/unEquipItem';
 
+import { needToBeInDiscordRealmEmbed } from "../messages";
+import isUserInRealm from "../helpers/realm/isUserInRealm";
+
 const showEquipmentImage = async (
   userCurrentCharacter,
 ) => {
@@ -55,9 +58,28 @@ export const discordShowEquipment = async (
     userId, // user discord id
     false, // Need inventory?
   );
+
+  const isInRealm = await isUserInRealm(
+    discordClient,
+    userCurrentCharacter,
+  );
+
+  if (!isInRealm) {
+    await message.reply({
+      content: `<@${userCurrentCharacter.UserGroup.user.user_id}>, ${userCurrentCharacter.UserGroup.group.inviteLink}`,
+      embeds: [
+        await needToBeInDiscordRealmEmbed(
+          userCurrentCharacter.UserGroup.group,
+        ),
+      ],
+      ephemeral: true,
+    });
+    return;
+  }
+
   if (!userCurrentCharacter) {
     await message.reply({
-      content: 'You have not selected a class yet\n`!runebase pickclass`\n/`pickclass`',
+      content: 'You have not selected a class yet\n`!runebase pickclass`\n`/pickclass`',
       ephemeral: true,
     });
     return;

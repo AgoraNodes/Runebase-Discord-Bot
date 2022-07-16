@@ -34,7 +34,7 @@ import { discordChangeRealm } from "../controllers/changeRealm";
 import { myRateLimiter } from '../helpers/rateLimit';
 import { preWithdraw } from '../helpers/withdraw/preWithdraw';
 import { isMaintenanceOrDisabled } from '../helpers/isMaintenanceOrDisabled';
-
+import onUserJoinRealm from '../helpers/realm/onUserJoinRealm';
 import settings from '../config/settings';
 
 import {
@@ -72,13 +72,12 @@ export const discordRouter = async (
 
   discordClient.on('guildMemberAdd', async (member) => {
     const setting = await db.setting.findOne();
-
+    const newUser = await createUpdateDiscordUser(
+      discordClient,
+      member.user,
+      queue,
+    );
     if (member.guild.id === setting.discordHomeServerGuildId) {
-      const newUser = await createUpdateDiscordUser(
-        discordClient,
-        member.user,
-        queue,
-      );
       member.guild.invites.fetch().then((guildInvites) => { // get all guild invites
         guildInvites.each(async (invite) => { // basically a for loop over the invites
           if (invite.uses !== userInvites[invite.code]) { // if it doesn't match what we stored:
@@ -106,6 +105,11 @@ export const discordRouter = async (
         });
       });
     }
+    // Test for Level and give user a rank if needed
+    onUserJoinRealm(
+      discordClient,
+      member,
+    );
   });
 
   discordClient.on('guildMemberUpdate', async (

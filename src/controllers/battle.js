@@ -76,7 +76,7 @@ export const discordBattle = async (
 
   if (!userCurrentCharacter) {
     await message.reply({
-      content: 'You have not selected a class yet\n`!runebase pickclass`\n/`pickclass`',
+      content: 'You have not selected a class yet\n`!runebase pickclass`\n`/pickclass`',
       ephemeral: true,
     });
     return;
@@ -636,7 +636,7 @@ ${newLootC.length > 0 ? `__found ${newLootC.length} ${newLootC.length === 1 ? `i
           const userToUpdate = await db.UserGroupClass.findOne({
             where: {
               UserGroupId: userCurrentCharacter.UserGroup.id,
-              classId: userCurrentCharacter.user.currentClassId,
+              classId: userCurrentCharacter.UserGroup.user.currentClassId,
             },
             include: [
               {
