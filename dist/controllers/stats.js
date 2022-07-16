@@ -264,7 +264,7 @@ var discordStats = /*#__PURE__*/function () {
                           break;
                         }
 
-                        newCalc = updatedUser.stats.strength + updatedUser.stats.dexterity + updatedUser.stats.vitality + updatedUser.stats.energy < updatedUser.UserGroup.ranks[0].level * 5;
+                        newCalc = updatedUser.stats.strength + updatedUser.stats.dexterity + updatedUser.stats.vitality + updatedUser.stats.energy < updatedUser.UserGroup.UserGroupRank.rank.level * 5;
                         _context2.t0 = interaction;
                         _context2.t1 = [];
                         _context2.t2 = _discord.MessageAttachment;

@@ -19,8 +19,6 @@ var _logger = _interopRequireDefault(require("../logger"));
 
 var _character = require("../character/character");
 
-var _messages = require("../../messages");
-
 var addSkillPoint = /*#__PURE__*/function () {
   var _ref = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee4(userCurrentCharacter, skillToAddId, io, queue) {
     var activity, failAddSkillReason, myUpdatedUser;
@@ -92,7 +90,7 @@ var addSkillPoint = /*#__PURE__*/function () {
                                   console.log(sumOfSkills);
                                   console.log('sumOfSkills');
 
-                                  if (!(findUserRank.rank.level <= Number(sumOfSkills[0].totalSpendPoints) && Number(sumOfSkills[0].totalSpendPoints) !== 0)) {
+                                  if (!(findUserRank.rank.level <= Number(sumOfSkills[0].totalSpendPoints) - 1 && Number(sumOfSkills[0].totalSpendPoints) !== 0)) {
                                     _context.next = 16;
                                     break;
                                   }

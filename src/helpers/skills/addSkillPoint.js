@@ -6,10 +6,6 @@ import {
 import db from '../../models';
 import logger from "../logger";
 import { fetchUserCurrentCharacter } from "../character/character";
-import {
-  cannotSendMessageUser,
-  discordErrorMessage,
-} from '../../messages';
 
 export const addSkillPoint = async (
   userCurrentCharacter,
@@ -64,7 +60,7 @@ export const addSkillPoint = async (
       console.log('sumOfSkills');
 
       if (
-        findUserRank.rank.level <= Number(sumOfSkills[0].totalSpendPoints)
+        findUserRank.rank.level <= (Number(sumOfSkills[0].totalSpendPoints) - 1)
         && Number(sumOfSkills[0].totalSpendPoints) !== 0
       ) {
         failAddSkillReason = 'User already spend all of the skillpoints!';

@@ -60,8 +60,12 @@ var addEnergy = /*#__PURE__*/function () {
                                         groupId: (0, _defineProperty2["default"])({}, _sequelize.Op.col, 'user.currentRealmId')
                                       },
                                       include: [{
-                                        model: _models["default"].rank,
-                                        as: 'ranks'
+                                        model: _models["default"].UserGroupRank,
+                                        as: 'UserGroupRank',
+                                        include: [{
+                                          model: _models["default"].rank,
+                                          as: 'rank'
+                                        }]
                                       }, {
                                         model: _models["default"].UserGroupClass,
                                         as: 'UserGroupClass',
@@ -83,17 +87,19 @@ var addEnergy = /*#__PURE__*/function () {
 
                                 case 2:
                                   user = _context.sent;
-                                  calc = user.UserGroup.UserGroupClass.stats.strength + user.UserGroup.UserGroupClass.stats.dexterity + user.UserGroup.UserGroupClass.stats.vitality + user.UserGroup.UserGroupClass.stats.energy < user.UserGroup.ranks[0].level * 5;
+                                  console.log(user);
+                                  console.log(user.UserGroup);
+                                  calc = user.UserGroup.UserGroupClass.stats.strength + user.UserGroup.UserGroupClass.stats.dexterity + user.UserGroup.UserGroupClass.stats.vitality + user.UserGroup.UserGroupClass.stats.energy < user.UserGroup.UserGroupRank.rank.level * 5;
 
                                   if (calc) {
-                                    _context.next = 7;
+                                    _context.next = 9;
                                     break;
                                   }
 
                                   cannotSpend = true;
                                   return _context.abrupt("return");
 
-                                case 7:
+                                case 9:
                                   addMana = 0;
 
                                   if (user.currentClass.name === 'Warrior') {
@@ -114,7 +120,7 @@ var addEnergy = /*#__PURE__*/function () {
                                     }
                                   }
 
-                                  _context.next = 11;
+                                  _context.next = 13;
                                   return user.UserGroup.UserGroupClass.stats.update({
                                     energy: user.UserGroup.UserGroupClass.stats.energy + 1,
                                     mana: user.UserGroup.UserGroupClass.stats.mana + addMana
@@ -123,9 +129,9 @@ var addEnergy = /*#__PURE__*/function () {
                                     transaction: t
                                   });
 
-                                case 11:
+                                case 13:
                                   updateEnergy = _context.sent;
-                                  _context.next = 14;
+                                  _context.next = 16;
                                   return user.UserGroup.UserGroupClass.condition.update({
                                     mana: user.UserGroup.UserGroupClass.condition.mana + addMana
                                   }, {
@@ -133,9 +139,9 @@ var addEnergy = /*#__PURE__*/function () {
                                     transaction: t
                                   });
 
-                                case 14:
+                                case 16:
                                   updateCondition = _context.sent;
-                                  _context.next = 17;
+                                  _context.next = 19;
                                   return _models["default"].activity.create({
                                     type: 'addEnergy_s',
                                     earnerId: currentUserCharacter.UserGroup.user.id
@@ -144,9 +150,9 @@ var addEnergy = /*#__PURE__*/function () {
                                     transaction: t
                                   });
 
-                                case 17:
+                                case 19:
                                   preActivity = _context.sent;
-                                  _context.next = 20;
+                                  _context.next = 22;
                                   return _models["default"].activity.findOne({
                                     where: {
                                       id: preActivity.id
@@ -159,11 +165,11 @@ var addEnergy = /*#__PURE__*/function () {
                                     transaction: t
                                   });
 
-                                case 20:
+                                case 22:
                                   finalActivity = _context.sent;
                                   activity.unshift(finalActivity);
 
-                                case 22:
+                                case 24:
                                 case "end":
                                   return _context.stop();
                               }

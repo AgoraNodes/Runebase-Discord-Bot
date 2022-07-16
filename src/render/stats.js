@@ -1,14 +1,8 @@
 import {
-  Sequelize,
-  Transaction,
-  Op,
-} from "sequelize";
-import {
   createCanvas,
   loadImage,
 } from 'canvas';
 import path from 'path';
-// import db from '../models';
 import { calculateCharacterStats } from '../helpers/stats/calculateCharacterStats';
 
 export const renderStatsImage = async (

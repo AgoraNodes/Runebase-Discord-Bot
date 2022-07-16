@@ -354,7 +354,7 @@ export const renderSkillTreeImage = async (
   }
   console.log('before render skill tree 3');
   const totalSkillsPointsSpend = _.sumBy(userCharacter.UserGroupClassSkills, 'points');
-  const skillPointsLeftToSpend = (userCurrentRank.level - totalSkillsPointsSpend);
+  const skillPointsLeftToSpend = (userCurrentRank.level - (totalSkillsPointsSpend - 1));
 
   if (skillPointsLeftToSpend > 0) {
     ctx.font = 'bold 18px "HeartWarming"';

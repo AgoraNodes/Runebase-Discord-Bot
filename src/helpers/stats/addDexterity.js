@@ -37,8 +37,14 @@ export const addDexterity = async (
             },
             include: [
               {
-                model: db.rank,
-                as: 'ranks',
+                model: db.UserGroupRank,
+                as: 'UserGroupRank',
+                include: [
+                  {
+                    model: db.rank,
+                    as: 'rank',
+                  },
+                ],
               },
               {
                 model: db.UserGroupClass,
@@ -72,7 +78,7 @@ export const addDexterity = async (
         + user.UserGroup.UserGroupClass.stats.dexterity
         + user.UserGroup.UserGroupClass.stats.vitality
         + user.UserGroup.UserGroupClass.stats.energy
-      ) < (user.UserGroup.ranks[0].level * 5);
+      ) < (user.UserGroup.UserGroupRank.rank.level * 5);
 
       if (!calc) {
         cannotSpend = true;

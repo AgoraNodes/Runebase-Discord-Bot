@@ -11,15 +11,12 @@ var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"))
 
 var _asyncToGenerator2 = _interopRequireDefault(require("@babel/runtime/helpers/asyncToGenerator"));
 
-var _sequelize = require("sequelize");
-
 var _canvas = require("canvas");
 
 var _path = _interopRequireDefault(require("path"));
 
 var _calculateCharacterStats = require("../helpers/stats/calculateCharacterStats");
 
-// import db from '../models';
 var renderStatsImage = /*#__PURE__*/function () {
   var _ref = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(currentUser, cannotSpendWarning) {
     var _yield$calculateChara, unspendAttributes, username, currentClass, lvl, exp, expNext, strength, dexterity, vitality, energy, hp, mp, stamina, ar, attackOne, attackTwo, defense, FR, PR, LR, CR, canvas, ctx, BackgroundImageStats, unspendAttributesBoxImage, finalImage;

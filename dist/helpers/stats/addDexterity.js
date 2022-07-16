@@ -60,8 +60,12 @@ var addDexterity = /*#__PURE__*/function () {
                                         groupId: (0, _defineProperty2["default"])({}, _sequelize.Op.col, 'user.currentRealmId')
                                       },
                                       include: [{
-                                        model: _models["default"].rank,
-                                        as: 'ranks'
+                                        model: _models["default"].UserGroupRank,
+                                        as: 'UserGroupRank',
+                                        include: [{
+                                          model: _models["default"].rank,
+                                          as: 'rank'
+                                        }]
                                       }, {
                                         model: _models["default"].UserGroupClass,
                                         as: 'UserGroupClass',
@@ -83,7 +87,7 @@ var addDexterity = /*#__PURE__*/function () {
 
                                 case 2:
                                   user = _context.sent;
-                                  calc = user.UserGroup.UserGroupClass.stats.strength + user.UserGroup.UserGroupClass.stats.dexterity + user.UserGroup.UserGroupClass.stats.vitality + user.UserGroup.UserGroupClass.stats.energy < user.UserGroup.ranks[0].level * 5;
+                                  calc = user.UserGroup.UserGroupClass.stats.strength + user.UserGroup.UserGroupClass.stats.dexterity + user.UserGroup.UserGroupClass.stats.vitality + user.UserGroup.UserGroupClass.stats.energy < user.UserGroup.UserGroupRank.rank.level * 5;
 
                                   if (calc) {
                                     _context.next = 7;

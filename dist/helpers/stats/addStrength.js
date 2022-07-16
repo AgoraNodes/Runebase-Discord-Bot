@@ -62,8 +62,12 @@ var addStrength = /*#__PURE__*/function () {
                                         groupId: (0, _defineProperty2["default"])({}, _sequelize.Op.col, 'user.currentRealmId')
                                       },
                                       include: [{
-                                        model: _models["default"].rank,
-                                        as: 'ranks'
+                                        model: _models["default"].UserGroupRank,
+                                        as: 'UserGroupRank',
+                                        include: [{
+                                          model: _models["default"].rank,
+                                          as: 'rank'
+                                        }]
                                       }, {
                                         model: _models["default"].UserGroupClass,
                                         as: 'UserGroupClass',
@@ -85,18 +89,20 @@ var addStrength = /*#__PURE__*/function () {
 
                                 case 2:
                                   user = _context.sent;
-                                  calc = user.UserGroup.UserGroupClass.stats.strength + user.UserGroup.UserGroupClass.stats.dexterity + user.UserGroup.UserGroupClass.stats.vitality + user.UserGroup.UserGroupClass.stats.energy < user.UserGroup.ranks[0].level * 5;
+                                  console.log(user.UserGroup.UserGroupRank.rank.level);
+                                  console.log('user.UserGroup.UserGroupRank.rank.level');
+                                  calc = user.UserGroup.UserGroupClass.stats.strength + user.UserGroup.UserGroupClass.stats.dexterity + user.UserGroup.UserGroupClass.stats.vitality + user.UserGroup.UserGroupClass.stats.energy < user.UserGroup.UserGroupRank.rank.level * 5;
 
                                   if (calc) {
-                                    _context.next = 7;
+                                    _context.next = 9;
                                     break;
                                   }
 
                                   cannotSpend = true;
                                   return _context.abrupt("return");
 
-                                case 7:
-                                  _context.next = 9;
+                                case 9:
+                                  _context.next = 11;
                                   return user.UserGroup.UserGroupClass.stats.update({
                                     strength: user.UserGroup.UserGroupClass.stats.strength + 1
                                   }, {
@@ -104,9 +110,9 @@ var addStrength = /*#__PURE__*/function () {
                                     transaction: t
                                   });
 
-                                case 9:
+                                case 11:
                                   updateStrength = _context.sent;
-                                  _context.next = 12;
+                                  _context.next = 14;
                                   return _models["default"].activity.create({
                                     type: 'addStrength_s',
                                     earnerId: currentUserCharacter.UserGroup.user.id
@@ -115,9 +121,9 @@ var addStrength = /*#__PURE__*/function () {
                                     transaction: t
                                   });
 
-                                case 12:
+                                case 14:
                                   preActivity = _context.sent;
-                                  _context.next = 15;
+                                  _context.next = 17;
                                   return _models["default"].activity.findOne({
                                     where: {
                                       id: preActivity.id
@@ -130,11 +136,11 @@ var addStrength = /*#__PURE__*/function () {
                                     transaction: t
                                   });
 
-                                case 15:
+                                case 17:
                                   finalActivity = _context.sent;
                                   activity.unshift(finalActivity);
 
-                                case 17:
+                                case 19:
                                 case "end":
                                   return _context.stop();
                               }
