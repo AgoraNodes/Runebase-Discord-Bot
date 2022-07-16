@@ -18,15 +18,18 @@ module.exports = (sequelize, DataTypes) => {
   };
 
   // 3: Define the Wallet model.
-  const UserClassSkillModel = sequelize.define('UserClassSkill', modelDefinition, modelOptions);
+  const UserClassSkillModel = sequelize.define('UserGroupClassSkill', modelDefinition, modelOptions);
 
   UserClassSkillModel.associate = (model) => {
     UserClassSkillModel.belongsTo(model.skill, {
       foreignKey: 'skillId',
     });
-    UserClassSkillModel.belongsTo(model.UserClass, {
-      foreignKey: 'UserClassId',
+    UserClassSkillModel.belongsTo(model.UserGroupClass, {
+      foreignKey: 'UserGroupClassId',
     });
+    UserClassSkillModel.belongsTo(model.UserGroupClass, {
+      foreignKey: 'UserClassId',
+    }); // remove this after moving with seeds
   };
 
   return UserClassSkillModel;

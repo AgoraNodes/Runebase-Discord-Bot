@@ -53,7 +53,7 @@ module.exports = (sequelize, DataTypes) => {
   const StatsModel = sequelize.define('stats', modelDefinition, modelOptions);
 
   StatsModel.associate = (model) => {
-    StatsModel.hasOne(model.UserClass, {
+    StatsModel.hasOne(model.UserGroupClass, {
       as: 'stats',
       foreignKey: 'statsId',
     });

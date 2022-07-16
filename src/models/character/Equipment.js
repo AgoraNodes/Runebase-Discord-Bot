@@ -18,7 +18,7 @@ module.exports = (sequelize, DataTypes) => {
   const EquipmentModel = sequelize.define('equipment', modelDefinition, modelOptions);
 
   EquipmentModel.associate = (model) => {
-    EquipmentModel.hasOne(model.UserClass, {
+    EquipmentModel.hasOne(model.UserGroupClass, {
       as: 'equipment',
       foreignKey: 'equipmentId',
     });

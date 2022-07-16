@@ -22,10 +22,11 @@ export const fetchUserCurrentCharacter = async (
       }]
     ),
   });
-  const userCurrentCharacter = await db.UserClass.findOne({
+  const userCurrentCharacter = await db.UserGroupClass.findOne({
     where: {
       // classId: { [Op.col]: 'user.currentClassId' },
       classId: user.currentClassId,
+      // groupId: user.currentRealmId,
     },
     ...(t && [
       {
@@ -34,6 +35,33 @@ export const fetchUserCurrentCharacter = async (
       }]
     ),
     include: [
+      {
+        model: db.UserGroup,
+        as: 'UserGroup',
+        required: true,
+        where: {
+          groupId: user.currentRealmId,
+        },
+        include: [
+          {
+            model: db.rank,
+            as: 'ranks',
+          },
+          {
+            model: db.user,
+            as: 'user',
+            where: {
+              user_id: `${userId}`,
+            },
+            include: [
+              {
+                model: db.class,
+                as: 'currentClass',
+              },
+            ],
+          },
+        ],
+      },
       {
         model: db.buff,
         as: 'buffs',
@@ -45,8 +73,8 @@ export const fetchUserCurrentCharacter = async (
         separate: true,
       },
       {
-        model: db.UserClassSkill,
-        as: 'UserClassSkills',
+        model: db.UserGroupClassSkill,
+        as: 'UserGroupClassSkills',
         include: [
           {
             model: db.skill,
@@ -75,23 +103,6 @@ export const fetchUserCurrentCharacter = async (
                 ],
               },
             ],
-          },
-        ],
-      },
-      {
-        model: db.user,
-        as: 'user',
-        where: {
-          user_id: `${userId}`,
-        },
-        include: [
-          {
-            model: db.class,
-            as: 'currentClass',
-          },
-          {
-            model: db.rank,
-            as: 'ranks',
           },
         ],
       },
@@ -418,5 +429,6 @@ export const fetchUserCurrentCharacter = async (
       }] : []),
     ],
   });
+  console.log(userCurrentCharacter);
   return userCurrentCharacter;
 };

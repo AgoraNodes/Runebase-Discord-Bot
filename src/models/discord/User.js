@@ -63,26 +63,26 @@ module.exports = (sequelize, DataTypes) => {
       as: 'currentRealm',
     });
     UserModel.hasMany(model.transaction);
-    UserModel.belongsToMany(
-      model.rank,
-      {
-        through: 'UserRank',
-      },
-    );
-    UserModel.belongsToMany(
-      model.class,
-      {
-        through: 'UserClass',
-      },
-    );
+    // UserModel.belongsToMany(
+    //   model.rank,
+    //   {
+    //     through: 'UserRank',
+    //   },
+    // );
+    // UserModel.belongsToMany(
+    //   model.class,
+    //   {
+    //     through: 'UserClass',
+    //   },
+    // );
     UserModel.belongsToMany(
       model.group,
       {
         through: 'UserGroup',
       },
     );
-    UserModel.hasOne(model.UserClass);
-    UserModel.hasOne(model.UserRank);
+    UserModel.hasOne(model.UserGroup);
+    UserModel.hasOne(model.UserGroupClass); // Can this be removed?
   };
 
   return UserModel;

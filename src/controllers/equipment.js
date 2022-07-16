@@ -224,8 +224,8 @@ export const discordShowEquipment = async (
     ctx.lineWidth = 3;
     ctx.textAlign = "center";
 
-    ctx.strokeText(`${userCurrentCharacter.user.username} canceled equipment screen`, 250, 60, 500);
-    ctx.fillText(`${userCurrentCharacter.user.username} canceled equipment screen`, 250, 60, 500);
+    ctx.strokeText(`${userCurrentCharacter.UserGroup.user.username} canceled equipment screen`, 250, 60, 500);
+    ctx.fillText(`${userCurrentCharacter.UserGroup.user.username} canceled equipment screen`, 250, 60, 500);
 
     return new MessageAttachment(canvas.toBuffer(), 'cancelEquipment.png');
   };
@@ -314,7 +314,7 @@ export const discordShowEquipment = async (
   });
 
   const collector = embedMessage.createMessageComponentCollector({
-    filter: ({ user: discordUser }) => discordUser.id === userCurrentCharacter.user.user_id,
+    filter: ({ user: discordUser }) => discordUser.id === userCurrentCharacter.UserGroup.user.user_id,
   });
 
   const currentIndex = 0;

@@ -16,8 +16,9 @@ export const calculateCharacterStats = async (
   const nextRank = await db.rank.findOne({
     where: {
       expNeeded: {
-        [Op.gt]: currentCharacter.user.exp,
+        [Op.gt]: currentCharacter.UserGroup.exp,
       },
+      groupId: currentCharacter.UserGroup.user.currentRealmId,
     },
     order: [
       ['id', 'ASC'],
@@ -29,7 +30,8 @@ export const calculateCharacterStats = async (
       }]
     ),
   });
-  const userCurrentRank = currentCharacter.user.ranks[0] ? currentCharacter.user.ranks[0] : { level: 0, expNeeded: nextRank.expNeeded };
+  console.log('1');
+  const userCurrentRank = currentCharacter.UserGroup.ranks[0] ? currentCharacter.UserGroup.ranks[0] : { level: 0, expNeeded: nextRank.expNeeded };
   const nextRankExp = nextRank && nextRank.expNeeded ? nextRank.expNeeded : userCurrentRank.expNeeded;
   const countedSpendAttributes = currentCharacter.stats.strength
     + currentCharacter.stats.dexterity
@@ -46,24 +48,25 @@ export const calculateCharacterStats = async (
   const totalManaBonus = 0;
   const lifeSteal = 0;
   const manaSteal = 0;
-  const initialStrength = currentCharacter.user.currentClass.strength + currentCharacter.stats.strength;
-  const initialDexterity = currentCharacter.user.currentClass.dexterity + currentCharacter.stats.dexterity;
-  const initialVitality = currentCharacter.user.currentClass.vitality + currentCharacter.stats.vitality;
-  const initialEnergy = currentCharacter.user.currentClass.energy + currentCharacter.stats.energy;
+  console.log('2');
+  const initialStrength = currentCharacter.UserGroup.user.currentClass.strength + currentCharacter.stats.strength;
+  const initialDexterity = currentCharacter.UserGroup.user.currentClass.dexterity + currentCharacter.stats.dexterity;
+  const initialVitality = currentCharacter.UserGroup.user.currentClass.vitality + currentCharacter.stats.vitality;
+  const initialEnergy = currentCharacter.UserGroup.user.currentClass.energy + currentCharacter.stats.energy;
   let strength = initialStrength;
   let dexterity = initialDexterity;
   let vitality = initialVitality;
   let energy = initialEnergy;
-
-  const maxStamina = currentCharacter.user.currentClass.stamina + currentCharacter.stats.stamina;
+  console.log('3');
+  const maxStamina = currentCharacter.UserGroup.user.currentClass.stamina + currentCharacter.stats.stamina;
   const currentStaminaPoints = currentCharacter.condition.stamina;
   let currentHp = currentCharacter.condition.life;
-  let maxHp = currentCharacter.user.currentClass.life + currentCharacter.stats.life;
+  let maxHp = currentCharacter.UserGroup.user.currentClass.life + currentCharacter.stats.life;
   const currentMp = currentCharacter.condition.mana;
-  let maxMp = currentCharacter.user.currentClass.mana + currentCharacter.stats.mana;
+  let maxMp = currentCharacter.UserGroup.user.currentClass.mana + currentCharacter.stats.mana;
 
-  defense += currentCharacter.user.currentClass.defense;
-
+  defense += currentCharacter.UserGroup.user.currentClass.defense;
+  console.log('4');
   let canWearHelm = false;
   let canWearMainHand = false;
   let canWearOffHand = false;
@@ -71,6 +74,7 @@ export const calculateCharacterStats = async (
   let canWearGloves = false;
   let canWearBelt = false;
   let canWearBoots = false;
+  console.log('4-1');
   [
     strength,
     dexterity,
@@ -95,6 +99,7 @@ export const calculateCharacterStats = async (
     defense,
     block,
   );
+  console.log('5');
   let addedLifeByItemVitality = 0;
   let addedManaByItemEnergy = 0;
   if (currentCharacter.class.name === 'Warrior') {
@@ -158,7 +163,7 @@ export const calculateCharacterStats = async (
       && currentCharacter.equipment.boots
       ? Math.round(currentCharacter.equipment.boots.maxDamage * addedStrengthDamagePercentage)
       : Math.round(2 * addedStrengthDamagePercentage),
-    ar: currentCharacter.user.currentClass.attackRating + (currentCharacter.stats.dexterity * 5),
+    ar: currentCharacter.UserGroup.user.currentClass.attackRating + (currentCharacter.stats.dexterity * 5),
     crit: 0,
     lifeSteal,
     manaSteal,
@@ -187,7 +192,7 @@ export const calculateCharacterStats = async (
       && currentCharacter.equipment.mainHand.maxThrowDamage
       ? Math.round(currentCharacter.equipment.mainHand.maxThrowDamage * addedStrengthDamagePercentage)
       : Math.round(0 * addedStrengthDamagePercentage),
-    ar: currentCharacter.user.currentClass.attackRating + (currentCharacter.stats.dexterity * 5),
+    ar: currentCharacter.UserGroup.user.currentClass.attackRating + (currentCharacter.stats.dexterity * 5),
     crit: 0,
     stun: 0,
     parry: 0,
@@ -234,7 +239,7 @@ export const calculateCharacterStats = async (
   console.log('after calculating buffs');
   // Fetch Selected Skills
   const selectedSkills = await fetchUserCurrentSelectedSkills(
-    currentCharacter.user.user_id,
+    currentCharacter.UserGroup.user.user_id,
     t,
   );
   console.log('after skill selection');
@@ -257,10 +262,10 @@ export const calculateCharacterStats = async (
   console.log('done calculating character stats');
   // TODO: APPLY CAPS BEFORE APPLYING THEM TO FINAL RETURN
   return {
-    username: currentCharacter.user.username,
-    currentClass: currentCharacter.user.currentClass.name,
+    username: currentCharacter.UserGroup.user.username,
+    currentClass: currentCharacter.UserGroup.user.currentClass.name,
     lvl: userCurrentRank.level,
-    exp: currentCharacter.user.exp,
+    exp: currentCharacter.UserGroup.exp,
     expNext: nextRankExp,
     unspendAttributes,
     strength,

@@ -49,7 +49,7 @@ module.exports = (sequelize, DataTypes) => {
   const DebuffModel = sequelize.define('debuff', modelDefinition, modelOptions);
 
   DebuffModel.associate = (model) => {
-    DebuffModel.belongsTo(model.UserClass);
+    DebuffModel.belongsTo(model.UserGroupClass);
     DebuffModel.belongsTo(model.BattleMonster);
   };
 

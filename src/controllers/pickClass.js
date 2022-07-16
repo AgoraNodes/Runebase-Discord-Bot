@@ -107,6 +107,7 @@ export const discordPickClass = async (
             transaction: t,
             lock: t.LOCK.UPDATE,
           });
+          console.log('1');
           const selectedClass = await db.class.findOne({
             where: {
               id: CurrentClassSelectionId,
@@ -114,24 +115,35 @@ export const discordPickClass = async (
             transaction: t,
             lock: t.LOCK.UPDATE,
           });
+          console.log('2');
           await findCurrentUser.update({
             currentClassId: CurrentClassSelectionId,
           }, {
             transaction: t,
             lock: t.LOCK.UPDATE,
           });
-          let userClass = await db.UserClass.findOne({
+          console.log('3');
+          const UserGroup = await db.UserGroup.findOne({
             where: {
               userId: findCurrentUser.id,
+              groupId: findCurrentUser.currentRealmId,
+            },
+          });
+          console.log('4');
+          let userGroupClass = await db.UserGroupClass.findOne({
+            where: {
+              UserGroupId: UserGroup.id,
               classId: CurrentClassSelectionId,
             },
           });
-          if (!userClass) {
+          console.log('5');
+          if (!userGroupClass) {
             const newStats = await db.stats.create({
             }, {
               transaction: t,
               lock: t.LOCK.UPDATE,
             });
+            console.log('5-1');
             const newCondition = await db.condition.create({
               life: selectedClass.life,
               mana: selectedClass.mana,
@@ -140,18 +152,22 @@ export const discordPickClass = async (
               transaction: t,
               lock: t.LOCK.UPDATE,
             });
+            console.log('5-2');
             const newInventory = await db.inventory.create({
             }, {
               transaction: t,
               lock: t.LOCK.UPDATE,
             });
+            console.log('5-3');
             const newEquipment = await db.equipment.create({
             }, {
               transaction: t,
               lock: t.LOCK.UPDATE,
             });
-            userClass = await db.UserClass.create({
-              userId: user.id,
+            console.log('5-4');
+            userGroupClass = await db.UserGroupClass.create({
+              userId: 1, // to be removed
+              UserGroupId: UserGroup.id,
               classId: CurrentClassSelectionId,
               statsId: newStats.id,
               conditionId: newCondition.id,
@@ -161,15 +177,18 @@ export const discordPickClass = async (
               transaction: t,
               lock: t.LOCK.UPDATE,
             });
-          } else {
-            userClass.update({
-              classId: CurrentClassSelectionId,
-            }, {
-              transaction: t,
-              lock: t.LOCK.UPDATE,
-            });
+            console.log('5-5');
           }
-          if (!userClass.conditionId) {
+          // else {
+          //   userClass.update({
+          //     classId: CurrentClassSelectionId,
+          //   }, {
+          //     transaction: t,
+          //     lock: t.LOCK.UPDATE,
+          //   });
+          // }
+          console.log('7');
+          if (!userGroupClass.conditionId) {
             const newCondition = await db.condition.create({
               life: selectedClass.life,
               mana: selectedClass.mana,
@@ -178,46 +197,47 @@ export const discordPickClass = async (
               transaction: t,
               lock: t.LOCK.UPDATE,
             });
-            userClass.update({
+            userGroupClass.update({
               conditionId: newCondition.id,
             }, {
               transaction: t,
               lock: t.LOCK.UPDATE,
             });
           }
-          if (!userClass.statsId) {
+          console.log('8');
+          if (!userGroupClass.statsId) {
             const newStats = await db.stats.create({
             }, {
               transaction: t,
               lock: t.LOCK.UPDATE,
             });
-            userClass.update({
+            userGroupClass.update({
               statsId: newStats.id,
             }, {
               transaction: t,
               lock: t.LOCK.UPDATE,
             });
           }
-          if (!userClass.inventoryId) {
+          if (!userGroupClass.inventoryId) {
             const inventory = await db.inventory.create({
             }, {
               transaction: t,
               lock: t.LOCK.UPDATE,
             });
-            userClass.update({
+            userGroupClass.update({
               inventoryId: inventory.id,
             }, {
               transaction: t,
               lock: t.LOCK.UPDATE,
             });
           }
-          if (!userClass.equipmentId) {
+          if (!userGroupClass.equipmentId) {
             const equipment = await db.equipment.create({
             }, {
               transaction: t,
               lock: t.LOCK.UPDATE,
             });
-            userClass.update({
+            userGroupClass.update({
               equipmentId: equipment.id,
             }, {
               transaction: t,
@@ -231,40 +251,54 @@ export const discordPickClass = async (
             transaction: t,
             lock: t.LOCK.UPDATE,
           });
-          let userAttackSkill = await db.UserClassSkill.findOne({
+          let userAttackSkill = await db.UserGroupClassSkill.findOne({
             where: {
-              UserClassId: userClass.id,
+              UserGroupClassId: userGroupClass.id,
               skillId: findAttackSkill.id,
             },
             transaction: t,
             lock: t.LOCK.UPDATE,
           });
           if (!userAttackSkill) {
-            userAttackSkill = await db.UserClassSkill.create({
-              UserClassId: userClass.id,
+            console.log('before create UserGroupClassSkill');
+            userAttackSkill = await db.UserGroupClassSkill.create({
+              UserClassId: 2, // to be removed
+              UserGroupClassId: userGroupClass.id,
               skillId: findAttackSkill.id,
               points: 1,
             }, {
               transaction: t,
               lock: t.LOCK.UPDATE,
             });
+            console.log('after create UserGroupClassSkill');
           }
-          if (!userClass.selectedMainSkillId) {
-            userClass = await userClass.update({
+          if (!userGroupClass.selectedMainSkillId) {
+            userGroupClass = await userGroupClass.update({
               selectedMainSkillId: userAttackSkill.id,
             }, {
               transaction: t,
               lock: t.LOCK.UPDATE,
             });
           }
-          if (!userClass.selectedSecondarySkillId) {
-            userClass = await userClass.update({
+          if (!userGroupClass.selectedSecondarySkillId) {
+            userGroupClass = await userGroupClass.update({
               selectedSecondarySkillId: userAttackSkill.id,
             }, {
               transaction: t,
               lock: t.LOCK.UPDATE,
             });
           }
+
+          await interaction.update({
+            files: [
+              await renderClassPicked(
+                currentIndex,
+                classes,
+                user,
+              ),
+            ],
+            components: [],
+          });
 
           const preActivity = await db.activity.create({
             type: 'pickClass_s',
@@ -353,16 +387,6 @@ export const discordPickClass = async (
         }
       });
 
-      await interaction.update({
-        files: [
-          await renderClassPicked(
-            currentIndex,
-            classes,
-            user,
-          ),
-        ],
-        components: [],
-      });
       return;
     }
     // Cancel class selection

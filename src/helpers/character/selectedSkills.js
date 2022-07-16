@@ -18,11 +18,11 @@ export const fetchUserCurrentSelectedSkills = async (
       }]
     ),
   });
-  const userCurrentSelectedSkill = await db.UserClass.findOne({
+  const userCurrentSelectedSkill = await db.UserGroupClass.findOne({
     where: {
       // classId: { [Op.col]: 'user.currentClassId' },
       classId: user.currentClassId,
-      userId: user.id,
+      // userId: user.id,
     },
     ...(t && [
       {
@@ -32,8 +32,16 @@ export const fetchUserCurrentSelectedSkills = async (
     ),
     include: [
       {
-        model: db.UserClassSkill,
-        as: 'UserClassSkills',
+        model: db.UserGroup,
+        as: 'UserGroup',
+        required: true,
+        where: {
+          groupId: user.currentRealmId,
+        },
+      },
+      {
+        model: db.UserGroupClassSkill,
+        as: 'UserGroupClassSkills',
         include: [
           {
             model: db.skill,
@@ -42,7 +50,7 @@ export const fetchUserCurrentSelectedSkills = async (
         ],
       },
       {
-        model: db.UserClassSkill,
+        model: db.UserGroupClassSkill,
         as: 'selectedMainSkill',
         include: [
           {
@@ -64,7 +72,7 @@ export const fetchUserCurrentSelectedSkills = async (
         ],
       },
       {
-        model: db.UserClassSkill,
+        model: db.UserGroupClassSkill,
         as: 'selectedSecondarySkill',
         include: [
           {
@@ -87,5 +95,6 @@ export const fetchUserCurrentSelectedSkills = async (
       },
     ],
   });
+  console.log(userCurrentSelectedSkill);
   return userCurrentSelectedSkill;
 };

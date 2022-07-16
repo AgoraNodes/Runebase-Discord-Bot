@@ -83,15 +83,15 @@ export const discordStats = async (
     ctx.lineWidth = 3;
     ctx.textAlign = "center";
 
-    ctx.strokeText(`${userCurrentCharacter.user.username} canceled stats selection`, 250, 60, 500);
-    ctx.fillText(`${userCurrentCharacter.user.username} canceled stats selection`, 250, 60, 500);
+    ctx.strokeText(`${userCurrentCharacter.UserGroup.user.username} canceled stats selection`, 250, 60, 500);
+    ctx.fillText(`${userCurrentCharacter.UserGroup.user.username} canceled stats selection`, 250, 60, 500);
 
     return new MessageAttachment(canvas.toBuffer(), 'cancelSelection.png');
   };
 
   const loadingEmbed = new MessageEmbed()
     .setTitle('Adding Attribute')
-    .setDescription(`${userCurrentCharacter.user.username}, Loading..`);
+    .setDescription(`${userCurrentCharacter.UserGroup.user.username}, Loading..`);
 
   // const calc = (
   //   userCurrentCharacter.stats.strength
@@ -139,7 +139,7 @@ export const discordStats = async (
   collector.on('collect', async (interaction) => {
     let updatedUser;
     let cannotSpend;
-    if (interaction.user.id !== userCurrentCharacter.user.user_id) {
+    if (interaction.user.id !== userCurrentCharacter.UserGroup.user.user_id) {
       await interaction.reply({
         content: `<@${interaction.user.id}>, These buttons aren't for you!`,
         ephemeral: true,
@@ -154,6 +154,7 @@ export const discordStats = async (
       components: [],
     });
     if (interaction.customId === 'strength') {
+      console.log('starting add strength');
       [
         updatedUser,
         cannotSpend,

@@ -64,6 +64,9 @@ export const updateServer = async (
   if (!req.body.inviteLink) {
     throw new Error("inviteLink is required");
   }
+  if (!req.body.expRewardChannelId) {
+    throw new Error("expRewardChannelId is required");
+  }
 
   const server = await db.group.findOne({
     where: {
@@ -73,6 +76,7 @@ export const updateServer = async (
   const updatedGroup = await server.update({
     name: req.body.name,
     inviteLink: req.body.inviteLink,
+    expRewardChannelId: req.body.expRewardChannelId,
   });
   res.locals.name = 'updateRank';
   res.locals.result = await db.group.findOne({

@@ -4,8 +4,8 @@ export const calcStrengthDexforReq = async (
   let strengthTotal = 0;
   let dexterityTotal = 0;
 
-  strengthTotal += userCurrentCharacter.user.currentClass.strength;
-  dexterityTotal += userCurrentCharacter.user.currentClass.dexterity;
+  strengthTotal += userCurrentCharacter.UserGroup.user.currentClass.strength;
+  dexterityTotal += userCurrentCharacter.UserGroup.user.currentClass.dexterity;
   strengthTotal += userCurrentCharacter.stats.strength;
   dexterityTotal += userCurrentCharacter.stats.dexterity;
 

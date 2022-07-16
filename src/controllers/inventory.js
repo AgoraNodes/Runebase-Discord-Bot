@@ -251,8 +251,8 @@ export const discordShowInventory = async (
     ctx.strokeStyle = 'black';
     ctx.lineWidth = 3;
     ctx.textAlign = "center";
-    ctx.strokeText(`${userCurrentCharacter.user.username} picked ${current[0].name}!`, 250, 40, 500);
-    ctx.fillText(`${userCurrentCharacter.user.username} picked ${current[0].name}!`, 250, 40, 500);
+    ctx.strokeText(`${userCurrentCharacter.UserGroup.user.username} picked ${current[0].name}!`, 250, 40, 500);
+    ctx.fillText(`${userCurrentCharacter.UserGroup.user.username} picked ${current[0].name}!`, 250, 40, 500);
     return new MessageAttachment(canvas.toBuffer(), 'picked.png');
   };
 
@@ -264,8 +264,8 @@ export const discordShowInventory = async (
     ctx.strokeStyle = 'black';
     ctx.lineWidth = 3;
     ctx.textAlign = "center";
-    ctx.strokeText(`${userCurrentCharacter.user.username} canceled inventory`, 250, 60, 500);
-    ctx.fillText(`${userCurrentCharacter.user.username} canceled inventory`, 250, 60, 500);
+    ctx.strokeText(`${userCurrentCharacter.UserGroup.user.username} canceled inventory`, 250, 60, 500);
+    ctx.fillText(`${userCurrentCharacter.UserGroup.user.username} canceled inventory`, 250, 60, 500);
     return new MessageAttachment(canvas.toBuffer(), 'cancelSelection.png');
   };
 
@@ -277,8 +277,8 @@ export const discordShowInventory = async (
     ctx.strokeStyle = 'black';
     ctx.lineWidth = 3;
     ctx.textAlign = "center";
-    ctx.strokeText(`${userCurrentCharacter.user.username} Your inventory is empty`, 250, 60, 500);
-    ctx.fillText(`${userCurrentCharacter.user.username} Your inventory is empty`, 250, 60, 500);
+    ctx.strokeText(`${userCurrentCharacter.UserGroup.user.username} Your inventory is empty`, 250, 60, 500);
+    ctx.fillText(`${userCurrentCharacter.UserGroup.user.username} Your inventory is empty`, 250, 60, 500);
     return new MessageAttachment(canvas.toBuffer(), 'emptyInventory.png');
   };
 

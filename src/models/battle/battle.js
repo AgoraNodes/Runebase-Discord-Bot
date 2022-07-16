@@ -23,7 +23,7 @@ module.exports = (sequelize, DataTypes) => {
   const BattleModel = sequelize.define('battle', modelDefinition, modelOptions);
 
   BattleModel.associate = (model) => {
-    BattleModel.belongsTo(model.UserClass);
+    BattleModel.belongsTo(model.UserGroupClass);
     BattleModel.hasMany(model.battleLog);
     BattleModel.hasMany(model.BattleMonster);
     // BattleModel.belongsTo(model.BattleMonster, {

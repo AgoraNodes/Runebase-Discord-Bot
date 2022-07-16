@@ -36,6 +36,10 @@ module.exports = (sequelize, DataTypes) => {
       defaultValue: false,
       allowNull: true,
     },
+    expRewardChannelId: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
   };
 
   // 2: The model options.
@@ -48,6 +52,7 @@ module.exports = (sequelize, DataTypes) => {
 
   GroupModel.associate = (model) => {
     GroupModel.hasMany(model.active);
+    GroupModel.hasMany(model.UserGroup);
     GroupModel.hasMany(model.rank);
     GroupModel.hasMany(model.channel);
     GroupModel.hasMany(model.featureSetting);

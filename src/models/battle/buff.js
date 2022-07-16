@@ -54,7 +54,7 @@ module.exports = (sequelize, DataTypes) => {
   const BuffModel = sequelize.define('buff', modelDefinition, modelOptions);
 
   BuffModel.associate = (model) => {
-    BuffModel.belongsTo(model.UserClass);
+    BuffModel.belongsTo(model.UserGroupClass);
     BuffModel.belongsTo(model.BattleMonster);
   };
 

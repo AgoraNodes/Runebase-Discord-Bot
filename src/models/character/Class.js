@@ -65,9 +65,9 @@ module.exports = (sequelize, DataTypes) => {
     });
     ClassModel.belongsTo(model.classDescription);
     ClassModel.belongsToMany(
-      model.user,
+      model.UserGroup,
       {
-        through: 'UserClass',
+        through: 'UserGroupClass',
       },
     );
     ClassModel.hasMany(model.skillTree);

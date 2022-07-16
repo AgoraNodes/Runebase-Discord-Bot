@@ -308,7 +308,7 @@ const calculateItemStats = async (
       newDefense += realDefenseValue;
     }
   }
-
+  console.log('end calc item stats');
   return [
     newStrength,
     newDexterity,

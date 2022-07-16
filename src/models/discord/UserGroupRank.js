@@ -17,6 +17,9 @@ module.exports = (sequelize, DataTypes) => {
   const UserGroupRankModel = sequelize.define('UserGroupRank', modelDefinition, modelOptions);
 
   UserGroupRankModel.associate = (model) => {
+    UserGroupRankModel.belongsTo(model.UserGroup, {
+      foreignKey: 'UserGroupId',
+    });
   };
 
   return UserGroupRankModel;

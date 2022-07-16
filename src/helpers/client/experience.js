@@ -134,6 +134,11 @@ export const gainExp = async (
   t,
   userJoined = false,
 ) => {
+  let UserGroup;
+  const setting = await db.setting.findOne({
+    transaction: t,
+    lock: t.LOCK.UPDATE,
+  });
   const user = await db.user.findOne({
     where: {
       user_id: userId,
@@ -141,17 +146,70 @@ export const gainExp = async (
     transaction: t,
     lock: t.LOCK.UPDATE,
   });
-  const updatedUser = await user.update({
-    exp: user.exp + amount,
+  if (
+    gainExpType === 'userJoined'
+    || gainExpType === 'topggVote'
+    || gainExpType === 'activeTalker'
+    || gainExpType === 'rollDice'
+  ) {
+    UserGroup = await db.UserGroup.findOne({
+      where: {
+        userId: user.id,
+      },
+      include: [
+        {
+          model: db.group,
+          as: 'group',
+          required: true,
+          where: {
+            groupId: setting.discordHomeServerGuildId,
+          },
+        },
+        {
+          model: db.user,
+          as: 'user',
+        },
+      ],
+    });
+  } else {
+    UserGroup = await db.UserGroup.findOne({
+      where: {
+        userId: user.id,
+      },
+      include: [
+        {
+          model: db.group,
+          as: 'group',
+          required: true,
+          where: {
+            id: user.currentRealmId,
+          },
+        },
+        {
+          model: db.user,
+          as: 'user',
+        },
+      ],
+    });
+  }
+  console.log(UserGroup);
+  const server = discordClient.guilds.cache.get(UserGroup.group.groupId);
+  if (!server.members.cache.get(userId)) {
+    // TODO: Send a warning message?
+    // Record an error in the database
+    console.log('user left the discord realm server');
+    return;
+  }
+  const updatedUserGroup = await UserGroup.update({
+    exp: UserGroup.exp + amount,
   }, {
     transaction: t,
     lock: t.LOCK.UPDATE,
   });
-  const setting = await db.setting.findOne();
-  const discordChannel = await discordClient.channels.cache.get(setting.expRewardChannelId);
+  const discordChannel = await discordClient.channels.cache.get(UserGroup.group.expRewardChannelId);
   await handleExperienceMessage(
     discordChannel,
-    updatedUser,
+    updatedUserGroup,
     amount,
     gainExpType,
     userJoined,
@@ -160,8 +218,9 @@ export const gainExp = async (
   const currentRank = await db.rank.findOne({
     where: {
       expNeeded: {
-        [Op.lte]: updatedUser.exp,
+        [Op.lte]: updatedUserGroup.exp,
       },
+      groupId: updatedUserGroup.groupId,
     },
     order: [
       ['id', 'DESC'],
@@ -170,19 +229,22 @@ export const gainExp = async (
     lock: t.LOCK.UPDATE,
   });
   const allRanks = await db.rank.findAll({
+    where: {
+      groupId: updatedUserGroup.groupId,
+    },
     transaction: t,
     lock: t.LOCK.UPDATE,
   });
 
   if (currentRank) {
-    const guild = await discordClient.guilds.cache.get(setting.discordHomeServerGuildId);
-    const member = await guild.members.cache.get(updatedUser.user_id);
+    const guild = await discordClient.guilds.cache.get(updatedUserGroup.group.groupId);
+    const member = await guild.members.cache.get(updatedUserGroup.user.user_id);
     if (!member.roles.cache.has(currentRank.discordRankRoleId)) {
       await member.roles.add(currentRank.discordRankRoleId);
       await discordChannel.send({
         embeds: [
           levelUpMessage(
-            updatedUser.user_id,
+            updatedUserGroup.user.user_id,
             currentRank,
           ),
         ],
@@ -197,23 +259,23 @@ export const gainExp = async (
         }
       }
     }
-    const userRankRecord = await db.UserRank.findOne({
+    const userGroupRankRecord = await db.UserGroupRank.findOne({
       where: {
-        userId: updatedUser.id,
+        UserGroupId: updatedUserGroup.id,
       },
       transaction: t,
       lock: t.LOCK.UPDATE,
     });
-    if (!userRankRecord) {
-      await db.UserRank.create({
-        userId: updatedUser.id,
+    if (!userGroupRankRecord) {
+      await db.UserGroupRank.create({
+        UserGroupId: updatedUserGroup.id,
         rankId: currentRank.id,
       }, {
         transaction: t,
         lock: t.LOCK.UPDATE,
       });
-    } else if (currentRank.id !== userRankRecord.rankId) {
-      await userRankRecord.update({
+    } else if (currentRank.id !== userGroupRankRecord.rankId) {
+      await userGroupRankRecord.update({
         rankId: currentRank.id,
       }, {
         transaction: t,

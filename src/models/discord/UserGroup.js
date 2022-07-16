@@ -28,6 +28,16 @@ module.exports = (sequelize, DataTypes) => {
         through: 'UserGroupRank',
       },
     );
+    UserGroupModel.belongsToMany(
+      model.class,
+      {
+        through: 'UserGroupClass',
+      },
+    );
+    UserGroupModel.hasOne(model.UserGroupClass);
+    UserGroupModel.hasOne(model.UserGroupRank);
+    UserGroupModel.belongsTo(model.group);
+    UserGroupModel.belongsTo(model.user);
   };
 
   return UserGroupModel;

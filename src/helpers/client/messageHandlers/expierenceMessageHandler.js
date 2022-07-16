@@ -8,7 +8,7 @@ import {
 
 export const handleExperienceMessage = async (
   discordChannel,
-  updatedUser,
+  updatedUserGroup,
   amount,
   gainExpType,
   userJoined = false,
@@ -26,10 +26,10 @@ export const handleExperienceMessage = async (
   // }
   if (gainExpType === 'battle') {
     await discordChannel.send({
-      content: `<@${updatedUser.user_id}>`,
+      content: `<@${updatedUserGroup.user.user_id}>`,
       embeds: [
         gainBattleExpExpMessage(
-          updatedUser.user_id,
+          updatedUserGroup.user.user_id,
           amount,
         ),
       ],
@@ -37,10 +37,10 @@ export const handleExperienceMessage = async (
   }
   if (gainExpType === 'activeTalker') {
     await discordChannel.send({
-      content: `<@${updatedUser.user_id}>`,
+      content: `<@${updatedUserGroup.user.user_id}>`,
       embeds: [
         gainActiveTalkerExpMessage(
-          updatedUser.user_id,
+          updatedUserGroup.user.user_id,
           amount,
         ),
       ],
@@ -48,10 +48,10 @@ export const handleExperienceMessage = async (
   }
   if (gainExpType === 'topggVote') {
     await discordChannel.send({
-      content: `<@${updatedUser.user_id}>`,
+      content: `<@${updatedUserGroup.user.user_id}>`,
       embeds: [
         gainVoteTopggExpMessage(
-          updatedUser.user_id,
+          updatedUserGroup.user.user_id,
           amount,
         ),
       ],
@@ -59,10 +59,10 @@ export const handleExperienceMessage = async (
   }
   if (gainExpType === 'userJoined') {
     await discordChannel.send({
-      content: `<@${updatedUser.user_id}>`,
+      content: `<@${updatedUserGroup.user.user_id}>`,
       embeds: [
         invitedNewUserRewardMessage(
-          updatedUser.user_id,
+          updatedUserGroup.user.user_id,
           userJoined,
           amount,
         ),
