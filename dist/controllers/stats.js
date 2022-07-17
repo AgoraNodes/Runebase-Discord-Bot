@@ -15,19 +15,9 @@ var _slicedToArray2 = _interopRequireDefault(require("@babel/runtime/helpers/sli
 
 var _asyncToGenerator2 = _interopRequireDefault(require("@babel/runtime/helpers/asyncToGenerator"));
 
-var _sequelize = require("sequelize");
-
 var _canvas = require("canvas");
 
 var _discord = require("discord.js");
-
-var _path = _interopRequireDefault(require("path"));
-
-var _embeds = require("../embeds");
-
-var _models = _interopRequireDefault(require("../models"));
-
-var _logger = _interopRequireDefault(require("../helpers/logger"));
 
 var _addStrength = require("../helpers/stats/addStrength");
 
@@ -53,10 +43,19 @@ var _messages = require("../messages");
 
 var _testPlayerReadyness = _interopRequireDefault(require("../helpers/testPlayerReadyness"));
 
+var _embeds = require("../embeds");
+
 /* eslint-disable import/prefer-default-export */
+// import {
+//   Sequelize,
+//   Transaction,
+//   Op,
+// } from "sequelize";
+// import db from '../models';
+// import logger from "../helpers/logger";
 var discordStats = /*#__PURE__*/function () {
   var _ref = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee3(discordClient, message, setting, io, queue, isDefered) {
-    var activity, userId, discordChannel, userCurrentCharacter, _yield$testPlayerRead, _yield$testPlayerRead2, failed, usedDeferReply, _yield$calculateChara, unspendAttributes, generateCancelClassPicked, loadingEmbed, calc, embedMessage, collector;
+    var activity, userId, discordChannel, userCurrentCharacter, _yield$testPlayerRead, _yield$testPlayerRead2, failed, usedDeferReply, _yield$calculateChara, unspendAttributes, generateCancelClassPicked, calc, embedMessage, collector;
 
     return _regenerator["default"].wrap(function _callee3$(_context3) {
       while (1) {
@@ -133,23 +132,22 @@ var discordStats = /*#__PURE__*/function () {
               return function generateCancelClassPicked() {
                 return _ref2.apply(this, arguments);
               };
-            }();
-
-            loadingEmbed = new _discord.MessageEmbed().setTitle('Adding Attribute').setDescription("".concat(userCurrentCharacter.UserGroup.user.username, ", Loading..")); // const calc = (
+            }(); // const calc = (
             //   userCurrentCharacter.stats.strength
             //   + userCurrentCharacter.stats.dexterity
             //   + userCurrentCharacter.stats.vitality
             //   + userCurrentCharacter.stats.energy
             // ) < (userCurrentCharacter.user.ranks[0].id * 5);
 
+
             calc = unspendAttributes > 0;
             _context3.t0 = discordChannel;
             _context3.t1 = (0, _messages.playingOnRealmMessage)(userCurrentCharacter);
             _context3.t2 = _discord.MessageAttachment;
-            _context3.next = 30;
+            _context3.next = 29;
             return (0, _stats.renderStatsImage)(userCurrentCharacter, false);
 
-          case 30:
+          case 29:
             _context3.t3 = _context3.sent;
             _context3.t4 = new _context3.t2(_context3.t3, 'class.png');
             _context3.t5 = [_context3.t4];
@@ -165,10 +163,10 @@ var discordStats = /*#__PURE__*/function () {
               files: _context3.t5,
               components: _context3.t6
             };
-            _context3.next = 37;
+            _context3.next = 36;
             return _context3.t0.send.call(_context3.t0, _context3.t7);
 
-          case 37:
+          case 36:
             embedMessage = _context3.sent;
             collector = embedMessage.createMessageComponentCollector({// filter: ({ user: discordUser }) => discordUser.id === userCurrentCharacter.user.user_id,
             });
@@ -199,132 +197,141 @@ var discordStats = /*#__PURE__*/function () {
                         return interaction.deferUpdate();
 
                       case 6:
-                        _context2.next = 8;
-                        return interaction.editReply({
-                          embeds: [loadingEmbed],
-                          components: []
-                        });
+                        _context2.t0 = interaction;
+                        _context2.next = 9;
+                        return (0, _embeds.addingAttributeEmbed)(userCurrentCharacter);
 
-                      case 8:
-                        if (!(interaction.customId === 'strength')) {
-                          _context2.next = 15;
-                          break;
-                        }
-
-                        _context2.next = 11;
-                        return (0, _addStrength.addStrength)(userCurrentCharacter, io, queue);
-
-                      case 11:
-                        _yield$addStrength = _context2.sent;
-                        _yield$addStrength2 = (0, _slicedToArray2["default"])(_yield$addStrength, 2);
-                        updatedUser = _yield$addStrength2[0];
-                        cannotSpend = _yield$addStrength2[1];
+                      case 9:
+                        _context2.t1 = _context2.sent;
+                        _context2.t2 = [_context2.t1];
+                        _context2.t3 = [];
+                        _context2.t4 = {
+                          embeds: _context2.t2,
+                          components: _context2.t3
+                        };
+                        _context2.next = 15;
+                        return _context2.t0.editReply.call(_context2.t0, _context2.t4);
 
                       case 15:
-                        if (!(interaction.customId === 'dexterity')) {
+                        if (!(interaction.customId === 'strength')) {
                           _context2.next = 22;
                           break;
                         }
 
                         _context2.next = 18;
-                        return (0, _addDexterity.addDexterity)(userCurrentCharacter, io, queue);
+                        return (0, _addStrength.addStrength)(userCurrentCharacter, io, queue);
 
                       case 18:
-                        _yield$addDexterity = _context2.sent;
-                        _yield$addDexterity2 = (0, _slicedToArray2["default"])(_yield$addDexterity, 2);
-                        updatedUser = _yield$addDexterity2[0];
-                        cannotSpend = _yield$addDexterity2[1];
+                        _yield$addStrength = _context2.sent;
+                        _yield$addStrength2 = (0, _slicedToArray2["default"])(_yield$addStrength, 2);
+                        updatedUser = _yield$addStrength2[0];
+                        cannotSpend = _yield$addStrength2[1];
 
                       case 22:
-                        if (!(interaction.customId === 'vitality')) {
+                        if (!(interaction.customId === 'dexterity')) {
                           _context2.next = 29;
                           break;
                         }
 
                         _context2.next = 25;
-                        return (0, _addVitality.addVitality)(userCurrentCharacter, io, queue);
+                        return (0, _addDexterity.addDexterity)(userCurrentCharacter, io, queue);
 
                       case 25:
-                        _yield$addVitality = _context2.sent;
-                        _yield$addVitality2 = (0, _slicedToArray2["default"])(_yield$addVitality, 2);
-                        updatedUser = _yield$addVitality2[0];
-                        cannotSpend = _yield$addVitality2[1];
+                        _yield$addDexterity = _context2.sent;
+                        _yield$addDexterity2 = (0, _slicedToArray2["default"])(_yield$addDexterity, 2);
+                        updatedUser = _yield$addDexterity2[0];
+                        cannotSpend = _yield$addDexterity2[1];
 
                       case 29:
-                        if (!(interaction.customId === 'energy')) {
+                        if (!(interaction.customId === 'vitality')) {
                           _context2.next = 36;
                           break;
                         }
 
                         _context2.next = 32;
-                        return (0, _addEnergy.addEnergy)(userCurrentCharacter, io, queue);
+                        return (0, _addVitality.addVitality)(userCurrentCharacter, io, queue);
 
                       case 32:
+                        _yield$addVitality = _context2.sent;
+                        _yield$addVitality2 = (0, _slicedToArray2["default"])(_yield$addVitality, 2);
+                        updatedUser = _yield$addVitality2[0];
+                        cannotSpend = _yield$addVitality2[1];
+
+                      case 36:
+                        if (!(interaction.customId === 'energy')) {
+                          _context2.next = 43;
+                          break;
+                        }
+
+                        _context2.next = 39;
+                        return (0, _addEnergy.addEnergy)(userCurrentCharacter, io, queue);
+
+                      case 39:
                         _yield$addEnergy = _context2.sent;
                         _yield$addEnergy2 = (0, _slicedToArray2["default"])(_yield$addEnergy, 2);
                         updatedUser = _yield$addEnergy2[0];
                         cannotSpend = _yield$addEnergy2[1];
 
-                      case 36:
+                      case 43:
                         if (!(interaction.customId === 'strength' || interaction.customId === 'dexterity' || interaction.customId === 'vitality' || interaction.customId === 'energy')) {
-                          _context2.next = 51;
+                          _context2.next = 58;
                           break;
                         }
 
                         newCalc = updatedUser.stats.strength + updatedUser.stats.dexterity + updatedUser.stats.vitality + updatedUser.stats.energy < updatedUser.UserGroup.UserGroupRank.rank.level * 5;
-                        _context2.t0 = interaction;
-                        _context2.t1 = (0, _messages.playingOnRealmMessage)(userCurrentCharacter);
-                        _context2.t2 = [];
-                        _context2.t3 = _discord.MessageAttachment;
-                        _context2.next = 44;
+                        _context2.t5 = interaction;
+                        _context2.t6 = (0, _messages.playingOnRealmMessage)(userCurrentCharacter);
+                        _context2.t7 = [];
+                        _context2.t8 = _discord.MessageAttachment;
+                        _context2.next = 51;
                         return (0, _stats.renderStatsImage)(updatedUser, false);
 
-                      case 44:
-                        _context2.t4 = _context2.sent;
-                        _context2.t5 = new _context2.t3(_context2.t4, 'class.png');
-                        _context2.t6 = [_context2.t5];
-                        _context2.t7 = [].concat((0, _toConsumableArray2["default"])(newCalc ? [new _discord.MessageActionRow({
+                      case 51:
+                        _context2.t9 = _context2.sent;
+                        _context2.t10 = new _context2.t8(_context2.t9, 'class.png');
+                        _context2.t11 = [_context2.t10];
+                        _context2.t12 = [].concat((0, _toConsumableArray2["default"])(newCalc ? [new _discord.MessageActionRow({
                           components: [(0, _buttons.generateAddStrengthButton)(), (0, _buttons.generateAddDexterityButton)()]
                         })] : []), (0, _toConsumableArray2["default"])(newCalc ? [new _discord.MessageActionRow({
                           components: [(0, _buttons.generateAddVitalityButton)(), (0, _buttons.generateAddEnergyButton)()]
                         })] : []), [new _discord.MessageActionRow({
                           components: [(0, _buttons.generateCancelStatsPickButton)()]
                         })]);
-                        _context2.t8 = {
-                          content: _context2.t1,
-                          embeds: _context2.t2,
-                          files: _context2.t6,
-                          components: _context2.t7
+                        _context2.t13 = {
+                          content: _context2.t6,
+                          embeds: _context2.t7,
+                          files: _context2.t11,
+                          components: _context2.t12
                         };
-                        _context2.next = 51;
-                        return _context2.t0.editReply.call(_context2.t0, _context2.t8);
+                        _context2.next = 58;
+                        return _context2.t5.editReply.call(_context2.t5, _context2.t13);
 
-                      case 51:
+                      case 58:
                         if (!(interaction.customId === 'cancelStatsPick')) {
-                          _context2.next = 63;
+                          _context2.next = 70;
                           break;
                         }
 
-                        _context2.t9 = interaction;
-                        _context2.t10 = (0, _messages.playingOnRealmMessage)(userCurrentCharacter);
-                        _context2.next = 56;
+                        _context2.t14 = interaction;
+                        _context2.t15 = (0, _messages.playingOnRealmMessage)(userCurrentCharacter);
+                        _context2.next = 63;
                         return generateCancelClassPicked();
 
-                      case 56:
-                        _context2.t11 = _context2.sent;
-                        _context2.t12 = [_context2.t11];
-                        _context2.t13 = [];
-                        _context2.t14 = [];
-                        _context2.t15 = {
-                          content: _context2.t10,
-                          files: _context2.t12,
-                          components: _context2.t13,
-                          embeds: _context2.t14
-                        };
-                        _context2.next = 63;
-                        return _context2.t9.editReply.call(_context2.t9, _context2.t15);
-
                       case 63:
+                        _context2.t16 = _context2.sent;
+                        _context2.t17 = [_context2.t16];
+                        _context2.t18 = [];
+                        _context2.t19 = [];
+                        _context2.t20 = {
+                          content: _context2.t15,
+                          files: _context2.t17,
+                          components: _context2.t18,
+                          embeds: _context2.t19
+                        };
+                        _context2.next = 70;
+                        return _context2.t14.editReply.call(_context2.t14, _context2.t20);
+
+                      case 70:
                       case "end":
                         return _context2.stop();
                     }
@@ -337,7 +344,7 @@ var discordStats = /*#__PURE__*/function () {
               };
             }());
 
-          case 40:
+          case 39:
           case "end":
             return _context3.stop();
         }

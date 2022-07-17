@@ -814,9 +814,9 @@ var discordShowInventory = /*#__PURE__*/function () {
                       case 136:
                         _context10.t57 = _context10.t50;
                         _context10.t58 = (0, _context10.t49)(_context10.t57);
-                        _context10.t59 = new _discord.MessageActionRow({
+                        _context10.t59 = (0, _toConsumableArray2["default"])(userCurrentCharacter.inventory.items.length > 1 ? [new _discord.MessageActionRow({
                           components: [].concat((0, _toConsumableArray2["default"])(currentIndex ? [(0, _buttons.generateBackButton)()] : []), (0, _toConsumableArray2["default"])(currentIndex + 1 < userCurrentCharacter.inventory.items.length ? [(0, _buttons.generateForwardButton)()] : []))
-                        });
+                        })] : []);
                         _context10.t60 = _discord.MessageActionRow;
                         _context10.next = 142;
                         return (0, _buttons.generateExitInventoryButton)();
@@ -828,8 +828,8 @@ var discordShowInventory = /*#__PURE__*/function () {
                           components: _context10.t62
                         };
                         _context10.t64 = new _context10.t60(_context10.t63);
-                        _context10.t65 = [_context10.t59, _context10.t64];
-                        _context10.t66 = _context10.t39.concat.call(_context10.t39, _context10.t48, _context10.t58, _context10.t65);
+                        _context10.t65 = [_context10.t64];
+                        _context10.t66 = _context10.t39.concat.call(_context10.t39, _context10.t48, _context10.t58, _context10.t59, _context10.t65);
                         _context10.t67 = {
                           content: _context10.t32,
                           files: _context10.t38,

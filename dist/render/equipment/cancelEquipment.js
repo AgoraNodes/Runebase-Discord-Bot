@@ -5,7 +5,7 @@ var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefau
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.renderCancelSkillPick = void 0;
+exports.renderCancelEquipmentImage = void 0;
 
 var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
 
@@ -13,13 +13,9 @@ var _asyncToGenerator2 = _interopRequireDefault(require("@babel/runtime/helpers/
 
 var _canvas = require("canvas");
 
-var _lodash = _interopRequireDefault(require("lodash"));
-
-var _discord = require("discord.js");
-
-var renderCancelSkillPick = /*#__PURE__*/function () {
+var renderCancelEquipmentImage = /*#__PURE__*/function () {
   var _ref = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(userCurrentCharacter) {
-    var canvas, ctx;
+    var canvas, ctx, finalImage;
     return _regenerator["default"].wrap(function _callee$(_context) {
       while (1) {
         switch (_context.prev = _context.next) {
@@ -31,11 +27,16 @@ var renderCancelSkillPick = /*#__PURE__*/function () {
             ctx.strokeStyle = 'black';
             ctx.lineWidth = 3;
             ctx.textAlign = "center";
-            ctx.strokeText("".concat(userCurrentCharacter.UserGroup.user.username, " canceled skill selection"), 250, 60, 500);
-            ctx.fillText("".concat(userCurrentCharacter.UserGroup.user.username, " canceled skill selection"), 250, 60, 500);
-            return _context.abrupt("return", new _discord.MessageAttachment(canvas.toBuffer(), 'cancelSelection.png'));
+            ctx.strokeText("".concat(userCurrentCharacter.UserGroup.user.username, " canceled equipment screen"), 250, 60, 500);
+            ctx.fillText("".concat(userCurrentCharacter.UserGroup.user.username, " canceled equipment screen"), 250, 60, 500);
+            _context.next = 11;
+            return canvas.toBuffer();
 
-          case 10:
+          case 11:
+            finalImage = _context.sent;
+            return _context.abrupt("return", finalImage);
+
+          case 13:
           case "end":
             return _context.stop();
         }
@@ -43,9 +44,9 @@ var renderCancelSkillPick = /*#__PURE__*/function () {
     }, _callee);
   }));
 
-  return function renderCancelSkillPick(_x) {
+  return function renderCancelEquipmentImage(_x) {
     return _ref.apply(this, arguments);
   };
 }();
 
-exports.renderCancelSkillPick = renderCancelSkillPick;
+exports.renderCancelEquipmentImage = renderCancelEquipmentImage;

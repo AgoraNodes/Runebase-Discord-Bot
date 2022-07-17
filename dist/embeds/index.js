@@ -5,7 +5,7 @@ var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefau
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.warnDirectMessage = exports.walletNotFoundMessage = exports.userNotFoundMessage = exports.unableToWithdrawToSelfMessage = exports.timeOutMessage = exports.skillInfoMessage = exports.skillConfirmationMessage = exports.rolledDiceMessage = exports.rollDiceTooFastMessage = exports.reviewMessage = exports.resetStatsDeclinedMessage = exports.resetStatsConfirmationMessage = exports.resetStatsCompletemessage = exports.resetSkillCompleteMessage = exports.realmChangeSuccessEmbed = exports.priceMessage = exports.needToBeInDiscordRealmEmbed = exports.minimumMessage = exports.loadingSkillSelectEmbed = exports.loadingSkillAddEmbed = exports.levelUpMessage = exports.invitedNewUserRewardMessage = exports.invalidAmountMessage = exports.invalidAddressMessage = exports.insufficientBalanceMessage = exports.helpMessage = exports.healCompleteMessage = exports.grantRoleExpMessage = exports.gainVoteTopggExpMessage = exports.gainTestExpMessage = exports.gainBattleExpExpMessage = exports.gainActiveTalkerExpMessage = exports.featureDisabledServerMessage = exports.featureDisabledGlobalMessage = exports.featureDisabledChannelMessage = exports.enterWithdrawalAmount = exports.enterWithdrawalAddress = exports.discordWithdrawalConfirmedMessage = exports.discordWithdrawalAcceptedMessage = exports.discordWelcomeMessage = exports.discordUserWithdrawalRejectMessage = exports.discordUserBannedMessage = exports.discordServerBannedMessage = exports.discordLimitSpamMessage = exports.discordIncomingDepositMessage = exports.discordErrorMessage = exports.discordDepositConfirmedMessage = exports.discordChannelBannedMessage = exports.discordBotMaintenanceMessage = exports.discordBotDisabledMessage = exports.depositAddressMessage = exports.declineResetSkillsMessage = exports.declineHealMessage = exports.confirmationHealMessage = exports.coinInfoMessage = exports.cannotSendMessageUser = exports.balanceMessage = exports.alreadyVotedTopGG = exports.NotInDirectMessage = exports.AccountInfoMessage = void 0;
+exports.warnDirectMessage = exports.walletNotFoundMessage = exports.userNotFoundMessage = exports.unableToWithdrawToSelfMessage = exports.timeOutMessage = exports.skillInfoMessage = exports.skillConfirmationMessage = exports.rolledDiceMessage = exports.rollDiceTooFastMessage = exports.reviewMessage = exports.resetStatsDeclinedMessage = exports.resetStatsConfirmationMessage = exports.resetStatsCompletemessage = exports.resetSkillCompleteMessage = exports.realmNotFoundEmbed = exports.realmChangeSuccessEmbed = exports.priceMessage = exports.needToBeInDiscordRealmEmbed = exports.minimumMessage = exports.loadingSkillSelectEmbed = exports.loadingSkillAddEmbed = exports.levelUpMessage = exports.invitedNewUserRewardMessage = exports.invalidAmountMessage = exports.invalidAddressMessage = exports.insufficientBalanceMessage = exports.helpMessage = exports.healCompleteMessage = exports.grantRoleExpMessage = exports.gainVoteTopggExpMessage = exports.gainTestExpMessage = exports.gainBattleExpExpMessage = exports.gainActiveTalkerExpMessage = exports.featureDisabledServerMessage = exports.featureDisabledGlobalMessage = exports.featureDisabledChannelMessage = exports.enterWithdrawalAmount = exports.enterWithdrawalAddress = exports.discordWithdrawalConfirmedMessage = exports.discordWithdrawalAcceptedMessage = exports.discordWelcomeMessage = exports.discordUserWithdrawalRejectMessage = exports.discordUserBannedMessage = exports.discordServerBannedMessage = exports.discordLimitSpamMessage = exports.discordIncomingDepositMessage = exports.discordErrorMessage = exports.discordDepositConfirmedMessage = exports.discordChannelBannedMessage = exports.discordBotMaintenanceMessage = exports.discordBotDisabledMessage = exports.depositAddressMessage = exports.declineResetSkillsMessage = exports.declineHealMessage = exports.confirmationHealMessage = exports.coinInfoMessage = exports.cannotSendMessageUser = exports.balanceMessage = exports.alreadyVotedTopGG = exports.alreadyInRealmEmbed = exports.addingAttributeEmbed = exports.NotInDirectMessage = exports.AccountInfoMessage = void 0;
 
 var _discord = require("discord.js");
 
@@ -632,6 +632,36 @@ var resetStatsCompletemessage = function resetStatsCompletemessage(userId) {
 };
 
 exports.resetStatsCompletemessage = resetStatsCompletemessage;
+
+var alreadyInRealmEmbed = function alreadyInRealmEmbed(user) {
+  var result = new _discord.MessageEmbed().setColor(_settings["default"].bot.color).setTitle('Change Realm').setDescription("<@".concat(user.user_id, ">, You are already in this realm currently.")).setTimestamp().setFooter({
+    text: "".concat(_settings["default"].bot.name, " v").concat(_package["default"].version),
+    iconURL: _settings["default"].bot.logo
+  });
+  return result;
+};
+
+exports.alreadyInRealmEmbed = alreadyInRealmEmbed;
+
+var realmNotFoundEmbed = function realmNotFoundEmbed(user) {
+  var result = new _discord.MessageEmbed().setColor(_settings["default"].bot.color).setTitle('Change Realm').setDescription("<@".concat(user.user_id, ">, We can't find the realm you are trying to join")).setTimestamp().setFooter({
+    text: "".concat(_settings["default"].bot.name, " v").concat(_package["default"].version),
+    iconURL: _settings["default"].bot.logo
+  });
+  return result;
+};
+
+exports.realmNotFoundEmbed = realmNotFoundEmbed;
+
+var addingAttributeEmbed = function addingAttributeEmbed(userCurrentCharacter) {
+  var result = new _discord.MessageEmbed().setColor(_settings["default"].bot.color).setTitle('Change Realm').setDescription("<@".concat(userCurrentCharacter.UserGroup.user.user_id, ">, Loading..")).setTimestamp().setFooter({
+    text: "".concat(_settings["default"].bot.name, " v").concat(_package["default"].version),
+    iconURL: _settings["default"].bot.logo
+  });
+  return result;
+};
+
+exports.addingAttributeEmbed = addingAttributeEmbed;
 
 var helpMessage = function helpMessage(withdraw) {
   var result = new _discord.MessageEmbed().setColor(_settings["default"].bot.color).setTitle("".concat("".concat(_settings["default"].bot.name, " v").concat(_package["default"].version), " Help")).setDescription("`".concat(_settings["default"].bot.command, "`\nDisplays this message\n\n`/help`\n`").concat(_settings["default"].bot.command, " help`\nDisplays this message\n\n`/pickclass`\n`").concat(_settings["default"].bot.command, " pickclass`\nSelect a new class\n\n`/stats`\n`").concat(_settings["default"].bot.command, " stats`\nSelect stats (attributes) for your class\n\n`/inventory`\n`").concat(_settings["default"].bot.command, " inventory`\nIventory management\n\n`/equipment`\n`").concat(_settings["default"].bot.command, " equipment`\nEquipment management\n\n`/skills`\n`").concat(_settings["default"].bot.command, " skills`\nSkill management\n\n`/heal`\n`").concat(_settings["default"].bot.command, " heal`\nHeal your character\n\n`/resetskills`\n`").concat(_settings["default"].bot.command, " resetskills`\nReset your skills trees\n\n`/resetstats`\n`").concat(_settings["default"].bot.command, " resetstats`\nreset your attributes/stats\n\n`/myrank`\n`").concat(_settings["default"].bot.command, " myrank`\nDisplays your account information\n\n`/ranks`\n`").concat(_settings["default"].bot.command, " ranks`\nDisplays all the ranks\n\n`/leaderboard`\n`").concat(_settings["default"].bot.command, " leaderboard`\nDisplays top 10 exped users \n\n`/mostactive`\n`").concat(_settings["default"].bot.command, " mostActive`\nDisplays top 10 most active chatters last month\n\n`/balance`\n`").concat(_settings["default"].bot.command, " balance`\nDisplays your balance\n\n`/deposit`\n`").concat(_settings["default"].bot.command, " deposit`\nDisplays your deposit address\n\n`/withdraw`\n`").concat(_settings["default"].bot.command, " withdraw`\nstarts withdrawal process")).setTimestamp().setFooter({

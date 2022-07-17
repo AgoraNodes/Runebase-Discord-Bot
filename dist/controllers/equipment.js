@@ -21,8 +21,6 @@ var _canvas = require("canvas");
 
 var _discord = require("discord.js");
 
-var _path = _interopRequireDefault(require("path"));
-
 var _models = _interopRequireDefault(require("../models"));
 
 var _logger = _interopRequireDefault(require("../helpers/logger"));
@@ -31,7 +29,7 @@ var _item = require("../render/item");
 
 var _stats = require("../render/stats");
 
-var _equipment = require("../render/equipment");
+var _equipment = require("../render/equipment/equipment");
 
 var _character = require("../helpers/character/character");
 
@@ -49,106 +47,88 @@ var _messages = require("../messages");
 
 var _testPlayerReadyness = _interopRequireDefault(require("../helpers/testPlayerReadyness"));
 
+var _cancelEquipment = require("../render/equipment/cancelEquipment");
+
 /* eslint-disable import/prefer-default-export */
-var showEquipmentImage = /*#__PURE__*/function () {
-  var _ref = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(userCurrentCharacter) {
-    var itemImage;
-    return _regenerator["default"].wrap(function _callee$(_context) {
-      while (1) {
-        switch (_context.prev = _context.next) {
-          case 0:
-            _context.next = 2;
-            return (0, _item.renderItemImage)(userCurrentCharacter.equipment.helm);
-
-          case 2:
-            itemImage = _context.sent;
-            console.log(showEquipmentImage);
-
-          case 4:
-          case "end":
-            return _context.stop();
-        }
-      }
-    }, _callee);
-  }));
-
-  return function showEquipmentImage(_x) {
-    return _ref.apply(this, arguments);
-  };
-}();
-
+// const showEquipmentImage = async (
+//   userCurrentCharacter,
+// ) => {
+//   const itemImage = await renderItemImage(
+//     userCurrentCharacter.equipment.helm,
+//   );
+// };
 var discordShowEquipment = /*#__PURE__*/function () {
-  var _ref2 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee10(discordClient, message, setting, io, queue, isDefered) {
-    var activity, userId, discordChannel, userCurrentCharacter, isInRealm, _yield$testPlayerRead, _yield$testPlayerRead2, failed, usedDeferReply, cancelEquipmentId, backId, helmId, amuletId, mainHandId, offHandId, armorId, glovesId, beltId, bootsId, ringSlotOneId, ringSlotTwoId, ringSlotOneButton, ringSlotTwoButton, bootsButton, helmButton, amuletutton, weaponSlotOneButton, weaponSlotTwoButton, armorButton, glovesButton, beltButton, backButton, generateCancelEquipmentButton, generateUnEquipItemButton, generateCurrentEquipmentImage, generateCancelEquipmentImage, isRowOneActive, isRowTwoActive, embedMessage, collector, currentIndex;
+  var _ref = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee8(discordClient, message, setting, io, queue, isDefered) {
+    var activity, userId, discordChannel, userCurrentCharacter, isInRealm, _yield$testPlayerRead, _yield$testPlayerRead2, failed, usedDeferReply, cancelEquipmentId, backId, helmId, amuletId, mainHandId, offHandId, armorId, glovesId, beltId, bootsId, ringSlotOneId, ringSlotTwoId, ringSlotOneButton, ringSlotTwoButton, bootsButton, helmButton, amuletutton, weaponSlotOneButton, weaponSlotTwoButton, armorButton, glovesButton, beltButton, backButton, generateCancelEquipmentButton, generateUnEquipItemButton, generateCurrentEquipmentImage, isRowOneActive, isRowTwoActive, embedMessage, collector, currentIndex;
 
-    return _regenerator["default"].wrap(function _callee10$(_context10) {
+    return _regenerator["default"].wrap(function _callee8$(_context8) {
       while (1) {
-        switch (_context10.prev = _context10.next) {
+        switch (_context8.prev = _context8.next) {
           case 0:
             activity = [];
-            _context10.next = 3;
+            _context8.next = 3;
             return (0, _fetchDiscordUserIdFromMessageOrInteraction.fetchDiscordUserIdFromMessageOrInteraction)(message);
 
           case 3:
-            userId = _context10.sent;
-            _context10.next = 6;
+            userId = _context8.sent;
+            _context8.next = 6;
             return (0, _fetchDiscordChannel.fetchDiscordChannel)(discordClient, message);
 
           case 6:
-            discordChannel = _context10.sent;
-            _context10.next = 9;
+            discordChannel = _context8.sent;
+            _context8.next = 9;
             return (0, _character.fetchUserCurrentCharacter)(userId, // user discord id
             false // Need inventory?
             );
 
           case 9:
-            userCurrentCharacter = _context10.sent;
-            _context10.next = 12;
+            userCurrentCharacter = _context8.sent;
+            _context8.next = 12;
             return (0, _isUserInRealm["default"])(discordClient, userCurrentCharacter);
 
           case 12:
-            isInRealm = _context10.sent;
+            isInRealm = _context8.sent;
 
             if (isInRealm) {
-              _context10.next = 24;
+              _context8.next = 24;
               break;
             }
 
-            _context10.t0 = message;
-            _context10.t1 = "<@".concat(userCurrentCharacter.UserGroup.user.user_id, ">, ").concat(userCurrentCharacter.UserGroup.group.inviteLink);
-            _context10.next = 18;
+            _context8.t0 = message;
+            _context8.t1 = "<@".concat(userCurrentCharacter.UserGroup.user.user_id, ">, ").concat(userCurrentCharacter.UserGroup.group.inviteLink);
+            _context8.next = 18;
             return (0, _embeds.needToBeInDiscordRealmEmbed)(userCurrentCharacter.UserGroup.group);
 
           case 18:
-            _context10.t2 = _context10.sent;
-            _context10.t3 = [_context10.t2];
-            _context10.t4 = {
-              content: _context10.t1,
-              embeds: _context10.t3,
+            _context8.t2 = _context8.sent;
+            _context8.t3 = [_context8.t2];
+            _context8.t4 = {
+              content: _context8.t1,
+              embeds: _context8.t3,
               ephemeral: true
             };
-            _context10.next = 23;
-            return _context10.t0.reply.call(_context10.t0, _context10.t4);
+            _context8.next = 23;
+            return _context8.t0.reply.call(_context8.t0, _context8.t4);
 
           case 23:
-            return _context10.abrupt("return");
+            return _context8.abrupt("return");
 
           case 24:
-            _context10.next = 26;
+            _context8.next = 26;
             return (0, _testPlayerReadyness["default"])(userCurrentCharacter, message, isDefered);
 
           case 26:
-            _yield$testPlayerRead = _context10.sent;
+            _yield$testPlayerRead = _context8.sent;
             _yield$testPlayerRead2 = (0, _slicedToArray2["default"])(_yield$testPlayerRead, 2);
             failed = _yield$testPlayerRead2[0];
             usedDeferReply = _yield$testPlayerRead2[1];
 
             if (!failed) {
-              _context10.next = 32;
+              _context8.next = 32;
               break;
             }
 
-            return _context10.abrupt("return", usedDeferReply);
+            return _context8.abrupt("return", usedDeferReply);
 
           case 32:
             cancelEquipmentId = 'cancelEquipment';
@@ -231,12 +211,12 @@ var discordShowEquipment = /*#__PURE__*/function () {
             });
 
             generateCancelEquipmentButton = /*#__PURE__*/function () {
-              var _ref3 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee2() {
-                return _regenerator["default"].wrap(function _callee2$(_context2) {
+              var _ref2 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee() {
+                return _regenerator["default"].wrap(function _callee$(_context) {
                   while (1) {
-                    switch (_context2.prev = _context2.next) {
+                    switch (_context.prev = _context.next) {
                       case 0:
-                        return _context2.abrupt("return", new _discord.MessageButton({
+                        return _context.abrupt("return", new _discord.MessageButton({
                           style: 'SECONDARY',
                           label: "Cancel Equipment",
                           emoji: '❌',
@@ -245,26 +225,26 @@ var discordShowEquipment = /*#__PURE__*/function () {
 
                       case 1:
                       case "end":
-                        return _context2.stop();
+                        return _context.stop();
                     }
                   }
-                }, _callee2);
+                }, _callee);
               }));
 
               return function generateCancelEquipmentButton() {
-                return _ref3.apply(this, arguments);
+                return _ref2.apply(this, arguments);
               };
             }();
 
             generateUnEquipItemButton = /*#__PURE__*/function () {
-              var _ref4 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee3(myItem) {
+              var _ref3 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee2(myItem) {
                 var unEquipItemId;
-                return _regenerator["default"].wrap(function _callee3$(_context3) {
+                return _regenerator["default"].wrap(function _callee2$(_context2) {
                   while (1) {
-                    switch (_context3.prev = _context3.next) {
+                    switch (_context2.prev = _context2.next) {
                       case 0:
                         unEquipItemId = "UnEquip:".concat(myItem.id);
-                        return _context3.abrupt("return", new _discord.MessageButton({
+                        return _context2.abrupt("return", new _discord.MessageButton({
                           style: 'SECONDARY',
                           label: "UnEquip ".concat(myItem.name),
                           emoji: '⛏️',
@@ -273,50 +253,45 @@ var discordShowEquipment = /*#__PURE__*/function () {
 
                       case 2:
                       case "end":
-                        return _context3.stop();
+                        return _context2.stop();
                     }
                   }
-                }, _callee3);
+                }, _callee2);
               }));
 
-              return function generateUnEquipItemButton(_x8) {
-                return _ref4.apply(this, arguments);
+              return function generateUnEquipItemButton(_x7) {
+                return _ref3.apply(this, arguments);
               };
-            }();
+            }(); // await registerFont(path.join(__dirname, '../assets/fonts/', 'Heart_warming.otf'), { family: 'HeartWarming' });
 
-            _context10.next = 59;
-            return (0, _canvas.registerFont)(_path["default"].join(__dirname, '../assets/fonts/', 'Heart_warming.otf'), {
-              family: 'HeartWarming'
-            });
 
-          case 59:
             generateCurrentEquipmentImage = /*#__PURE__*/function () {
-              var _ref5 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee4(userCurrentCharacter) {
+              var _ref4 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee3(userCurrentCharacter) {
                 var statsImageBuffer, statsImage, equipmentImageBuffer, equipmentImage, canvas, ctx;
-                return _regenerator["default"].wrap(function _callee4$(_context4) {
+                return _regenerator["default"].wrap(function _callee3$(_context3) {
                   while (1) {
-                    switch (_context4.prev = _context4.next) {
+                    switch (_context3.prev = _context3.next) {
                       case 0:
-                        _context4.next = 2;
+                        _context3.next = 2;
                         return (0, _stats.renderStatsImage)(userCurrentCharacter, false);
 
                       case 2:
-                        statsImageBuffer = _context4.sent;
-                        _context4.next = 5;
+                        statsImageBuffer = _context3.sent;
+                        _context3.next = 5;
                         return (0, _canvas.loadImage)(statsImageBuffer);
 
                       case 5:
-                        statsImage = _context4.sent;
-                        _context4.next = 8;
+                        statsImage = _context3.sent;
+                        _context3.next = 8;
                         return (0, _equipment.renderEquipmentImage)(userCurrentCharacter);
 
                       case 8:
-                        equipmentImageBuffer = _context4.sent;
-                        _context4.next = 11;
+                        equipmentImageBuffer = _context3.sent;
+                        _context3.next = 11;
                         return (0, _canvas.loadImage)(equipmentImageBuffer);
 
                       case 11:
-                        equipmentImage = _context4.sent;
+                        equipmentImage = _context3.sent;
                         canvas = (0, _canvas.createCanvas)(2420, 1300);
                         ctx = canvas.getContext('2d'); // Stats image
 
@@ -332,325 +307,294 @@ var discordShowEquipment = /*#__PURE__*/function () {
 
                         ctx.strokeStyle = 'black';
                         ctx.lineWidth = 3;
-                        return _context4.abrupt("return", new _discord.MessageAttachment(canvas.toBuffer(), 'inventory.png'));
+                        return _context3.abrupt("return", new _discord.MessageAttachment(canvas.toBuffer(), 'equipment.png'));
 
                       case 21:
                       case "end":
-                        return _context4.stop();
+                        return _context3.stop();
                     }
                   }
-                }, _callee4);
+                }, _callee3);
               }));
 
-              return function generateCurrentEquipmentImage(_x9) {
-                return _ref5.apply(this, arguments);
-              };
-            }();
-
-            generateCancelEquipmentImage = /*#__PURE__*/function () {
-              var _ref6 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee5() {
-                var canvas, ctx;
-                return _regenerator["default"].wrap(function _callee5$(_context5) {
-                  while (1) {
-                    switch (_context5.prev = _context5.next) {
-                      case 0:
-                        canvas = (0, _canvas.createCanvas)(500, 100);
-                        ctx = canvas.getContext('2d');
-                        ctx.font = 'bold 30px "HeartWarming"';
-                        ctx.fillStyle = "#ccc";
-                        ctx.strokeStyle = 'black';
-                        ctx.lineWidth = 3;
-                        ctx.textAlign = "center";
-                        ctx.strokeText("".concat(userCurrentCharacter.UserGroup.user.username, " canceled equipment screen"), 250, 60, 500);
-                        ctx.fillText("".concat(userCurrentCharacter.UserGroup.user.username, " canceled equipment screen"), 250, 60, 500);
-                        return _context5.abrupt("return", new _discord.MessageAttachment(canvas.toBuffer(), 'cancelEquipment.png'));
-
-                      case 10:
-                      case "end":
-                        return _context5.stop();
-                    }
-                  }
-                }, _callee5);
-              }));
-
-              return function generateCancelEquipmentImage() {
-                return _ref6.apply(this, arguments);
+              return function generateCurrentEquipmentImage(_x8) {
+                return _ref4.apply(this, arguments);
               };
             }();
 
             isRowOneActive = userCurrentCharacter.equipment.helm || userCurrentCharacter.equipment.amulet || userCurrentCharacter.equipment.mainHand || userCurrentCharacter.equipment.offHand || userCurrentCharacter.equipment.armor;
             isRowTwoActive = userCurrentCharacter.equipment.gloves || userCurrentCharacter.equipment.ringSlotOne || userCurrentCharacter.equipment.ringSlotTwo || userCurrentCharacter.equipment.belt || userCurrentCharacter.equipment.boots;
-            _context10.t5 = discordChannel;
-            _context10.t6 = (0, _messages.playingOnRealmMessage)(userCurrentCharacter);
-            _context10.next = 67;
+            _context8.t5 = discordChannel;
+            _context8.t6 = (0, _messages.playingOnRealmMessage)(userCurrentCharacter);
+            _context8.next = 64;
             return generateCurrentEquipmentImage(userCurrentCharacter);
 
-          case 67:
-            _context10.t7 = _context10.sent;
-            _context10.t8 = [_context10.t7];
+          case 64:
+            _context8.t7 = _context8.sent;
+            _context8.t8 = [_context8.t7];
 
             if (!(isRowOneActive || isRowTwoActive)) {
-              _context10.next = 84;
+              _context8.next = 81;
               break;
             }
 
-            _context10.t10 = [];
-            _context10.t11 = (0, _toConsumableArray2["default"])(isRowOneActive ? [new _discord.MessageActionRow({
+            _context8.t10 = [];
+            _context8.t11 = (0, _toConsumableArray2["default"])(isRowOneActive ? [new _discord.MessageActionRow({
               components: [].concat((0, _toConsumableArray2["default"])(userCurrentCharacter.equipment.helm ? [helmButton] : []), (0, _toConsumableArray2["default"])(userCurrentCharacter.equipment.amulet ? [amuletutton] : []), (0, _toConsumableArray2["default"])(userCurrentCharacter.equipment.mainHand ? [weaponSlotOneButton] : []), (0, _toConsumableArray2["default"])(userCurrentCharacter.equipment.offHand ? [weaponSlotTwoButton] : []), (0, _toConsumableArray2["default"])(userCurrentCharacter.equipment.armor ? [armorButton] : []))
             })] : []);
-            _context10.t12 = (0, _toConsumableArray2["default"])(isRowTwoActive ? [new _discord.MessageActionRow({
+            _context8.t12 = (0, _toConsumableArray2["default"])(isRowTwoActive ? [new _discord.MessageActionRow({
               components: [].concat((0, _toConsumableArray2["default"])(userCurrentCharacter.equipment.gloves ? [glovesButton] : []), (0, _toConsumableArray2["default"])(userCurrentCharacter.equipment.ringSlotOne ? [ringSlotOneButton] : []), (0, _toConsumableArray2["default"])(userCurrentCharacter.equipment.ringSlotTwo ? [ringSlotTwoButton] : []), (0, _toConsumableArray2["default"])(userCurrentCharacter.equipment.belt ? [beltButton] : []), (0, _toConsumableArray2["default"])(userCurrentCharacter.equipment.boots ? [bootsButton] : []))
             })] : []);
-            _context10.t13 = _discord.MessageActionRow;
-            _context10.next = 76;
+            _context8.t13 = _discord.MessageActionRow;
+            _context8.next = 73;
             return generateCancelEquipmentButton();
 
-          case 76:
-            _context10.t14 = _context10.sent;
-            _context10.t15 = [_context10.t14];
-            _context10.t16 = {
-              components: _context10.t15
+          case 73:
+            _context8.t14 = _context8.sent;
+            _context8.t15 = [_context8.t14];
+            _context8.t16 = {
+              components: _context8.t15
             };
-            _context10.t17 = new _context10.t13(_context10.t16);
-            _context10.t18 = [_context10.t17];
-            _context10.t9 = _context10.t10.concat.call(_context10.t10, _context10.t11, _context10.t12, _context10.t18);
-            _context10.next = 92;
+            _context8.t17 = new _context8.t13(_context8.t16);
+            _context8.t18 = [_context8.t17];
+            _context8.t9 = _context8.t10.concat.call(_context8.t10, _context8.t11, _context8.t12, _context8.t18);
+            _context8.next = 89;
             break;
 
-          case 84:
-            _context10.t19 = _discord.MessageActionRow;
-            _context10.next = 87;
+          case 81:
+            _context8.t19 = _discord.MessageActionRow;
+            _context8.next = 84;
             return generateCancelEquipmentButton();
 
-          case 87:
-            _context10.t20 = _context10.sent;
-            _context10.t21 = [_context10.t20];
-            _context10.t22 = {
-              components: _context10.t21
+          case 84:
+            _context8.t20 = _context8.sent;
+            _context8.t21 = [_context8.t20];
+            _context8.t22 = {
+              components: _context8.t21
             };
-            _context10.t23 = new _context10.t19(_context10.t22);
-            _context10.t9 = [_context10.t23];
+            _context8.t23 = new _context8.t19(_context8.t22);
+            _context8.t9 = [_context8.t23];
 
-          case 92:
-            _context10.t24 = _context10.t9;
-            _context10.t25 = {
-              content: _context10.t6,
-              files: _context10.t8,
-              components: _context10.t24
+          case 89:
+            _context8.t24 = _context8.t9;
+            _context8.t25 = {
+              content: _context8.t6,
+              files: _context8.t8,
+              components: _context8.t24
             };
-            _context10.next = 96;
-            return _context10.t5.send.call(_context10.t5, _context10.t25);
+            _context8.next = 93;
+            return _context8.t5.send.call(_context8.t5, _context8.t25);
 
-          case 96:
-            embedMessage = _context10.sent;
+          case 93:
+            embedMessage = _context8.sent;
             collector = embedMessage.createMessageComponentCollector({
-              filter: function filter(_ref7) {
-                var discordUser = _ref7.user;
+              filter: function filter(_ref5) {
+                var discordUser = _ref5.user;
                 return discordUser.id === userCurrentCharacter.UserGroup.user.user_id;
               }
             });
             currentIndex = 0;
             collector.on('collect', /*#__PURE__*/function () {
-              var _ref8 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee9(interaction) {
+              var _ref6 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee7(interaction) {
                 var equipedItem, cannotUnEquip, cannotUnEquipReason, itemId, _yield$unEquipItem, _yield$unEquipItem2;
 
-                return _regenerator["default"].wrap(function _callee9$(_context9) {
+                return _regenerator["default"].wrap(function _callee7$(_context7) {
                   while (1) {
-                    switch (_context9.prev = _context9.next) {
+                    switch (_context7.prev = _context7.next) {
                       case 0:
-                        _context9.next = 2;
+                        _context7.next = 2;
                         return interaction.deferUpdate();
 
                       case 2:
                         cannotUnEquipReason = '';
 
                         if (!(interaction.customId === helmId || interaction.customId === amuletId || interaction.customId === mainHandId || interaction.customId === offHandId || interaction.customId === armorId || interaction.customId === glovesId || interaction.customId === beltId || interaction.customId === bootsId || interaction.customId === ringSlotOneId || interaction.customId === ringSlotTwoId)) {
-                          _context9.next = 7;
+                          _context7.next = 7;
                           break;
                         }
 
-                        _context9.next = 6;
-                        return queue.add( /*#__PURE__*/(0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee8() {
-                          return _regenerator["default"].wrap(function _callee8$(_context8) {
+                        _context7.next = 6;
+                        return queue.add( /*#__PURE__*/(0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee6() {
+                          return _regenerator["default"].wrap(function _callee6$(_context6) {
                             while (1) {
-                              switch (_context8.prev = _context8.next) {
+                              switch (_context6.prev = _context6.next) {
                                 case 0:
-                                  _context8.next = 2;
+                                  _context6.next = 2;
                                   return _models["default"].sequelize.transaction({
                                     isolationLevel: _sequelize.Transaction.ISOLATION_LEVELS.SERIALIZABLE
                                   }, /*#__PURE__*/function () {
-                                    var _ref10 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee6(t) {
+                                    var _ref8 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee4(t) {
                                       var itemImage, itemToUnEquip, preActivity, finalActivity;
-                                      return _regenerator["default"].wrap(function _callee6$(_context6) {
+                                      return _regenerator["default"].wrap(function _callee4$(_context4) {
                                         while (1) {
-                                          switch (_context6.prev = _context6.next) {
+                                          switch (_context4.prev = _context4.next) {
                                             case 0:
-                                              _context6.next = 2;
+                                              _context4.next = 2;
                                               return (0, _character.fetchUserCurrentCharacter)(userId, // user discord id
                                               false, // Need inventory?
                                               t);
 
                                             case 2:
-                                              userCurrentCharacter = _context6.sent;
+                                              userCurrentCharacter = _context4.sent;
 
                                               if (!(interaction.customId === helmId)) {
-                                                _context6.next = 8;
+                                                _context4.next = 8;
                                                 break;
                                               }
 
-                                              _context6.next = 6;
+                                              _context4.next = 6;
                                               return (0, _item.renderItemImage)(userCurrentCharacter.equipment.helm);
 
                                             case 6:
-                                              itemImage = _context6.sent;
+                                              itemImage = _context4.sent;
                                               itemToUnEquip = userCurrentCharacter.equipment.helm;
 
                                             case 8:
                                               if (!(interaction.customId === amuletId)) {
-                                                _context6.next = 13;
+                                                _context4.next = 13;
                                                 break;
                                               }
 
-                                              _context6.next = 11;
+                                              _context4.next = 11;
                                               return (0, _item.renderItemImage)(userCurrentCharacter.equipment.amulet);
 
                                             case 11:
-                                              itemImage = _context6.sent;
+                                              itemImage = _context4.sent;
                                               itemToUnEquip = userCurrentCharacter.equipment.amulet;
 
                                             case 13:
                                               if (!(interaction.customId === mainHandId)) {
-                                                _context6.next = 18;
+                                                _context4.next = 18;
                                                 break;
                                               }
 
-                                              _context6.next = 16;
+                                              _context4.next = 16;
                                               return (0, _item.renderItemImage)(userCurrentCharacter.equipment.mainHand);
 
                                             case 16:
-                                              itemImage = _context6.sent;
+                                              itemImage = _context4.sent;
                                               itemToUnEquip = userCurrentCharacter.equipment.mainHand;
 
                                             case 18:
                                               if (!(interaction.customId === offHandId)) {
-                                                _context6.next = 23;
+                                                _context4.next = 23;
                                                 break;
                                               }
 
-                                              _context6.next = 21;
+                                              _context4.next = 21;
                                               return (0, _item.renderItemImage)(userCurrentCharacter.equipment.offHand);
 
                                             case 21:
-                                              itemImage = _context6.sent;
+                                              itemImage = _context4.sent;
                                               itemToUnEquip = userCurrentCharacter.equipment.offHand;
 
                                             case 23:
                                               if (!(interaction.customId === armorId)) {
-                                                _context6.next = 28;
+                                                _context4.next = 28;
                                                 break;
                                               }
 
-                                              _context6.next = 26;
+                                              _context4.next = 26;
                                               return (0, _item.renderItemImage)(userCurrentCharacter.equipment.armor);
 
                                             case 26:
-                                              itemImage = _context6.sent;
+                                              itemImage = _context4.sent;
                                               itemToUnEquip = userCurrentCharacter.equipment.armor;
 
                                             case 28:
                                               if (!(interaction.customId === glovesId)) {
-                                                _context6.next = 33;
+                                                _context4.next = 33;
                                                 break;
                                               }
 
-                                              _context6.next = 31;
+                                              _context4.next = 31;
                                               return (0, _item.renderItemImage)(userCurrentCharacter.equipment.gloves);
 
                                             case 31:
-                                              itemImage = _context6.sent;
+                                              itemImage = _context4.sent;
                                               itemToUnEquip = userCurrentCharacter.equipment.gloves;
 
                                             case 33:
                                               if (!(interaction.customId === beltId)) {
-                                                _context6.next = 38;
+                                                _context4.next = 38;
                                                 break;
                                               }
 
-                                              _context6.next = 36;
+                                              _context4.next = 36;
                                               return (0, _item.renderItemImage)(userCurrentCharacter.equipment.belt);
 
                                             case 36:
-                                              itemImage = _context6.sent;
+                                              itemImage = _context4.sent;
                                               itemToUnEquip = userCurrentCharacter.equipment.belt;
 
                                             case 38:
                                               if (!(interaction.customId === bootsId)) {
-                                                _context6.next = 43;
+                                                _context4.next = 43;
                                                 break;
                                               }
 
-                                              _context6.next = 41;
+                                              _context4.next = 41;
                                               return (0, _item.renderItemImage)(userCurrentCharacter.equipment.boots);
 
                                             case 41:
-                                              itemImage = _context6.sent;
+                                              itemImage = _context4.sent;
                                               itemToUnEquip = userCurrentCharacter.equipment.boots;
 
                                             case 43:
                                               if (!(interaction.customId === ringSlotOneId)) {
-                                                _context6.next = 48;
+                                                _context4.next = 48;
                                                 break;
                                               }
 
-                                              _context6.next = 46;
+                                              _context4.next = 46;
                                               return (0, _item.renderItemImage)(userCurrentCharacter.equipment.ringSlotOne);
 
                                             case 46:
-                                              itemImage = _context6.sent;
+                                              itemImage = _context4.sent;
                                               itemToUnEquip = userCurrentCharacter.equipment.ringSlotOne;
 
                                             case 48:
                                               if (!(interaction.customId === ringSlotTwoId)) {
-                                                _context6.next = 53;
+                                                _context4.next = 53;
                                                 break;
                                               }
 
-                                              _context6.next = 51;
+                                              _context4.next = 51;
                                               return (0, _item.renderItemImage)(userCurrentCharacter.equipment.ringSlotTwo);
 
                                             case 51:
-                                              itemImage = _context6.sent;
+                                              itemImage = _context4.sent;
                                               itemToUnEquip = userCurrentCharacter.equipment.ringSlotTwo;
 
                                             case 53:
-                                              _context6.t0 = interaction;
-                                              _context6.t1 = (0, _messages.playingOnRealmMessage)(userCurrentCharacter);
-                                              _context6.t2 = [itemImage];
-                                              _context6.t3 = _discord.MessageActionRow;
-                                              _context6.next = 59;
+                                              _context4.t0 = interaction;
+                                              _context4.t1 = (0, _messages.playingOnRealmMessage)(userCurrentCharacter);
+                                              _context4.t2 = [itemImage];
+                                              _context4.t3 = _discord.MessageActionRow;
+                                              _context4.next = 59;
                                               return generateUnEquipItemButton(itemToUnEquip);
 
                                             case 59:
-                                              _context6.t4 = _context6.sent;
-                                              _context6.t5 = [_context6.t4];
-                                              _context6.t6 = {
-                                                components: _context6.t5
+                                              _context4.t4 = _context4.sent;
+                                              _context4.t5 = [_context4.t4];
+                                              _context4.t6 = {
+                                                components: _context4.t5
                                               };
-                                              _context6.t7 = new _context6.t3(_context6.t6);
-                                              _context6.t8 = new _discord.MessageActionRow({
+                                              _context4.t7 = new _context4.t3(_context4.t6);
+                                              _context4.t8 = new _discord.MessageActionRow({
                                                 components: [backButton]
                                               });
-                                              _context6.t9 = [_context6.t7, _context6.t8];
-                                              _context6.t10 = {
-                                                content: _context6.t1,
-                                                files: _context6.t2,
-                                                components: _context6.t9
+                                              _context4.t9 = [_context4.t7, _context4.t8];
+                                              _context4.t10 = {
+                                                content: _context4.t1,
+                                                files: _context4.t2,
+                                                components: _context4.t9
                                               };
-                                              _context6.next = 68;
-                                              return _context6.t0.editReply.call(_context6.t0, _context6.t10);
+                                              _context4.next = 68;
+                                              return _context4.t0.editReply.call(_context4.t0, _context4.t10);
 
                                             case 68:
-                                              _context6.next = 70;
+                                              _context4.next = 70;
                                               return _models["default"].activity.create({
                                                 type: 'pickClass_s',
                                                 earnerId: userCurrentCharacter.user.id
@@ -660,8 +604,8 @@ var discordShowEquipment = /*#__PURE__*/function () {
                                               });
 
                                             case 70:
-                                              preActivity = _context6.sent;
-                                              _context6.next = 73;
+                                              preActivity = _context4.sent;
+                                              _context4.next = 73;
                                               return _models["default"].activity.findOne({
                                                 where: {
                                                   id: preActivity.id
@@ -675,54 +619,54 @@ var discordShowEquipment = /*#__PURE__*/function () {
                                               });
 
                                             case 73:
-                                              finalActivity = _context6.sent;
+                                              finalActivity = _context4.sent;
                                               activity.unshift(finalActivity);
 
                                             case 75:
                                             case "end":
-                                              return _context6.stop();
+                                              return _context4.stop();
                                           }
                                         }
-                                      }, _callee6);
+                                      }, _callee4);
                                     }));
 
-                                    return function (_x11) {
-                                      return _ref10.apply(this, arguments);
+                                    return function (_x10) {
+                                      return _ref8.apply(this, arguments);
                                     };
                                   }())["catch"]( /*#__PURE__*/function () {
-                                    var _ref11 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee7(err) {
-                                      return _regenerator["default"].wrap(function _callee7$(_context7) {
+                                    var _ref9 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee5(err) {
+                                      return _regenerator["default"].wrap(function _callee5$(_context5) {
                                         while (1) {
-                                          switch (_context7.prev = _context7.next) {
+                                          switch (_context5.prev = _context5.next) {
                                             case 0:
                                               console.log(err);
-                                              _context7.prev = 1;
-                                              _context7.next = 4;
+                                              _context5.prev = 1;
+                                              _context5.next = 4;
                                               return _models["default"].error.create({
                                                 type: 'Equipment',
                                                 error: "".concat(err)
                                               });
 
                                             case 4:
-                                              _context7.next = 9;
+                                              _context5.next = 9;
                                               break;
 
                                             case 6:
-                                              _context7.prev = 6;
-                                              _context7.t0 = _context7["catch"](1);
+                                              _context5.prev = 6;
+                                              _context5.t0 = _context5["catch"](1);
 
-                                              _logger["default"].error("Error Discord: ".concat(_context7.t0));
+                                              _logger["default"].error("Error Discord: ".concat(_context5.t0));
 
                                             case 9:
                                             case "end":
-                                              return _context7.stop();
+                                              return _context5.stop();
                                           }
                                         }
-                                      }, _callee7, null, [[1, 6]]);
+                                      }, _callee5, null, [[1, 6]]);
                                     }));
 
-                                    return function (_x12) {
-                                      return _ref11.apply(this, arguments);
+                                    return function (_x11) {
+                                      return _ref9.apply(this, arguments);
                                     };
                                   }());
 
@@ -735,147 +679,149 @@ var discordShowEquipment = /*#__PURE__*/function () {
 
                                 case 3:
                                 case "end":
-                                  return _context8.stop();
+                                  return _context6.stop();
                               }
                             }
-                          }, _callee8);
+                          }, _callee6);
                         })));
 
                       case 6:
-                        return _context9.abrupt("return");
+                        return _context7.abrupt("return");
 
                       case 7:
                         if (!(interaction.customId === cancelEquipmentId)) {
-                          _context9.next = 18;
+                          _context7.next = 20;
                           break;
                         }
 
-                        _context9.t0 = interaction;
-                        _context9.next = 11;
-                        return generateCancelEquipmentImage();
+                        _context7.t0 = interaction;
+                        _context7.t1 = _discord.MessageAttachment;
+                        _context7.next = 12;
+                        return (0, _cancelEquipment.renderCancelEquipmentImage)(userCurrentCharacter);
 
-                      case 11:
-                        _context9.t1 = _context9.sent;
-                        _context9.t2 = [_context9.t1];
-                        _context9.t3 = [];
-                        _context9.t4 = {
-                          files: _context9.t2,
-                          components: _context9.t3
+                      case 12:
+                        _context7.t2 = _context7.sent;
+                        _context7.t3 = new _context7.t1(_context7.t2, 'equipment.png');
+                        _context7.t4 = [_context7.t3];
+                        _context7.t5 = [];
+                        _context7.t6 = {
+                          files: _context7.t4,
+                          components: _context7.t5
                         };
-                        _context9.next = 17;
-                        return _context9.t0.editReply.call(_context9.t0, _context9.t4);
+                        _context7.next = 19;
+                        return _context7.t0.editReply.call(_context7.t0, _context7.t6);
 
-                      case 17:
-                        return _context9.abrupt("return");
+                      case 19:
+                        return _context7.abrupt("return");
 
-                      case 18:
+                      case 20:
                         if (!interaction.customId.startsWith('UnEquip:')) {
-                          _context9.next = 29;
+                          _context7.next = 31;
                           break;
                         }
 
                         console.log('detected unequip click');
                         itemId = Number(interaction.customId.replace("UnEquip:", ""));
-                        _context9.next = 23;
+                        _context7.next = 25;
                         return (0, _unEquipItem.unEquipItem)(userCurrentCharacter, itemId, discordChannel, io, queue);
 
-                      case 23:
-                        _yield$unEquipItem = _context9.sent;
+                      case 25:
+                        _yield$unEquipItem = _context7.sent;
                         _yield$unEquipItem2 = (0, _slicedToArray2["default"])(_yield$unEquipItem, 4);
                         userCurrentCharacter = _yield$unEquipItem2[0];
                         equipedItem = _yield$unEquipItem2[1];
                         cannotUnEquip = _yield$unEquipItem2[2];
                         cannotUnEquipReason = _yield$unEquipItem2[3];
 
-                      case 29:
+                      case 31:
                         isRowOneActive = userCurrentCharacter.equipment.helm || userCurrentCharacter.equipment.amulet || userCurrentCharacter.equipment.mainHand || userCurrentCharacter.equipment.offHand || userCurrentCharacter.equipment.armor;
                         isRowTwoActive = userCurrentCharacter.equipment.gloves || userCurrentCharacter.equipment.ringSlotOne || userCurrentCharacter.equipment.ringSlotTwo || userCurrentCharacter.equipment.belt || userCurrentCharacter.equipment.boots;
                         console.log('before edit reply'); // Load another character
 
-                        _context9.t5 = interaction;
-                        _context9.t6 = (0, _messages.playingOnRealmMessage)(userCurrentCharacter);
-                        _context9.next = 36;
+                        _context7.t7 = interaction;
+                        _context7.t8 = (0, _messages.playingOnRealmMessage)(userCurrentCharacter);
+                        _context7.next = 38;
                         return generateCurrentEquipmentImage(userCurrentCharacter);
 
-                      case 36:
-                        _context9.t7 = _context9.sent;
-                        _context9.t8 = [_context9.t7];
+                      case 38:
+                        _context7.t9 = _context7.sent;
+                        _context7.t10 = [_context7.t9];
 
                         if (!(isRowOneActive || isRowTwoActive)) {
-                          _context9.next = 53;
+                          _context7.next = 55;
                           break;
                         }
 
-                        _context9.t10 = [];
-                        _context9.t11 = (0, _toConsumableArray2["default"])(isRowOneActive ? [new _discord.MessageActionRow({
+                        _context7.t12 = [];
+                        _context7.t13 = (0, _toConsumableArray2["default"])(isRowOneActive ? [new _discord.MessageActionRow({
                           components: [].concat((0, _toConsumableArray2["default"])(userCurrentCharacter.equipment.helm ? [helmButton] : []), (0, _toConsumableArray2["default"])(userCurrentCharacter.equipment.amulet ? [amuletutton] : []), (0, _toConsumableArray2["default"])(userCurrentCharacter.equipment.mainHand ? [weaponSlotOneButton] : []), (0, _toConsumableArray2["default"])(userCurrentCharacter.equipment.offHand ? [weaponSlotTwoButton] : []), (0, _toConsumableArray2["default"])(userCurrentCharacter.equipment.armor ? [armorButton] : []))
                         })] : []);
-                        _context9.t12 = (0, _toConsumableArray2["default"])(isRowTwoActive ? [new _discord.MessageActionRow({
+                        _context7.t14 = (0, _toConsumableArray2["default"])(isRowTwoActive ? [new _discord.MessageActionRow({
                           components: [].concat((0, _toConsumableArray2["default"])(userCurrentCharacter.equipment.gloves ? [glovesButton] : []), (0, _toConsumableArray2["default"])(userCurrentCharacter.equipment.ringSlotOne ? [ringSlotOneButton] : []), (0, _toConsumableArray2["default"])(userCurrentCharacter.equipment.ringSlotTwo ? [ringSlotTwoButton] : []), (0, _toConsumableArray2["default"])(userCurrentCharacter.equipment.belt ? [beltButton] : []), (0, _toConsumableArray2["default"])(userCurrentCharacter.equipment.boots ? [bootsButton] : []))
                         })] : []);
-                        _context9.t13 = _discord.MessageActionRow;
-                        _context9.next = 45;
+                        _context7.t15 = _discord.MessageActionRow;
+                        _context7.next = 47;
                         return generateCancelEquipmentButton();
 
-                      case 45:
-                        _context9.t14 = _context9.sent;
-                        _context9.t15 = [_context9.t14];
-                        _context9.t16 = {
-                          components: _context9.t15
+                      case 47:
+                        _context7.t16 = _context7.sent;
+                        _context7.t17 = [_context7.t16];
+                        _context7.t18 = {
+                          components: _context7.t17
                         };
-                        _context9.t17 = new _context9.t13(_context9.t16);
-                        _context9.t18 = [_context9.t17];
-                        _context9.t9 = _context9.t10.concat.call(_context9.t10, _context9.t11, _context9.t12, _context9.t18);
-                        _context9.next = 61;
+                        _context7.t19 = new _context7.t15(_context7.t18);
+                        _context7.t20 = [_context7.t19];
+                        _context7.t11 = _context7.t12.concat.call(_context7.t12, _context7.t13, _context7.t14, _context7.t20);
+                        _context7.next = 63;
                         break;
 
-                      case 53:
-                        _context9.t19 = _discord.MessageActionRow;
-                        _context9.next = 56;
+                      case 55:
+                        _context7.t21 = _discord.MessageActionRow;
+                        _context7.next = 58;
                         return generateCancelEquipmentButton();
 
-                      case 56:
-                        _context9.t20 = _context9.sent;
-                        _context9.t21 = [_context9.t20];
-                        _context9.t22 = {
-                          components: _context9.t21
+                      case 58:
+                        _context7.t22 = _context7.sent;
+                        _context7.t23 = [_context7.t22];
+                        _context7.t24 = {
+                          components: _context7.t23
                         };
-                        _context9.t23 = new _context9.t19(_context9.t22);
-                        _context9.t9 = [_context9.t23];
+                        _context7.t25 = new _context7.t21(_context7.t24);
+                        _context7.t11 = [_context7.t25];
 
-                      case 61:
-                        _context9.t24 = _context9.t9;
-                        _context9.t25 = {
-                          content: _context9.t6,
-                          files: _context9.t8,
-                          components: _context9.t24
+                      case 63:
+                        _context7.t26 = _context7.t11;
+                        _context7.t27 = {
+                          content: _context7.t8,
+                          files: _context7.t10,
+                          components: _context7.t26
                         };
-                        _context9.next = 65;
-                        return _context9.t5.editReply.call(_context9.t5, _context9.t25);
+                        _context7.next = 67;
+                        return _context7.t7.editReply.call(_context7.t7, _context7.t27);
 
-                      case 65:
+                      case 67:
                       case "end":
-                        return _context9.stop();
+                        return _context7.stop();
                     }
                   }
-                }, _callee9);
+                }, _callee7);
               }));
 
-              return function (_x10) {
-                return _ref8.apply(this, arguments);
+              return function (_x9) {
+                return _ref6.apply(this, arguments);
               };
             }());
 
-          case 100:
+          case 97:
           case "end":
-            return _context10.stop();
+            return _context8.stop();
         }
       }
-    }, _callee10);
+    }, _callee8);
   }));
 
-  return function discordShowEquipment(_x2, _x3, _x4, _x5, _x6, _x7) {
-    return _ref2.apply(this, arguments);
+  return function discordShowEquipment(_x, _x2, _x3, _x4, _x5, _x6) {
+    return _ref.apply(this, arguments);
   };
 }();
 

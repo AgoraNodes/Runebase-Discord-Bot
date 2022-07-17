@@ -17,13 +17,13 @@ var _path = _interopRequireDefault(require("path"));
 
 var renderEquipmentImage = /*#__PURE__*/function () {
   var _ref = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(userCurrentCharacter) {
-    var equipmentBackground, canvas, ctx, helmImage, amuletImage, mainHandImage, offHandImage, armorImage, glovesImage, ringSlotOneImage, ringSlotTwoImage, beltImage, bootsImage, finalImage;
+    var helmImage, amuletImage, mainHandImage, offHandImage, armorImage, glovesImage, ringSlotOneImage, ringSlotTwoImage, beltImage, bootsImage, equipmentBackground, canvas, ctx, finalImage;
     return _regenerator["default"].wrap(function _callee$(_context) {
       while (1) {
         switch (_context.prev = _context.next) {
           case 0:
             _context.next = 2;
-            return (0, _canvas.loadImage)(_path["default"].join(__dirname, '../assets/images/equipment', "background.png"));
+            return (0, _canvas.loadImage)(_path["default"].join(__dirname, '../../assets/images/equipment', "background.png"));
 
           case 2:
             equipmentBackground = _context.sent;
@@ -37,7 +37,7 @@ var renderEquipmentImage = /*#__PURE__*/function () {
             }
 
             _context.next = 9;
-            return (0, _canvas.loadImage)(_path["default"].join(__dirname, "../assets/images/items/".concat(userCurrentCharacter.equipment.helm.itemBase.itemFamily.itemType.name, "/").concat(userCurrentCharacter.equipment.helm.itemBase.itemFamily.name), "".concat(userCurrentCharacter.equipment.helm.itemBase.name, ".png")));
+            return (0, _canvas.loadImage)(_path["default"].join(__dirname, "../../assets/images/items/".concat(userCurrentCharacter.equipment.helm.itemBase.itemFamily.itemType.name, "/").concat(userCurrentCharacter.equipment.helm.itemBase.itemFamily.name), "".concat(userCurrentCharacter.equipment.helm.itemBase.name, ".png")));
 
           case 9:
             helmImage = _context.sent;
@@ -49,7 +49,7 @@ var renderEquipmentImage = /*#__PURE__*/function () {
             }
 
             _context.next = 13;
-            return (0, _canvas.loadImage)(_path["default"].join(__dirname, "../assets/images/items/".concat(userCurrentCharacter.equipment.armor.itemBase.itemFamily.itemType.name, "/").concat(userCurrentCharacter.equipment.armor.itemBase.itemFamily.name), "".concat(userCurrentCharacter.equipment.armor.itemBase.name, ".png")));
+            return (0, _canvas.loadImage)(_path["default"].join(__dirname, "../../assets/images/items/".concat(userCurrentCharacter.equipment.armor.itemBase.itemFamily.itemType.name, "/").concat(userCurrentCharacter.equipment.armor.itemBase.itemFamily.name), "".concat(userCurrentCharacter.equipment.armor.itemBase.name, ".png")));
 
           case 13:
             armorImage = _context.sent;
@@ -61,7 +61,7 @@ var renderEquipmentImage = /*#__PURE__*/function () {
             }
 
             _context.next = 17;
-            return (0, _canvas.loadImage)(_path["default"].join(__dirname, "../assets/images/items/".concat(userCurrentCharacter.equipment.mainHand.itemBase.itemFamily.itemType.name, "/").concat(userCurrentCharacter.equipment.mainHand.itemBase.itemFamily.name), "".concat(userCurrentCharacter.equipment.mainHand.itemBase.name, ".png")));
+            return (0, _canvas.loadImage)(_path["default"].join(__dirname, "../../assets/images/items/".concat(userCurrentCharacter.equipment.mainHand.itemBase.itemFamily.itemType.name, "/").concat(userCurrentCharacter.equipment.mainHand.itemBase.itemFamily.name), "".concat(userCurrentCharacter.equipment.mainHand.itemBase.name, ".png")));
 
           case 17:
             mainHandImage = _context.sent;
@@ -73,7 +73,7 @@ var renderEquipmentImage = /*#__PURE__*/function () {
             }
 
             _context.next = 21;
-            return (0, _canvas.loadImage)(_path["default"].join(__dirname, "../assets/images/items/".concat(userCurrentCharacter.equipment.offHand.itemBase.itemFamily.itemType.name, "/").concat(userCurrentCharacter.equipment.offHand.itemBase.itemFamily.name), "".concat(userCurrentCharacter.equipment.offHand.itemBase.name, ".png")));
+            return (0, _canvas.loadImage)(_path["default"].join(__dirname, "../../assets/images/items/".concat(userCurrentCharacter.equipment.offHand.itemBase.itemFamily.itemType.name, "/").concat(userCurrentCharacter.equipment.offHand.itemBase.itemFamily.name), "".concat(userCurrentCharacter.equipment.offHand.itemBase.name, ".png")));
 
           case 21:
             offHandImage = _context.sent;
@@ -85,7 +85,7 @@ var renderEquipmentImage = /*#__PURE__*/function () {
             }
 
             _context.next = 25;
-            return (0, _canvas.loadImage)(_path["default"].join(__dirname, "../assets/images/items/".concat(userCurrentCharacter.equipment.boots.itemBase.itemFamily.itemType.name, "/").concat(userCurrentCharacter.equipment.boots.itemBase.itemFamily.name), "".concat(userCurrentCharacter.equipment.boots.itemBase.name, ".png")));
+            return (0, _canvas.loadImage)(_path["default"].join(__dirname, "../../assets/images/items/".concat(userCurrentCharacter.equipment.boots.itemBase.itemFamily.itemType.name, "/").concat(userCurrentCharacter.equipment.boots.itemBase.itemFamily.name), "".concat(userCurrentCharacter.equipment.boots.itemBase.name, ".png")));
 
           case 25:
             bootsImage = _context.sent;
@@ -97,7 +97,7 @@ var renderEquipmentImage = /*#__PURE__*/function () {
             }
 
             _context.next = 29;
-            return (0, _canvas.loadImage)(_path["default"].join(__dirname, "../assets/images/items/".concat(userCurrentCharacter.equipment.gloves.itemBase.itemFamily.itemType.name, "/").concat(userCurrentCharacter.equipment.gloves.itemBase.itemFamily.name), "".concat(userCurrentCharacter.equipment.gloves.itemBase.name, ".png")));
+            return (0, _canvas.loadImage)(_path["default"].join(__dirname, "../../assets/images/items/".concat(userCurrentCharacter.equipment.gloves.itemBase.itemFamily.itemType.name, "/").concat(userCurrentCharacter.equipment.gloves.itemBase.itemFamily.name), "".concat(userCurrentCharacter.equipment.gloves.itemBase.name, ".png")));
 
           case 29:
             glovesImage = _context.sent;
@@ -109,7 +109,7 @@ var renderEquipmentImage = /*#__PURE__*/function () {
             }
 
             _context.next = 33;
-            return (0, _canvas.loadImage)(_path["default"].join(__dirname, "../assets/images/items/".concat(userCurrentCharacter.equipment.belt.itemBase.itemFamily.itemType.name, "/").concat(userCurrentCharacter.equipment.belt.itemBase.itemFamily.name), "".concat(userCurrentCharacter.equipment.belt.itemBase.name, ".png")));
+            return (0, _canvas.loadImage)(_path["default"].join(__dirname, "../../assets/images/items/".concat(userCurrentCharacter.equipment.belt.itemBase.itemFamily.itemType.name, "/").concat(userCurrentCharacter.equipment.belt.itemBase.itemFamily.name), "".concat(userCurrentCharacter.equipment.belt.itemBase.name, ".png")));
 
           case 33:
             beltImage = _context.sent;
@@ -121,7 +121,7 @@ var renderEquipmentImage = /*#__PURE__*/function () {
             }
 
             _context.next = 37;
-            return (0, _canvas.loadImage)(_path["default"].join(__dirname, "../assets/images/items/".concat(userCurrentCharacter.equipment.amulet.itemBase.itemFamily.itemType.name, "/").concat(userCurrentCharacter.equipment.amulet.itemBase.itemFamily.name), "".concat(userCurrentCharacter.equipment.amulet.itemBase.name, ".png")));
+            return (0, _canvas.loadImage)(_path["default"].join(__dirname, "../../assets/images/items/".concat(userCurrentCharacter.equipment.amulet.itemBase.itemFamily.itemType.name, "/").concat(userCurrentCharacter.equipment.amulet.itemBase.itemFamily.name), "".concat(userCurrentCharacter.equipment.amulet.itemBase.name, ".png")));
 
           case 37:
             amuletImage = _context.sent;
@@ -133,7 +133,7 @@ var renderEquipmentImage = /*#__PURE__*/function () {
             }
 
             _context.next = 41;
-            return (0, _canvas.loadImage)(_path["default"].join(__dirname, "../assets/images/items/".concat(userCurrentCharacter.equipment.ringSlotOne.itemBase.itemFamily.itemType.name, "/").concat(userCurrentCharacter.equipment.ringSlotOne.itemBase.itemFamily.name), "".concat(userCurrentCharacter.equipment.ringSlotOne.itemBase.name, ".png")));
+            return (0, _canvas.loadImage)(_path["default"].join(__dirname, "../../assets/images/items/".concat(userCurrentCharacter.equipment.ringSlotOne.itemBase.itemFamily.itemType.name, "/").concat(userCurrentCharacter.equipment.ringSlotOne.itemBase.itemFamily.name), "".concat(userCurrentCharacter.equipment.ringSlotOne.itemBase.name, ".png")));
 
           case 41:
             ringSlotOneImage = _context.sent;
@@ -145,7 +145,7 @@ var renderEquipmentImage = /*#__PURE__*/function () {
             }
 
             _context.next = 45;
-            return (0, _canvas.loadImage)(_path["default"].join(__dirname, "../assets/images/items/".concat(userCurrentCharacter.equipment.ringSlotTwo.itemBase.itemFamily.itemType.name, "/").concat(userCurrentCharacter.equipment.ringSlotTwo.itemBase.itemFamily.name), "".concat(userCurrentCharacter.equipment.ringSlotTwo.itemBase.name, ".png")));
+            return (0, _canvas.loadImage)(_path["default"].join(__dirname, "../../assets/images/items/".concat(userCurrentCharacter.equipment.ringSlotTwo.itemBase.itemFamily.itemType.name, "/").concat(userCurrentCharacter.equipment.ringSlotTwo.itemBase.itemFamily.name), "".concat(userCurrentCharacter.equipment.ringSlotTwo.itemBase.name, ".png")));
 
           case 45:
             ringSlotTwoImage = _context.sent;

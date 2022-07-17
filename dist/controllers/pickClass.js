@@ -57,7 +57,18 @@ var discordPickClass = /*#__PURE__*/function () {
             return _models["default"].user.findOne({
               where: {
                 user_id: "".concat(userId)
-              }
+              },
+              include: [{
+                model: _models["default"].UserGroup,
+                as: 'UserGroup',
+                include: [{
+                  model: _models["default"].user,
+                  as: 'user'
+                }, {
+                  model: _models["default"].group,
+                  as: 'group'
+                }]
+              }]
             });
 
           case 4:
@@ -120,54 +131,56 @@ var discordPickClass = /*#__PURE__*/function () {
             discordChannel = _context5.sent;
             canFitOnOnePage = classes.length <= 1;
             _context5.t0 = discordChannel;
-            _context5.next = 27;
+            _context5.t1 = (0, _messages.playingOnRealmMessage)(user);
+            _context5.next = 28;
             return (0, _pickClass.renderPickClassImage)(0, classes, user);
 
-          case 27:
-            _context5.t1 = _context5.sent;
-            _context5.t2 = [_context5.t1];
+          case 28:
+            _context5.t2 = _context5.sent;
+            _context5.t3 = [_context5.t2];
 
             if (!canFitOnOnePage) {
-              _context5.next = 33;
+              _context5.next = 34;
               break;
             }
 
-            _context5.t3 = [];
-            _context5.next = 45;
+            _context5.t4 = [];
+            _context5.next = 46;
             break;
 
-          case 33:
-            _context5.t4 = _discord.MessageActionRow;
-            _context5.next = 36;
+          case 34:
+            _context5.t5 = _discord.MessageActionRow;
+            _context5.next = 37;
             return (0, _buttons.generatePickClassButton)(0, classes);
 
-          case 36:
-            _context5.t5 = _context5.sent;
-            _context5.next = 39;
+          case 37:
+            _context5.t6 = _context5.sent;
+            _context5.next = 40;
             return (0, _buttons.generateCancelPickClassButton)();
 
-          case 39:
-            _context5.t6 = _context5.sent;
-            _context5.t7 = [_context5.t5, _context5.t6];
-            _context5.t8 = {
-              components: _context5.t7
+          case 40:
+            _context5.t7 = _context5.sent;
+            _context5.t8 = [_context5.t6, _context5.t7];
+            _context5.t9 = {
+              components: _context5.t8
             };
-            _context5.t9 = new _context5.t4(_context5.t8);
-            _context5.t10 = new _discord.MessageActionRow({
+            _context5.t10 = new _context5.t5(_context5.t9);
+            _context5.t11 = new _discord.MessageActionRow({
               components: [(0, _buttons.generateForwardButton)()]
             });
-            _context5.t3 = [_context5.t9, _context5.t10];
+            _context5.t4 = [_context5.t10, _context5.t11];
 
-          case 45:
-            _context5.t11 = _context5.t3;
-            _context5.t12 = {
-              files: _context5.t2,
-              components: _context5.t11
+          case 46:
+            _context5.t12 = _context5.t4;
+            _context5.t13 = {
+              content: _context5.t1,
+              files: _context5.t3,
+              components: _context5.t12
             };
-            _context5.next = 49;
-            return _context5.t0.send.call(_context5.t0, _context5.t12);
+            _context5.next = 50;
+            return _context5.t0.send.call(_context5.t0, _context5.t13);
 
-          case 49:
+          case 50:
             embedMessage = _context5.sent;
             collector = embedMessage.createMessageComponentCollector({
               filter: function filter(_ref2) {
@@ -311,8 +324,6 @@ var discordPickClass = /*#__PURE__*/function () {
                                               console.log('5-4');
                                               _context.next = 39;
                                               return _models["default"].UserGroupClass.create({
-                                                userId: 1,
-                                                // to be removed
                                                 UserGroupId: UserGroup.id,
                                                 classId: CurrentClassSelectionId,
                                                 statsId: newStats.id,
@@ -764,7 +775,7 @@ var discordPickClass = /*#__PURE__*/function () {
               };
             }());
 
-          case 53:
+          case 54:
           case "end":
             return _context5.stop();
         }

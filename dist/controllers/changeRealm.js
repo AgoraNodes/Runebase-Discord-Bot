@@ -30,7 +30,7 @@ var _fetchDiscordChannel = require("../helpers/client/fetchDiscordChannel");
 /* eslint-disable import/prefer-default-export */
 var discordChangeRealm = /*#__PURE__*/function () {
   var _ref = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee4(discordClient, message, io, isDefered) {
-    var activity, userId, discordChannel, user, realms, realmMap, alreadyInRealmEmbed, realmNotFoundEmbed, embedMessage, collector;
+    var activity, userId, discordChannel, user, realms, realmMap, embedMessage, collector;
     return _regenerator["default"].wrap(function _callee4$(_context4) {
       while (1) {
         switch (_context4.prev = _context4.next) {
@@ -103,20 +103,11 @@ var discordChangeRealm = /*#__PURE__*/function () {
 
               return filtered;
             }, []);
-            console.log(realmMap);
-            console.log('123');
-            alreadyInRealmEmbed = new _discord.MessageEmbed().setTitle('Change Realm').setDescription("".concat(user.username, ", You are already in this realm currently."));
-            realmNotFoundEmbed = new _discord.MessageEmbed().setTitle('Change Realm').setDescription("".concat(user.username, ", We can't find the realm you are trying to join"));
-            _context4.next = 26;
+            _context4.next = 22;
             return discordChannel.send({
               content: "<@".concat(user.user_id, ">, please select your realm"),
               files: [],
-              components: [// new MessageActionRow({
-              //  components: [
-              // await generateHealButton(),
-              //  ],
-              // }),
-              new _discord.MessageActionRow({
+              components: [new _discord.MessageActionRow({
                 components: [new _discord.MessageSelectMenu({
                   type: 'SELECT_MENU',
                   customId: 'select-realm',
@@ -125,7 +116,7 @@ var discordChangeRealm = /*#__PURE__*/function () {
               })]
             });
 
-          case 26:
+          case 22:
             embedMessage = _context4.sent;
             collector = embedMessage.createMessageComponentCollector({});
             collector.on('collect', /*#__PURE__*/function () {
@@ -195,79 +186,17 @@ var discordChangeRealm = /*#__PURE__*/function () {
                                     console.log(myUser);
 
                                     if (!(myUser.currentRealmId === newSelectedId)) {
-                                      _context.next = 9;
+                                      _context.next = 17;
                                       break;
                                     }
 
                                     console.log('You are already in this realm');
-                                    _context.next = 8;
-                                    return interaction.editReply({
-                                      content: "<@".concat(user.user_id, ">"),
-                                      embeds: [alreadyInRealmEmbed],
-                                      components: [new _discord.MessageActionRow({
-                                        components: [new _discord.MessageSelectMenu({
-                                          type: 'SELECT_MENU',
-                                          customId: 'select-realm',
-                                          options: realmMap
-                                        })]
-                                      })]
-                                    });
-
-                                  case 8:
-                                    return _context.abrupt("return");
-
-                                  case 9:
-                                    console.log('after Realm ID check');
-                                    _context.next = 12;
-                                    return _models["default"].group.findOne({
-                                      where: {
-                                        id: newSelectedId,
-                                        activeRealm: true
-                                      },
-                                      transaction: t,
-                                      lock: t.LOCK.UPDATE
-                                    });
-
-                                  case 12:
-                                    realm = _context.sent;
-                                    console.log(realm);
-
-                                    if (realm) {
-                                      _context.next = 18;
-                                      break;
-                                    }
-
-                                    _context.next = 17;
-                                    return interaction.editReply({
-                                      content: "<@".concat(user.user_id, ">"),
-                                      embeds: [realmNotFoundEmbed],
-                                      components: [new _discord.MessageActionRow({
-                                        components: [new _discord.MessageSelectMenu({
-                                          type: 'SELECT_MENU',
-                                          customId: 'select-realm',
-                                          options: realmMap
-                                        })]
-                                      })]
-                                    });
-
-                                  case 17:
-                                    return _context.abrupt("return");
-
-                                  case 18:
-                                    console.log('before discord check');
-                                    server = discordClient.guilds.cache.get(realm.groupId);
-
-                                    if (server.members.cache.get(user.user_id)) {
-                                      _context.next = 32;
-                                      break;
-                                    }
-
                                     _context.t0 = interaction;
-                                    _context.t1 = "<@".concat(user.user_id, ">, ").concat(realm.inviteLink);
-                                    _context.next = 25;
-                                    return (0, _embeds.needToBeInDiscordRealmEmbed)(realm);
+                                    _context.t1 = "<@".concat(user.user_id, ">");
+                                    _context.next = 10;
+                                    return (0, _embeds.alreadyInRealmEmbed)(user);
 
-                                  case 25:
+                                  case 10:
                                     _context.t2 = _context.sent;
                                     _context.t3 = [_context.t2];
                                     _context.t4 = [new _discord.MessageActionRow({
@@ -282,14 +211,96 @@ var discordChangeRealm = /*#__PURE__*/function () {
                                       embeds: _context.t3,
                                       components: _context.t4
                                     };
-                                    _context.next = 31;
+                                    _context.next = 16;
                                     return _context.t0.editReply.call(_context.t0, _context.t5);
 
-                                  case 31:
+                                  case 16:
                                     return _context.abrupt("return");
 
-                                  case 32:
-                                    _context.next = 34;
+                                  case 17:
+                                    console.log('after Realm ID check');
+                                    _context.next = 20;
+                                    return _models["default"].group.findOne({
+                                      where: {
+                                        id: newSelectedId,
+                                        activeRealm: true
+                                      },
+                                      transaction: t,
+                                      lock: t.LOCK.UPDATE
+                                    });
+
+                                  case 20:
+                                    realm = _context.sent;
+                                    console.log(realm);
+
+                                    if (realm) {
+                                      _context.next = 34;
+                                      break;
+                                    }
+
+                                    _context.t6 = interaction;
+                                    _context.t7 = "<@".concat(user.user_id, ">");
+                                    _context.next = 27;
+                                    return (0, _embeds.realmNotFoundEmbed)(user);
+
+                                  case 27:
+                                    _context.t8 = _context.sent;
+                                    _context.t9 = [_context.t8];
+                                    _context.t10 = [new _discord.MessageActionRow({
+                                      components: [new _discord.MessageSelectMenu({
+                                        type: 'SELECT_MENU',
+                                        customId: 'select-realm',
+                                        options: realmMap
+                                      })]
+                                    })];
+                                    _context.t11 = {
+                                      content: _context.t7,
+                                      embeds: _context.t9,
+                                      components: _context.t10
+                                    };
+                                    _context.next = 33;
+                                    return _context.t6.editReply.call(_context.t6, _context.t11);
+
+                                  case 33:
+                                    return _context.abrupt("return");
+
+                                  case 34:
+                                    console.log('before discord check');
+                                    server = discordClient.guilds.cache.get(realm.groupId);
+
+                                    if (server.members.cache.get(user.user_id)) {
+                                      _context.next = 48;
+                                      break;
+                                    }
+
+                                    _context.t12 = interaction;
+                                    _context.t13 = "<@".concat(user.user_id, ">, ").concat(realm.inviteLink);
+                                    _context.next = 41;
+                                    return (0, _embeds.needToBeInDiscordRealmEmbed)(realm);
+
+                                  case 41:
+                                    _context.t14 = _context.sent;
+                                    _context.t15 = [_context.t14];
+                                    _context.t16 = [new _discord.MessageActionRow({
+                                      components: [new _discord.MessageSelectMenu({
+                                        type: 'SELECT_MENU',
+                                        customId: 'select-realm',
+                                        options: realmMap
+                                      })]
+                                    })];
+                                    _context.t17 = {
+                                      content: _context.t13,
+                                      embeds: _context.t15,
+                                      components: _context.t16
+                                    };
+                                    _context.next = 47;
+                                    return _context.t12.editReply.call(_context.t12, _context.t17);
+
+                                  case 47:
+                                    return _context.abrupt("return");
+
+                                  case 48:
+                                    _context.next = 50;
                                     return _models["default"].UserGroup.findOne({
                                       where: {
                                         userId: user.id,
@@ -299,15 +310,15 @@ var discordChangeRealm = /*#__PURE__*/function () {
                                       lock: t.LOCK.UPDATE
                                     });
 
-                                  case 34:
+                                  case 50:
                                     UserGroup = _context.sent;
 
                                     if (UserGroup) {
-                                      _context.next = 39;
+                                      _context.next = 55;
                                       break;
                                     }
 
-                                    _context.next = 38;
+                                    _context.next = 54;
                                     return _models["default"].UserGroup.create({
                                       userId: user.id,
                                       groupId: newSelectedId
@@ -316,13 +327,13 @@ var discordChangeRealm = /*#__PURE__*/function () {
                                       lock: t.LOCK.UPDATE
                                     });
 
-                                  case 38:
+                                  case 54:
                                     UserGroup = _context.sent;
 
-                                  case 39:
+                                  case 55:
                                     console.log('joining realm');
                                     console.log(newSelectedId);
-                                    _context.next = 43;
+                                    _context.next = 59;
                                     return myUser.update({
                                       currentRealmId: newSelectedId,
                                       currentClassId: null
@@ -331,25 +342,25 @@ var discordChangeRealm = /*#__PURE__*/function () {
                                       lock: t.LOCK.UPDATE
                                     });
 
-                                  case 43:
-                                    _context.t6 = interaction;
-                                    _context.t7 = "<@".concat(user.user_id, ">");
-                                    _context.next = 47;
+                                  case 59:
+                                    _context.t18 = interaction;
+                                    _context.t19 = "<@".concat(user.user_id, ">");
+                                    _context.next = 63;
                                     return (0, _embeds.realmChangeSuccessEmbed)(realm);
 
-                                  case 47:
-                                    _context.t8 = _context.sent;
-                                    _context.t9 = [_context.t8];
-                                    _context.t10 = [];
-                                    _context.t11 = {
-                                      content: _context.t7,
-                                      embeds: _context.t9,
-                                      components: _context.t10
+                                  case 63:
+                                    _context.t20 = _context.sent;
+                                    _context.t21 = [_context.t20];
+                                    _context.t22 = [];
+                                    _context.t23 = {
+                                      content: _context.t19,
+                                      embeds: _context.t21,
+                                      components: _context.t22
                                     };
-                                    _context.next = 53;
-                                    return _context.t6.editReply.call(_context.t6, _context.t11);
+                                    _context.next = 69;
+                                    return _context.t18.editReply.call(_context.t18, _context.t23);
 
-                                  case 53:
+                                  case 69:
                                   case "end":
                                     return _context.stop();
                                 }
@@ -409,7 +420,7 @@ var discordChangeRealm = /*#__PURE__*/function () {
               };
             }());
 
-          case 29:
+          case 25:
           case "end":
             return _context4.stop();
         }

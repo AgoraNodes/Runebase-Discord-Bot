@@ -19,15 +19,9 @@ var _canvas = require("canvas");
 
 var _path = _interopRequireDefault(require("path"));
 
-var _embeds = require("../embeds");
-
 var _models = _interopRequireDefault(require("../models"));
 
 var _logger = _interopRequireDefault(require("../helpers/logger"));
-
-var _userWalletExist = require("../helpers/client/userWalletExist");
-
-var _generateLoot = require("../helpers/items/generateLoot");
 
 var _generateStartingDagger = require("../helpers/items/generateStartingDagger");
 
@@ -40,10 +34,6 @@ var _fetchDiscordUserIdFromMessageOrInteraction = require("../helpers/client/fet
 var _fetchDiscordChannel = require("../helpers/client/fetchDiscordChannel");
 
 /* eslint-disable import/prefer-default-export */
-var lootedMessage = function lootedMessage() {
-  console.log('looted');
-};
-
 var generateLootImage = /*#__PURE__*/function () {
   var _ref = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(lootItem, distance) {
     var trueEnd,
