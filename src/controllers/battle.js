@@ -41,6 +41,10 @@ import {
   insufficientBalanceMessage,
   healCompleteMessage,
 } from '../embeds';
+import {
+  playingOnRealmMessage,
+  notSelectedClassYetMessage,
+} from '../messages';
 import skillEmoji from "../config/skillEmoji";
 
 let currentSelectedMonster;
@@ -75,13 +79,13 @@ export const discordBattle = async (
   if (!userCurrentCharacter) {
     if (!isDefered) {
       await message.reply({
-        content: 'You have not selected a class yet\n`!runebase pickclass`\n`/pickclass`',
+        content: notSelectedClassYetMessage(),
         ephemeral: true,
       });
       return;
     }
     await message.editReply({
-      content: 'You have not selected a class yet\n`!runebase pickclass`\n`/pickclass`',
+      content: notSelectedClassYetMessage(),
       ephemeral: true,
     });
     usedDeferReply = true;
@@ -90,6 +94,7 @@ export const discordBattle = async (
   console.log('battle2');
   if (userCurrentCharacter.condition.stamina < 20) {
     await discordChannel.send({
+      content: playingOnRealmMessage(userCurrentCharacter),
       files: [
         await renderOutOfStamina(
           userCurrentCharacter,
@@ -102,6 +107,7 @@ export const discordBattle = async (
   console.log('battle3');
   if (userCurrentCharacter.condition.life < 1) {
     await discordChannel.send({
+      content: playingOnRealmMessage(userCurrentCharacter),
       files: [
         await renderUserDied(
           userCurrentCharacter,
@@ -346,8 +352,7 @@ export const discordBattle = async (
 
   console.log('battle9');
   const embedMessage = await discordChannel.send({
-    content: `You are playing on: ${userCurrentCharacter.UserGroup.group.name}
-<@${userCurrentCharacter.UserGroup.user.user_id}>`,
+    content: playingOnRealmMessage(userCurrentCharacter),
     files: [
       new MessageAttachment(
         await renderBattleGif(
@@ -502,8 +507,7 @@ ${newLootC.length > 0 ? `__found ${newLootC.length} ${newLootC.length === 1 ? `i
       await interaction.deferUpdate();
       console.log(userWallet);
       await interaction.editReply({
-        content: `You are playing on: ${userCurrentCharacter.UserGroup.group.name}
-<@${userCurrentCharacter.UserGroup.user.user_id}>`,
+        content: playingOnRealmMessage(userCurrentCharacter),
         embeds: [
           await confirmationHealMessage(
             userCurrentCharacter.UserGroup.user.user_id,
@@ -525,7 +529,7 @@ ${newLootC.length > 0 ? `__found ${newLootC.length} ${newLootC.length === 1 ? `i
     if (interaction.isButton() && interaction.customId === 'decline') {
       await interaction.deferUpdate();
       await interaction.editReply({
-        content: `<@${userCurrentCharacter.UserGroup.user.user_id}>`,
+        content: playingOnRealmMessage(userCurrentCharacter),
         embeds: [],
         components: [
           new MessageActionRow({
@@ -592,7 +596,7 @@ ${newLootC.length > 0 ? `__found ${newLootC.length} ${newLootC.length === 1 ? `i
           });
           if (findWallet.available < 10000000) {
             await interaction.editReply({
-              content: `<@${userCurrentCharacter.UserGroup.user.user_id}>`,
+              content: playingOnRealmMessage(userCurrentCharacter),
               embeds: [
                 await insufficientBalanceMessage(
                   userCurrentCharacter.UserGroup.user.user_id,
@@ -857,7 +861,7 @@ ${newLootC.length > 0 ? `__found ${newLootC.length} ${newLootC.length === 1 ? `i
             });
             newLoot = newLoot.filter((data) => data.id !== itemId);
             await interaction.editReply({
-              content: `<@${userCurrentCharacter.UserGroup.user.user_id}>`,
+              content: playingOnRealmMessage(userCurrentCharacter),
               files: [
                 await renderBattleComplete(
                   userCurrentCharacter,
@@ -884,7 +888,7 @@ ${newLootC.length > 0 ? `__found ${newLootC.length} ${newLootC.length === 1 ? `i
             t,
           );
           await interaction.editReply({
-            content: `<@${userCurrentCharacter.UserGroup.user.user_id}>`,
+            content: playingOnRealmMessage(userCurrentCharacter),
             embeds: [
               loadingBattleMoveEmbed,
             ],
@@ -963,7 +967,7 @@ ${newLootC.length > 0 ? `__found ${newLootC.length} ${newLootC.length === 1 ? `i
             console.log(initialUserState);
             console.log('before final renderbattleGif complete');
             await interaction.editReply({
-              content: `<@${userCurrentCharacter.UserGroup.user.user_id}>`,
+              content: playingOnRealmMessage(userCurrentCharacter),
               embeds: [],
               files: [
                 new MessageAttachment(
@@ -1006,7 +1010,7 @@ ${newLootC.length > 0 ? `__found ${newLootC.length} ${newLootC.length === 1 ? `i
             }, []);
 
             await interaction.editReply({
-              content: `<@${userCurrentCharacter.UserGroup.user.user_id}>`,
+              content: playingOnRealmMessage(userCurrentCharacter),
               embeds: [],
               files: [
                 new MessageAttachment(
@@ -1079,7 +1083,7 @@ ${newLootC.length > 0 ? `__found ${newLootC.length} ${newLootC.length === 1 ? `i
           if (userCurrentCharacter.condition.life < 1) {
             setTimeout(async () => {
               await interaction.editReply({
-                content: `<@${userCurrentCharacter.UserGroup.user.user_id}>`,
+                content: playingOnRealmMessage(userCurrentCharacter),
                 embeds: [],
                 files: [
                   await renderUserDied(
@@ -1093,7 +1097,7 @@ ${newLootC.length > 0 ? `__found ${newLootC.length} ${newLootC.length === 1 ? `i
           if (battle.complete) {
             setTimeout(async () => {
               await interaction.editReply({
-                content: `<@${userCurrentCharacter.UserGroup.user.user_id}>`,
+                content: playingOnRealmMessage(userCurrentCharacter),
                 embeds: [
                   await battleCompleteEmbed(
                     userCurrentCharacter,
@@ -1199,7 +1203,7 @@ ${newLootC.length > 0 ? `__found ${newLootC.length} ${newLootC.length === 1 ? `i
           myInitialUserState.mp = mp;
           console.log('selecting 5');
           await interaction.editReply({
-            content: `<@${userCurrentCharacter.UserGroup.user.user_id}>`,
+            content: playingOnRealmMessage(userCurrentCharacter),
             embeds: [],
             files: [
               new MessageAttachment(

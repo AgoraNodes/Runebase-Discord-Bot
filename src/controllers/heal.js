@@ -23,6 +23,11 @@ import {
 } from '../embeds';
 import { calculateCharacterStats } from '../helpers/stats/calculateCharacterStats';
 
+import {
+  playingOnRealmMessage,
+  notSelectedClassYetMessage,
+} from '../messages';
+
 export const discordHeal = async (
   discordClient,
   message,
@@ -46,7 +51,7 @@ export const discordHeal = async (
 
   if (!userCurrentCharacter) {
     await message.reply({
-      content: 'You have not selected a class yet\n`!runebase pickclass`\n`/pickclass`',
+      content: notSelectedClassYetMessage(),
       ephemeral: true,
     });
     return;
@@ -59,6 +64,7 @@ export const discordHeal = async (
   });
 
   const embedMessage = await discordChannel.send({
+    content: playingOnRealmMessage(userCurrentCharacter),
     embeds: [
       await confirmationHealMessage(
         userCurrentCharacter.UserGroup.user.user_id,
@@ -116,6 +122,7 @@ export const discordHeal = async (
             });
             if (findWallet.available < 10000000) {
               await interaction.editReply({
+                content: playingOnRealmMessage(userCurrentCharacter),
                 embeds: [
                   await insufficientBalanceMessage(
                     userCurrentCharacter.UserGroup.user.user_id,
@@ -171,7 +178,7 @@ export const discordHeal = async (
               transaction: t,
             });
             await interaction.editReply({
-              content: `<@${userCurrentCharacter.UserGroup.user.user_id}>`,
+              content: playingOnRealmMessage(userCurrentCharacter),
               embeds: [
                 await healCompleteMessage(
                   userCurrentCharacter.UserGroup.user.user_id,

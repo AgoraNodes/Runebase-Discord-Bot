@@ -29,6 +29,11 @@ import { unEquipItem } from '../helpers/equipment/unEquipItem';
 import { needToBeInDiscordRealmEmbed } from "../embeds";
 import isUserInRealm from "../helpers/realm/isUserInRealm";
 
+import {
+  playingOnRealmMessage,
+  notSelectedClassYetMessage,
+} from '../messages';
+
 const showEquipmentImage = async (
   userCurrentCharacter,
 ) => {
@@ -79,7 +84,7 @@ export const discordShowEquipment = async (
 
   if (!userCurrentCharacter) {
     await message.reply({
-      content: 'You have not selected a class yet\n`!runebase pickclass`\n`/pickclass`',
+      content: notSelectedClassYetMessage(),
       ephemeral: true,
     });
     return;
@@ -267,6 +272,7 @@ export const discordShowEquipment = async (
     || userCurrentCharacter.equipment.boots
   );
   const embedMessage = await discordChannel.send({
+    content: playingOnRealmMessage(userCurrentCharacter),
     files: [
       await generateCurrentEquipmentImage(userCurrentCharacter),
     ],
@@ -429,6 +435,7 @@ export const discordShowEquipment = async (
             itemToUnEquip = userCurrentCharacter.equipment.ringSlotTwo;
           }
           await interaction.editReply({
+            content: playingOnRealmMessage(userCurrentCharacter),
             files: [
               itemImage,
             ],
@@ -532,6 +539,7 @@ export const discordShowEquipment = async (
     console.log('before edit reply');
     // Load another character
     await interaction.editReply({
+      content: playingOnRealmMessage(userCurrentCharacter),
       files: [
         await generateCurrentEquipmentImage(userCurrentCharacter),
       ],

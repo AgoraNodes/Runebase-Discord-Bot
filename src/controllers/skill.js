@@ -22,6 +22,10 @@ import {
   loadingSkillSelectEmbed,
 } from '../embeds';
 import skillEmoji from "../config/skillEmoji";
+import {
+  playingOnRealmMessage,
+  notSelectedClassYetMessage,
+} from '../messages';
 
 export const discordSkills = async (
   discordClient,
@@ -48,7 +52,7 @@ export const discordSkills = async (
 
   if (!userCurrentCharacter) {
     await message.reply({
-      content: 'You have not selected a class yet\n`!runebase pickclass`\n`/pickclass`',
+      content: notSelectedClassYetMessage(),
       ephemeral: true,
     });
     return;
@@ -80,7 +84,7 @@ export const discordSkills = async (
   });
 
   const embedMessage = await discordChannel.send({
-    content: `<@${userCurrentCharacter.UserGroup.user.user_id}>`,
+    content: playingOnRealmMessage(userCurrentCharacter),
     files: [
       await renderSkillScreen(
         userCurrentCharacter,
@@ -139,7 +143,7 @@ export const discordSkills = async (
     if (interaction.isButton()) {
       if (interaction.customId.startsWith('addSkill:')) {
         await interaction.editReply({
-          content: `<@${userCurrentCharacter.UserGroup.user.user_id}>`,
+          content: playingOnRealmMessage(userCurrentCharacter),
           embeds: [
             await loadingSkillAddEmbed(
               userCurrentCharacter.UserGroup.user.username,
@@ -159,6 +163,7 @@ export const discordSkills = async (
       }
       if (interaction.customId === 'cancelSkillPick') {
         await interaction.editReply({
+          content: playingOnRealmMessage(userCurrentCharacter),
           embeds: [],
           files: [
             await renderCancelSkillPick(userCurrentCharacter),
@@ -170,6 +175,7 @@ export const discordSkills = async (
     }
     if (interaction.isSelectMenu()) {
       await interaction.editReply({
+        content: playingOnRealmMessage(userCurrentCharacter),
         embeds: [
           await loadingSkillSelectEmbed(
             userCurrentCharacter.UserGroup.user.username,
@@ -220,7 +226,7 @@ export const discordSkills = async (
     });
 
     await interaction.editReply({
-      content: `<@${userCurrentCharacter.UserGroup.user.user_id}>`,
+      content: playingOnRealmMessage(userCurrentCharacter),
       embeds: [
         ...(jsonSkillInfo
           ? [

@@ -22,6 +22,10 @@ import {
   declineResetSkillsMessage,
   resetSkillCompleteMessage,
 } from '../embeds';
+import {
+  playingOnRealmMessage,
+  notSelectedClassYetMessage,
+} from '../messages';
 
 export const discordResetSkills = async (
   discordClient,
@@ -46,7 +50,7 @@ export const discordResetSkills = async (
 
   if (!userCurrentCharacter) {
     await message.reply({
-      content: 'You have not selected a class yet\n`!runebase pickclass`\n`/pickclass`',
+      content: notSelectedClassYetMessage(),
       ephemeral: true,
     });
     return;
@@ -79,6 +83,7 @@ export const discordResetSkills = async (
   const totalSkillsCost = sumSkillPoints * 1;
 
   const embedMessage = await discordChannel.send({
+    content: playingOnRealmMessage(userCurrentCharacter),
     embeds: [
       await skillConfirmationMessage(
         userId,
@@ -113,6 +118,7 @@ export const discordResetSkills = async (
 
       if (interaction.customId === 'decline') {
         await interaction.editReply({
+          content: playingOnRealmMessage(userCurrentCharacter),
           embeds: [
             await declineResetSkillsMessage(
               userCurrentCharacter.UserGroup.user.user_id,
@@ -182,6 +188,7 @@ export const discordResetSkills = async (
             if (userSkills.length > 0) {
               if (findWallet.available < resetCost) {
                 await interaction.editReply({
+                  content: playingOnRealmMessage(userCurrentCharacter),
                   embeds: [
                     await insufficientBalanceMessage(
                       userCurrentCharacter.UserGroup.user.user_id,
@@ -210,7 +217,7 @@ export const discordResetSkills = async (
             }
 
             await interaction.editReply({
-              content: `<@${userCurrentCharacter.UserGroup.user.user_id}>`,
+              content: playingOnRealmMessage(userCurrentCharacter),
               embeds: [
                 await resetSkillCompleteMessage(
                   userCurrentCharacter.UserGroup.user.user_id,

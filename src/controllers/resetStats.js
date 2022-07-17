@@ -22,6 +22,10 @@ import {
   generateAcceptButton,
   generateDeclineButton,
 } from '../buttons';
+import {
+  playingOnRealmMessage,
+  notSelectedClassYetMessage,
+} from '../messages';
 
 export const discordResetStats = async (
   discordClient,
@@ -46,7 +50,7 @@ export const discordResetStats = async (
 
   if (!userCurrentCharacter) {
     await message.reply({
-      content: 'You have not selected a class yet\n`!runebase pickclass`\n`/pickclass`',
+      content: notSelectedClassYetMessage(),
       ephemeral: true,
     });
     return;
@@ -71,6 +75,7 @@ export const discordResetStats = async (
   ).multipliedBy(0.1);
 
   const embedMessage = await discordChannel.send({
+    content: playingOnRealmMessage(userCurrentCharacter),
     embeds: [
       await resetStatsConfirmationMessage(
         userCurrentCharacter.UserGroup.user.user_id,
@@ -152,6 +157,7 @@ export const discordResetStats = async (
             console.log('totalCostNumber');
             if (findWallet.available < totalStatsCostUser) {
               await interaction.editReply({
+                content: playingOnRealmMessage(userCurrentCharacter),
                 embeds: [
                   await insufficientBalanceMessage(
                     userCharacterToReset.UserGroup.user.user_id,
@@ -205,7 +211,7 @@ export const discordResetStats = async (
             }
 
             await interaction.editReply({
-              content: `<@${userCurrentCharacter.UserGroup.user.user_id}>`,
+              content: playingOnRealmMessage(userCurrentCharacter),
               embeds: [
                 resetStatsCompletemessage(
                   userCurrentCharacter.UserGroup.user.user_id,

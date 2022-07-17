@@ -39,6 +39,10 @@ import {
   generateAddEnergyButton,
   generateCancelStatsPickButton,
 } from '../buttons';
+import {
+  playingOnRealmMessage,
+  notSelectedClassYetMessage,
+} from '../messages';
 
 export const discordStats = async (
   discordClient,
@@ -64,7 +68,7 @@ export const discordStats = async (
 
   if (!userCurrentCharacter) {
     await message.reply({
-      content: 'You have not selected a class yet\n`!runebase pickclass`\n`/pickclass`',
+      content: notSelectedClassYetMessage(),
       ephemeral: true,
     });
     return;
@@ -103,6 +107,7 @@ export const discordStats = async (
   const calc = unspendAttributes > 0;
 
   const embedMessage = await discordChannel.send({
+    content: playingOnRealmMessage(userCurrentCharacter),
     files: [
       new MessageAttachment(
         await renderStatsImage(
@@ -208,6 +213,7 @@ export const discordStats = async (
       ) < (updatedUser.UserGroup.UserGroupRank.rank.level * 5);
 
       await interaction.editReply({
+        content: playingOnRealmMessage(userCurrentCharacter),
         embeds: [],
         files: [
           new MessageAttachment(
@@ -242,6 +248,7 @@ export const discordStats = async (
     // Cancel class selection
     if (interaction.customId === 'cancelStatsPick') {
       await interaction.editReply({
+        content: playingOnRealmMessage(userCurrentCharacter),
         files: [
           await generateCancelClassPicked(),
         ],

@@ -36,6 +36,11 @@ import {
   generateDestroyYesButton,
 } from '../buttons';
 
+import {
+  playingOnRealmMessage,
+  notSelectedClassYetMessage,
+} from '../messages';
+
 export const discordShowInventory = async (
   discordClient,
   message,
@@ -59,13 +64,13 @@ export const discordShowInventory = async (
 
   if (!userCurrentCharacter) {
     await message.reply({
-      content: 'You have not selected a class yet\n`!runebase pickclass`\n`/pickclass`',
+      content: notSelectedClassYetMessage(),
       ephemeral: true,
     });
     return;
   }
 
-  await registerFont(path.join(__dirname, '../assets/fonts/', 'Heart_warming.otf'), { family: 'HeartWarming' });
+  // await registerFont(path.join(__dirname, '../assets/fonts/', 'Heart_warming.otf'), { family: 'HeartWarming' });
 
   const generateConfirmDestroyItemImage = async (
     start,
@@ -310,6 +315,7 @@ export const discordShowInventory = async (
 
   const canFitOnOnePage = userCurrentCharacter.inventory.items.length <= 1;
   const embedMessage = await discordChannel.send({
+    content: playingOnRealmMessage(userCurrentCharacter),
     files: [
       ...(
         userCurrentCharacter.inventory.items.length > 0 ? [
@@ -429,6 +435,7 @@ export const discordShowInventory = async (
     }
     if (interaction.customId.startsWith('Destroy:')) {
       await interaction.editReply({
+        content: playingOnRealmMessage(userCurrentCharacter),
         files: [
           ...(
             userCurrentCharacter.inventory.items.length > 0 ? [
@@ -478,6 +485,7 @@ export const discordShowInventory = async (
     // Cancel class selection
     if (interaction.customId === 'exitInventory') {
       await interaction.editReply({
+        content: playingOnRealmMessage(userCurrentCharacter),
         files: [
           await generateExitInventoryImage(),
         ],
@@ -493,6 +501,7 @@ export const discordShowInventory = async (
     }
 
     await interaction.editReply({
+      content: playingOnRealmMessage(userCurrentCharacter),
       files: [
         ...(
           userCurrentCharacter.inventory.items.length > 0 ? [
