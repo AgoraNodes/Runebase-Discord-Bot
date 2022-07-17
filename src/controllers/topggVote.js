@@ -49,7 +49,12 @@ export const discordTopggVote = async (
     if (topggVoteRecord) {
       console.log('record found skip voting');
       const setting = await db.setting.findOne();
-      const discordChannel = await discordClient.channels.cache.get(setting.expRewardChannelId);
+      const findGroupToPost = await db.group.findOne({
+        where: {
+          groupId: setting.discordHomeServerGuildId,
+        },
+      });
+      const discordChannel = await discordClient.channels.cache.get(findGroupToPost.expRewardChannelId);
       await discordChannel.send({
         content: `<@${user.user_id}>`,
         embeds: [

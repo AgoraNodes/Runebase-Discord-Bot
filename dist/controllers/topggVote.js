@@ -41,7 +41,7 @@ var discordTopggVote = /*#__PURE__*/function () {
               isolationLevel: _sequelize.Transaction.ISOLATION_LEVELS.SERIALIZABLE
             }, /*#__PURE__*/function () {
               var _ref2 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(t) {
-                var _yield$userWalletExis, _yield$userWalletExis2, user, userActivity, topggVoteRecord, setting, discordChannel, newTopggRecord, newExp, preActivity, finalActivity;
+                var _yield$userWalletExis, _yield$userWalletExis2, user, userActivity, topggVoteRecord, setting, findGroupToPost, discordChannel, newTopggRecord, newExp, preActivity, finalActivity;
 
                 return _regenerator["default"].wrap(function _callee$(_context) {
                   while (1) {
@@ -86,7 +86,7 @@ var discordTopggVote = /*#__PURE__*/function () {
                         console.log(topggVoteRecord);
 
                         if (!topggVoteRecord) {
-                          _context.next = 26;
+                          _context.next = 29;
                           break;
                         }
 
@@ -97,21 +97,30 @@ var discordTopggVote = /*#__PURE__*/function () {
                       case 19:
                         setting = _context.sent;
                         _context.next = 22;
-                        return discordClient.channels.cache.get(setting.expRewardChannelId);
+                        return _models["default"].group.findOne({
+                          where: {
+                            groupId: setting.discordHomeServerGuildId
+                          }
+                        });
 
                       case 22:
-                        discordChannel = _context.sent;
+                        findGroupToPost = _context.sent;
                         _context.next = 25;
+                        return discordClient.channels.cache.get(findGroupToPost.expRewardChannelId);
+
+                      case 25:
+                        discordChannel = _context.sent;
+                        _context.next = 28;
                         return discordChannel.send({
                           content: "<@".concat(user.user_id, ">"),
                           embeds: [(0, _messages.alreadyVotedTopGG)(user.user_id)]
                         });
 
-                      case 25:
+                      case 28:
                         return _context.abrupt("return");
 
-                      case 26:
-                        _context.next = 28;
+                      case 29:
+                        _context.next = 31;
                         return _models["default"].topggVote.create({
                           userId: user.id
                         }, {
@@ -119,15 +128,15 @@ var discordTopggVote = /*#__PURE__*/function () {
                           transaction: t
                         });
 
-                      case 28:
+                      case 31:
                         newTopggRecord = _context.sent;
                         console.log('after record create');
-                        _context.next = 32;
+                        _context.next = 35;
                         return (0, _experience.gainExp)(discordClient, message.user, 16, 'topggVote', t);
 
-                      case 32:
+                      case 35:
                         newExp = _context.sent;
-                        _context.next = 35;
+                        _context.next = 38;
                         return _models["default"].activity.create({
                           type: 'topggvote_s',
                           earnerId: user.id
@@ -136,9 +145,9 @@ var discordTopggVote = /*#__PURE__*/function () {
                           transaction: t
                         });
 
-                      case 35:
+                      case 38:
                         preActivity = _context.sent;
-                        _context.next = 38;
+                        _context.next = 41;
                         return _models["default"].activity.findOne({
                           where: {
                             id: preActivity.id
@@ -151,11 +160,11 @@ var discordTopggVote = /*#__PURE__*/function () {
                           transaction: t
                         });
 
-                      case 38:
+                      case 41:
                         finalActivity = _context.sent;
                         activity.unshift(finalActivity);
 
-                      case 40:
+                      case 43:
                       case "end":
                         return _context.stop();
                     }
