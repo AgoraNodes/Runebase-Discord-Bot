@@ -44,11 +44,27 @@ export const discordMostActive = async (
         transaction: t,
       },
     );
+    const setting = await db.setting.findOne();
+    const findGroupToPost = await db.group.findOne({
+      where: {
+        groupId: setting.discordHomeServerGuildId,
+      },
+    });
 
-    const olderThenDate = new Date(Date.now() - (30 * 24 * 60 * 60 * 1000));
+    // const olderThenDate = new Date(Date.now() - (30 * 24 * 60 * 60 * 1000));
     const topUsers = await db.user.findAll({
       order: [[Sequelize.literal('(SELECT SUM(count) FROM activeTalker where activeTalker.userId = user.id AND activeTalker.createdAt > date_sub(now(), interval 1 month))'), 'DESC']],
       limit: 10,
+      include: [
+        {
+          model: db.UserGroup,
+          as: 'UserGroup',
+          required: true,
+          where: {
+            groupId: findGroupToPost.id,
+          },
+        },
+      ],
       lock: t.LOCK.UPDATE,
       transaction: t,
     });
@@ -95,11 +111,19 @@ export const discordMostActive = async (
 
       // get rank info
 
+      const setting = await db.setting.findOne();
+      const findGroupToPost = await db.group.findOne({
+        where: {
+          groupId: setting.discordHomeServerGuildId,
+        },
+      });
+
       const currentRank = await db.rank.findOne({
         where: {
           expNeeded: {
-            [Op.lte]: topUser.exp,
+            [Op.lte]: topUser.UserGroup.exp,
           },
+          groupId: findGroupToPost.id,
         },
         order: [
           ['id', 'DESC'],
@@ -117,8 +141,9 @@ export const discordMostActive = async (
       const nextRank = await db.rank.findOne({
         where: {
           expNeeded: {
-            [Op.gt]: topUser.exp,
+            [Op.gt]: topUser.UserGroup.exp,
           },
+          groupId: findGroupToPost.id,
         },
         order: [
           ['id', 'ASC'],
@@ -128,7 +153,7 @@ export const discordMostActive = async (
       });
 
       const nextRankExp = nextRank && nextRank.expNeeded ? nextRank.expNeeded : currentRankExp;
-      const currentExp = topUser.exp;
+      const currentExp = topUser.UserGroup.exp;
 
       return {
         position: index + 1,
@@ -136,7 +161,7 @@ export const discordMostActive = async (
         monthlyChatActivity: monthlyChatActivity && monthlyChatActivity.count ? monthlyChatActivity.count : 0,
         totalChatActivity: totalChatActivity && totalChatActivity.count ? totalChatActivity.count : 0,
         // userId: user.user_id,
-        exp: topUser.exp,
+        exp: topUser.UserGroup.exp,
         invitedUsers: topUser.totalInvitedUsersCount,
         avatar: await loadImage(clippedAvatar),
         //

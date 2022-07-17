@@ -36,8 +36,18 @@ export const discordRanks = async (
     }
     if (!user) return;
 
+    const setting = await db.setting.findOne();
+    const findGroupToPost = await db.group.findOne({
+      where: {
+        groupId: setting.discordHomeServerGuildId,
+      },
+    });
+
     const allRanks = await db.rank.findAll(
       {
+        where: {
+          groupId: findGroupToPost.id,
+        },
         lock: t.LOCK.UPDATE,
         transaction: t,
       },

@@ -43,7 +43,7 @@ var discordRanks = /*#__PURE__*/function () {
               isolationLevel: _sequelize.Transaction.ISOLATION_LEVELS.SERIALIZABLE
             }, /*#__PURE__*/function () {
               var _ref2 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(t) {
-                var _yield$userWalletExis, _yield$userWalletExis2, user, userActivity, allRanks, canvasAddedRanksHeight, canvas, ctx, attachment, discordChannel, preActivity, finalActivity;
+                var _yield$userWalletExis, _yield$userWalletExis2, user, userActivity, setting, findGroupToPost, allRanks, canvasAddedRanksHeight, canvas, ctx, attachment, discordChannel, preActivity, finalActivity;
 
                 return _regenerator["default"].wrap(function _callee$(_context) {
                   while (1) {
@@ -71,20 +71,37 @@ var discordRanks = /*#__PURE__*/function () {
 
                       case 9:
                         _context.next = 11;
+                        return _models["default"].setting.findOne();
+
+                      case 11:
+                        setting = _context.sent;
+                        _context.next = 14;
+                        return _models["default"].group.findOne({
+                          where: {
+                            groupId: setting.discordHomeServerGuildId
+                          }
+                        });
+
+                      case 14:
+                        findGroupToPost = _context.sent;
+                        _context.next = 17;
                         return _models["default"].rank.findAll({
+                          where: {
+                            groupId: findGroupToPost.id
+                          },
                           lock: t.LOCK.UPDATE,
                           transaction: t
                         });
 
-                      case 11:
+                      case 17:
                         allRanks = _context.sent;
                         canvasAddedRanksHeight = allRanks.length * 40 + 36.5;
-                        _context.next = 15;
+                        _context.next = 21;
                         return (0, _canvas.registerFont)(_path["default"].join(__dirname, '../assets/fonts/', 'Heart_warming.otf'), {
                           family: 'HeartWarming'
                         });
 
-                      case 15:
+                      case 21:
                         canvas = (0, _canvas.createCanvas)(600, canvasAddedRanksHeight);
                         ctx = canvas.getContext('2d');
                         ctx.font = 'bold 20px "HeartWarming"';
@@ -148,37 +165,37 @@ var discordRanks = /*#__PURE__*/function () {
                         attachment = new _discord.MessageAttachment(canvas.toBuffer(), 'ranks.png');
 
                         if (!(message.type && message.type === 'APPLICATION_COMMAND')) {
-                          _context.next = 71;
+                          _context.next = 77;
                           break;
                         }
 
                         if (!message.guildId) {
-                          _context.next = 69;
+                          _context.next = 75;
                           break;
                         }
 
-                        _context.next = 66;
+                        _context.next = 72;
                         return discordClient.channels.cache.get(message.channelId);
 
-                      case 66:
+                      case 72:
                         discordChannel = _context.sent;
-                        _context.next = 69;
+                        _context.next = 75;
                         return discordChannel.send({
                           files: [attachment]
                         });
 
-                      case 69:
-                        _context.next = 73;
+                      case 75:
+                        _context.next = 79;
                         break;
 
-                      case 71:
-                        _context.next = 73;
+                      case 77:
+                        _context.next = 79;
                         return message.channel.send({
                           files: [attachment]
                         });
 
-                      case 73:
-                        _context.next = 75;
+                      case 79:
+                        _context.next = 81;
                         return _models["default"].activity.create({
                           type: 'ranks_s',
                           earnerId: user.id
@@ -187,9 +204,9 @@ var discordRanks = /*#__PURE__*/function () {
                           transaction: t
                         });
 
-                      case 75:
+                      case 81:
                         preActivity = _context.sent;
-                        _context.next = 78;
+                        _context.next = 84;
                         return _models["default"].activity.findOne({
                           where: {
                             id: preActivity.id
@@ -202,11 +219,11 @@ var discordRanks = /*#__PURE__*/function () {
                           transaction: t
                         });
 
-                      case 78:
+                      case 84:
                         finalActivity = _context.sent;
                         activity.unshift(finalActivity);
 
-                      case 80:
+                      case 86:
                       case "end":
                         return _context.stop();
                     }

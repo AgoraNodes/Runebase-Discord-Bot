@@ -45,7 +45,7 @@ var discordMostActive = /*#__PURE__*/function () {
               isolationLevel: _sequelize.Transaction.ISOLATION_LEVELS.SERIALIZABLE
             }, /*#__PURE__*/function () {
               var _ref2 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee3(t) {
-                var _yield$userWalletExis, _yield$userWalletExis2, user, userActivity, allRanks, olderThenDate, topUsers, promises, newTopUsers, canvasAddedRanksHeight, canvas, ctx, expBarWidth, attachment, discordChannel, preActivity, finalActivity;
+                var _yield$userWalletExis, _yield$userWalletExis2, user, userActivity, allRanks, setting, findGroupToPost, topUsers, promises, newTopUsers, canvasAddedRanksHeight, canvas, ctx, expBarWidth, attachment, discordChannel, preActivity, finalActivity;
 
                 return _regenerator["default"].wrap(function _callee3$(_context3) {
                   while (1) {
@@ -80,20 +80,41 @@ var discordMostActive = /*#__PURE__*/function () {
 
                       case 11:
                         allRanks = _context3.sent;
-                        olderThenDate = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
-                        _context3.next = 15;
+                        _context3.next = 14;
+                        return _models["default"].setting.findOne();
+
+                      case 14:
+                        setting = _context3.sent;
+                        _context3.next = 17;
+                        return _models["default"].group.findOne({
+                          where: {
+                            groupId: setting.discordHomeServerGuildId
+                          }
+                        });
+
+                      case 17:
+                        findGroupToPost = _context3.sent;
+                        _context3.next = 20;
                         return _models["default"].user.findAll({
                           order: [[_sequelize.Sequelize.literal('(SELECT SUM(count) FROM activeTalker where activeTalker.userId = user.id AND activeTalker.createdAt > date_sub(now(), interval 1 month))'), 'DESC']],
                           limit: 10,
+                          include: [{
+                            model: _models["default"].UserGroup,
+                            as: 'UserGroup',
+                            required: true,
+                            where: {
+                              groupId: findGroupToPost.id
+                            }
+                          }],
                           lock: t.LOCK.UPDATE,
                           transaction: t
                         });
 
-                      case 15:
+                      case 20:
                         topUsers = _context3.sent;
                         promises = topUsers.map( /*#__PURE__*/function () {
                           var _ref3 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(topUser, index) {
-                            var discordUser, totalChatActivity, monthlyChatActivity, loadedAvatar, canvas, ctx, clippedAvatar, currentRank, currentRankExp, nextRank, nextRankExp, currentExp;
+                            var discordUser, totalChatActivity, monthlyChatActivity, loadedAvatar, canvas, ctx, clippedAvatar, setting, findGroupToPost, currentRank, currentRankExp, nextRank, nextRankExp, currentExp;
                             return _regenerator["default"].wrap(function _callee$(_context) {
                               while (1) {
                                 switch (_context.prev = _context.next) {
@@ -156,16 +177,31 @@ var discordMostActive = /*#__PURE__*/function () {
                                     clippedAvatar = canvas.toBuffer(); // get rank info
 
                                     _context.next = 28;
+                                    return _models["default"].setting.findOne();
+
+                                  case 28:
+                                    setting = _context.sent;
+                                    _context.next = 31;
+                                    return _models["default"].group.findOne({
+                                      where: {
+                                        groupId: setting.discordHomeServerGuildId
+                                      }
+                                    });
+
+                                  case 31:
+                                    findGroupToPost = _context.sent;
+                                    _context.next = 34;
                                     return _models["default"].rank.findOne({
                                       where: {
-                                        expNeeded: (0, _defineProperty2["default"])({}, _sequelize.Op.lte, topUser.exp)
+                                        expNeeded: (0, _defineProperty2["default"])({}, _sequelize.Op.lte, topUser.UserGroup.exp),
+                                        groupId: findGroupToPost.id
                                       },
                                       order: [['id', 'DESC']],
                                       transaction: t,
                                       lock: t.LOCK.UPDATE
                                     });
 
-                                  case 28:
+                                  case 34:
                                     currentRank = _context.sent;
 
                                     if (currentRank) {
@@ -174,30 +210,31 @@ var discordMostActive = /*#__PURE__*/function () {
                                       currentRankExp = 0;
                                     }
 
-                                    _context.next = 32;
+                                    _context.next = 38;
                                     return _models["default"].rank.findOne({
                                       where: {
-                                        expNeeded: (0, _defineProperty2["default"])({}, _sequelize.Op.gt, topUser.exp)
+                                        expNeeded: (0, _defineProperty2["default"])({}, _sequelize.Op.gt, topUser.UserGroup.exp),
+                                        groupId: findGroupToPost.id
                                       },
                                       order: [['id', 'ASC']],
                                       transaction: t,
                                       lock: t.LOCK.UPDATE
                                     });
 
-                                  case 32:
+                                  case 38:
                                     nextRank = _context.sent;
                                     nextRankExp = nextRank && nextRank.expNeeded ? nextRank.expNeeded : currentRankExp;
-                                    currentExp = topUser.exp;
+                                    currentExp = topUser.UserGroup.exp;
                                     _context.t0 = index + 1;
                                     _context.t1 = topUser.username;
                                     _context.t2 = monthlyChatActivity && monthlyChatActivity.count ? monthlyChatActivity.count : 0;
                                     _context.t3 = totalChatActivity && totalChatActivity.count ? totalChatActivity.count : 0;
-                                    _context.t4 = topUser.exp;
+                                    _context.t4 = topUser.UserGroup.exp;
                                     _context.t5 = topUser.totalInvitedUsersCount;
-                                    _context.next = 43;
+                                    _context.next = 49;
                                     return (0, _canvas.loadImage)(clippedAvatar);
 
-                                  case 43:
+                                  case 49:
                                     _context.t6 = _context.sent;
                                     _context.t7 = currentRankExp;
                                     _context.t8 = currentExp;
@@ -219,7 +256,7 @@ var discordMostActive = /*#__PURE__*/function () {
                                       currentRankId: _context.t11
                                     });
 
-                                  case 50:
+                                  case 56:
                                   case "end":
                                     return _context.stop();
                                 }
@@ -231,19 +268,19 @@ var discordMostActive = /*#__PURE__*/function () {
                             return _ref3.apply(this, arguments);
                           };
                         }());
-                        _context3.next = 19;
+                        _context3.next = 24;
                         return Promise.all(promises);
 
-                      case 19:
+                      case 24:
                         newTopUsers = _context3.sent;
                         console.log(newTopUsers);
                         canvasAddedRanksHeight = newTopUsers.length * 300 + 36.5;
-                        _context3.next = 24;
+                        _context3.next = 29;
                         return (0, _canvas.registerFont)(_path["default"].join(__dirname, '../assets/fonts/', 'Heart_warming.otf'), {
                           family: 'HeartWarming'
                         });
 
-                      case 24:
+                      case 29:
                         canvas = (0, _canvas.createCanvas)(1040, canvasAddedRanksHeight);
                         ctx = canvas.getContext('2d');
                         expBarWidth = 600;
@@ -402,37 +439,37 @@ var discordMostActive = /*#__PURE__*/function () {
                         attachment = new _discord.MessageAttachment(canvas.toBuffer(), 'mostActive.png');
 
                         if (!(message.type && message.type === 'APPLICATION_COMMAND')) {
-                          _context3.next = 73;
+                          _context3.next = 78;
                           break;
                         }
 
                         if (!message.guildId) {
-                          _context3.next = 71;
+                          _context3.next = 76;
                           break;
                         }
 
-                        _context3.next = 68;
+                        _context3.next = 73;
                         return discordClient.channels.cache.get(message.channelId);
 
-                      case 68:
+                      case 73:
                         discordChannel = _context3.sent;
-                        _context3.next = 71;
+                        _context3.next = 76;
                         return discordChannel.send({
                           files: [attachment]
                         });
 
-                      case 71:
-                        _context3.next = 75;
+                      case 76:
+                        _context3.next = 80;
                         break;
 
-                      case 73:
-                        _context3.next = 75;
+                      case 78:
+                        _context3.next = 80;
                         return message.channel.send({
                           files: [attachment]
                         });
 
-                      case 75:
-                        _context3.next = 77;
+                      case 80:
+                        _context3.next = 82;
                         return _models["default"].activity.create({
                           type: 'mostActive_s',
                           earnerId: user.id
@@ -441,9 +478,9 @@ var discordMostActive = /*#__PURE__*/function () {
                           transaction: t
                         });
 
-                      case 77:
+                      case 82:
                         preActivity = _context3.sent;
-                        _context3.next = 80;
+                        _context3.next = 85;
                         return _models["default"].activity.findOne({
                           where: {
                             id: preActivity.id
@@ -456,11 +493,11 @@ var discordMostActive = /*#__PURE__*/function () {
                           transaction: t
                         });
 
-                      case 80:
+                      case 85:
                         finalActivity = _context3.sent;
                         activity.unshift(finalActivity);
 
-                      case 82:
+                      case 87:
                       case "end":
                         return _context3.stop();
                     }

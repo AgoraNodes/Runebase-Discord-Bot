@@ -59,11 +59,38 @@ export const discordMyRank = async (
       },
     });
 
+    const setting = await db.setting.findOne();
+    const findGroupToPost = await db.group.findOne({
+      where: {
+        groupId: setting.discordHomeServerGuildId,
+      },
+    });
+
+    const userWithUserGroup = await db.user.findOne({
+      include: [
+        {
+          model: db.UserGroup,
+          as: 'UserGroup',
+          required: true,
+          where: {
+            groupId: findGroupToPost.id,
+          },
+        },
+      ],
+      order: [
+        ['exp', 'DESC'],
+      ],
+      limit: 10,
+      lock: t.LOCK.UPDATE,
+      transaction: t,
+    });
+
     const currentRank = await db.rank.findOne({
       where: {
         expNeeded: {
-          [Op.lte]: user.exp,
+          [Op.lte]: userWithUserGroup.UserGroup.exp,
         },
+        groupId: findGroupToPost.id,
       },
       order: [
         ['id', 'DESC'],
@@ -83,6 +110,7 @@ export const discordMyRank = async (
         expNeeded: {
           [Op.gt]: user.exp,
         },
+        groupId: findGroupToPost.id,
       },
       order: [
         ['id', 'ASC'],
@@ -92,7 +120,7 @@ export const discordMyRank = async (
     });
 
     const nextRankExp = nextRank && nextRank.expNeeded ? nextRank.expNeeded : currentRankExp;
-    const currentExp = user.exp;
+    const currentExp = userWithUserGroup.UserGroup.exp;
     await registerFont(path.join(__dirname, '../assets/fonts/', 'Heart_warming.otf'), { family: 'HeartWarming' });
     const canvas = createCanvas(1000, 300);
     const ctx = canvas.getContext('2d');
