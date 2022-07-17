@@ -31,7 +31,9 @@ function AsyncFromSyncIterator(s) { function AsyncFromSyncIteratorContinuation(r
 
 var monstersApplyAttack = /*#__PURE__*/function () {
   var _ref = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(userState, // Current User State
-  saveToDatabasePromises, battleMonsterState, lvl, // Users Level
+  saveToDatabasePromises, // Save to database promises
+  battleMonsterState, // BattleMonsters Current State
+  lvl, // Users Level
   block, // users Block
   defense, // Users defense
   regularAttack, // Users Regular Attack
@@ -50,25 +52,26 @@ var monstersApplyAttack = /*#__PURE__*/function () {
             totalDamageByMonsters = 0;
             retaliationArray = []; // eslint-disable-next-line no-restricted-syntax
 
+            console.log('Processing Stage #2 - Applying Monster Attacks');
             _iteratorAbruptCompletion = false;
             _didIteratorError = false;
-            _context.prev = 4;
+            _context.prev = 5;
             _iterator = _asyncIterator(battleMonsterState);
 
-          case 6:
-            _context.next = 8;
+          case 7:
+            _context.next = 9;
             return _iterator.next();
 
-          case 8:
+          case 9:
             if (!(_iteratorAbruptCompletion = !(_step = _context.sent).done)) {
-              _context.next = 34;
+              _context.next = 36;
               break;
             }
 
             remainingMonster = _step.value;
 
             if (!(remainingMonster.currentHp > 0 && !remainingMonster.stunned)) {
-              _context.next = 31;
+              _context.next = 33;
               break;
             }
 
@@ -77,17 +80,18 @@ var monstersApplyAttack = /*#__PURE__*/function () {
             battleLogs = [];
 
             if (!(userState.hp.current > 0)) {
-              _context.next = 31;
+              _context.next = 33;
               break;
             }
 
             _pickRandomMonsterAtt = (0, _pickRandomMonsterAttack["default"])(remainingMonster), _pickRandomMonsterAtt2 = (0, _slicedToArray2["default"])(_pickRandomMonsterAtt, 1), useAttack = _pickRandomMonsterAtt2[0];
             randomMonsterAttackDamage = (0, _utils.randomIntFromInterval)(useAttack.minDmg, useAttack.maxDmg); // Get Random Monster Damage
 
-            _context.next = 19;
+            console.log('before attack test');
+            _context.next = 21;
             return (0, _isFailedAttack["default"])(userState, lvl, block, defense, regularAttack, battle, battleLogs, remainingMonster, useAttack, saveToDatabasePromises, t);
 
-          case 19:
+          case 21:
             _yield$isFailedAttack = _context.sent;
             _yield$isFailedAttack2 = (0, _slicedToArray2["default"])(_yield$isFailedAttack, 3);
             individualBattleObject = _yield$isFailedAttack2[0];
@@ -145,68 +149,74 @@ var monstersApplyAttack = /*#__PURE__*/function () {
             }
 
             stageTwoInfoArray.push(individualBattleObject);
-            _context.next = 29;
+            _context.next = 31;
             return (0, _calculateUserRetaliation["default"])(userState, remainingMonster.id);
 
-          case 29:
+          case 31:
             retaliate = _context.sent;
 
             if (retaliate && retaliate.length > 0) {
               retaliationArray.push.apply(retaliationArray, (0, _toConsumableArray2["default"])(retaliate));
             }
 
-          case 31:
+          case 33:
             _iteratorAbruptCompletion = false;
-            _context.next = 6;
-            break;
-
-          case 34:
-            _context.next = 40;
+            _context.next = 7;
             break;
 
           case 36:
-            _context.prev = 36;
-            _context.t0 = _context["catch"](4);
+            _context.next = 42;
+            break;
+
+          case 38:
+            _context.prev = 38;
+            _context.t0 = _context["catch"](5);
             _didIteratorError = true;
             _iteratorError = _context.t0;
 
-          case 40:
-            _context.prev = 40;
-            _context.prev = 41;
+          case 42:
+            _context.prev = 42;
+            _context.prev = 43;
 
             if (!(_iteratorAbruptCompletion && _iterator["return"] != null)) {
-              _context.next = 45;
+              _context.next = 47;
               break;
             }
 
-            _context.next = 45;
+            _context.next = 47;
             return _iterator["return"]();
 
-          case 45:
-            _context.prev = 45;
+          case 47:
+            _context.prev = 47;
 
             if (!_didIteratorError) {
-              _context.next = 48;
+              _context.next = 50;
               break;
             }
 
             throw _iteratorError;
 
-          case 48:
-            return _context.finish(45);
-
-          case 49:
-            return _context.finish(40);
-
           case 50:
-            return _context.abrupt("return", [totalDamageByMonsters, userState, battleMonsterState, stageTwoInfoArray, retaliationArray, saveToDatabasePromises]);
+            return _context.finish(47);
 
           case 51:
+            return _context.finish(42);
+
+          case 52:
+            return _context.abrupt("return", [totalDamageByMonsters, // Total Damage done by monster
+            userState, // The New user State
+            battleMonsterState, // The new battlemonster state
+            stageTwoInfoArray, // completed Stage Two Info Array
+            retaliationArray, // Retailiation Array, Should we retaliate in next move?
+            saveToDatabasePromises // Database insertion promises
+            ]);
+
+          case 53:
           case "end":
             return _context.stop();
         }
       }
-    }, _callee, null, [[4, 36, 40, 50], [41,, 45, 49]]);
+    }, _callee, null, [[5, 38, 42, 52], [43,, 47, 51]]);
   }));
 
   return function monstersApplyAttack(_x, _x2, _x3, _x4, _x5, _x6, _x7, _x8, _x9, _x10) {

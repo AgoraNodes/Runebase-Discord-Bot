@@ -99,6 +99,11 @@ const rateLimiterResetStats = new RateLimiterFlexible.default.RateLimiterMemory(
   duration: 30,
 });
 
+const rateLimiterChangeRealm = new RateLimiterFlexible.default.RateLimiterMemory({
+  points: 2,
+  duration: 30,
+});
+
 export const myRateLimiter = async (
   client,
   message,
@@ -194,6 +199,10 @@ export const myRateLimiter = async (
       }
       if (title.toLowerCase() === 'resetstats') {
         await rateLimiterResetStats.consume(userId, 1);
+        return false;
+      }
+      if (title.toLowerCase() === 'changerealm') {
+        await rateLimiterChangeRealm.consume(userId, 1);
         return false;
       }
 

@@ -65,6 +65,7 @@ var userApplyAttackSingle = /*#__PURE__*/function () {
 
             // TODO: Apply Damage reductions? based on attackType (useAttack.attackType)
             if (!attackFailed) {
+              console.log('Stage #1 - Attack Not Failed (User Attacking)');
               randomAttackDamage = (0, _utils.randomIntFromInterval)(useAttack.min, useAttack.max); // Random attack damage between min-max
 
               lifeStolen = (0, _utils2.lifeSteal)(randomAttackDamage, useAttack.lifeSteal); // Test Crit
@@ -74,10 +75,12 @@ var userApplyAttackSingle = /*#__PURE__*/function () {
               _calculateCritDamage2 = (0, _slicedToArray2["default"])(_calculateCritDamage, 2);
               didUserCrit = _calculateCritDamage2[0];
               randomAttackDamage = _calculateCritDamage2[1];
-              // Test Stun
+              console.log('Stage #1 - After Calculating User Crit Damage'); // Test Stun
+
               didUserStun = Math.random() < Number(useAttack.stun) / 100;
               updatedMonster.currentHp -= randomAttackDamage; // Generate Battle log
 
+              console.log('Stage #1 - Generating Battle Logs');
               log = "".concat(userState.UserGroup.user.username, " used ").concat(useAttack.name, " on ").concat(updatedMonster.monster.name, " for ").concat(randomAttackDamage, " damage").concat(didUserCrit ? ' (crit)' : '');
               saveToDatabasePromises.push(new Promise(function (resolve, reject) {
                 _models["default"].battleLog.create({
@@ -141,9 +144,10 @@ var userApplyAttackSingle = /*#__PURE__*/function () {
               receivedHeal: lifeStolen || false,
               userState: JSON.parse(JSON.stringify(userState))
             });
+            console.log('Stage #1 - Returning Values');
             return _context.abrupt("return", [stageOneInfoArray, userState, battleMonsterState, allRoundEffectsInfoArray, totalHealedByLifeSteal, saveToDatabasePromises]);
 
-          case 21:
+          case 22:
           case "end":
             return _context.stop();
         }

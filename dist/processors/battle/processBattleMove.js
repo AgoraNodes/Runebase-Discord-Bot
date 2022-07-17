@@ -340,7 +340,9 @@ var processBattleMove = /*#__PURE__*/function () {
             // Return new Battlemonster state
             allRoundEffectsInfoArray = _yield$userApplyAttac4[3];
             totalHealedByLifeSteal = _yield$userApplyAttac4[4];
-            saveToDatabasePromisesTwo = _yield$userApplyAttac4[5];
+            // Return total healed by lifeSteal
+            saveToDatabasePromisesTwo // Return Database promises to fulfill
+            = _yield$userApplyAttac4[5];
 
           case 120:
             // If there are no monsters left, tag battle as complete
@@ -350,17 +352,22 @@ var processBattleMove = /*#__PURE__*/function () {
 
             if (!isBattleMonsterAlive || isBattleMonsterAlive.length < 1) {
               isBattleComplete = true;
+              console.log('Stage #1 - Battle Completion');
             } // Stage Two
 
 
-            console.log('Stage #2 Processing'); // Process Monster Moves/Attacks
+            console.log('Stage #2 Processing');
+            console.log('Stage #2-1 Processing'); // Process Monster Moves/Attacks
 
             if (isBattleComplete) {
-              _context.next = 155;
+              _context.next = 157;
               break;
             }
 
-            _context.next = 126;
+            console.log('battle is not complete'); // TODO: ADD ABILITY FOR ENEMY TO APPLY BUFFS TO SELF OR GROUP
+            // TODO: ADD ABILITY FOR ENEMY TO APPLY DEBUFFS TO USER
+
+            _context.next = 128;
             return (0, _monstersApplyAttack["default"])(userState, // Pass the userState
             saveToDatabasePromisesTwo, // pass database promises array
             battleMonsterState, // pass battlemonster state
@@ -373,7 +380,7 @@ var processBattleMove = /*#__PURE__*/function () {
             t // database transaction
             );
 
-          case 126:
+          case 128:
             _yield$monstersApplyA = _context.sent;
             _yield$monstersApplyA2 = (0, _slicedToArray2["default"])(_yield$monstersApplyA, 6);
             totalDamageByMonsters = _yield$monstersApplyA2[0];
@@ -391,15 +398,15 @@ var processBattleMove = /*#__PURE__*/function () {
             console.log('Stage #3 Processing'); // Stage Three
 
             if (!(retaliationArray.length > 0)) {
-              _context.next = 146;
+              _context.next = 148;
               break;
             }
 
-            _context.next = 138;
+            _context.next = 140;
             return (0, _userApplyRetaliation["default"])(userState, totalHealedByLifeSteal, saveToDatabasePromisesTwo, // pass the Database promises array
             battleMonsterState, allRoundEffectsInfoArray, battle, retaliationArray, stageThreeInfoArray, kick, lvl, t);
 
-          case 138:
+          case 140:
             _yield$userApplyRetli = _context.sent;
             _yield$userApplyRetli2 = (0, _slicedToArray2["default"])(_yield$userApplyRetli, 6);
             stageThreeInfoArray = _yield$userApplyRetli2[0];
@@ -412,14 +419,14 @@ var processBattleMove = /*#__PURE__*/function () {
             totalHealedByLifeSteal = _yield$userApplyRetli2[4];
             saveToDatabasePromisesTwo = _yield$userApplyRetli2[5];
 
-          case 146:
+          case 148:
             console.log('Stage #4 Processing'); // Stage Four
             // Apply debuff damage
 
-            _context.next = 149;
+            _context.next = 151;
             return (0, _userApplyDebuffDamage["default"])(userState, battleMonsterState, saveToDatabasePromisesOne, battle, stageFourInfoArray, t);
 
-          case 149:
+          case 151:
             _yield$userApplyDebuf5 = _context.sent;
             _yield$userApplyDebuf6 = (0, _slicedToArray2["default"])(_yield$userApplyDebuf5, 4);
             stageFourInfoArray = _yield$userApplyDebuf6[0];
@@ -430,20 +437,24 @@ var processBattleMove = /*#__PURE__*/function () {
             // Return the new userState
             saveToDatabasePromisesOne = _yield$userApplyDebuf6[3];
 
-          case 155:
-            _context.next = 157;
+          case 157:
+            console.log('awaiting promises');
+            _context.next = 160;
             return Promise.all(saveToDatabasePromisesOne);
 
-          case 157:
+          case 160:
             if (isBattleComplete) {
-              _context.next = 169;
+              _context.next = 173;
               break;
             }
 
-            _context.next = 160;
+            console.log('Stage #5 - Processing'); // Stage 5
+            // Count Down buffs, debuffs / after round effects (heal?)
+
+            _context.next = 164;
             return (0, _countDownBuffsAndDebuffs["default"])(stageFiveInfoArray, userState, battleMonsterState, t);
 
-          case 160:
+          case 164:
             _yield$countDownBuffs = _context.sent;
             _yield$countDownBuffs2 = (0, _slicedToArray2["default"])(_yield$countDownBuffs, 3);
             stageFiveInfoArray = _yield$countDownBuffs2[0];
@@ -464,17 +475,20 @@ var processBattleMove = /*#__PURE__*/function () {
               isBattleComplete = true;
             }
 
-          case 169:
+          case 173:
+            // Stage 7 (Battle Complete effects) (Mana/Health REGEN)
+            console.log('Stage #7 - Processing');
+
             if (!isBattleComplete) {
-              _context.next = 179;
+              _context.next = 184;
               break;
             }
 
-            _context.next = 172;
+            _context.next = 177;
             return (0, _userApplyBattleCompleteEffects["default"])(stageSevenInfoArray, userState, battle, totalHealedByLifeSteal, saveToDatabasePromisesTwo, // pass the Database promises array
             t);
 
-          case 172:
+          case 177:
             _yield$userApplyBattl = _context.sent;
             _yield$userApplyBattl2 = (0, _slicedToArray2["default"])(_yield$userApplyBattl, 4);
             stageSevenInfoArray = _yield$userApplyBattl2[0];
@@ -498,7 +512,7 @@ var processBattleMove = /*#__PURE__*/function () {
               });
             }));
 
-          case 179:
+          case 184:
             // STAGE 8 (Unrecorded for rendering)
             // TODO: TEST IF NEW VALUE SURPASSES MAX HEALTH / MANA (Life Steal & after battle heal effects)
             newLifeValue = userCurrentCharacter.condition.life - (totalDamageByMonsters - Math.round(totalDamageByMonsters * (userState.hp.totalLifeBonus / 100))) + (totalHealedByLifeSteal - Math.round(totalHealedByLifeSteal * (userState.hp.totalLifeBonus / 100)));
@@ -545,16 +559,16 @@ var processBattleMove = /*#__PURE__*/function () {
               _iterator.f();
             }
 
-            _context.next = 185;
+            _context.next = 190;
             return Promise.all(saveToDatabasePromisesTwo);
 
-          case 185:
+          case 190:
             // Remove all the duplicates from (allRoundBuffsInfoArray, allRoundDebuffsInfoArray, allRoundEffectsInfoArray)
             allRoundBuffsInfoArray = (0, _toConsumableArray2["default"])(new Set(allRoundBuffsInfoArray));
             allRoundDebuffsInfoArray = (0, _toConsumableArray2["default"])(new Set(allRoundDebuffsInfoArray));
             allRoundEffectsInfoArray = (0, _toConsumableArray2["default"])(new Set(allRoundEffectsInfoArray)); // Fetch Updated Battle for next round -> See battle controller for handling
 
-            _context.next = 190;
+            _context.next = 195;
             return _models["default"].battle.findOne({
               where: {
                 id: battle.id
@@ -582,7 +596,7 @@ var processBattleMove = /*#__PURE__*/function () {
               transaction: t
             });
 
-          case 190:
+          case 195:
             updatedBattle = _context.sent;
             console.log(updatedBattle.BattleMonsters);
             console.log('updatedBattle.complete');
@@ -601,7 +615,7 @@ var processBattleMove = /*#__PURE__*/function () {
             return _context.abrupt("return", [userCurrentCharacter, initialUserState, newBattleState, allRoundBuffsInfoArray, allRoundDebuffsInfoArray, allRoundEffectsInfoArray, stageZeroInfoArray, stageOneInfoArray, stageTwoInfoArray, stageThreeInfoArray, stageFourInfoArray, stageFiveInfoArray, stageSixInfoArray, stageSevenInfoArray, sumExp // newBattleState,
             ]);
 
-          case 206:
+          case 211:
           case "end":
             return _context.stop();
         }

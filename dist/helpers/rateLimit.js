@@ -101,6 +101,10 @@ var rateLimiterResetStats = new RateLimiterFlexible["default"].RateLimiterMemory
   points: 2,
   duration: 30
 });
+var rateLimiterChangeRealm = new RateLimiterFlexible["default"].RateLimiterMemory({
+  points: 2,
+  duration: 30
+});
 
 var myRateLimiter = /*#__PURE__*/function () {
   var _ref = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(client, message, title) {
@@ -361,69 +365,81 @@ var myRateLimiter = /*#__PURE__*/function () {
             return _context.abrupt("return", false);
 
           case 84:
-            throw new Error("no Rate limiter could be reached");
-
-          case 87:
-            _context.prev = 87;
-            _context.t0 = _context["catch"](5);
-            console.log(_context.t0);
-            _context.prev = 90;
-            _context.next = 93;
-            return errorConsumer.consume(userId, 1);
-
-          case 93:
-            notError = _context.sent;
-
-            if (!(notError.remainingPoints > 0)) {
-              _context.next = 101;
+            if (!(title.toLowerCase() === 'changerealm')) {
+              _context.next = 88;
               break;
             }
 
+            _context.next = 87;
+            return rateLimiterChangeRealm.consume(userId, 1);
+
+          case 87:
+            return _context.abrupt("return", false);
+
+          case 88:
+            throw new Error("no Rate limiter could be reached");
+
+          case 91:
+            _context.prev = 91;
+            _context.t0 = _context["catch"](5);
+            console.log(_context.t0);
+            _context.prev = 94;
             _context.next = 97;
-            return client.channels.fetch(discordChannelId)["catch"](function (e) {
-              console.log(e);
-            });
+            return errorConsumer.consume(userId, 1);
 
           case 97:
-            discordChannel = _context.sent;
+            notError = _context.sent;
 
-            if (!discordChannel) {
-              _context.next = 101;
+            if (!(notError.remainingPoints > 0)) {
+              _context.next = 105;
               break;
             }
 
             _context.next = 101;
+            return client.channels.fetch(discordChannelId)["catch"](function (e) {
+              console.log(e);
+            });
+
+          case 101:
+            discordChannel = _context.sent;
+
+            if (!discordChannel) {
+              _context.next = 105;
+              break;
+            }
+
+            _context.next = 105;
             return discordChannel.send({
               embeds: [(0, _messages.discordLimitSpamMessage)(userId, title)]
             })["catch"](function (e) {
               console.log(e);
             });
 
-          case 101:
-            return _context.abrupt("return", true);
-
-          case 104:
-            _context.prev = 104;
-            _context.t1 = _context["catch"](90);
-            console.log(_context.t1);
+          case 105:
             return _context.abrupt("return", true);
 
           case 108:
-            _context.next = 114;
+            _context.prev = 108;
+            _context.t1 = _context["catch"](94);
+            console.log(_context.t1);
+            return _context.abrupt("return", true);
+
+          case 112:
+            _context.next = 118;
             break;
 
-          case 110:
-            _context.prev = 110;
+          case 114:
+            _context.prev = 114;
             _context.t2 = _context["catch"](0);
             console.log(_context.t2);
             return _context.abrupt("return", true);
 
-          case 114:
+          case 118:
           case "end":
             return _context.stop();
         }
       }
-    }, _callee, null, [[0, 110], [5, 87], [90, 104]]);
+    }, _callee, null, [[0, 114], [5, 91], [94, 108]]);
   }));
 
   return function myRateLimiter(_x, _x2, _x3) {

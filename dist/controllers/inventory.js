@@ -469,7 +469,7 @@ var discordShowInventory = /*#__PURE__*/function () {
             collector = embedMessage.createMessageComponentCollector({
               filter: function filter(_ref8) {
                 var discordUser = _ref8.user;
-                return discordUser.id === userCurrentCharacter.user.user_id;
+                return discordUser.id === userCurrentCharacter.UserGroup.user.user_id;
               }
             });
             currentIndex = 0;

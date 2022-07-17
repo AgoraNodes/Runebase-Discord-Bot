@@ -39,6 +39,8 @@ var _MainHand = require("./equip/MainHand");
 
 var _Rings = require("./equip/Rings");
 
+var _character = require("../character/character");
+
 var equipItem = /*#__PURE__*/function () {
   var _ref = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee4(userCurrentCharacter, itemId, discordChannel, io, queue) {
     var activity, cannotEquip, cannotEquipReason, findItemToEquip, myUpdatedUser;
@@ -65,20 +67,38 @@ var equipItem = /*#__PURE__*/function () {
                             while (1) {
                               switch (_context.prev = _context.next) {
                                 case 0:
-                                  _context.next = 2;
-                                  return _models["default"].UserClass.findOne({
+                                  console.log('eq 1'); // const findUserCharacter = await fetchUserCurrentCharacter(
+                                  //   userCurrentCharacter.UserGroup.user.user_id, // user discord id
+                                  //   false, // Need inventory?
+                                  //   t,
+                                  // );
+
+                                  _context.next = 3;
+                                  return _models["default"].UserGroupClass.findOne({
                                     where: {
-                                      id: userCurrentCharacter.id
+                                      id: userCurrentCharacter.id // '$UserGroup.group.id$': userCurrentCharacter.currentRealmId,
+
                                     },
                                     include: [{
-                                      model: _models["default"].user,
-                                      as: 'user',
+                                      model: _models["default"].UserGroup,
+                                      as: 'UserGroup',
                                       include: [{
-                                        model: _models["default"]["class"],
-                                        as: 'currentClass'
+                                        model: _models["default"].UserGroupRank,
+                                        as: 'UserGroupRank',
+                                        include: [{
+                                          model: _models["default"].rank,
+                                          as: 'rank'
+                                        }]
                                       }, {
-                                        model: _models["default"].UserRank,
-                                        as: 'UserRank'
+                                        model: _models["default"].group,
+                                        as: 'group'
+                                      }, {
+                                        model: _models["default"].user,
+                                        as: 'user',
+                                        include: [{
+                                          model: _models["default"]["class"],
+                                          as: 'currentClass'
+                                        }]
                                       }]
                                     }, {
                                       model: _models["default"].stats,
@@ -146,17 +166,19 @@ var equipItem = /*#__PURE__*/function () {
                                     transaction: t
                                   });
 
-                                case 2:
+                                case 3:
                                   findUserCharacter = _context.sent;
-                                  _context.next = 5;
+                                  console.log('eq 2');
+                                  _context.next = 7;
                                   return (0, _calcStrengthDexforReq.calcStrengthDexforReq)(findUserCharacter);
 
-                                case 5:
+                                case 7:
                                   _yield$calcStrengthDe = _context.sent;
                                   _yield$calcStrengthDe2 = (0, _slicedToArray2["default"])(_yield$calcStrengthDe, 2);
                                   userStrength = _yield$calcStrengthDe2[0];
                                   userDexterity = _yield$calcStrengthDe2[1];
-                                  _context.next = 11;
+                                  console.log('eq 3');
+                                  _context.next = 14;
                                   return _models["default"].item.findOne({
                                     where: {
                                       id: itemId,
@@ -181,11 +203,12 @@ var equipItem = /*#__PURE__*/function () {
                                     transaction: t
                                   });
 
-                                case 11:
+                                case 14:
                                   findItemToEquip = _context.sent;
+                                  console.log('eq 4');
 
                                   if (!(findItemToEquip.itemBase.strengthReq && userStrength < findItemToEquip.itemBase.strengthReq)) {
-                                    _context.next = 16;
+                                    _context.next = 20;
                                     break;
                                   }
 
@@ -193,9 +216,9 @@ var equipItem = /*#__PURE__*/function () {
                                   cannotEquip = true;
                                   return _context.abrupt("return");
 
-                                case 16:
+                                case 20:
                                   if (!(findItemToEquip.itemBase.dexterityReq && userDexterity < findItemToEquip.itemBase.dexterityReq)) {
-                                    _context.next = 20;
+                                    _context.next = 24;
                                     break;
                                   }
 
@@ -203,9 +226,9 @@ var equipItem = /*#__PURE__*/function () {
                                   cannotEquip = true;
                                   return _context.abrupt("return");
 
-                                case 20:
+                                case 24:
                                   if (!(findItemToEquip.levelReq && findUserCharacter.user.UserRank.id < findItemToEquip.levelReq)) {
-                                    _context.next = 24;
+                                    _context.next = 28;
                                     break;
                                   }
 
@@ -213,11 +236,11 @@ var equipItem = /*#__PURE__*/function () {
                                   cannotEquip = true;
                                   return _context.abrupt("return");
 
-                                case 24:
-                                  console.log(userCurrentCharacter.user.currentClass.name);
+                                case 28:
+                                  console.log(userCurrentCharacter.UserGroup.user.currentClass.name);
 
-                                  if (!(findItemToEquip.itemBase.itemFamily.itemType.name === 'Sorceress Orbs' && userCurrentCharacter.user.currentClass.name !== 'Sorceress' || findItemToEquip.itemBase.itemFamily.itemType.name === 'Paladin Shields' && userCurrentCharacter.user.currentClass.name !== 'Paladin' || findItemToEquip.itemBase.itemFamily.itemType.name === 'Necromancer Shrunken Heads' && userCurrentCharacter.user.currentClass.name !== 'Necromancer' || findItemToEquip.itemBase.itemFamily.itemType.name === 'Amazon Weapons' && userCurrentCharacter.user.currentClass.name !== 'Amazon' || findItemToEquip.itemBase.itemFamily.itemType.name === 'Assasin Katars' && userCurrentCharacter.user.currentClass.name !== 'Assasin' || findItemToEquip.itemBase.itemFamily.itemType.name === 'Druid Pelts' && userCurrentCharacter.user.currentClass.name !== 'Druid' || findItemToEquip.itemBase.itemFamily.itemType.name === 'Warrior Helms' && userCurrentCharacter.user.currentClass.name !== 'Warrior')) {
-                                    _context.next = 29;
+                                  if (!(findItemToEquip.itemBase.itemFamily.itemType.name === 'Sorceress Orbs' && userCurrentCharacter.UserGroup.user.currentClass.name !== 'Sorceress' || findItemToEquip.itemBase.itemFamily.itemType.name === 'Paladin Shields' && userCurrentCharacter.UserGroup.user.currentClass.name !== 'Paladin' || findItemToEquip.itemBase.itemFamily.itemType.name === 'Necromancer Shrunken Heads' && userCurrentCharacter.UserGroup.user.currentClass.name !== 'Necromancer' || findItemToEquip.itemBase.itemFamily.itemType.name === 'Amazon Weapons' && userCurrentCharacter.UserGroup.user.currentClass.name !== 'Amazon' || findItemToEquip.itemBase.itemFamily.itemType.name === 'Assasin Katars' && userCurrentCharacter.UserGroup.user.currentClass.name !== 'Assasin' || findItemToEquip.itemBase.itemFamily.itemType.name === 'Druid Pelts' && userCurrentCharacter.UserGroup.user.currentClass.name !== 'Druid' || findItemToEquip.itemBase.itemFamily.itemType.name === 'Warrior Helms' && userCurrentCharacter.UserGroup.user.currentClass.name !== 'Warrior')) {
+                                    _context.next = 33;
                                     break;
                                   }
 
@@ -225,100 +248,100 @@ var equipItem = /*#__PURE__*/function () {
                                   cannotEquip = true;
                                   return _context.abrupt("return");
 
-                                case 29:
+                                case 33:
                                   if (!(findItemToEquip.itemBase.itemFamily.itemType.name === 'Helms' || findItemToEquip.itemBase.itemFamily.itemType.name === 'Circlets' || findItemToEquip.itemBase.itemFamily.itemType.name === 'Druid Pelts' || findItemToEquip.itemBase.itemFamily.itemType.name === 'Warrior Helms')) {
-                                    _context.next = 32;
+                                    _context.next = 36;
                                     break;
                                   }
 
-                                  _context.next = 32;
+                                  _context.next = 36;
                                   return (0, _Helm.equipHelm)(userCurrentCharacter, findUserCharacter.equipment, findItemToEquip, t);
 
-                                case 32:
+                                case 36:
                                   if (!(findItemToEquip.itemBase.itemFamily.itemType.name === 'Belts')) {
-                                    _context.next = 35;
+                                    _context.next = 39;
                                     break;
                                   }
 
-                                  _context.next = 35;
+                                  _context.next = 39;
                                   return (0, _Belt.equipBelt)(userCurrentCharacter, findUserCharacter.equipment, findItemToEquip, t);
 
-                                case 35:
+                                case 39:
                                   if (!(findItemToEquip.itemBase.itemFamily.itemType.name === 'Gloves')) {
-                                    _context.next = 38;
+                                    _context.next = 42;
                                     break;
                                   }
 
-                                  _context.next = 38;
+                                  _context.next = 42;
                                   return (0, _Gloves.equipGloves)(userCurrentCharacter, findUserCharacter.equipment, findItemToEquip, t);
 
-                                case 38:
+                                case 42:
                                   if (!(findItemToEquip.itemBase.itemFamily.itemType.name === 'Boots')) {
-                                    _context.next = 41;
+                                    _context.next = 45;
                                     break;
                                   }
 
-                                  _context.next = 41;
+                                  _context.next = 45;
                                   return (0, _Boots.equipBoots)(userCurrentCharacter, findUserCharacter.equipment, findItemToEquip, t);
 
-                                case 41:
+                                case 45:
                                   if (!(findItemToEquip.itemBase.itemFamily.itemType.name === 'Rings')) {
-                                    _context.next = 44;
+                                    _context.next = 48;
                                     break;
                                   }
 
-                                  _context.next = 44;
+                                  _context.next = 48;
                                   return (0, _Rings.equipRing)(userCurrentCharacter, findUserCharacter.equipment, findItemToEquip, t);
 
-                                case 44:
+                                case 48:
                                   if (!(findItemToEquip.itemBase.itemFamily.itemType.name === 'Amulets')) {
-                                    _context.next = 47;
+                                    _context.next = 51;
                                     break;
                                   }
 
-                                  _context.next = 47;
+                                  _context.next = 51;
                                   return (0, _Amulet.equipAmulet)(userCurrentCharacter, findUserCharacter.equipment, findItemToEquip, t);
 
-                                case 47:
+                                case 51:
                                   if (!(findItemToEquip.itemBase.itemFamily.itemType.name === 'Armors')) {
-                                    _context.next = 50;
+                                    _context.next = 54;
                                     break;
                                   }
 
-                                  _context.next = 50;
+                                  _context.next = 54;
                                   return (0, _Armor.equipArmor)(userCurrentCharacter, findUserCharacter.equipment, findItemToEquip, t);
 
-                                case 50:
+                                case 54:
                                   if (!(findItemToEquip.itemBase.itemFamily.itemType.name === 'Shields' || findItemToEquip.itemBase.itemFamily.itemType.name === 'Sorceress Orbs' || findItemToEquip.itemBase.itemFamily.itemType.name === 'Paladin Shields' || findItemToEquip.itemBase.itemFamily.itemType.name === 'Necromancer Shrunken Heads')) {
-                                    _context.next = 53;
+                                    _context.next = 57;
                                     break;
                                   }
 
-                                  _context.next = 53;
+                                  _context.next = 57;
                                   return (0, _OffHand.equipOffHand)(userCurrentCharacter, findUserCharacter.equipment, findItemToEquip, t);
 
-                                case 53:
+                                case 57:
                                   if (!(findItemToEquip.itemBase.itemFamily.itemType.name === 'Axes' || findItemToEquip.itemBase.itemFamily.itemType.name === 'Bows' || findItemToEquip.itemBase.itemFamily.itemType.name === 'Crossbows' || findItemToEquip.itemBase.itemFamily.itemType.name === 'Daggers' || findItemToEquip.itemBase.itemFamily.itemType.name === 'Javelins' || findItemToEquip.itemBase.itemFamily.itemType.name === 'Maces' || findItemToEquip.itemBase.itemFamily.itemType.name === 'Polearms' || findItemToEquip.itemBase.itemFamily.itemType.name === 'Scepters' || findItemToEquip.itemBase.itemFamily.itemType.name === 'Spears' || findItemToEquip.itemBase.itemFamily.itemType.name === 'Staves' || findItemToEquip.itemBase.itemFamily.itemType.name === 'Swords' || findItemToEquip.itemBase.itemFamily.itemType.name === 'Throwing' || findItemToEquip.itemBase.itemFamily.itemType.name === 'Wands' || findItemToEquip.itemBase.itemFamily.itemType.name === 'Assasin Katars' || findItemToEquip.itemBase.itemFamily.itemType.name === 'Amazon Weapons')) {
-                                    _context.next = 56;
+                                    _context.next = 60;
                                     break;
                                   }
 
-                                  _context.next = 56;
+                                  _context.next = 60;
                                   return (0, _MainHand.equipMainHand)(userCurrentCharacter, findUserCharacter.equipment, findItemToEquip, t);
 
-                                case 56:
-                                  _context.next = 58;
+                                case 60:
+                                  _context.next = 62;
                                   return _models["default"].activity.create({
                                     type: 'equipItem_s',
-                                    earnerId: userCurrentCharacter.user.id
+                                    earnerId: userCurrentCharacter.UserGroup.user.id
                                   }, {
                                     lock: t.LOCK.UPDATE,
                                     transaction: t
                                   });
 
-                                case 58:
+                                case 62:
                                   preActivity = _context.sent;
-                                  _context.next = 61;
+                                  _context.next = 65;
                                   return _models["default"].activity.findOne({
                                     where: {
                                       id: preActivity.id
@@ -331,11 +354,11 @@ var equipItem = /*#__PURE__*/function () {
                                     transaction: t
                                   });
 
-                                case 61:
+                                case 65:
                                   finalActivity = _context.sent;
                                   activity.unshift(finalActivity);
 
-                                case 63:
+                                case 67:
                                 case "end":
                                   return _context.stop();
                               }
@@ -352,30 +375,31 @@ var equipItem = /*#__PURE__*/function () {
                             while (1) {
                               switch (_context2.prev = _context2.next) {
                                 case 0:
+                                  console.log('error during equiping transaction');
                                   console.log(err);
-                                  _context2.prev = 1;
-                                  _context2.next = 4;
+                                  _context2.prev = 2;
+                                  _context2.next = 5;
                                   return _models["default"].error.create({
                                     type: 'equipItem',
                                     error: "".concat(err)
                                   });
 
-                                case 4:
-                                  _context2.next = 9;
+                                case 5:
+                                  _context2.next = 10;
                                   break;
 
-                                case 6:
-                                  _context2.prev = 6;
-                                  _context2.t0 = _context2["catch"](1);
+                                case 7:
+                                  _context2.prev = 7;
+                                  _context2.t0 = _context2["catch"](2);
 
                                   _logger["default"].error("Error Discord: ".concat(_context2.t0));
 
-                                case 9:
+                                case 10:
                                 case "end":
                                   return _context2.stop();
                               }
                             }
-                          }, _callee2, null, [[1, 6]]);
+                          }, _callee2, null, [[2, 7]]);
                         }));
 
                         return function (_x7) {
@@ -400,22 +424,32 @@ var equipItem = /*#__PURE__*/function () {
 
           case 4:
             _context4.next = 6;
-            return _models["default"].UserClass.findOne({
+            return _models["default"].UserGroupClass.findOne({
               where: {
-                classId: userCurrentCharacter.user.currentClassId
+                id: userCurrentCharacter.id // classId: userCurrentCharacter.UserGroup.user.currentClassId,
+                // '$UserGroup.group.id$': userCurrentCharacter.currentRealmId,
+
               },
               include: [{
-                model: _models["default"].user,
-                as: 'user',
-                where: {
-                  id: "".concat(userCurrentCharacter.user.id)
-                },
+                model: _models["default"].UserGroup,
+                as: 'UserGroup',
                 include: [{
-                  model: _models["default"]["class"],
-                  as: 'currentClass'
+                  model: _models["default"].UserGroupRank,
+                  as: 'UserGroupRank',
+                  include: [{
+                    model: _models["default"].rank,
+                    as: 'rank'
+                  }]
                 }, {
-                  model: _models["default"].rank,
-                  as: 'ranks'
+                  model: _models["default"].group,
+                  as: 'group'
+                }, {
+                  model: _models["default"].user,
+                  as: 'user',
+                  include: [{
+                    model: _models["default"]["class"],
+                    as: 'currentClass'
+                  }]
                 }]
               }, {
                 model: _models["default"].stats,
@@ -456,9 +490,10 @@ var equipItem = /*#__PURE__*/function () {
 
           case 6:
             myUpdatedUser = _context4.sent;
+            console.log('done equiping');
             return _context4.abrupt("return", [myUpdatedUser, findItemToEquip, cannotEquip, cannotEquipReason]);
 
-          case 8:
+          case 9:
           case "end":
             return _context4.stop();
         }

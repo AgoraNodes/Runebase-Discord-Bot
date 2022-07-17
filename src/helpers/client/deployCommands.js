@@ -13,6 +13,7 @@ const commands = [
   new SlashCommandBuilder().setName('skills').setDescription('Skill Management'),
   new SlashCommandBuilder().setName('resetstats').setDescription('Reset your Attributes/Stats'),
   new SlashCommandBuilder().setName('resetskills').setDescription('Reset your skills'),
+  new SlashCommandBuilder().setName('changerealm').setDescription('Change your Realm'),
   new SlashCommandBuilder().setName('inventory').setDescription('Inventory Management'),
   new SlashCommandBuilder().setName('equipment').setDescription('Equipment Management'),
   new SlashCommandBuilder().setName('battle').setDescription('Battle a monster'),

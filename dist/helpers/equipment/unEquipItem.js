@@ -64,20 +64,32 @@ var unEquipItem = /*#__PURE__*/function () {
                             while (1) {
                               switch (_context.prev = _context.next) {
                                 case 0:
-                                  _context.next = 2;
-                                  return _models["default"].UserClass.findOne({
+                                  console.log('uneq 1');
+                                  _context.next = 3;
+                                  return _models["default"].UserGroupClass.findOne({
                                     where: {
                                       id: userCurrentCharacter.id
                                     },
                                     include: [{
-                                      model: _models["default"].user,
-                                      as: 'user',
+                                      model: _models["default"].UserGroup,
+                                      as: 'UserGroup',
                                       include: [{
-                                        model: _models["default"]["class"],
-                                        as: 'currentClass'
+                                        model: _models["default"].UserGroupRank,
+                                        as: 'UserGroupRank',
+                                        include: [{
+                                          model: _models["default"].rank,
+                                          as: 'rank'
+                                        }]
                                       }, {
-                                        model: _models["default"].UserRank,
-                                        as: 'UserRank'
+                                        model: _models["default"].group,
+                                        as: 'group'
+                                      }, {
+                                        model: _models["default"].user,
+                                        as: 'user',
+                                        include: [{
+                                          model: _models["default"]["class"],
+                                          as: 'currentClass'
+                                        }]
                                       }]
                                     }, {
                                       model: _models["default"].stats,
@@ -121,9 +133,10 @@ var unEquipItem = /*#__PURE__*/function () {
                                     transaction: t
                                   });
 
-                                case 2:
+                                case 3:
                                   findUserCharacter = _context.sent;
-                                  _context.next = 5;
+                                  console.log('uneq 2');
+                                  _context.next = 7;
                                   return _models["default"].item.findOne({
                                     where: {
                                       id: itemId
@@ -147,102 +160,104 @@ var unEquipItem = /*#__PURE__*/function () {
                                     transaction: t
                                   });
 
-                                case 5:
+                                case 7:
                                   findItemToUnEquip = _context.sent;
+                                  console.log('uneq 3');
 
                                   if (!(findItemToUnEquip.itemBase.itemFamily.itemType.name === 'Helms' || findItemToUnEquip.itemBase.itemFamily.itemType.name === 'Circlets' || findItemToUnEquip.itemBase.itemFamily.itemType.name === 'Druid Pelts' || findItemToUnEquip.itemBase.itemFamily.itemType.name === 'Warrior Helms')) {
-                                    _context.next = 9;
-                                    break;
-                                  }
-
-                                  _context.next = 9;
-                                  return (0, _Helm.unEquipHelm)(userCurrentCharacter, t);
-
-                                case 9:
-                                  if (!(findItemToUnEquip.itemBase.itemFamily.itemType.name === 'Belts')) {
                                     _context.next = 12;
                                     break;
                                   }
 
                                   _context.next = 12;
-                                  return (0, _Belt.unEquipBelt)(userCurrentCharacter, t);
+                                  return (0, _Helm.unEquipHelm)(userCurrentCharacter, t);
 
                                 case 12:
-                                  if (!(findItemToUnEquip.itemBase.itemFamily.itemType.name === 'Gloves')) {
+                                  if (!(findItemToUnEquip.itemBase.itemFamily.itemType.name === 'Belts')) {
                                     _context.next = 15;
                                     break;
                                   }
 
                                   _context.next = 15;
-                                  return (0, _Gloves.unEquipGloves)(userCurrentCharacter, t);
+                                  return (0, _Belt.unEquipBelt)(userCurrentCharacter, t);
 
                                 case 15:
-                                  if (!(findItemToUnEquip.itemBase.itemFamily.itemType.name === 'Boots')) {
+                                  if (!(findItemToUnEquip.itemBase.itemFamily.itemType.name === 'Gloves')) {
                                     _context.next = 18;
                                     break;
                                   }
 
                                   _context.next = 18;
-                                  return (0, _Boots.unEquipBoots)(userCurrentCharacter, t);
+                                  return (0, _Gloves.unEquipGloves)(userCurrentCharacter, t);
 
                                 case 18:
-                                  if (!(findItemToUnEquip.itemBase.itemFamily.itemType.name === 'Rings')) {
+                                  if (!(findItemToUnEquip.itemBase.itemFamily.itemType.name === 'Boots')) {
                                     _context.next = 21;
                                     break;
                                   }
 
                                   _context.next = 21;
-                                  return (0, _Rings.unEquipRing)(userCurrentCharacter, findItemToUnEquip, t);
+                                  return (0, _Boots.unEquipBoots)(userCurrentCharacter, t);
 
                                 case 21:
-                                  if (!(findItemToUnEquip.itemBase.itemFamily.itemType.name === 'Amulets')) {
+                                  if (!(findItemToUnEquip.itemBase.itemFamily.itemType.name === 'Rings')) {
                                     _context.next = 24;
                                     break;
                                   }
 
                                   _context.next = 24;
-                                  return (0, _Amulet.unEquipAmulet)(userCurrentCharacter, t);
+                                  return (0, _Rings.unEquipRing)(userCurrentCharacter, findItemToUnEquip, t);
 
                                 case 24:
-                                  if (!(findItemToUnEquip.itemBase.itemFamily.itemType.name === 'Armors')) {
+                                  if (!(findItemToUnEquip.itemBase.itemFamily.itemType.name === 'Amulets')) {
                                     _context.next = 27;
                                     break;
                                   }
 
                                   _context.next = 27;
-                                  return (0, _Armor.unEquipArmor)(userCurrentCharacter, t);
+                                  return (0, _Amulet.unEquipAmulet)(userCurrentCharacter, t);
 
                                 case 27:
-                                  if (!(findItemToUnEquip.itemBase.itemFamily.itemType.name === 'Shields' || findItemToUnEquip.itemBase.itemFamily.itemType.name === 'Sorceress Orbs' || findItemToUnEquip.itemBase.itemFamily.itemType.name === 'Paladin Shields' || findItemToUnEquip.itemBase.itemFamily.itemType.name === 'Necromancer Shrunken Heads')) {
+                                  if (!(findItemToUnEquip.itemBase.itemFamily.itemType.name === 'Armors')) {
                                     _context.next = 30;
                                     break;
                                   }
 
                                   _context.next = 30;
-                                  return (0, _OffHand.unEquipOffHand)(userCurrentCharacter, t);
+                                  return (0, _Armor.unEquipArmor)(userCurrentCharacter, t);
 
                                 case 30:
-                                  if (!(findItemToUnEquip.itemBase.itemFamily.itemType.name === 'Axes' || findItemToUnEquip.itemBase.itemFamily.itemType.name === 'Bows' || findItemToUnEquip.itemBase.itemFamily.itemType.name === 'Crossbows' || findItemToUnEquip.itemBase.itemFamily.itemType.name === 'Daggers' || findItemToUnEquip.itemBase.itemFamily.itemType.name === 'Javelins' || findItemToUnEquip.itemBase.itemFamily.itemType.name === 'Maces' || findItemToUnEquip.itemBase.itemFamily.itemType.name === 'Polearms' || findItemToUnEquip.itemBase.itemFamily.itemType.name === 'Scepters' || findItemToUnEquip.itemBase.itemFamily.itemType.name === 'Spears' || findItemToUnEquip.itemBase.itemFamily.itemType.name === 'Staves' || findItemToUnEquip.itemBase.itemFamily.itemType.name === 'Swords' || findItemToUnEquip.itemBase.itemFamily.itemType.name === 'Throwing' || findItemToUnEquip.itemBase.itemFamily.itemType.name === 'Wands' || findItemToUnEquip.itemBase.itemFamily.itemType.name === 'Assasin Katars' || findItemToUnEquip.itemBase.itemFamily.itemType.name === 'Amazon Weapons')) {
+                                  if (!(findItemToUnEquip.itemBase.itemFamily.itemType.name === 'Shields' || findItemToUnEquip.itemBase.itemFamily.itemType.name === 'Sorceress Orbs' || findItemToUnEquip.itemBase.itemFamily.itemType.name === 'Paladin Shields' || findItemToUnEquip.itemBase.itemFamily.itemType.name === 'Necromancer Shrunken Heads')) {
                                     _context.next = 33;
                                     break;
                                   }
 
                                   _context.next = 33;
-                                  return (0, _MainHand.unEquipMainHand)(userCurrentCharacter, t);
+                                  return (0, _OffHand.unEquipOffHand)(userCurrentCharacter, t);
 
                                 case 33:
-                                  _context.next = 35;
+                                  if (!(findItemToUnEquip.itemBase.itemFamily.itemType.name === 'Axes' || findItemToUnEquip.itemBase.itemFamily.itemType.name === 'Bows' || findItemToUnEquip.itemBase.itemFamily.itemType.name === 'Crossbows' || findItemToUnEquip.itemBase.itemFamily.itemType.name === 'Daggers' || findItemToUnEquip.itemBase.itemFamily.itemType.name === 'Javelins' || findItemToUnEquip.itemBase.itemFamily.itemType.name === 'Maces' || findItemToUnEquip.itemBase.itemFamily.itemType.name === 'Polearms' || findItemToUnEquip.itemBase.itemFamily.itemType.name === 'Scepters' || findItemToUnEquip.itemBase.itemFamily.itemType.name === 'Spears' || findItemToUnEquip.itemBase.itemFamily.itemType.name === 'Staves' || findItemToUnEquip.itemBase.itemFamily.itemType.name === 'Swords' || findItemToUnEquip.itemBase.itemFamily.itemType.name === 'Throwing' || findItemToUnEquip.itemBase.itemFamily.itemType.name === 'Wands' || findItemToUnEquip.itemBase.itemFamily.itemType.name === 'Assasin Katars' || findItemToUnEquip.itemBase.itemFamily.itemType.name === 'Amazon Weapons')) {
+                                    _context.next = 36;
+                                    break;
+                                  }
+
+                                  _context.next = 36;
+                                  return (0, _MainHand.unEquipMainHand)(userCurrentCharacter, t);
+
+                                case 36:
+                                  console.log('uneq 4');
+                                  _context.next = 39;
                                   return _models["default"].activity.create({
                                     type: 'equipItem_s',
-                                    earnerId: userCurrentCharacter.user.id
+                                    earnerId: userCurrentCharacter.UserGroup.user.id
                                   }, {
                                     lock: t.LOCK.UPDATE,
                                     transaction: t
                                   });
 
-                                case 35:
+                                case 39:
                                   preActivity = _context.sent;
-                                  _context.next = 38;
+                                  _context.next = 42;
                                   return _models["default"].activity.findOne({
                                     where: {
                                       id: preActivity.id
@@ -255,11 +270,11 @@ var unEquipItem = /*#__PURE__*/function () {
                                     transaction: t
                                   });
 
-                                case 38:
+                                case 42:
                                   finalActivity = _context.sent;
                                   activity.unshift(finalActivity);
 
-                                case 40:
+                                case 44:
                                 case "end":
                                   return _context.stop();
                               }
@@ -324,7 +339,7 @@ var unEquipItem = /*#__PURE__*/function () {
 
           case 4:
             _context4.next = 6;
-            return (0, _character.fetchUserCurrentCharacter)(userCurrentCharacter.user.user_id, // user discord id
+            return (0, _character.fetchUserCurrentCharacter)(userCurrentCharacter.UserGroup.user.user_id, // user discord id
             true // Need inventory?
             );
 

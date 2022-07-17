@@ -31,16 +31,6 @@ var _generateLoot = require("../helpers/items/generateLoot");
 
 var _generateStartingDagger = require("../helpers/items/generateStartingDagger");
 
-var _generateRandomMagicItem = require("../helpers/items/generateRandomMagicItem");
-
-var _generateRandomNormalItem = require("../helpers/items/generateRandomNormalItem");
-
-var _generateRandomLowQualityItem = require("../helpers/items/generateRandomLowQualityItem");
-
-var _generateRandomSuperiorItem = require("../helpers/items/generateRandomSuperiorItem");
-
-var _generateModifierStringArray = require("../helpers/items/generateModifierStringArray");
-
 var _item = require("../render/item");
 
 var _character = require("../helpers/character/character");
@@ -109,8 +99,8 @@ var generateLootImage = /*#__PURE__*/function () {
               ctx.strokeText("Nobody Looted", backgroundItemImage.width / 2, backgroundItemImage.height + 10, backgroundItemImage.width);
               ctx.fillText("Nobody Looted", backgroundItemImage.width / 2, backgroundItemImage.height + 10, backgroundItemImage.width);
             } else if (lootItem.inventoryId) {
-              ctx.strokeText("Looted by ".concat(lootItem.inventory.UserClass.user.username), backgroundItemImage.width / 2, backgroundItemImage.height + 10, backgroundItemImage.width);
-              ctx.fillText("Looted by ".concat(lootItem.inventory.UserClass.user.username), backgroundItemImage.width / 2, backgroundItemImage.height + 10, backgroundItemImage.width);
+              ctx.strokeText("Looted by ".concat(lootItem.inventory.UserGroupClass.UserGroup.user.username), backgroundItemImage.width / 2, backgroundItemImage.height + 10, backgroundItemImage.width);
+              ctx.fillText("Looted by ".concat(lootItem.inventory.UserGroupClass.UserGroup.user.username), backgroundItemImage.width / 2, backgroundItemImage.height + 10, backgroundItemImage.width);
             } else if (!lootItem.inventoryId) {
               ctx.strokeText("".concat(!ended ? "Time remaining ".concat(days > 0 ? "".concat(days, " days") : '', "  ").concat(hours > 0 ? "".concat(hours, " hours") : '', " ").concat(minutes > 0 ? "".concat(minutes, " minutes") : '', " ").concat(seconds > 0 ? "".concat(seconds, " seconds") : '') : "Ended"), backgroundItemImage.width / 2, backgroundItemImage.height + 10, backgroundItemImage.width);
               ctx.fillText("".concat(!ended ? "Time remaining ".concat(days > 0 ? "".concat(days, " days") : '', "  ").concat(hours > 0 ? "".concat(hours, " hours") : '', " ").concat(minutes > 0 ? "".concat(minutes, " minutes") : '', " ").concat(seconds > 0 ? "".concat(seconds, " seconds") : '') : "Ended"), backgroundItemImage.width / 2, backgroundItemImage.height + 10, backgroundItemImage.width);
@@ -242,11 +232,15 @@ var listenLoot = /*#__PURE__*/function () {
                                                   model: _models["default"].inventory,
                                                   as: 'inventory',
                                                   include: [{
-                                                    model: _models["default"].UserClass,
-                                                    as: 'UserClass',
+                                                    model: _models["default"].UserGroupClass,
+                                                    as: 'UserGroupClass',
                                                     include: [{
-                                                      model: _models["default"].user,
-                                                      as: 'user'
+                                                      model: _models["default"].UserGroup,
+                                                      as: 'UserGroup',
+                                                      include: [{
+                                                        model: _models["default"].user,
+                                                        as: 'user'
+                                                      }]
                                                     }]
                                                   }]
                                                 }, {
@@ -571,19 +565,24 @@ var discordStartDagger = /*#__PURE__*/function () {
                         userCurrentCharacter = _context13.sent;
 
                         if (userCurrentCharacter) {
-                          _context13.next = 12;
+                          _context13.next = 13;
                           break;
                         }
 
-                        console.log('user has not selected a class yet'); // Add notice message here to warn user to select a class
-
-                        return _context13.abrupt("return");
+                        _context13.next = 12;
+                        return message.reply({
+                          content: 'You have not selected a class yet\n`!runebase pickclass`\n`/pickclass`',
+                          ephemeral: true
+                        });
 
                       case 12:
-                        _context13.next = 14;
+                        return _context13.abrupt("return");
+
+                      case 13:
+                        _context13.next = 15;
                         return (0, _generateStartingDagger.generateRandomStartDagger)(1);
 
-                      case 14:
+                      case 15:
                         newItem = _context13.sent;
 
                         // const itemImage = await renderItemImage(newItem);
@@ -614,36 +613,36 @@ var discordStartDagger = /*#__PURE__*/function () {
                         }();
 
                         _context13.t0 = Date;
-                        _context13.next = 19;
+                        _context13.next = 20;
                         return new Date().getTime();
 
-                      case 19:
+                      case 20:
                         _context13.t1 = _context13.sent;
                         _context13.t2 = _context13.t1 + 120000;
-                        _context13.next = 23;
+                        _context13.next = 24;
                         return new _context13.t0(_context13.t2);
 
-                      case 23:
+                      case 24:
                         countDownDate = _context13.sent;
-                        _context13.next = 26;
+                        _context13.next = 27;
                         return new Date().getTime();
 
-                      case 26:
+                      case 27:
                         now = _context13.sent;
                         distance = countDownDate - now;
-                        _context13.next = 30;
+                        _context13.next = 31;
                         return generateLootImage(newItem, distance);
 
-                      case 30:
+                      case 31:
                         lootImage = _context13.sent;
                         attachment = new _discord.MessageAttachment(lootImage, 'lootItem.png');
                         _context13.t3 = discordChannel;
                         _context13.t4 = [attachment];
                         _context13.t5 = _discord.MessageActionRow;
-                        _context13.next = 37;
+                        _context13.next = 38;
                         return generateLootButton();
 
-                      case 37:
+                      case 38:
                         _context13.t6 = _context13.sent;
                         _context13.t7 = [_context13.t6];
                         _context13.t8 = {
@@ -655,10 +654,10 @@ var discordStartDagger = /*#__PURE__*/function () {
                           files: _context13.t4,
                           components: _context13.t10
                         };
-                        _context13.next = 45;
+                        _context13.next = 46;
                         return _context13.t3.send.call(_context13.t3, _context13.t11);
 
-                      case 45:
+                      case 46:
                         messageDropLoot = _context13.sent;
                         updateMessage = setInterval( /*#__PURE__*/(0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee12() {
                           var findItem, updatedLootImage, newAttachment;
@@ -767,11 +766,11 @@ var discordStartDagger = /*#__PURE__*/function () {
                             }
                           }, _callee12);
                         })), 10000);
-                        _context13.next = 49;
+                        _context13.next = 50;
                         return listenLoot(messageDropLoot, io, queue, newItem, distance, updateMessage);
 
-                      case 49:
-                        _context13.next = 51;
+                      case 50:
+                        _context13.next = 52;
                         return _models["default"].activity.create({
                           type: 'myrank_s',
                           earnerId: userCurrentCharacter.user.id
@@ -780,9 +779,9 @@ var discordStartDagger = /*#__PURE__*/function () {
                           transaction: t
                         });
 
-                      case 51:
+                      case 52:
                         preActivity = _context13.sent;
-                        _context13.next = 54;
+                        _context13.next = 55;
                         return _models["default"].activity.findOne({
                           where: {
                             id: preActivity.id
@@ -795,11 +794,11 @@ var discordStartDagger = /*#__PURE__*/function () {
                           transaction: t
                         });
 
-                      case 54:
+                      case 55:
                         finalActivity = _context13.sent;
                         activity.unshift(finalActivity);
 
-                      case 56:
+                      case 57:
                       case "end":
                         return _context13.stop();
                     }

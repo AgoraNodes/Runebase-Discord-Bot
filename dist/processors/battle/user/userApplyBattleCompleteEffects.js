@@ -21,11 +21,10 @@ var userApplyBattleCompleteEffects = /*#__PURE__*/function () {
       while (1) {
         switch (_context.prev = _context.next) {
           case 0:
-            console.log(userState);
-            console.log('userState');
+            console.log('Stage #7 - Starting to Apply Battle Complete effects');
 
             if (userState["class"].name === 'Warrior') {
-              relieve = userState.UserClassSkills.find(function (element) {
+              relieve = userState.UserGroupClassSkills.find(function (element) {
                 return element.skill.name === 'Relieve';
               });
 
@@ -60,6 +59,7 @@ var userApplyBattleCompleteEffects = /*#__PURE__*/function () {
               }
             }
 
+            console.log('Stage #7 - Ending Apply Battle Complete effects');
             return _context.abrupt("return", [stageSevenInfoArray, userState, totalHealedByLifeSteal, saveToDatabasePromises]);
 
           case 4:

@@ -286,6 +286,32 @@ export const discordRouter = async (
           });
         }
 
+        if (commandName === 'changerealm') {
+          await interaction.deferReply().catch((e) => {
+            console.log(e);
+          });
+          const limited = await myRateLimiter(
+            discordClient,
+            interaction,
+            'ChangeRealm',
+          );
+          if (limited) {
+            await interaction.editReply('rate limited').catch((e) => {
+              console.log(e);
+            });
+            return;
+          }
+
+          await discordChangeRealm(
+            discordClient,
+            interaction,
+            io,
+          );
+          await interaction.editReply('\u200b').catch((e) => {
+            console.log(e);
+          });
+        }
+
         if (commandName === 'myrank') {
           await interaction.deferReply().catch((e) => {
             console.log(e);
@@ -869,11 +895,10 @@ export const discordRouter = async (
     }
 
     if (filteredMessageDiscord[1] && filteredMessageDiscord[1].toLowerCase() === 'changerealm') {
-      console.log('used help');
       const limited = await myRateLimiter(
         discordClient,
         message,
-        'Help',
+        'ChangeRealm',
       );
       if (limited) return;
       await queue.add(async () => {
