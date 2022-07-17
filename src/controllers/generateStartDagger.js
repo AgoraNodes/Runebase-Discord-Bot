@@ -17,24 +17,14 @@ import {
 } from 'canvas';
 
 import path from 'path';
-import {
-  cannotSendMessageUser,
-  discordErrorMessage,
-} from '../embeds';
 import db from '../models';
 import logger from "../helpers/logger";
-import { userWalletExist } from "../helpers/client/userWalletExist";
-import { generateLoot } from "../helpers/items/generateLoot";
 import { generateRandomStartDagger } from '../helpers/items/generateStartingDagger';
 import { renderItemImage } from "../render/item";
 
 import { fetchUserCurrentCharacter } from "../helpers/character/character";
 import { fetchDiscordUserIdFromMessageOrInteraction } from '../helpers/client/fetchDiscordUserIdFromMessageOrInteraction';
 import { fetchDiscordChannel } from '../helpers/client/fetchDiscordChannel';
-
-const lootedMessage = () => {
-  console.log('looted');
-};
 
 const generateLootImage = async (
   lootItem,

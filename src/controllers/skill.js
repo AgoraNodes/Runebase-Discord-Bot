@@ -2,7 +2,7 @@
 import {
   MessageActionRow,
   MessageSelectMenu,
-  MessageEmbed,
+  // MessageEmbed,
 } from 'discord.js';
 import { fetchUserCurrentCharacter } from "../helpers/character/character";
 import { fetchDiscordUserIdFromMessageOrInteraction } from '../helpers/client/fetchDiscordUserIdFromMessageOrInteraction';
@@ -24,7 +24,6 @@ import {
 import skillEmoji from "../config/skillEmoji";
 import {
   playingOnRealmMessage,
-  notSelectedClassYetMessage,
 } from '../messages';
 import testPlayerReadyness from '../helpers/testPlayerReadyness';
 

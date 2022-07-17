@@ -1030,6 +1030,54 @@ export const resetStatsCompletemessage = (
   return result;
 };
 
+export const alreadyInRealmEmbed = (
+  user,
+) => {
+  const result = new MessageEmbed()
+    .setColor(settings.bot.color)
+    .setTitle('Change Realm')
+    .setDescription(`<@${user.user_id}>, You are already in this realm currently.`)
+    .setTimestamp()
+    .setFooter({
+      text: `${settings.bot.name} v${pjson.version}`,
+      iconURL: settings.bot.logo,
+    });
+
+  return result;
+};
+
+export const realmNotFoundEmbed = (
+  user,
+) => {
+  const result = new MessageEmbed()
+    .setColor(settings.bot.color)
+    .setTitle('Change Realm')
+    .setDescription(`<@${user.user_id}>, We can't find the realm you are trying to join`)
+    .setTimestamp()
+    .setFooter({
+      text: `${settings.bot.name} v${pjson.version}`,
+      iconURL: settings.bot.logo,
+    });
+
+  return result;
+};
+
+export const addingAttributeEmbed = (
+  userCurrentCharacter,
+) => {
+  const result = new MessageEmbed()
+    .setColor(settings.bot.color)
+    .setTitle('Change Realm')
+    .setDescription(`<@${userCurrentCharacter.UserGroup.user.user_id}>, Loading..`)
+    .setTimestamp()
+    .setFooter({
+      text: `${settings.bot.name} v${pjson.version}`,
+      iconURL: settings.bot.logo,
+    });
+
+  return result;
+};
+
 export const helpMessage = (withdraw) => {
   const result = new MessageEmbed()
     .setColor(settings.bot.color)

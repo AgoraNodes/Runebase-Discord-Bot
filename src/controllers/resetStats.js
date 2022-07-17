@@ -24,7 +24,6 @@ import {
 } from '../buttons';
 import {
   playingOnRealmMessage,
-  notSelectedClassYetMessage,
 } from '../messages';
 import testPlayerReadyness from '../helpers/testPlayerReadyness';
 

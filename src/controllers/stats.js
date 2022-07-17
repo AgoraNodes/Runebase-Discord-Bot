@@ -1,28 +1,21 @@
 /* eslint-disable import/prefer-default-export */
-import {
-  Sequelize,
-  Transaction,
-  Op,
-} from "sequelize";
+// import {
+//   Sequelize,
+//   Transaction,
+//   Op,
+// } from "sequelize";
 import {
   createCanvas,
-  loadImage,
-  registerFont,
 } from 'canvas';
 import {
   MessageActionRow,
-  MessageButton,
+  // MessageButton,
   MessageAttachment,
-  MessageEmbed,
+  // MessageEmbed,
 } from 'discord.js';
 
-import path from 'path';
-import {
-  cannotSendMessageUser,
-  discordErrorMessage,
-} from '../embeds';
-import db from '../models';
-import logger from "../helpers/logger";
+// import db from '../models';
+// import logger from "../helpers/logger";
 import { addStrength } from "../helpers/stats/addStrength";
 import { addDexterity } from "../helpers/stats/addDexterity";
 import { addVitality } from "../helpers/stats/addVitality";
@@ -41,9 +34,12 @@ import {
 } from '../buttons';
 import {
   playingOnRealmMessage,
-  notSelectedClassYetMessage,
 } from '../messages';
 import testPlayerReadyness from '../helpers/testPlayerReadyness';
+
+import {
+  addingAttributeEmbed,
+} from '../embeds';
 
 export const discordStats = async (
   discordClient,
@@ -97,10 +93,6 @@ export const discordStats = async (
 
     return new MessageAttachment(canvas.toBuffer(), 'cancelSelection.png');
   };
-
-  const loadingEmbed = new MessageEmbed()
-    .setTitle('Adding Attribute')
-    .setDescription(`${userCurrentCharacter.UserGroup.user.username}, Loading..`);
 
   // const calc = (
   //   userCurrentCharacter.stats.strength
@@ -159,7 +151,7 @@ export const discordStats = async (
     await interaction.deferUpdate();
     await interaction.editReply({
       embeds: [
-        loadingEmbed,
+        await addingAttributeEmbed(userCurrentCharacter),
       ],
       components: [],
     });

@@ -18,8 +18,8 @@ export const renderCancelSkillPick = async (
   ctx.lineWidth = 3;
   ctx.textAlign = "center";
 
-  ctx.strokeText(`${userCurrentCharacter.user.username} canceled skill selection`, 250, 60, 500);
-  ctx.fillText(`${userCurrentCharacter.user.username} canceled skill selection`, 250, 60, 500);
+  ctx.strokeText(`${userCurrentCharacter.UserGroup.user.username} canceled skill selection`, 250, 60, 500);
+  ctx.fillText(`${userCurrentCharacter.UserGroup.user.username} canceled skill selection`, 250, 60, 500);
 
   return new MessageAttachment(canvas.toBuffer(), 'cancelSelection.png');
 };

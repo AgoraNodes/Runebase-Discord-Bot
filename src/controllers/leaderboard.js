@@ -1,5 +1,9 @@
 /* eslint-disable import/prefer-default-export */
-import { Transaction, Sequelize, Op } from "sequelize";
+import {
+  Transaction,
+  Sequelize,
+  Op,
+} from "sequelize";
 import {
   createCanvas,
   loadImage,

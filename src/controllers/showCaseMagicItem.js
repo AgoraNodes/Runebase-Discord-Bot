@@ -1,8 +1,8 @@
 /* eslint-disable import/prefer-default-export */
 import {
-  Sequelize,
+  // Sequelize,
   Transaction,
-  Op,
+  // Op,
 } from "sequelize";
 
 import {
@@ -17,29 +17,21 @@ import {
 } from 'canvas';
 
 import path from 'path';
-import {
-  cannotSendMessageUser,
-  discordErrorMessage,
-} from '../embeds';
 import db from '../models';
 import logger from "../helpers/logger";
-import { userWalletExist } from "../helpers/client/userWalletExist";
+// import { userWalletExist } from "../helpers/client/userWalletExist";
 import { generateLoot } from "../helpers/items/generateLoot";
-import { generateRandomStartDagger } from '../helpers/items/generateStartingDagger';
+// import { generateRandomStartDagger } from '../helpers/items/generateStartingDagger';
 import { generateRandomMagicItem } from "../helpers/items/generateRandomMagicItem";
-import { generateRandomNormalItem } from "../helpers/items/generateRandomNormalItem";
-import { generateRandomLowQualityItem } from "../helpers/items/generateRandomLowQualityItem";
-import { generateRandomSuperiorItem } from "../helpers/items/generateRandomSuperiorItem";
-import { generateModifierStringArray } from "../helpers/items/generateModifierStringArray";
+// import { generateRandomNormalItem } from "../helpers/items/generateRandomNormalItem";
+// import { generateRandomLowQualityItem } from "../helpers/items/generateRandomLowQualityItem";
+// import { generateRandomSuperiorItem } from "../helpers/items/generateRandomSuperiorItem";
+// import { generateModifierStringArray } from "../helpers/items/generateModifierStringArray";
 import { renderItemImage } from "../render/item";
 
 import { fetchUserCurrentCharacter } from "../helpers/character/character";
 import { fetchDiscordUserIdFromMessageOrInteraction } from '../helpers/client/fetchDiscordUserIdFromMessageOrInteraction';
 import { fetchDiscordChannel } from '../helpers/client/fetchDiscordChannel';
-
-const lootedMessage = () => {
-  console.log('looted');
-};
 
 const generateLootImage = async (
   lootItem,
@@ -55,7 +47,7 @@ const generateLootImage = async (
     || lootItem.inventoryId
     || trueEnd
   );
-  await registerFont(path.join(__dirname, '../assets/fonts/', 'Heart_warming.otf'), { family: 'HeartWarming' });
+
   const itemImage = await renderItemImage(lootItem);
   const backgroundItemImage = await loadImage(itemImage);
   const canvas = createCanvas(backgroundItemImage.width, backgroundItemImage.height + 20);
@@ -139,9 +131,9 @@ const listenLoot = async (
         await db.sequelize.transaction({
           isolationLevel: Transaction.ISOLATION_LEVELS.SERIALIZABLE,
         }, async (t) => {
-          const userCollectingId = await fetchDiscordUserIdFromMessageOrInteraction(
-            button,
-          );
+          // const userCollectingId = await fetchDiscordUserIdFromMessageOrInteraction(
+          //   button,
+          // );
           const userCurrentCharacterCollecting = await fetchUserCurrentCharacter(
             button.user.id, // user discord id
             true, // Need inventory?
@@ -152,7 +144,6 @@ const listenLoot = async (
               content: 'You have not selected a class yet\n!runebase pickclass\n/pickclass',
               ephemeral: true,
             });
-            console.log('user has not selected a class yet'); // Add notice message here to warn user to select a class
             return;
           }
 

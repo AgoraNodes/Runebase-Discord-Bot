@@ -13,8 +13,8 @@ import {
 import {
   realmChangeSuccessEmbed,
   needToBeInDiscordRealmEmbed,
-  levelUpMessage,
-  discordErrorMessage,
+  alreadyInRealmEmbed,
+  realmNotFoundEmbed,
 } from '../embeds';
 import db from '../models';
 import logger from "../helpers/logger";
@@ -66,27 +66,12 @@ export const discordChangeRealm = async (
     // }
     return filtered;
   }, []);
-  console.log(realmMap);
-  console.log('123');
-
-  const alreadyInRealmEmbed = new MessageEmbed()
-    .setTitle('Change Realm')
-    .setDescription(`${user.username}, You are already in this realm currently.`);
-
-  const realmNotFoundEmbed = new MessageEmbed()
-    .setTitle('Change Realm')
-    .setDescription(`${user.username}, We can't find the realm you are trying to join`);
 
   const embedMessage = await discordChannel.send({
     content: `<@${user.user_id}>, please select your realm`,
     files: [
     ],
     components: [
-      // new MessageActionRow({
-      //  components: [
-      // await generateHealButton(),
-      //  ],
-      // }),
       new MessageActionRow({
         components: [
           new MessageSelectMenu({
@@ -129,7 +114,7 @@ export const discordChangeRealm = async (
               await interaction.editReply({
                 content: `<@${user.user_id}>`,
                 embeds: [
-                  alreadyInRealmEmbed,
+                  await alreadyInRealmEmbed(user),
                 ],
                 components: [
                   new MessageActionRow({
@@ -159,7 +144,7 @@ export const discordChangeRealm = async (
               await interaction.editReply({
                 content: `<@${user.user_id}>`,
                 embeds: [
-                  realmNotFoundEmbed,
+                  await realmNotFoundEmbed(user),
                 ],
                 components: [
                   new MessageActionRow({

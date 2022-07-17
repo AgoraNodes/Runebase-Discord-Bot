@@ -1,13 +1,10 @@
 /* eslint-disable import/prefer-default-export */
 import {
-  Sequelize,
   Transaction,
-  Op,
 } from "sequelize";
 import {
   createCanvas,
   loadImage,
-  registerFont,
 } from 'canvas';
 import {
   MessageActionRow,
@@ -15,12 +12,11 @@ import {
   MessageAttachment,
 } from 'discord.js';
 
-import path from 'path';
 import db from '../models';
 import logger from "../helpers/logger";
 import { renderItemImage } from "../render/item";
 import { renderStatsImage } from "../render/stats";
-import { renderEquipmentImage } from '../render/equipment';
+import { renderEquipmentImage } from '../render/equipment/equipment';
 import { fetchUserCurrentCharacter } from "../helpers/character/character";
 import { fetchDiscordUserIdFromMessageOrInteraction } from '../helpers/client/fetchDiscordUserIdFromMessageOrInteraction';
 import { fetchDiscordChannel } from '../helpers/client/fetchDiscordChannel';
@@ -31,19 +27,18 @@ import isUserInRealm from "../helpers/realm/isUserInRealm";
 
 import {
   playingOnRealmMessage,
-  notSelectedClassYetMessage,
 } from '../messages';
 
 import testPlayerReadyness from '../helpers/testPlayerReadyness';
+import { renderCancelEquipmentImage } from "../render/equipment/cancelEquipment";
 
-const showEquipmentImage = async (
-  userCurrentCharacter,
-) => {
-  const itemImage = await renderItemImage(
-    userCurrentCharacter.equipment.helm,
-  );
-  console.log(showEquipmentImage);
-};
+// const showEquipmentImage = async (
+//   userCurrentCharacter,
+// ) => {
+//   const itemImage = await renderItemImage(
+//     userCurrentCharacter.equipment.helm,
+//   );
+// };
 
 export const discordShowEquipment = async (
   discordClient,
@@ -200,7 +195,7 @@ export const discordShowEquipment = async (
     });
   };
 
-  await registerFont(path.join(__dirname, '../assets/fonts/', 'Heart_warming.otf'), { family: 'HeartWarming' });
+  // await registerFont(path.join(__dirname, '../assets/fonts/', 'Heart_warming.otf'), { family: 'HeartWarming' });
 
   const generateCurrentEquipmentImage = async (
     userCurrentCharacter,
@@ -243,23 +238,7 @@ export const discordShowEquipment = async (
     ctx.strokeStyle = 'black';
     ctx.lineWidth = 3;
 
-    return new MessageAttachment(canvas.toBuffer(), 'inventory.png');
-  };
-
-  const generateCancelEquipmentImage = async () => {
-    const canvas = createCanvas(500, 100);
-    const ctx = canvas.getContext('2d');
-
-    ctx.font = 'bold 30px "HeartWarming"';
-    ctx.fillStyle = "#ccc";
-    ctx.strokeStyle = 'black';
-    ctx.lineWidth = 3;
-    ctx.textAlign = "center";
-
-    ctx.strokeText(`${userCurrentCharacter.UserGroup.user.username} canceled equipment screen`, 250, 60, 500);
-    ctx.fillText(`${userCurrentCharacter.UserGroup.user.username} canceled equipment screen`, 250, 60, 500);
-
-    return new MessageAttachment(canvas.toBuffer(), 'cancelEquipment.png');
+    return new MessageAttachment(canvas.toBuffer(), 'equipment.png');
   };
 
   let isRowOneActive = (
@@ -502,7 +481,10 @@ export const discordShowEquipment = async (
     if (interaction.customId === cancelEquipmentId) {
       await interaction.editReply({
         files: [
-          await generateCancelEquipmentImage(),
+          new MessageAttachment(
+            await renderCancelEquipmentImage(userCurrentCharacter),
+            'equipment.png',
+          ),
         ],
         components: [],
       });
