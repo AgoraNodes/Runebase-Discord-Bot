@@ -460,6 +460,7 @@ ${newLootC.length > 0 ? `__found ${newLootC.length} ${newLootC.length === 1 ? `i
         }
       }
     }
+    console.log('collector 1');
     if (interaction.user.id !== userCurrentCharacter.UserGroup.user.user_id) {
       await interaction.reply({
         content: `<@${interaction.user.id}>, These buttons aren't for you!`,
@@ -467,7 +468,7 @@ ${newLootC.length > 0 ? `__found ${newLootC.length} ${newLootC.length === 1 ? `i
       });
       return;
     }
-
+    console.log('collector 2');
     if (battle.UserGroupClassId !== userCurrentCharacter.id) {
       await interaction.reply({
         content: `<@${interaction.user.id}>, This battle belongs to a different character!`,
@@ -484,6 +485,7 @@ ${newLootC.length > 0 ? `__found ${newLootC.length} ${newLootC.length === 1 ? `i
         return;
       }
     }
+    console.log('collector 3');
     // Heal Handling
     if (interaction.isButton() && interaction.customId === 'Heal') {
       await interaction.deferUpdate();
@@ -507,6 +509,7 @@ ${newLootC.length > 0 ? `__found ${newLootC.length} ${newLootC.length === 1 ? `i
       });
       return;
     }
+    console.log('collector 4');
     if (interaction.isButton() && interaction.customId === 'decline') {
       await interaction.deferUpdate();
       await interaction.editReply({
@@ -557,9 +560,11 @@ ${newLootC.length > 0 ? `__found ${newLootC.length} ${newLootC.length === 1 ? `i
       });
       return;
     }
+    console.log('collector 5');
     battle = await reFetchBattle(
       battle,
     );
+    console.log('collector 6');
     if (interaction.isButton() && interaction.customId === 'accept') {
       await interaction.deferUpdate();
       await queue.add(async () => {
@@ -761,6 +766,7 @@ ${newLootC.length > 0 ? `__found ${newLootC.length} ${newLootC.length === 1 ? `i
       });
       return;
     }
+    console.log('collector 7');
     // End Heal handling
     if (interaction.isSelectMenu()) {
       if (interaction.customId === 'select-mob') {
@@ -784,7 +790,7 @@ ${newLootC.length > 0 ? `__found ${newLootC.length} ${newLootC.length === 1 ? `i
         }
       }
     }
-
+    console.log('collector 8');
     await queue.add(async () => {
       await db.sequelize.transaction({
         isolationLevel: Transaction.ISOLATION_LEVELS.SERIALIZABLE,
@@ -1106,6 +1112,7 @@ ${newLootC.length > 0 ? `__found ${newLootC.length} ${newLootC.length === 1 ? `i
           return;
         }
 
+        console.log('selecting 1');
         if (interaction.isSelectMenu()) {
           let skillId;
           if (interaction.customId === 'select-mainSkill') {
@@ -1121,6 +1128,7 @@ ${newLootC.length > 0 ? `__found ${newLootC.length} ${newLootC.length === 1 ? `i
             }
             console.log('selecting new main skill');
           }
+          console.log('selecting 2');
           if (interaction.customId === 'select-secondarySkill') {
             await interaction.deferUpdate();
             if (interaction.values[0].startsWith('secondarySkill:')) {
@@ -1133,7 +1141,7 @@ ${newLootC.length > 0 ? `__found ${newLootC.length} ${newLootC.length === 1 ? `i
               );
             }
           }
-
+          console.log('selecting 3');
           mainSkillMap = userCurrentSelectedSkills.UserGroupClassSkills.reduce((filtered, mySkill) => {
             if (!mySkill.skill.passive) {
               const emoji = skillEmoji.find((a) => a.name === mySkill.skill.name);
@@ -1150,7 +1158,7 @@ ${newLootC.length > 0 ? `__found ${newLootC.length} ${newLootC.length === 1 ? `i
             }
             return filtered;
           }, []);
-
+          console.log('selecting 4');
           secondarySkillMap = userCurrentSelectedSkills.UserGroupClassSkills.reduce((filtered, mySkill) => {
             if (!mySkill.skill.passive) {
               const emoji = skillEmoji.find((a) => a.name === mySkill.skill.name);
@@ -1177,7 +1185,7 @@ ${newLootC.length > 0 ? `__found ${newLootC.length} ${newLootC.length === 1 ? `i
           myInitialUserState = JSON.parse(JSON.stringify(userCurrentCharacter));
           myInitialUserState.hp = hp;
           myInitialUserState.mp = mp;
-
+          console.log('selecting 5');
           await interaction.editReply({
             content: `<@${userCurrentCharacter.UserGroup.user.user_id}>`,
             embeds: [],
@@ -1243,7 +1251,6 @@ ${newLootC.length > 0 ? `__found ${newLootC.length} ${newLootC.length === 1 ? `i
     }).catch(async (err) => {
       console.log('catch error');
       console.log(err);
-      console.log('end catch error');
     });
   });
 };

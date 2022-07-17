@@ -54,13 +54,13 @@ export const discordResetSkills = async (
 
   const userWallet = await db.wallet.findOne({
     where: {
-      userId: userCurrentCharacter.user.id,
+      userId: userCurrentCharacter.UserGroup.user.id,
     },
   });
 
-  const userSkills = await db.UserClassSkill.findAll({
+  const userSkills = await db.UserGroupClassSkill.findAll({
     where: {
-      UserClassId: userCurrentCharacter.id,
+      UserGroupClassId: userCurrentCharacter.id,
     },
     include: [
       {
@@ -102,7 +102,7 @@ export const discordResetSkills = async (
 
   collector.on('collect', async (interaction) => {
     if (interaction.isButton()) {
-      if (interaction.user.id !== userCurrentCharacter.user.user_id) {
+      if (interaction.user.id !== userCurrentCharacter.UserGroup.user.user_id) {
         await interaction.reply({
           content: `<@${interaction.user.id}>, These buttons aren't for you!`,
           ephemeral: true,
@@ -115,7 +115,7 @@ export const discordResetSkills = async (
         await interaction.editReply({
           embeds: [
             await declineResetSkillsMessage(
-              userCurrentCharacter.user.user_id,
+              userCurrentCharacter.UserGroup.user.user_id,
             ),
           ],
           components: [
@@ -130,14 +130,14 @@ export const discordResetSkills = async (
           }, async (t) => {
             const findWallet = await db.wallet.findOne({
               where: {
-                userId: userCurrentCharacter.user.id,
+                userId: userCurrentCharacter.UserGroup.user.id,
               },
               lock: t.LOCK.UPDATE,
               transaction: t,
             });
-            const userSkills = await db.UserClassSkill.findAll({
+            const userSkills = await db.UserGroupClassSkill.findAll({
               where: {
-                UserClassId: userCurrentCharacter.id,
+                UserGroupClassId: userCurrentCharacter.id,
               },
               include: [
                 {
@@ -154,9 +154,9 @@ export const discordResetSkills = async (
               transaction: t,
             });
             console.log(userSkills);
-            const attackSkill = await db.UserClassSkill.findOne({
+            const attackSkill = await db.UserGroupClassSkill.findOne({
               where: {
-                UserClassId: userCurrentCharacter.id,
+                UserGroupClassId: userCurrentCharacter.id,
               },
               include: [
                 {
@@ -184,7 +184,7 @@ export const discordResetSkills = async (
                 await interaction.editReply({
                   embeds: [
                     await insufficientBalanceMessage(
-                      userCurrentCharacter.user.user_id,
+                      userCurrentCharacter.UserGroup.user.user_id,
                       'Reset Skills',
                     ),
                   ],
@@ -210,10 +210,10 @@ export const discordResetSkills = async (
             }
 
             await interaction.editReply({
-              content: `<@${userCurrentCharacter.user.user_id}>`,
+              content: `<@${userCurrentCharacter.UserGroup.user.user_id}>`,
               embeds: [
                 await resetSkillCompleteMessage(
-                  userCurrentCharacter.user.user_id,
+                  userCurrentCharacter.UserGroup.user.user_id,
                 ),
               ],
               components: [

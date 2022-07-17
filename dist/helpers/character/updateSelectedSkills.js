@@ -50,26 +50,36 @@ var updateUserCurrentSelectedSkills = /*#__PURE__*/function () {
 
           case 5:
             user = _context.sent;
-            _context.next = 8;
-            return _models["default"].UserClass.findOne(_objectSpread({
+            console.log('1');
+            _context.next = 9;
+            return _models["default"].UserGroupClass.findOne(_objectSpread({
               where: {
-                classId: user.currentClassId,
-                userId: user.id
-              }
+                classId: user.currentClassId
+              },
+              include: [{
+                model: _models["default"].UserGroup,
+                as: 'UserGroup',
+                required: true,
+                where: {
+                  groupId: user.currentRealmId,
+                  userId: user.id
+                }
+              }]
             }, t && [{
               lock: t.LOCK.UPDATE,
               transaction: t
             }]));
 
-          case 8:
+          case 9:
             userToUpdate = _context.sent;
+            console.log('2');
 
             if (!secondSkillId) {
-              _context.next = 12;
+              _context.next = 14;
               break;
             }
 
-            _context.next = 12;
+            _context.next = 14;
             return userToUpdate.update({
               selectedSecondarySkillId: secondSkillId
             }, _objectSpread({}, t && [{
@@ -77,13 +87,13 @@ var updateUserCurrentSelectedSkills = /*#__PURE__*/function () {
               transaction: t
             }]));
 
-          case 12:
+          case 14:
             if (!mainSkillId) {
-              _context.next = 15;
+              _context.next = 17;
               break;
             }
 
-            _context.next = 15;
+            _context.next = 17;
             return userToUpdate.update({
               selectedMainSkillId: mainSkillId
             }, _objectSpread({}, t && [{
@@ -91,27 +101,34 @@ var updateUserCurrentSelectedSkills = /*#__PURE__*/function () {
               transaction: t
             }]));
 
-          case 15:
-            _context.next = 17;
-            return _models["default"].UserClass.findOne(_objectSpread(_objectSpread({
+          case 17:
+            console.log('3');
+            _context.next = 20;
+            return _models["default"].UserGroupClass.findOne(_objectSpread(_objectSpread({
               where: {
-                // classId: { [Op.col]: 'user.currentClassId' },
-                classId: user.currentClassId,
-                userId: user.id
+                classId: user.currentClassId
               }
             }, t && [{
               lock: t.LOCK.UPDATE,
               transaction: t
             }]), {}, {
               include: [{
-                model: _models["default"].UserClassSkill,
-                as: 'UserClassSkills',
+                model: _models["default"].UserGroup,
+                as: 'UserGroup',
+                required: true,
+                where: {
+                  groupId: user.currentRealmId,
+                  userId: user.id
+                }
+              }, {
+                model: _models["default"].UserGroupClassSkill,
+                as: 'UserGroupClassSkills',
                 include: [{
                   model: _models["default"].skill,
                   as: 'skill'
                 }]
               }, {
-                model: _models["default"].UserClassSkill,
+                model: _models["default"].UserGroupClassSkill,
                 as: 'selectedMainSkill',
                 include: [{
                   model: _models["default"].skill,
@@ -126,7 +143,7 @@ var updateUserCurrentSelectedSkills = /*#__PURE__*/function () {
                   }]
                 }]
               }, {
-                model: _models["default"].UserClassSkill,
+                model: _models["default"].UserGroupClassSkill,
                 as: 'selectedSecondarySkill',
                 include: [{
                   model: _models["default"].skill,
@@ -143,11 +160,12 @@ var updateUserCurrentSelectedSkills = /*#__PURE__*/function () {
               }]
             }));
 
-          case 17:
+          case 20:
             userCurrentSelectedSkill = _context.sent;
+            console.log('done');
             return _context.abrupt("return", userCurrentSelectedSkill);
 
-          case 19:
+          case 23:
           case "end":
             return _context.stop();
         }

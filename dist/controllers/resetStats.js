@@ -74,20 +74,16 @@ var discordResetStats = /*#__PURE__*/function () {
             _context5.next = 16;
             return _models["default"].wallet.findOne({
               where: {
-                userId: userCurrentCharacter.user.id
+                userId: userCurrentCharacter.UserGroup.user.id
               }
             });
 
           case 16:
             userWallet = _context5.sent;
-            // const totalStatsCost = (new BigNumber((userCurrentCharacter.stats.strength
-            //   + userCurrentCharacter.stats.dexterity
-            //   + userCurrentCharacter.stats.vitality
-            //   + userCurrentCharacter.stats.energy))).multiply(0.1);
             totalStatsCost = new _bignumber["default"](userCurrentCharacter.stats.strength).plus(userCurrentCharacter.stats.dexterity).plus(userCurrentCharacter.stats.vitality).plus(userCurrentCharacter.stats.energy).multipliedBy(0.1);
             _context5.t0 = discordChannel;
             _context5.next = 21;
-            return (0, _messages.resetStatsConfirmationMessage)(userCurrentCharacter.user.user_id, userWallet.available, totalStatsCost);
+            return (0, _messages.resetStatsConfirmationMessage)(userCurrentCharacter.UserGroup.user.user_id, userWallet.available, totalStatsCost);
 
           case 21:
             _context5.t1 = _context5.sent;
@@ -131,7 +127,7 @@ var discordResetStats = /*#__PURE__*/function () {
                           break;
                         }
 
-                        if (!(interaction.user.id !== userCurrentCharacter.user.user_id)) {
+                        if (!(interaction.user.id !== userCurrentCharacter.UserGroup.user.user_id)) {
                           _context4.next = 5;
                           break;
                         }
@@ -157,7 +153,7 @@ var discordResetStats = /*#__PURE__*/function () {
 
                         _context4.t0 = interaction;
                         _context4.next = 11;
-                        return (0, _messages.resetStatsDeclinedMessage)(userCurrentCharacter.user.user_id, 'Reset Stats');
+                        return (0, _messages.resetStatsDeclinedMessage)(userCurrentCharacter.UserGroup.user.user_id, 'Reset Stats');
 
                       case 11:
                         _context4.t1 = _context4.sent;
@@ -198,7 +194,7 @@ var discordResetStats = /*#__PURE__*/function () {
                                               _context.next = 2;
                                               return _models["default"].wallet.findOne({
                                                 where: {
-                                                  userId: userCurrentCharacter.user.id
+                                                  userId: userCurrentCharacter.UserGroup.user.id
                                                 },
                                                 lock: t.LOCK.UPDATE,
                                                 transaction: t
@@ -207,7 +203,7 @@ var discordResetStats = /*#__PURE__*/function () {
                                             case 2:
                                               findWallet = _context.sent;
                                               _context.next = 5;
-                                              return (0, _character.fetchUserCurrentCharacter)(userCurrentCharacter.user.user_id, // user discord id
+                                              return (0, _character.fetchUserCurrentCharacter)(userCurrentCharacter.UserGroup.user.user_id, // user discord id
                                               false // Need inventory?
                                               );
 
@@ -224,7 +220,7 @@ var discordResetStats = /*#__PURE__*/function () {
 
                                               _context.t0 = interaction;
                                               _context.next = 13;
-                                              return (0, _messages.insufficientBalanceMessage)(userCharacterToReset.user.user_id, 'Reset Stats');
+                                              return (0, _messages.insufficientBalanceMessage)(userCharacterToReset.UserGroup.user.user_id, 'Reset Stats');
 
                                             case 13:
                                               _context.t1 = _context.sent;
@@ -269,9 +265,9 @@ var discordResetStats = /*#__PURE__*/function () {
                                               });
 
                                             case 28:
-                                              maxStamina = userCharacterToReset.user.currentClass.stamina + userCharacterToReset.stats.stamina;
-                                              maxHp = userCharacterToReset.user.currentClass.life + userCharacterToReset.stats.life;
-                                              maxMp = userCharacterToReset.user.currentClass.mana + userCharacterToReset.stats.mana;
+                                              maxStamina = userCharacterToReset.UserGroup.user.currentClass.stamina + userCharacterToReset.stats.stamina;
+                                              maxHp = userCharacterToReset.UserGroup.user.currentClass.life + userCharacterToReset.stats.life;
+                                              maxMp = userCharacterToReset.UserGroup.user.currentClass.mana + userCharacterToReset.stats.mana;
 
                                               if (!(userCharacterToReset.condition.mana > maxMp)) {
                                                 _context.next = 34;
@@ -308,8 +304,8 @@ var discordResetStats = /*#__PURE__*/function () {
                                             case 40:
                                               _context.next = 42;
                                               return interaction.editReply({
-                                                content: "<@".concat(userCurrentCharacter.user.user_id, ">"),
-                                                embeds: [(0, _messages.resetStatsCompletemessage)(userCurrentCharacter.user.user_id)],
+                                                content: "<@".concat(userCurrentCharacter.UserGroup.user.user_id, ">"),
+                                                embeds: [(0, _messages.resetStatsCompletemessage)(userCurrentCharacter.UserGroup.user.user_id)],
                                                 components: []
                                               });
 

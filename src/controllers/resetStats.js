@@ -54,14 +54,9 @@ export const discordResetStats = async (
 
   const userWallet = await db.wallet.findOne({
     where: {
-      userId: userCurrentCharacter.user.id,
+      userId: userCurrentCharacter.UserGroup.user.id,
     },
   });
-
-  // const totalStatsCost = (new BigNumber((userCurrentCharacter.stats.strength
-  //   + userCurrentCharacter.stats.dexterity
-  //   + userCurrentCharacter.stats.vitality
-  //   + userCurrentCharacter.stats.energy))).multiply(0.1);
 
   const totalStatsCost = (
     new BigNumber(
@@ -78,7 +73,7 @@ export const discordResetStats = async (
   const embedMessage = await discordChannel.send({
     embeds: [
       await resetStatsConfirmationMessage(
-        userCurrentCharacter.user.user_id,
+        userCurrentCharacter.UserGroup.user.user_id,
         userWallet.available,
         totalStatsCost,
       ),
@@ -99,7 +94,7 @@ export const discordResetStats = async (
 
   collector.on('collect', async (interaction) => {
     if (interaction.isButton()) {
-      if (interaction.user.id !== userCurrentCharacter.user.user_id) {
+      if (interaction.user.id !== userCurrentCharacter.UserGroup.user.user_id) {
         await interaction.reply({
           content: `<@${interaction.user.id}>, These buttons aren't for you!`,
           ephemeral: true,
@@ -112,7 +107,7 @@ export const discordResetStats = async (
         await interaction.editReply({
           embeds: [
             await resetStatsDeclinedMessage(
-              userCurrentCharacter.user.user_id,
+              userCurrentCharacter.UserGroup.user.user_id,
               'Reset Stats',
             ),
           ],
@@ -128,13 +123,13 @@ export const discordResetStats = async (
           }, async (t) => {
             const findWallet = await db.wallet.findOne({
               where: {
-                userId: userCurrentCharacter.user.id,
+                userId: userCurrentCharacter.UserGroup.user.id,
               },
               lock: t.LOCK.UPDATE,
               transaction: t,
             });
             const userCharacterToReset = await fetchUserCurrentCharacter(
-              userCurrentCharacter.user.user_id, // user discord id
+              userCurrentCharacter.UserGroup.user.user_id, // user discord id
               false, // Need inventory?
             );
 
@@ -159,7 +154,7 @@ export const discordResetStats = async (
               await interaction.editReply({
                 embeds: [
                   await insufficientBalanceMessage(
-                    userCharacterToReset.user.user_id,
+                    userCharacterToReset.UserGroup.user.user_id,
                     'Reset Stats',
                   ),
                 ],
@@ -190,9 +185,9 @@ export const discordResetStats = async (
               lock: t.LOCK.UPDATE,
               transaction: t,
             });
-            const maxStamina = userCharacterToReset.user.currentClass.stamina + userCharacterToReset.stats.stamina;
-            const maxHp = userCharacterToReset.user.currentClass.life + userCharacterToReset.stats.life;
-            const maxMp = userCharacterToReset.user.currentClass.mana + userCharacterToReset.stats.mana;
+            const maxStamina = userCharacterToReset.UserGroup.user.currentClass.stamina + userCharacterToReset.stats.stamina;
+            const maxHp = userCharacterToReset.UserGroup.user.currentClass.life + userCharacterToReset.stats.life;
+            const maxMp = userCharacterToReset.UserGroup.user.currentClass.mana + userCharacterToReset.stats.mana;
             if (userCharacterToReset.condition.mana > maxMp) {
               await userCharacterToReset.condition.update({
                 mana: maxMp,
@@ -210,14 +205,13 @@ export const discordResetStats = async (
             }
 
             await interaction.editReply({
-              content: `<@${userCurrentCharacter.user.user_id}>`,
+              content: `<@${userCurrentCharacter.UserGroup.user.user_id}>`,
               embeds: [
                 resetStatsCompletemessage(
-                  userCurrentCharacter.user.user_id,
+                  userCurrentCharacter.UserGroup.user.user_id,
                 ),
               ],
-              components: [
-              ],
+              components: [],
             });
           }).catch(async (err) => {
             console.log(err);

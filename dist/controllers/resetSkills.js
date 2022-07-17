@@ -79,16 +79,16 @@ var discordResetSkills = /*#__PURE__*/function () {
             _context5.next = 16;
             return _models["default"].wallet.findOne({
               where: {
-                userId: userCurrentCharacter.user.id
+                userId: userCurrentCharacter.UserGroup.user.id
               }
             });
 
           case 16:
             userWallet = _context5.sent;
             _context5.next = 19;
-            return _models["default"].UserClassSkill.findAll({
+            return _models["default"].UserGroupClassSkill.findAll({
               where: {
-                UserClassId: userCurrentCharacter.id
+                UserGroupClassId: userCurrentCharacter.id
               },
               include: [{
                 model: _models["default"].skill,
@@ -151,7 +151,7 @@ var discordResetSkills = /*#__PURE__*/function () {
                           break;
                         }
 
-                        if (!(interaction.user.id !== userCurrentCharacter.user.user_id)) {
+                        if (!(interaction.user.id !== userCurrentCharacter.UserGroup.user.user_id)) {
                           _context4.next = 5;
                           break;
                         }
@@ -177,7 +177,7 @@ var discordResetSkills = /*#__PURE__*/function () {
 
                         _context4.t0 = interaction;
                         _context4.next = 11;
-                        return (0, _messages.declineResetSkillsMessage)(userCurrentCharacter.user.user_id);
+                        return (0, _messages.declineResetSkillsMessage)(userCurrentCharacter.UserGroup.user.user_id);
 
                       case 11:
                         _context4.t1 = _context4.sent;
@@ -219,7 +219,7 @@ var discordResetSkills = /*#__PURE__*/function () {
                                               _context.next = 2;
                                               return _models["default"].wallet.findOne({
                                                 where: {
-                                                  userId: userCurrentCharacter.user.id
+                                                  userId: userCurrentCharacter.UserGroup.user.id
                                                 },
                                                 lock: t.LOCK.UPDATE,
                                                 transaction: t
@@ -228,9 +228,9 @@ var discordResetSkills = /*#__PURE__*/function () {
                                             case 2:
                                               findWallet = _context.sent;
                                               _context.next = 5;
-                                              return _models["default"].UserClassSkill.findAll({
+                                              return _models["default"].UserGroupClassSkill.findAll({
                                                 where: {
-                                                  UserClassId: userCurrentCharacter.id
+                                                  UserGroupClassId: userCurrentCharacter.id
                                                 },
                                                 include: [{
                                                   model: _models["default"].skill,
@@ -247,9 +247,9 @@ var discordResetSkills = /*#__PURE__*/function () {
                                               userSkills = _context.sent;
                                               console.log(userSkills);
                                               _context.next = 9;
-                                              return _models["default"].UserClassSkill.findOne({
+                                              return _models["default"].UserGroupClassSkill.findOne({
                                                 where: {
-                                                  UserClassId: userCurrentCharacter.id
+                                                  UserGroupClassId: userCurrentCharacter.id
                                                 },
                                                 include: [{
                                                   model: _models["default"].skill,
@@ -291,7 +291,7 @@ var discordResetSkills = /*#__PURE__*/function () {
 
                                               _context.t0 = interaction;
                                               _context.next = 19;
-                                              return (0, _messages.insufficientBalanceMessage)(userCurrentCharacter.user.user_id, 'Reset Skills');
+                                              return (0, _messages.insufficientBalanceMessage)(userCurrentCharacter.UserGroup.user.user_id, 'Reset Skills');
 
                                             case 19:
                                               _context.t1 = _context.sent;
@@ -359,9 +359,9 @@ var discordResetSkills = /*#__PURE__*/function () {
 
                                             case 45:
                                               _context.t6 = interaction;
-                                              _context.t7 = "<@".concat(userCurrentCharacter.user.user_id, ">");
+                                              _context.t7 = "<@".concat(userCurrentCharacter.UserGroup.user.user_id, ">");
                                               _context.next = 49;
-                                              return (0, _messages.resetSkillCompleteMessage)(userCurrentCharacter.user.user_id);
+                                              return (0, _messages.resetSkillCompleteMessage)(userCurrentCharacter.UserGroup.user.user_id);
 
                                             case 49:
                                               _context.t8 = _context.sent;

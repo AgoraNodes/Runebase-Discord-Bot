@@ -20,12 +20,22 @@ export const updateUserCurrentSelectedSkills = async (
       }]
     ),
   });
-
-  const userToUpdate = await db.UserClass.findOne({
+  console.log('1');
+  const userToUpdate = await db.UserGroupClass.findOne({
     where: {
       classId: user.currentClassId,
-      userId: user.id,
     },
+    include: [
+      {
+        model: db.UserGroup,
+        as: 'UserGroup',
+        required: true,
+        where: {
+          groupId: user.currentRealmId,
+          userId: user.id,
+        },
+      },
+    ],
     ...(t && [
       {
         lock: t.LOCK.UPDATE,
@@ -33,7 +43,7 @@ export const updateUserCurrentSelectedSkills = async (
       }]
     ),
   });
-
+  console.log('2');
   if (secondSkillId) {
     await userToUpdate.update({
       selectedSecondarySkillId: secondSkillId,
@@ -59,12 +69,10 @@ export const updateUserCurrentSelectedSkills = async (
       ),
     });
   }
-
-  const userCurrentSelectedSkill = await db.UserClass.findOne({
+  console.log('3');
+  const userCurrentSelectedSkill = await db.UserGroupClass.findOne({
     where: {
-      // classId: { [Op.col]: 'user.currentClassId' },
       classId: user.currentClassId,
-      userId: user.id,
     },
     ...(t && [
       {
@@ -74,8 +82,17 @@ export const updateUserCurrentSelectedSkills = async (
     ),
     include: [
       {
-        model: db.UserClassSkill,
-        as: 'UserClassSkills',
+        model: db.UserGroup,
+        as: 'UserGroup',
+        required: true,
+        where: {
+          groupId: user.currentRealmId,
+          userId: user.id,
+        },
+      },
+      {
+        model: db.UserGroupClassSkill,
+        as: 'UserGroupClassSkills',
         include: [
           {
             model: db.skill,
@@ -84,7 +101,7 @@ export const updateUserCurrentSelectedSkills = async (
         ],
       },
       {
-        model: db.UserClassSkill,
+        model: db.UserGroupClassSkill,
         as: 'selectedMainSkill',
         include: [
           {
@@ -106,7 +123,7 @@ export const updateUserCurrentSelectedSkills = async (
         ],
       },
       {
-        model: db.UserClassSkill,
+        model: db.UserGroupClassSkill,
         as: 'selectedSecondarySkill',
         include: [
           {
@@ -129,5 +146,6 @@ export const updateUserCurrentSelectedSkills = async (
       },
     ],
   });
+  console.log('done');
   return userCurrentSelectedSkill;
 };
