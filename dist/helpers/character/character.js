@@ -56,7 +56,8 @@ var fetchUserCurrentCharacter = /*#__PURE__*/function () {
             return _models["default"].UserGroupClass.findOne(_objectSpread(_objectSpread({
               where: {
                 // classId: { [Op.col]: 'user.currentClassId' },
-                classId: user.currentClassId // groupId: user.currentRealmId,
+                classId: user.currentClassId,
+                '$UserGroup.groupId$': user.currentRealmId // groupId: user.currentRealmId,
 
               }
             }, t && [{

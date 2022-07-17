@@ -53,6 +53,51 @@ var skillEmoji = [// Warrior (passives not included)
 }, {
   name: 'Wound',
   emoji: '<:Wound:995242768022638642>'
+}, {
+  name: 'Relieve',
+  emoji: '<:Relieve:998093694416736307>'
+}, {
+  name: 'Critical Hit',
+  emoji: '<:CriticalHit:998093541832146975>'
+}, {
+  name: 'Healing Hit',
+  emoji: '<:HealingHit:998093703061192734>'
+}, {
+  name: 'Axeman',
+  emoji: '<:Axeman:998093482436599898>'
+}, {
+  name: 'Maceman',
+  emoji: '<:Maceman:998093704189464656>'
+}, {
+  name: 'Spearman',
+  emoji: '<:Spearman:998093698149658644>'
+}, {
+  name: 'Parry',
+  emoji: '<:Parry:998093705380642927>'
+}, {
+  name: 'Polearm Master',
+  emoji: '<:PolearmMaster:998093690906083379>'
+}, {
+  name: 'Resistance',
+  emoji: '<:Resistance:998093695742132267>'
+}, {
+  name: 'Retaliate',
+  emoji: '<:Retaliate:998093696882966638>'
+}, {
+  name: 'Critical Kick',
+  emoji: '<:CriticalKick:998093543484702760>'
+}, {
+  name: 'Though Skin',
+  emoji: '<:ThoughSkin:998093700645269574>'
+}, {
+  name: 'Throwing Master',
+  emoji: '<:ThrowingMaster:998093701958090842>'
+}, {
+  name: 'Swordsman',
+  emoji: '<:Swordsman:998093699391176805>'
+}, {
+  name: 'Critical Throw',
+  emoji: '<:CriticalThrow:998093544642318457>'
 }];
 var _default = skillEmoji;
 exports["default"] = _default;

@@ -21,6 +21,7 @@ import {
   loadingSkillAddEmbed,
   loadingSkillSelectEmbed,
 } from '../messages';
+import skillEmoji from "../config/skillEmoji";
 
 export const discordSkills = async (
   discordClient,
@@ -66,11 +67,17 @@ export const discordSkills = async (
   const skillMap = userCurrentCharacter.class.skillTrees[0].skills.map((
     mySkill,
     index,
-  ) => ({
-    placeholder: 'pick a skill',
-    label: `${(mySkill.column + 9).toString(36).toUpperCase()}${mySkill.row}: ${mySkill.name}`,
-    value: `skill-${index}`,
-  }));
+  ) => {
+    const emoji = skillEmoji.find((a) => a.name === mySkill.name);
+    return {
+      placeholder: 'pick a skill',
+      label: `${(mySkill.column + 9).toString(36).toUpperCase()}${mySkill.row}: ${mySkill.name}`,
+      value: `skill-${index}`,
+      ...(emoji ? {
+        emoji: emoji.emoji,
+      } : false),
+    };
+  });
 
   const embedMessage = await discordChannel.send({
     content: `<@${userCurrentCharacter.UserGroup.user.user_id}>`,
@@ -199,12 +206,18 @@ export const discordSkills = async (
     const skillMapEdit = userCurrentCharacter.class.skillTrees[skillTreeIndex].skills.map((
       mySkill,
       index,
-    ) => ({
-      placeholder: 'pick a skill',
-      label: `${(mySkill.column + 9).toString(36).toUpperCase()}${mySkill.row}: ${mySkill.name}`,
-      value: `skill-${index}`,
-      default: index === skillIndex,
-    }));
+    ) => {
+      const emoji = skillEmoji.find((a) => a.name === mySkill.name);
+      return {
+        placeholder: 'pick a skill',
+        label: `${(mySkill.column + 9).toString(36).toUpperCase()}${mySkill.row}: ${mySkill.name}`,
+        value: `skill-${index}`,
+        default: index === skillIndex,
+        ...(emoji ? {
+          emoji: emoji.emoji,
+        } : false),
+      };
+    });
 
     await interaction.editReply({
       content: `<@${userCurrentCharacter.UserGroup.user.user_id}>`,

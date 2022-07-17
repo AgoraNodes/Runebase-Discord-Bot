@@ -49,7 +49,8 @@ var fetchUserCurrentSelectedSkills = /*#__PURE__*/function () {
             return _models["default"].UserGroupClass.findOne(_objectSpread(_objectSpread({
               where: {
                 // classId: { [Op.col]: 'user.currentClassId' },
-                classId: user.currentClassId // userId: user.id,
+                classId: user.currentClassId,
+                '$UserGroup.groupId$': user.currentRealmId // userId: user.id,
 
               }
             }, t && [{
