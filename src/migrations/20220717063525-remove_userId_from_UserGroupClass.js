@@ -1,14 +1,7 @@
 module.exports = {
-  up: async (queryInterface, DataTypes) => {
-    const transaction = await queryInterface.sequelize.transaction();
-    try {
-      queryInterface.removeColumn('UserGroupClass', 'userId');
-      await transaction.commit();
-    } catch (err) {
-      await transaction.rollback();
-      throw err;
-    }
-  },
+  up: (queryInterface, Sequelize) => Promise.all([
+    queryInterface.removeColumn('UserGroupClass', 'userId'),
+  ]),
   down: async (queryInterface, DataTypes) => {
     const transaction = await queryInterface.sequelize.transaction();
     try {
