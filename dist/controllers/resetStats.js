@@ -9,6 +9,8 @@ exports.discordResetStats = void 0;
 
 var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
 
+var _slicedToArray2 = _interopRequireDefault(require("@babel/runtime/helpers/slicedToArray"));
+
 var _asyncToGenerator2 = _interopRequireDefault(require("@babel/runtime/helpers/asyncToGenerator"));
 
 var _sequelize = require("sequelize");
@@ -31,10 +33,13 @@ var _buttons = require("../buttons");
 
 var _messages = require("../messages");
 
+var _testPlayerReadyness = _interopRequireDefault(require("../helpers/testPlayerReadyness"));
+
 /* eslint-disable import/prefer-default-export */
 var discordResetStats = /*#__PURE__*/function () {
-  var _ref = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee5(discordClient, message, io, queue) {
-    var activity, userId, discordChannel, userCurrentCharacter, userWallet, totalStatsCost, embedMessage, collector;
+  var _ref = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee5(discordClient, message, io, queue, isDefered) {
+    var activity, userId, discordChannel, userCurrentCharacter, _yield$testPlayerRead, _yield$testPlayerRead2, failed, usedDeferReply, userWallet, totalStatsCost, embedMessage, collector;
+
     return _regenerator["default"].wrap(function _callee5$(_context5) {
       while (1) {
         switch (_context5.prev = _context5.next) {
@@ -57,50 +62,51 @@ var discordResetStats = /*#__PURE__*/function () {
 
           case 9:
             userCurrentCharacter = _context5.sent;
+            _context5.next = 12;
+            return (0, _testPlayerReadyness["default"])(userCurrentCharacter, message, isDefered);
 
-            if (userCurrentCharacter) {
-              _context5.next = 14;
+          case 12:
+            _yield$testPlayerRead = _context5.sent;
+            _yield$testPlayerRead2 = (0, _slicedToArray2["default"])(_yield$testPlayerRead, 2);
+            failed = _yield$testPlayerRead2[0];
+            usedDeferReply = _yield$testPlayerRead2[1];
+
+            if (!failed) {
+              _context5.next = 18;
               break;
             }
 
-            _context5.next = 13;
-            return message.reply({
-              content: (0, _messages.notSelectedClassYetMessage)(),
-              ephemeral: true
-            });
+            return _context5.abrupt("return", usedDeferReply);
 
-          case 13:
-            return _context5.abrupt("return");
-
-          case 14:
-            _context5.next = 16;
+          case 18:
+            _context5.next = 20;
             return _models["default"].wallet.findOne({
               where: {
                 userId: userCurrentCharacter.UserGroup.user.id
               }
             });
 
-          case 16:
+          case 20:
             userWallet = _context5.sent;
             totalStatsCost = new _bignumber["default"](userCurrentCharacter.stats.strength).plus(userCurrentCharacter.stats.dexterity).plus(userCurrentCharacter.stats.vitality).plus(userCurrentCharacter.stats.energy).multipliedBy(0.1);
             _context5.t0 = discordChannel;
             _context5.t1 = (0, _messages.playingOnRealmMessage)(userCurrentCharacter);
-            _context5.next = 22;
+            _context5.next = 26;
             return (0, _embeds.resetStatsConfirmationMessage)(userCurrentCharacter.UserGroup.user.user_id, userWallet.available, totalStatsCost);
 
-          case 22:
+          case 26:
             _context5.t2 = _context5.sent;
             _context5.t3 = [_context5.t2];
             _context5.t4 = _discord.MessageActionRow;
-            _context5.next = 27;
+            _context5.next = 31;
             return (0, _buttons.generateAcceptButton)();
 
-          case 27:
+          case 31:
             _context5.t5 = _context5.sent;
-            _context5.next = 30;
+            _context5.next = 34;
             return (0, _buttons.generateDeclineButton)();
 
-          case 30:
+          case 34:
             _context5.t6 = _context5.sent;
             _context5.t7 = [_context5.t5, _context5.t6];
             _context5.t8 = {
@@ -113,10 +119,10 @@ var discordResetStats = /*#__PURE__*/function () {
               embeds: _context5.t3,
               components: _context5.t10
             };
-            _context5.next = 38;
+            _context5.next = 42;
             return _context5.t0.send.call(_context5.t0, _context5.t11);
 
-          case 38:
+          case 42:
             embedMessage = _context5.sent;
             collector = embedMessage.createMessageComponentCollector({// filter: ({ user: discordUser }) => discordUser.id === userCurrentCharacter.user.user_id,
             });
@@ -323,7 +329,7 @@ var discordResetStats = /*#__PURE__*/function () {
                                       }, _callee);
                                     }));
 
-                                    return function (_x6) {
+                                    return function (_x7) {
                                       return _ref4.apply(this, arguments);
                                     };
                                   }())["catch"]( /*#__PURE__*/function () {
@@ -357,7 +363,7 @@ var discordResetStats = /*#__PURE__*/function () {
                                       }, _callee2, null, [[1, 6]]);
                                     }));
 
-                                    return function (_x7) {
+                                    return function (_x8) {
                                       return _ref5.apply(this, arguments);
                                     };
                                   }());
@@ -385,12 +391,12 @@ var discordResetStats = /*#__PURE__*/function () {
                 }, _callee4);
               }));
 
-              return function (_x5) {
+              return function (_x6) {
                 return _ref2.apply(this, arguments);
               };
             }());
 
-          case 41:
+          case 45:
           case "end":
             return _context5.stop();
         }
@@ -398,7 +404,7 @@ var discordResetStats = /*#__PURE__*/function () {
     }, _callee5);
   }));
 
-  return function discordResetStats(_x, _x2, _x3, _x4) {
+  return function discordResetStats(_x, _x2, _x3, _x4, _x5) {
     return _ref.apply(this, arguments);
   };
 }();

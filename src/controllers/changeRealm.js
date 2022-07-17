@@ -26,6 +26,7 @@ export const discordChangeRealm = async (
   discordClient,
   message,
   io,
+  isDefered,
 ) => {
   const activity = [];
 

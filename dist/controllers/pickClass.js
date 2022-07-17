@@ -33,14 +33,18 @@ var _cancelClassPick = require("../render/pickClass/cancelClassPick");
 
 var _buttons = require("../buttons");
 
+var _messages = require("../messages");
+
 /* eslint-disable import/prefer-default-export */
 var discordPickClass = /*#__PURE__*/function () {
-  var _ref = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee5(discordClient, message, setting, io, queue) {
-    var userId, user, activity, classes, discordChannel, canFitOnOnePage, embedMessage, collector, currentIndex;
+  var _ref = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee5(discordClient, message, setting, io, queue, isDefered) {
+    var usedDeferReply, userId, user, activity, classes, discordChannel, canFitOnOnePage, embedMessage, collector, currentIndex;
     return _regenerator["default"].wrap(function _callee5$(_context5) {
       while (1) {
         switch (_context5.prev = _context5.next) {
           case 0:
+            usedDeferReply = false;
+
             if (message.user && message.user.id) {
               userId = message.user.id;
             } else if (message.author) {
@@ -49,26 +53,57 @@ var discordPickClass = /*#__PURE__*/function () {
               userId = message.user;
             }
 
-            _context5.next = 3;
+            _context5.next = 4;
             return _models["default"].user.findOne({
               where: {
                 user_id: "".concat(userId)
               }
             });
 
-          case 3:
+          case 4:
             user = _context5.sent;
 
             if (user) {
-              _context5.next = 6;
+              _context5.next = 7;
               break;
             }
 
             return _context5.abrupt("return");
 
-          case 6:
+          case 7:
+            if (user.currentRealmId) {
+              _context5.next = 16;
+              break;
+            }
+
+            if (isDefered) {
+              _context5.next = 12;
+              break;
+            }
+
+            _context5.next = 11;
+            return message.reply({
+              content: (0, _messages.notSelectedRealmYetMessage)(),
+              ephemeral: true
+            });
+
+          case 11:
+            return _context5.abrupt("return", usedDeferReply);
+
+          case 12:
+            _context5.next = 14;
+            return message.editReply({
+              content: (0, _messages.notSelectedRealmYetMessage)(),
+              ephemeral: true
+            });
+
+          case 14:
+            usedDeferReply = true;
+            return _context5.abrupt("return", usedDeferReply);
+
+          case 16:
             activity = [];
-            _context5.next = 9;
+            _context5.next = 19;
             return _models["default"]["class"].findAll({
               include: [{
                 model: _models["default"].classDescription,
@@ -76,42 +111,42 @@ var discordPickClass = /*#__PURE__*/function () {
               }]
             });
 
-          case 9:
+          case 19:
             classes = _context5.sent;
-            _context5.next = 12;
+            _context5.next = 22;
             return (0, _fetchDiscordChannel.fetchDiscordChannel)(discordClient, message);
 
-          case 12:
+          case 22:
             discordChannel = _context5.sent;
             canFitOnOnePage = classes.length <= 1;
             _context5.t0 = discordChannel;
-            _context5.next = 17;
+            _context5.next = 27;
             return (0, _pickClass.renderPickClassImage)(0, classes, user);
 
-          case 17:
+          case 27:
             _context5.t1 = _context5.sent;
             _context5.t2 = [_context5.t1];
 
             if (!canFitOnOnePage) {
-              _context5.next = 23;
+              _context5.next = 33;
               break;
             }
 
             _context5.t3 = [];
-            _context5.next = 35;
+            _context5.next = 45;
             break;
 
-          case 23:
+          case 33:
             _context5.t4 = _discord.MessageActionRow;
-            _context5.next = 26;
+            _context5.next = 36;
             return (0, _buttons.generatePickClassButton)(0, classes);
 
-          case 26:
+          case 36:
             _context5.t5 = _context5.sent;
-            _context5.next = 29;
+            _context5.next = 39;
             return (0, _buttons.generateCancelPickClassButton)();
 
-          case 29:
+          case 39:
             _context5.t6 = _context5.sent;
             _context5.t7 = [_context5.t5, _context5.t6];
             _context5.t8 = {
@@ -123,16 +158,16 @@ var discordPickClass = /*#__PURE__*/function () {
             });
             _context5.t3 = [_context5.t9, _context5.t10];
 
-          case 35:
+          case 45:
             _context5.t11 = _context5.t3;
             _context5.t12 = {
               files: _context5.t2,
               components: _context5.t11
             };
-            _context5.next = 39;
+            _context5.next = 49;
             return _context5.t0.send.call(_context5.t0, _context5.t12);
 
-          case 39:
+          case 49:
             embedMessage = _context5.sent;
             collector = embedMessage.createMessageComponentCollector({
               filter: function filter(_ref2) {
@@ -525,7 +560,7 @@ var discordPickClass = /*#__PURE__*/function () {
                                       }, _callee);
                                     }));
 
-                                    return function (_x7) {
+                                    return function (_x8) {
                                       return _ref5.apply(this, arguments);
                                     };
                                   }())["catch"]( /*#__PURE__*/function () {
@@ -631,7 +666,7 @@ var discordPickClass = /*#__PURE__*/function () {
                                       }, _callee2, null, [[1, 6]]);
                                     }));
 
-                                    return function (_x8) {
+                                    return function (_x9) {
                                       return _ref6.apply(this, arguments);
                                     };
                                   }());
@@ -724,12 +759,12 @@ var discordPickClass = /*#__PURE__*/function () {
                 }, _callee4);
               }));
 
-              return function (_x6) {
+              return function (_x7) {
                 return _ref3.apply(this, arguments);
               };
             }());
 
-          case 43:
+          case 53:
           case "end":
             return _context5.stop();
         }
@@ -737,7 +772,7 @@ var discordPickClass = /*#__PURE__*/function () {
     }, _callee5);
   }));
 
-  return function discordPickClass(_x, _x2, _x3, _x4, _x5) {
+  return function discordPickClass(_x, _x2, _x3, _x4, _x5, _x6) {
     return _ref.apply(this, arguments);
   };
 }();

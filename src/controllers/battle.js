@@ -43,9 +43,9 @@ import {
 } from '../embeds';
 import {
   playingOnRealmMessage,
-  notSelectedClassYetMessage,
 } from '../messages';
 import skillEmoji from "../config/skillEmoji";
+import testPlayerReadyness from '../helpers/testPlayerReadyness';
 
 let currentSelectedMonster;
 
@@ -55,7 +55,7 @@ export const discordBattle = async (
   isDefered,
   queue,
 ) => {
-  let usedDeferReply = false;
+  // let usedDeferReply = false;
   let allRoundBuffsInfoArray = [];
   let allRoundDebuffsInfoArray = [];
   let allRoundEffectsInfoArray = [];
@@ -75,22 +75,16 @@ export const discordBattle = async (
   );
 
   console.log('battle1');
+  const [
+    failed,
+    usedDeferReply,
+  ] = await testPlayerReadyness(
+    userCurrentCharacter,
+    message,
+    isDefered,
+  );
+  if (failed) return usedDeferReply;
 
-  if (!userCurrentCharacter) {
-    if (!isDefered) {
-      await message.reply({
-        content: notSelectedClassYetMessage(),
-        ephemeral: true,
-      });
-      return;
-    }
-    await message.editReply({
-      content: notSelectedClassYetMessage(),
-      ephemeral: true,
-    });
-    usedDeferReply = true;
-    return usedDeferReply;
-  }
   console.log('battle2');
   if (userCurrentCharacter.condition.stamina < 20) {
     await discordChannel.send({

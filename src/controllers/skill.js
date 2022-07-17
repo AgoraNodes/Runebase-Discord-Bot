@@ -26,6 +26,7 @@ import {
   playingOnRealmMessage,
   notSelectedClassYetMessage,
 } from '../messages';
+import testPlayerReadyness from '../helpers/testPlayerReadyness';
 
 export const discordSkills = async (
   discordClient,
@@ -33,6 +34,7 @@ export const discordSkills = async (
   setting,
   io,
   queue,
+  isDefered,
 ) => {
   // const activity = [];
 
@@ -50,13 +52,15 @@ export const discordSkills = async (
     false, // Need inventory?
   );
 
-  if (!userCurrentCharacter) {
-    await message.reply({
-      content: notSelectedClassYetMessage(),
-      ephemeral: true,
-    });
-    return;
-  }
+  const [
+    failed,
+    usedDeferReply,
+  ] = await testPlayerReadyness(
+    userCurrentCharacter,
+    message,
+    isDefered,
+  );
+  if (failed) return usedDeferReply;
 
   const skillTreeMap = userCurrentCharacter.class.skillTrees.map((skilltree, index) => {
     console.log(index);

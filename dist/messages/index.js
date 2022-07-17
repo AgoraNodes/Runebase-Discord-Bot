@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.playingOnRealmMessage = exports.notSelectedClassYetMessage = void 0;
+exports.playingOnRealmMessage = exports.notSelectedRealmYetMessage = exports.notSelectedClassYetMessage = void 0;
 
 var playingOnRealmMessage = function playingOnRealmMessage(userCurrentCharacter) {
   return "You are playing on realm: ".concat(userCurrentCharacter.UserGroup.group.groupName, "\n<@").concat(userCurrentCharacter.UserGroup.user.user_id, ">");
@@ -16,3 +16,9 @@ var notSelectedClassYetMessage = function notSelectedClassYetMessage() {
 };
 
 exports.notSelectedClassYetMessage = notSelectedClassYetMessage;
+
+var notSelectedRealmYetMessage = function notSelectedRealmYetMessage() {
+  return 'You have not selected a realm yet\n`!runebase changerealm`\n`/changerealm`';
+};
+
+exports.notSelectedRealmYetMessage = notSelectedRealmYetMessage;

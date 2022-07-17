@@ -23,6 +23,7 @@ import {
   generateCancelPickClassButton,
   generatePickClassButton,
 } from '../buttons';
+import { notSelectedRealmYetMessage } from "../messages";
 
 export const discordPickClass = async (
   discordClient,
@@ -30,7 +31,9 @@ export const discordPickClass = async (
   setting,
   io,
   queue,
+  isDefered,
 ) => {
+  let usedDeferReply = false;
   let userId;
   if (message.user && message.user.id) {
     userId = message.user.id;
@@ -46,6 +49,21 @@ export const discordPickClass = async (
   });
 
   if (!user) return;
+  if (!user.currentRealmId) {
+    if (!isDefered) {
+      await message.reply({
+        content: notSelectedRealmYetMessage(),
+        ephemeral: true,
+      });
+      return usedDeferReply;
+    }
+    await message.editReply({
+      content: notSelectedRealmYetMessage(),
+      ephemeral: true,
+    });
+    usedDeferReply = true;
+    return usedDeferReply;
+  }
 
   const activity = [];
 

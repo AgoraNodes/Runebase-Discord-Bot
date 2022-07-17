@@ -9,9 +9,9 @@ exports.discordShowEquipment = void 0;
 
 var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
 
-var _slicedToArray2 = _interopRequireDefault(require("@babel/runtime/helpers/slicedToArray"));
-
 var _toConsumableArray2 = _interopRequireDefault(require("@babel/runtime/helpers/toConsumableArray"));
+
+var _slicedToArray2 = _interopRequireDefault(require("@babel/runtime/helpers/slicedToArray"));
 
 var _asyncToGenerator2 = _interopRequireDefault(require("@babel/runtime/helpers/asyncToGenerator"));
 
@@ -47,6 +47,8 @@ var _isUserInRealm = _interopRequireDefault(require("../helpers/realm/isUserInRe
 
 var _messages = require("../messages");
 
+var _testPlayerReadyness = _interopRequireDefault(require("../helpers/testPlayerReadyness"));
+
 /* eslint-disable import/prefer-default-export */
 var showEquipmentImage = /*#__PURE__*/function () {
   var _ref = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(userCurrentCharacter) {
@@ -76,8 +78,9 @@ var showEquipmentImage = /*#__PURE__*/function () {
 }();
 
 var discordShowEquipment = /*#__PURE__*/function () {
-  var _ref2 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee10(discordClient, message, setting, io, queue) {
-    var activity, userId, discordChannel, userCurrentCharacter, isInRealm, cancelEquipmentId, backId, helmId, amuletId, mainHandId, offHandId, armorId, glovesId, beltId, bootsId, ringSlotOneId, ringSlotTwoId, ringSlotOneButton, ringSlotTwoButton, bootsButton, helmButton, amuletutton, weaponSlotOneButton, weaponSlotTwoButton, armorButton, glovesButton, beltButton, backButton, generateCancelEquipmentButton, generateUnEquipItemButton, generateCurrentEquipmentImage, generateCancelEquipmentImage, isRowOneActive, isRowTwoActive, embedMessage, collector, currentIndex;
+  var _ref2 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee10(discordClient, message, setting, io, queue, isDefered) {
+    var activity, userId, discordChannel, userCurrentCharacter, isInRealm, _yield$testPlayerRead, _yield$testPlayerRead2, failed, usedDeferReply, cancelEquipmentId, backId, helmId, amuletId, mainHandId, offHandId, armorId, glovesId, beltId, bootsId, ringSlotOneId, ringSlotTwoId, ringSlotOneButton, ringSlotTwoButton, bootsButton, helmButton, amuletutton, weaponSlotOneButton, weaponSlotTwoButton, armorButton, glovesButton, beltButton, backButton, generateCancelEquipmentButton, generateUnEquipItemButton, generateCurrentEquipmentImage, generateCancelEquipmentImage, isRowOneActive, isRowTwoActive, embedMessage, collector, currentIndex;
+
     return _regenerator["default"].wrap(function _callee10$(_context10) {
       while (1) {
         switch (_context10.prev = _context10.next) {
@@ -131,21 +134,23 @@ var discordShowEquipment = /*#__PURE__*/function () {
             return _context10.abrupt("return");
 
           case 24:
-            if (userCurrentCharacter) {
-              _context10.next = 28;
+            _context10.next = 26;
+            return (0, _testPlayerReadyness["default"])(userCurrentCharacter, message, isDefered);
+
+          case 26:
+            _yield$testPlayerRead = _context10.sent;
+            _yield$testPlayerRead2 = (0, _slicedToArray2["default"])(_yield$testPlayerRead, 2);
+            failed = _yield$testPlayerRead2[0];
+            usedDeferReply = _yield$testPlayerRead2[1];
+
+            if (!failed) {
+              _context10.next = 32;
               break;
             }
 
-            _context10.next = 27;
-            return message.reply({
-              content: (0, _messages.notSelectedClassYetMessage)(),
-              ephemeral: true
-            });
+            return _context10.abrupt("return", usedDeferReply);
 
-          case 27:
-            return _context10.abrupt("return");
-
-          case 28:
+          case 32:
             cancelEquipmentId = 'cancelEquipment';
             backId = 'back';
             helmId = 'helm';
@@ -274,17 +279,17 @@ var discordShowEquipment = /*#__PURE__*/function () {
                 }, _callee3);
               }));
 
-              return function generateUnEquipItemButton(_x7) {
+              return function generateUnEquipItemButton(_x8) {
                 return _ref4.apply(this, arguments);
               };
             }();
 
-            _context10.next = 55;
+            _context10.next = 59;
             return (0, _canvas.registerFont)(_path["default"].join(__dirname, '../assets/fonts/', 'Heart_warming.otf'), {
               family: 'HeartWarming'
             });
 
-          case 55:
+          case 59:
             generateCurrentEquipmentImage = /*#__PURE__*/function () {
               var _ref5 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee4(userCurrentCharacter) {
                 var statsImageBuffer, statsImage, equipmentImageBuffer, equipmentImage, canvas, ctx;
@@ -337,7 +342,7 @@ var discordShowEquipment = /*#__PURE__*/function () {
                 }, _callee4);
               }));
 
-              return function generateCurrentEquipmentImage(_x8) {
+              return function generateCurrentEquipmentImage(_x9) {
                 return _ref5.apply(this, arguments);
               };
             }();
@@ -377,15 +382,15 @@ var discordShowEquipment = /*#__PURE__*/function () {
             isRowTwoActive = userCurrentCharacter.equipment.gloves || userCurrentCharacter.equipment.ringSlotOne || userCurrentCharacter.equipment.ringSlotTwo || userCurrentCharacter.equipment.belt || userCurrentCharacter.equipment.boots;
             _context10.t5 = discordChannel;
             _context10.t6 = (0, _messages.playingOnRealmMessage)(userCurrentCharacter);
-            _context10.next = 63;
+            _context10.next = 67;
             return generateCurrentEquipmentImage(userCurrentCharacter);
 
-          case 63:
+          case 67:
             _context10.t7 = _context10.sent;
             _context10.t8 = [_context10.t7];
 
             if (!(isRowOneActive || isRowTwoActive)) {
-              _context10.next = 80;
+              _context10.next = 84;
               break;
             }
 
@@ -397,10 +402,10 @@ var discordShowEquipment = /*#__PURE__*/function () {
               components: [].concat((0, _toConsumableArray2["default"])(userCurrentCharacter.equipment.gloves ? [glovesButton] : []), (0, _toConsumableArray2["default"])(userCurrentCharacter.equipment.ringSlotOne ? [ringSlotOneButton] : []), (0, _toConsumableArray2["default"])(userCurrentCharacter.equipment.ringSlotTwo ? [ringSlotTwoButton] : []), (0, _toConsumableArray2["default"])(userCurrentCharacter.equipment.belt ? [beltButton] : []), (0, _toConsumableArray2["default"])(userCurrentCharacter.equipment.boots ? [bootsButton] : []))
             })] : []);
             _context10.t13 = _discord.MessageActionRow;
-            _context10.next = 72;
+            _context10.next = 76;
             return generateCancelEquipmentButton();
 
-          case 72:
+          case 76:
             _context10.t14 = _context10.sent;
             _context10.t15 = [_context10.t14];
             _context10.t16 = {
@@ -409,15 +414,15 @@ var discordShowEquipment = /*#__PURE__*/function () {
             _context10.t17 = new _context10.t13(_context10.t16);
             _context10.t18 = [_context10.t17];
             _context10.t9 = _context10.t10.concat.call(_context10.t10, _context10.t11, _context10.t12, _context10.t18);
-            _context10.next = 88;
+            _context10.next = 92;
             break;
 
-          case 80:
+          case 84:
             _context10.t19 = _discord.MessageActionRow;
-            _context10.next = 83;
+            _context10.next = 87;
             return generateCancelEquipmentButton();
 
-          case 83:
+          case 87:
             _context10.t20 = _context10.sent;
             _context10.t21 = [_context10.t20];
             _context10.t22 = {
@@ -426,17 +431,17 @@ var discordShowEquipment = /*#__PURE__*/function () {
             _context10.t23 = new _context10.t19(_context10.t22);
             _context10.t9 = [_context10.t23];
 
-          case 88:
+          case 92:
             _context10.t24 = _context10.t9;
             _context10.t25 = {
               content: _context10.t6,
               files: _context10.t8,
               components: _context10.t24
             };
-            _context10.next = 92;
+            _context10.next = 96;
             return _context10.t5.send.call(_context10.t5, _context10.t25);
 
-          case 92:
+          case 96:
             embedMessage = _context10.sent;
             collector = embedMessage.createMessageComponentCollector({
               filter: function filter(_ref7) {
@@ -681,7 +686,7 @@ var discordShowEquipment = /*#__PURE__*/function () {
                                       }, _callee6);
                                     }));
 
-                                    return function (_x10) {
+                                    return function (_x11) {
                                       return _ref10.apply(this, arguments);
                                     };
                                   }())["catch"]( /*#__PURE__*/function () {
@@ -716,7 +721,7 @@ var discordShowEquipment = /*#__PURE__*/function () {
                                       }, _callee7, null, [[1, 6]]);
                                     }));
 
-                                    return function (_x11) {
+                                    return function (_x12) {
                                       return _ref11.apply(this, arguments);
                                     };
                                   }());
@@ -856,12 +861,12 @@ var discordShowEquipment = /*#__PURE__*/function () {
                 }, _callee9);
               }));
 
-              return function (_x9) {
+              return function (_x10) {
                 return _ref8.apply(this, arguments);
               };
             }());
 
-          case 96:
+          case 100:
           case "end":
             return _context10.stop();
         }
@@ -869,7 +874,7 @@ var discordShowEquipment = /*#__PURE__*/function () {
     }, _callee10);
   }));
 
-  return function discordShowEquipment(_x2, _x3, _x4, _x5, _x6) {
+  return function discordShowEquipment(_x2, _x3, _x4, _x5, _x6, _x7) {
     return _ref2.apply(this, arguments);
   };
 }();

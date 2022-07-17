@@ -9,11 +9,11 @@ exports.discordBattle = void 0;
 
 var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
 
-var _slicedToArray2 = _interopRequireDefault(require("@babel/runtime/helpers/slicedToArray"));
-
 var _toConsumableArray2 = _interopRequireDefault(require("@babel/runtime/helpers/toConsumableArray"));
 
 var _defineProperty2 = _interopRequireDefault(require("@babel/runtime/helpers/defineProperty"));
+
+var _slicedToArray2 = _interopRequireDefault(require("@babel/runtime/helpers/slicedToArray"));
 
 var _asyncToGenerator2 = _interopRequireDefault(require("@babel/runtime/helpers/asyncToGenerator"));
 
@@ -63,6 +63,8 @@ var _messages = require("../messages");
 
 var _skillEmoji = _interopRequireDefault(require("../config/skillEmoji"));
 
+var _testPlayerReadyness = _interopRequireDefault(require("../helpers/testPlayerReadyness"));
+
 function _createForOfIteratorHelper(o, allowArrayLike) { var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"]; if (!it) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = it.call(o); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it["return"] != null) it["return"](); } finally { if (didErr) throw err; } } }; }
 
 function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
@@ -81,80 +83,65 @@ var currentSelectedMonster;
 
 var discordBattle = /*#__PURE__*/function () {
   var _ref = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee13(discordClient, message, isDefered, queue) {
-    var usedDeferReply, allRoundBuffsInfoArray, allRoundDebuffsInfoArray, allRoundEffectsInfoArray, userId, discordChannel, userCurrentCharacter, userWallet, battle, newBattle, monster, randomAmountOfMobs, mobPromises, i, randomMonsterHp, newMobPromise, userCurrentSelectedSkills, mainSkillMap, secondarySkillMap, selectMonsterMap, _yield$calculateChara, hp, mp, myInitialUserState, _iterator4, _step4, userBuff, _iterator5, _step5, userDebuff, _iterator6, _step6, eachBattleMonster, _iterator7, _step7, monsterBuff, _iterator8, _step8, monsterDebuff, embedMessage, generateLootImagesArray, generateLootItemButtonArray, loadingBattleMoveEmbed, battleCompleteEmbed, collector, newLoot;
+    var allRoundBuffsInfoArray, allRoundDebuffsInfoArray, allRoundEffectsInfoArray, userId, discordChannel, userCurrentCharacter, _yield$testPlayerRead, _yield$testPlayerRead2, failed, usedDeferReply, userWallet, battle, newBattle, monster, randomAmountOfMobs, mobPromises, i, randomMonsterHp, newMobPromise, userCurrentSelectedSkills, mainSkillMap, secondarySkillMap, selectMonsterMap, _yield$calculateChara, hp, mp, myInitialUserState, _iterator4, _step4, userBuff, _iterator5, _step5, userDebuff, _iterator6, _step6, eachBattleMonster, _iterator7, _step7, monsterBuff, _iterator8, _step8, monsterDebuff, embedMessage, generateLootImagesArray, generateLootItemButtonArray, loadingBattleMoveEmbed, battleCompleteEmbed, collector, newLoot;
 
     return _regenerator["default"].wrap(function _callee13$(_context13) {
       while (1) {
         switch (_context13.prev = _context13.next) {
           case 0:
-            usedDeferReply = false;
+            // let usedDeferReply = false;
             allRoundBuffsInfoArray = [];
             allRoundDebuffsInfoArray = [];
             allRoundEffectsInfoArray = []; // const activity = [];
 
-            _context13.next = 6;
+            _context13.next = 5;
             return (0, _fetchDiscordUserIdFromMessageOrInteraction.fetchDiscordUserIdFromMessageOrInteraction)(message);
 
-          case 6:
+          case 5:
             userId = _context13.sent;
-            _context13.next = 9;
+            _context13.next = 8;
             return (0, _fetchDiscordChannel.fetchDiscordChannel)(discordClient, message);
 
-          case 9:
+          case 8:
             discordChannel = _context13.sent;
-            _context13.next = 12;
+            _context13.next = 11;
             return (0, _character.fetchUserCurrentCharacter)(userId, // user discord id
             false // Need inventory?
             );
 
-          case 12:
+          case 11:
             userCurrentCharacter = _context13.sent;
             console.log('battle1');
+            _context13.next = 15;
+            return (0, _testPlayerReadyness["default"])(userCurrentCharacter, message, isDefered);
 
-            if (userCurrentCharacter) {
-              _context13.next = 23;
+          case 15:
+            _yield$testPlayerRead = _context13.sent;
+            _yield$testPlayerRead2 = (0, _slicedToArray2["default"])(_yield$testPlayerRead, 2);
+            failed = _yield$testPlayerRead2[0];
+            usedDeferReply = _yield$testPlayerRead2[1];
+
+            if (!failed) {
+              _context13.next = 21;
               break;
             }
 
-            if (isDefered) {
-              _context13.next = 19;
-              break;
-            }
-
-            _context13.next = 18;
-            return message.reply({
-              content: (0, _messages.notSelectedClassYetMessage)(),
-              ephemeral: true
-            });
-
-          case 18:
-            return _context13.abrupt("return");
-
-          case 19:
-            _context13.next = 21;
-            return message.editReply({
-              content: (0, _messages.notSelectedClassYetMessage)(),
-              ephemeral: true
-            });
-
-          case 21:
-            usedDeferReply = true;
             return _context13.abrupt("return", usedDeferReply);
 
-          case 23:
+          case 21:
             console.log('battle2');
 
             if (!(userCurrentCharacter.condition.stamina < 20)) {
-              _context13.next = 36;
+              _context13.next = 34;
               break;
             }
 
             _context13.t0 = discordChannel;
             _context13.t1 = (0, _messages.playingOnRealmMessage)(userCurrentCharacter);
-            _context13.next = 29;
+            _context13.next = 27;
             return (0, _outOfStamina.renderOutOfStamina)(userCurrentCharacter);
 
-          case 29:
+          case 27:
             _context13.t2 = _context13.sent;
             _context13.t3 = [_context13.t2];
             _context13.t4 = [];
@@ -163,26 +150,26 @@ var discordBattle = /*#__PURE__*/function () {
               files: _context13.t3,
               components: _context13.t4
             };
-            _context13.next = 35;
+            _context13.next = 33;
             return _context13.t0.send.call(_context13.t0, _context13.t5);
 
-          case 35:
+          case 33:
             return _context13.abrupt("return");
 
-          case 36:
+          case 34:
             console.log('battle3');
 
             if (!(userCurrentCharacter.condition.life < 1)) {
-              _context13.next = 49;
+              _context13.next = 47;
               break;
             }
 
             _context13.t6 = discordChannel;
             _context13.t7 = (0, _messages.playingOnRealmMessage)(userCurrentCharacter);
-            _context13.next = 42;
+            _context13.next = 40;
             return (0, _userDied.renderUserDied)(userCurrentCharacter);
 
-          case 42:
+          case 40:
             _context13.t8 = _context13.sent;
             _context13.t9 = [_context13.t8];
             _context13.t10 = [];
@@ -191,37 +178,37 @@ var discordBattle = /*#__PURE__*/function () {
               files: _context13.t9,
               components: _context13.t10
             };
-            _context13.next = 48;
+            _context13.next = 46;
             return _context13.t6.send.call(_context13.t6, _context13.t11);
 
-          case 48:
+          case 46:
             return _context13.abrupt("return");
 
-          case 49:
-            _context13.next = 51;
+          case 47:
+            _context13.next = 49;
             return userCurrentCharacter.condition.update({
               stamina: userCurrentCharacter.condition.stamina - 20
             });
 
-          case 51:
-            _context13.next = 53;
+          case 49:
+            _context13.next = 51;
             return (0, _character.fetchUserCurrentCharacter)(userId, // user discord id
             false // Need inventory?
             );
 
-          case 53:
+          case 51:
             userCurrentCharacter = _context13.sent;
             console.log('3');
-            _context13.next = 57;
+            _context13.next = 55;
             return _models["default"].wallet.findOne({
               where: {
                 userId: userCurrentCharacter.UserGroup.user.id
               }
             });
 
-          case 57:
+          case 55:
             userWallet = _context13.sent;
-            _context13.next = 60;
+            _context13.next = 58;
             return _models["default"].battle.findOne({
               where: {
                 complete: false,
@@ -256,31 +243,31 @@ var discordBattle = /*#__PURE__*/function () {
               }]
             });
 
-          case 60:
+          case 58:
             battle = _context13.sent;
             console.log('battle4');
 
             if (battle) {
-              _context13.next = 77;
+              _context13.next = 75;
               break;
             }
 
-            _context13.next = 65;
+            _context13.next = 63;
             return _models["default"].battle.create({
               complete: false,
               UserGroupClassId: userCurrentCharacter.id
             });
 
-          case 65:
+          case 63:
             newBattle = _context13.sent;
-            _context13.next = 68;
+            _context13.next = 66;
             return _models["default"].monster.findOne({
               where: {
                 name: 'Zombie'
               }
             });
 
-          case 68:
+          case 66:
             monster = _context13.sent;
             randomAmountOfMobs = (0, _utils.randomIntFromInterval)(3, 4);
             mobPromises = [];
@@ -296,11 +283,11 @@ var discordBattle = /*#__PURE__*/function () {
               mobPromises.push(newMobPromise);
             }
 
-            _context13.next = 74;
+            _context13.next = 72;
             return Promise.all(mobPromises);
 
-          case 74:
-            _context13.next = 76;
+          case 72:
+            _context13.next = 74;
             return _models["default"].battle.findOne({
               where: {
                 id: newBattle.id
@@ -334,14 +321,14 @@ var discordBattle = /*#__PURE__*/function () {
               }]
             });
 
-          case 76:
+          case 74:
             battle = _context13.sent;
 
-          case 77:
-            _context13.next = 79;
+          case 75:
+            _context13.next = 77;
             return (0, _selectedSkills.fetchUserCurrentSelectedSkills)(userId);
 
-          case 79:
+          case 77:
             userCurrentSelectedSkills = _context13.sent;
             console.log('battle5');
             mainSkillMap = userCurrentSelectedSkills.UserGroupClassSkills.reduce(function (filtered, mySkill) {
@@ -406,10 +393,10 @@ var discordBattle = /*#__PURE__*/function () {
               return filtered;
             }, []);
             console.log('battle7');
-            _context13.next = 89;
+            _context13.next = 87;
             return (0, _calculateCharacterStats.calculateCharacterStats)(userCurrentCharacter);
 
-          case 89:
+          case 87:
             _yield$calculateChara = _context13.sent;
             hp = _yield$calculateChara.hp;
             mp = _yield$calculateChara.mp;
@@ -497,28 +484,28 @@ var discordBattle = /*#__PURE__*/function () {
             _context13.t12 = discordChannel;
             _context13.t13 = (0, _messages.playingOnRealmMessage)(userCurrentCharacter);
             _context13.t14 = _discord.MessageAttachment;
-            _context13.next = 106;
+            _context13.next = 104;
             return (0, _battle.renderBattleGif)(myInitialUserState, userCurrentSelectedSkills, battle, currentSelectedMonster, allRoundBuffsInfoArray, allRoundDebuffsInfoArray, allRoundEffectsInfoArray);
 
-          case 106:
+          case 104:
             _context13.t15 = _context13.sent;
             _context13.t16 = new _context13.t14(_context13.t15, 'battle.gif');
             _context13.t17 = [_context13.t16];
             _context13.t18 = _discord.MessageActionRow;
-            _context13.next = 112;
+            _context13.next = 110;
             return (0, _buttons.generateMainSkillButton)(userCurrentSelectedSkills.selectedMainSkill);
 
-          case 112:
+          case 110:
             _context13.t19 = _context13.sent;
-            _context13.next = 115;
+            _context13.next = 113;
             return (0, _buttons.generateSecondarySkillButton)(userCurrentSelectedSkills.selectedSecondarySkill);
 
-          case 115:
+          case 113:
             _context13.t20 = _context13.sent;
-            _context13.next = 118;
+            _context13.next = 116;
             return (0, _buttons.generateHealButton)();
 
-          case 118:
+          case 116:
             _context13.t21 = _context13.sent;
             _context13.t22 = [_context13.t19, _context13.t20, _context13.t21];
             _context13.t23 = {
@@ -549,10 +536,10 @@ var discordBattle = /*#__PURE__*/function () {
               files: _context13.t17,
               components: _context13.t25
             };
-            _context13.next = 126;
+            _context13.next = 124;
             return _context13.t12.send.call(_context13.t12, _context13.t26);
 
-          case 126:
+          case 124:
             embedMessage = _context13.sent;
 
             generateLootImagesArray = /*#__PURE__*/function () {
@@ -2115,7 +2102,7 @@ var discordBattle = /*#__PURE__*/function () {
               };
             }());
 
-          case 135:
+          case 133:
           case "end":
             return _context13.stop();
         }

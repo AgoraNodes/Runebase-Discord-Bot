@@ -38,8 +38,8 @@ import {
 
 import {
   playingOnRealmMessage,
-  notSelectedClassYetMessage,
 } from '../messages';
+import testPlayerReadyness from '../helpers/testPlayerReadyness';
 
 export const discordShowInventory = async (
   discordClient,
@@ -47,6 +47,7 @@ export const discordShowInventory = async (
   setting,
   io,
   queue,
+  isDefered,
 ) => {
   const activity = [];
   const userId = await fetchDiscordUserIdFromMessageOrInteraction(
@@ -62,13 +63,15 @@ export const discordShowInventory = async (
     true, // Need inventory?
   );
 
-  if (!userCurrentCharacter) {
-    await message.reply({
-      content: notSelectedClassYetMessage(),
-      ephemeral: true,
-    });
-    return;
-  }
+  const [
+    failed,
+    usedDeferReply,
+  ] = await testPlayerReadyness(
+    userCurrentCharacter,
+    message,
+    isDefered,
+  );
+  if (failed) return usedDeferReply;
 
   // await registerFont(path.join(__dirname, '../assets/fonts/', 'Heart_warming.otf'), { family: 'HeartWarming' });
 

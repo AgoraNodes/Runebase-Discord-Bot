@@ -34,6 +34,8 @@ import {
   notSelectedClassYetMessage,
 } from '../messages';
 
+import testPlayerReadyness from '../helpers/testPlayerReadyness';
+
 const showEquipmentImage = async (
   userCurrentCharacter,
 ) => {
@@ -49,6 +51,7 @@ export const discordShowEquipment = async (
   setting,
   io,
   queue,
+  isDefered,
 ) => {
   const activity = [];
   const userId = await fetchDiscordUserIdFromMessageOrInteraction(
@@ -82,13 +85,15 @@ export const discordShowEquipment = async (
     return;
   }
 
-  if (!userCurrentCharacter) {
-    await message.reply({
-      content: notSelectedClassYetMessage(),
-      ephemeral: true,
-    });
-    return;
-  }
+  const [
+    failed,
+    usedDeferReply,
+  ] = await testPlayerReadyness(
+    userCurrentCharacter,
+    message,
+    isDefered,
+  );
+  if (failed) return usedDeferReply;
 
   const cancelEquipmentId = 'cancelEquipment';
   const backId = 'back';

@@ -9,6 +9,8 @@ exports.discordHeal = void 0;
 
 var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
 
+var _slicedToArray2 = _interopRequireDefault(require("@babel/runtime/helpers/slicedToArray"));
+
 var _asyncToGenerator2 = _interopRequireDefault(require("@babel/runtime/helpers/asyncToGenerator"));
 
 var _sequelize = require("sequelize");
@@ -31,10 +33,13 @@ var _calculateCharacterStats = require("../helpers/stats/calculateCharacterStats
 
 var _messages = require("../messages");
 
+var _testPlayerReadyness = _interopRequireDefault(require("../helpers/testPlayerReadyness"));
+
 /* eslint-disable import/prefer-default-export */
 var discordHeal = /*#__PURE__*/function () {
-  var _ref = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee5(discordClient, message, io, queue) {
-    var activity, userId, discordChannel, userCurrentCharacter, userWallet, embedMessage, collector;
+  var _ref = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee5(discordClient, message, io, queue, isDefered) {
+    var activity, userId, discordChannel, userCurrentCharacter, _yield$testPlayerRead, _yield$testPlayerRead2, failed, usedDeferReply, userWallet, embedMessage, collector;
+
     return _regenerator["default"].wrap(function _callee5$(_context5) {
       while (1) {
         switch (_context5.prev = _context5.next) {
@@ -57,49 +62,50 @@ var discordHeal = /*#__PURE__*/function () {
 
           case 9:
             userCurrentCharacter = _context5.sent;
+            _context5.next = 12;
+            return (0, _testPlayerReadyness["default"])(userCurrentCharacter, message, isDefered);
 
-            if (userCurrentCharacter) {
-              _context5.next = 14;
+          case 12:
+            _yield$testPlayerRead = _context5.sent;
+            _yield$testPlayerRead2 = (0, _slicedToArray2["default"])(_yield$testPlayerRead, 2);
+            failed = _yield$testPlayerRead2[0];
+            usedDeferReply = _yield$testPlayerRead2[1];
+
+            if (!failed) {
+              _context5.next = 18;
               break;
             }
 
-            _context5.next = 13;
-            return message.reply({
-              content: (0, _messages.notSelectedClassYetMessage)(),
-              ephemeral: true
-            });
+            return _context5.abrupt("return", usedDeferReply);
 
-          case 13:
-            return _context5.abrupt("return");
-
-          case 14:
-            _context5.next = 16;
+          case 18:
+            _context5.next = 20;
             return _models["default"].wallet.findOne({
               where: {
                 userId: userCurrentCharacter.UserGroup.user.id
               }
             });
 
-          case 16:
+          case 20:
             userWallet = _context5.sent;
             _context5.t0 = discordChannel;
             _context5.t1 = (0, _messages.playingOnRealmMessage)(userCurrentCharacter);
-            _context5.next = 21;
+            _context5.next = 25;
             return (0, _embeds.confirmationHealMessage)(userCurrentCharacter.UserGroup.user.user_id, userWallet.available);
 
-          case 21:
+          case 25:
             _context5.t2 = _context5.sent;
             _context5.t3 = [_context5.t2];
             _context5.t4 = _discord.MessageActionRow;
-            _context5.next = 26;
+            _context5.next = 30;
             return (0, _buttons.generateAcceptButton)();
 
-          case 26:
+          case 30:
             _context5.t5 = _context5.sent;
-            _context5.next = 29;
+            _context5.next = 33;
             return (0, _buttons.generateDeclineButton)();
 
-          case 29:
+          case 33:
             _context5.t6 = _context5.sent;
             _context5.t7 = [_context5.t5, _context5.t6];
             _context5.t8 = {
@@ -112,10 +118,10 @@ var discordHeal = /*#__PURE__*/function () {
               embeds: _context5.t3,
               components: _context5.t10
             };
-            _context5.next = 37;
+            _context5.next = 41;
             return _context5.t0.send.call(_context5.t0, _context5.t11);
 
-          case 37:
+          case 41:
             embedMessage = _context5.sent;
             collector = embedMessage.createMessageComponentCollector({// filter: ({ user: discordUser }) => discordUser.id === userCurrentCharacter.user.user_id,
             });
@@ -308,7 +314,7 @@ var discordHeal = /*#__PURE__*/function () {
                                       }, _callee);
                                     }));
 
-                                    return function (_x6) {
+                                    return function (_x7) {
                                       return _ref4.apply(this, arguments);
                                     };
                                   }())["catch"]( /*#__PURE__*/function () {
@@ -342,7 +348,7 @@ var discordHeal = /*#__PURE__*/function () {
                                       }, _callee2, null, [[1, 6]]);
                                     }));
 
-                                    return function (_x7) {
+                                    return function (_x8) {
                                       return _ref5.apply(this, arguments);
                                     };
                                   }());
@@ -370,12 +376,12 @@ var discordHeal = /*#__PURE__*/function () {
                 }, _callee4);
               }));
 
-              return function (_x5) {
+              return function (_x6) {
                 return _ref2.apply(this, arguments);
               };
             }());
 
-          case 40:
+          case 44:
           case "end":
             return _context5.stop();
         }
@@ -383,7 +389,7 @@ var discordHeal = /*#__PURE__*/function () {
     }, _callee5);
   }));
 
-  return function discordHeal(_x, _x2, _x3, _x4) {
+  return function discordHeal(_x, _x2, _x3, _x4, _x5) {
     return _ref.apply(this, arguments);
   };
 }();

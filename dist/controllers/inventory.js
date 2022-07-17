@@ -9,9 +9,9 @@ exports.discordShowInventory = void 0;
 
 var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
 
-var _slicedToArray2 = _interopRequireDefault(require("@babel/runtime/helpers/slicedToArray"));
-
 var _toConsumableArray2 = _interopRequireDefault(require("@babel/runtime/helpers/toConsumableArray"));
+
+var _slicedToArray2 = _interopRequireDefault(require("@babel/runtime/helpers/slicedToArray"));
 
 var _asyncToGenerator2 = _interopRequireDefault(require("@babel/runtime/helpers/asyncToGenerator"));
 
@@ -41,12 +41,15 @@ var _buttons = require("../buttons");
 
 var _messages = require("../messages");
 
+var _testPlayerReadyness = _interopRequireDefault(require("../helpers/testPlayerReadyness"));
+
 /* eslint-disable import/prefer-default-export */
 // import { generateStatsImage } from "../helpers/stats/generateStatsImage";
 // import { generateEquipmentImage } from '../helpers/equipment/generateEquipmentImage';
 var discordShowInventory = /*#__PURE__*/function () {
-  var _ref = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee11(discordClient, message, setting, io, queue) {
-    var activity, userId, discordChannel, userCurrentCharacter, generateConfirmDestroyItemImage, generateInventoryImage, generateClassPicked, generateExitInventoryImage, generateEmptyInventoryImage, generateEquipmentCompareButton, row, canFitOnOnePage, embedMessage, collector, currentIndex;
+  var _ref = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee11(discordClient, message, setting, io, queue, isDefered) {
+    var activity, userId, discordChannel, userCurrentCharacter, _yield$testPlayerRead, _yield$testPlayerRead2, failed, usedDeferReply, generateConfirmDestroyItemImage, generateInventoryImage, generateClassPicked, generateExitInventoryImage, generateEmptyInventoryImage, generateEquipmentCompareButton, row, canFitOnOnePage, embedMessage, collector, currentIndex;
+
     return _regenerator["default"].wrap(function _callee11$(_context11) {
       while (1) {
         switch (_context11.prev = _context11.next) {
@@ -69,22 +72,23 @@ var discordShowInventory = /*#__PURE__*/function () {
 
           case 9:
             userCurrentCharacter = _context11.sent;
+            _context11.next = 12;
+            return (0, _testPlayerReadyness["default"])(userCurrentCharacter, message, isDefered);
 
-            if (userCurrentCharacter) {
-              _context11.next = 14;
+          case 12:
+            _yield$testPlayerRead = _context11.sent;
+            _yield$testPlayerRead2 = (0, _slicedToArray2["default"])(_yield$testPlayerRead, 2);
+            failed = _yield$testPlayerRead2[0];
+            usedDeferReply = _yield$testPlayerRead2[1];
+
+            if (!failed) {
+              _context11.next = 18;
               break;
             }
 
-            _context11.next = 13;
-            return message.reply({
-              content: (0, _messages.notSelectedClassYetMessage)(),
-              ephemeral: true
-            });
+            return _context11.abrupt("return", usedDeferReply);
 
-          case 13:
-            return _context11.abrupt("return");
-
-          case 14:
+          case 18:
             // await registerFont(path.join(__dirname, '../assets/fonts/', 'Heart_warming.otf'), { family: 'HeartWarming' });
             generateConfirmDestroyItemImage = /*#__PURE__*/function () {
               var _ref2 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(start, currentUserCharacter) {
@@ -132,7 +136,7 @@ var discordShowInventory = /*#__PURE__*/function () {
                 }, _callee);
               }));
 
-              return function generateConfirmDestroyItemImage(_x6, _x7) {
+              return function generateConfirmDestroyItemImage(_x7, _x8) {
                 return _ref2.apply(this, arguments);
               };
             }();
@@ -203,7 +207,7 @@ var discordShowInventory = /*#__PURE__*/function () {
                 }, _callee2);
               }));
 
-              return function generateInventoryImage(_x8, _x9, _x10, _x11, _x12, _x13) {
+              return function generateInventoryImage(_x9, _x10, _x11, _x12, _x13, _x14) {
                 return _ref3.apply(this, arguments);
               };
             }();
@@ -235,7 +239,7 @@ var discordShowInventory = /*#__PURE__*/function () {
                 }, _callee3);
               }));
 
-              return function generateClassPicked(_x14) {
+              return function generateClassPicked(_x15) {
                 return _ref4.apply(this, arguments);
               };
             }();
@@ -266,7 +270,7 @@ var discordShowInventory = /*#__PURE__*/function () {
                 }, _callee4);
               }));
 
-              return function generateExitInventoryImage(_x15) {
+              return function generateExitInventoryImage(_x16) {
                 return _ref5.apply(this, arguments);
               };
             }();
@@ -297,7 +301,7 @@ var discordShowInventory = /*#__PURE__*/function () {
                 }, _callee5);
               }));
 
-              return function generateEmptyInventoryImage(_x16) {
+              return function generateEmptyInventoryImage(_x17) {
                 return _ref6.apply(this, arguments);
               };
             }();
@@ -326,7 +330,7 @@ var discordShowInventory = /*#__PURE__*/function () {
                 }, _callee6);
               }));
 
-              return function generateEquipmentCompareButton(_x17) {
+              return function generateEquipmentCompareButton(_x18) {
                 return _ref7.apply(this, arguments);
               };
             }();
@@ -334,63 +338,63 @@ var discordShowInventory = /*#__PURE__*/function () {
             row = new _discord.MessageActionRow();
 
             if (!(userCurrentCharacter.inventory && userCurrentCharacter.inventory.items && userCurrentCharacter.inventory.items.length > 0)) {
-              _context11.next = 27;
+              _context11.next = 31;
               break;
             }
 
             _context11.t0 = row;
-            _context11.next = 25;
+            _context11.next = 29;
             return generateEquipmentCompareButton(0);
 
-          case 25:
+          case 29:
             _context11.t1 = _context11.sent;
 
             _context11.t0.addComponents.call(_context11.t0, _context11.t1);
 
-          case 27:
+          case 31:
             canFitOnOnePage = userCurrentCharacter.inventory.items.length <= 1;
             _context11.t2 = discordChannel;
             _context11.t3 = (0, _messages.playingOnRealmMessage)(userCurrentCharacter);
             _context11.t4 = _toConsumableArray2["default"];
 
             if (!(userCurrentCharacter.inventory.items.length > 0)) {
-              _context11.next = 38;
+              _context11.next = 42;
               break;
             }
 
-            _context11.next = 34;
+            _context11.next = 38;
             return generateInventoryImage(userCurrentCharacter, false, false, false, false, 0);
 
-          case 34:
+          case 38:
             _context11.t6 = _context11.sent;
             _context11.t5 = [_context11.t6];
-            _context11.next = 42;
+            _context11.next = 46;
             break;
 
-          case 38:
-            _context11.next = 40;
+          case 42:
+            _context11.next = 44;
             return generateEmptyInventoryImage();
 
-          case 40:
+          case 44:
             _context11.t7 = _context11.sent;
             _context11.t5 = [_context11.t7];
 
-          case 42:
+          case 46:
             _context11.t8 = _context11.t5;
             _context11.t9 = (0, _context11.t4)(_context11.t8);
             _context11.t10 = [];
             _context11.t11 = _toConsumableArray2["default"];
 
             if (!(userCurrentCharacter.inventory && userCurrentCharacter.inventory.items && userCurrentCharacter.inventory.items.length > 0)) {
-              _context11.next = 67;
+              _context11.next = 71;
               break;
             }
 
             _context11.t13 = _discord.MessageActionRow;
-            _context11.next = 50;
+            _context11.next = 54;
             return generateEquipmentCompareButton(0);
 
-          case 50:
+          case 54:
             _context11.t14 = _context11.sent;
             _context11.t15 = [_context11.t14];
             _context11.t16 = {
@@ -398,15 +402,15 @@ var discordShowInventory = /*#__PURE__*/function () {
             };
             _context11.t17 = new _context11.t13(_context11.t16);
             _context11.t18 = _discord.MessageActionRow;
-            _context11.next = 57;
+            _context11.next = 61;
             return (0, _buttons.generateEquipItemButton)(0, userCurrentCharacter);
 
-          case 57:
+          case 61:
             _context11.t19 = _context11.sent;
-            _context11.next = 60;
+            _context11.next = 64;
             return (0, _buttons.generateDestroyItemButton)(0, userCurrentCharacter);
 
-          case 60:
+          case 64:
             _context11.t20 = _context11.sent;
             _context11.t21 = [_context11.t19, _context11.t20];
             _context11.t22 = {
@@ -414,13 +418,13 @@ var discordShowInventory = /*#__PURE__*/function () {
             };
             _context11.t23 = new _context11.t18(_context11.t22);
             _context11.t12 = [_context11.t17, _context11.t23];
-            _context11.next = 68;
+            _context11.next = 72;
             break;
 
-          case 67:
+          case 71:
             _context11.t12 = [];
 
-          case 68:
+          case 72:
             _context11.t24 = _context11.t12;
             _context11.t25 = (0, _context11.t11)(_context11.t24);
             _context11.t26 = (0, _toConsumableArray2["default"])(!canFitOnOnePage ? [new _discord.MessageActionRow({
@@ -429,15 +433,15 @@ var discordShowInventory = /*#__PURE__*/function () {
             _context11.t27 = _toConsumableArray2["default"];
 
             if (!(userCurrentCharacter.inventory.items.length > 0)) {
-              _context11.next = 83;
+              _context11.next = 87;
               break;
             }
 
             _context11.t29 = _discord.MessageActionRow;
-            _context11.next = 76;
+            _context11.next = 80;
             return (0, _buttons.generateExitInventoryButton)();
 
-          case 76:
+          case 80:
             _context11.t30 = _context11.sent;
             _context11.t31 = [_context11.t30];
             _context11.t32 = {
@@ -445,13 +449,13 @@ var discordShowInventory = /*#__PURE__*/function () {
             };
             _context11.t33 = new _context11.t29(_context11.t32);
             _context11.t28 = [_context11.t33];
-            _context11.next = 84;
+            _context11.next = 88;
             break;
 
-          case 83:
+          case 87:
             _context11.t28 = [];
 
-          case 84:
+          case 88:
             _context11.t34 = _context11.t28;
             _context11.t35 = (0, _context11.t27)(_context11.t34);
             _context11.t36 = _context11.t10.concat.call(_context11.t10, _context11.t25, _context11.t26, _context11.t35);
@@ -460,10 +464,10 @@ var discordShowInventory = /*#__PURE__*/function () {
               files: _context11.t9,
               components: _context11.t36
             };
-            _context11.next = 90;
+            _context11.next = 94;
             return _context11.t2.send.call(_context11.t2, _context11.t37);
 
-          case 90:
+          case 94:
             embedMessage = _context11.sent;
             collector = embedMessage.createMessageComponentCollector({
               filter: function filter(_ref8) {
@@ -519,7 +523,7 @@ var discordShowInventory = /*#__PURE__*/function () {
                                       }, _callee7);
                                     }));
 
-                                    return function (_x19) {
+                                    return function (_x20) {
                                       return _ref11.apply(this, arguments);
                                     };
                                   }())["catch"]( /*#__PURE__*/function () {
@@ -538,7 +542,7 @@ var discordShowInventory = /*#__PURE__*/function () {
                                       }, _callee8);
                                     }));
 
-                                    return function (_x20) {
+                                    return function (_x21) {
                                       return _ref12.apply(this, arguments);
                                     };
                                   }());
@@ -842,12 +846,12 @@ var discordShowInventory = /*#__PURE__*/function () {
                 }, _callee10);
               }));
 
-              return function (_x18) {
+              return function (_x19) {
                 return _ref9.apply(this, arguments);
               };
             }());
 
-          case 94:
+          case 98:
           case "end":
             return _context11.stop();
         }
@@ -855,7 +859,7 @@ var discordShowInventory = /*#__PURE__*/function () {
     }, _callee11);
   }));
 
-  return function discordShowInventory(_x, _x2, _x3, _x4, _x5) {
+  return function discordShowInventory(_x, _x2, _x3, _x4, _x5, _x6) {
     return _ref.apply(this, arguments);
   };
 }();

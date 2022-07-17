@@ -29,7 +29,7 @@ var _fetchDiscordChannel = require("../helpers/client/fetchDiscordChannel");
 
 /* eslint-disable import/prefer-default-export */
 var discordChangeRealm = /*#__PURE__*/function () {
-  var _ref = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee4(discordClient, message, io) {
+  var _ref = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee4(discordClient, message, io, isDefered) {
     var activity, userId, discordChannel, user, realms, realmMap, alreadyInRealmEmbed, realmNotFoundEmbed, embedMessage, collector;
     return _regenerator["default"].wrap(function _callee4$(_context4) {
       while (1) {
@@ -357,7 +357,7 @@ var discordChangeRealm = /*#__PURE__*/function () {
                             }, _callee);
                           }));
 
-                          return function (_x5) {
+                          return function (_x6) {
                             return _ref3.apply(this, arguments);
                           };
                         }())["catch"]( /*#__PURE__*/function () {
@@ -391,7 +391,7 @@ var discordChangeRealm = /*#__PURE__*/function () {
                             }, _callee2, null, [[0, 5]]);
                           }));
 
-                          return function (_x6) {
+                          return function (_x7) {
                             return _ref4.apply(this, arguments);
                           };
                         }());
@@ -404,7 +404,7 @@ var discordChangeRealm = /*#__PURE__*/function () {
                 }, _callee3);
               }));
 
-              return function (_x4) {
+              return function (_x5) {
                 return _ref2.apply(this, arguments);
               };
             }());
@@ -417,7 +417,7 @@ var discordChangeRealm = /*#__PURE__*/function () {
     }, _callee4);
   }));
 
-  return function discordChangeRealm(_x, _x2, _x3) {
+  return function discordChangeRealm(_x, _x2, _x3, _x4) {
     return _ref.apply(this, arguments);
   };
 }();

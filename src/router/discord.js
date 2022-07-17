@@ -144,6 +144,7 @@ export const discordRouter = async (
     let channelTask;
     let channelTaskId;
     let lastSeenDiscordTask;
+    let usedDeferReply;
     if (!interaction.user.bot) {
       const maintenance = await isMaintenanceOrDisabled(
         interaction,
@@ -197,7 +198,6 @@ export const discordRouter = async (
         }
 
         if (commandName === 'battle') {
-          let usedDeferReply;
           await interaction.deferReply().catch((e) => {
             console.log(e);
           });
@@ -223,16 +223,19 @@ export const discordRouter = async (
           });
 
           await queue.add(async () => {
-            const task = await discordHeal(
+            usedDeferReply = await discordHeal(
               discordClient,
               interaction,
               io,
               queue,
+              true, // Is Defered by command?
             );
           });
-          await interaction.editReply('\u200b').catch((e) => {
-            console.log(e);
-          });
+          if (!usedDeferReply) {
+            await interaction.editReply('\u200b').catch((e) => {
+              console.log(e);
+            });
+          }
         }
 
         if (commandName === 'resetstats') {
@@ -251,15 +254,18 @@ export const discordRouter = async (
             return;
           }
 
-          await discordResetStats(
+          usedDeferReply = await discordResetStats(
             discordClient,
             interaction,
             io,
             queue,
+            true, // Is Defered by command?
           );
-          await interaction.editReply('\u200b').catch((e) => {
-            console.log(e);
-          });
+          if (!usedDeferReply) {
+            await interaction.editReply('\u200b').catch((e) => {
+              console.log(e);
+            });
+          }
         }
 
         if (commandName === 'resetskills') {
@@ -278,15 +284,18 @@ export const discordRouter = async (
             return;
           }
 
-          await discordResetSkills(
+          usedDeferReply = await discordResetSkills(
             discordClient,
             interaction,
             io,
             queue,
+            true, // Is Defered by command?
           );
-          await interaction.editReply('\u200b').catch((e) => {
-            console.log(e);
-          });
+          if (!usedDeferReply) {
+            await interaction.editReply('\u200b').catch((e) => {
+              console.log(e);
+            });
+          }
         }
 
         if (commandName === 'changerealm') {
@@ -305,14 +314,17 @@ export const discordRouter = async (
             return;
           }
 
-          await discordChangeRealm(
+          usedDeferReply = await discordChangeRealm(
             discordClient,
             interaction,
             io,
+            true, // Is Defered by command?
           );
-          await interaction.editReply('\u200b').catch((e) => {
-            console.log(e);
-          });
+          if (!usedDeferReply) {
+            await interaction.editReply('\u200b').catch((e) => {
+              console.log(e);
+            });
+          }
         }
 
         if (commandName === 'myrank') {
@@ -493,16 +505,19 @@ export const discordRouter = async (
           }
           const setting = await db.setting.findOne();
 
-          const task = await discordPickClass(
+          usedDeferReply = await discordPickClass(
             discordClient,
             interaction,
             setting,
             io,
             queue,
+            true, // Is Defered by command?
           );
-          await interaction.editReply('\u200b').catch((e) => {
-            console.log(e);
-          });
+          if (!usedDeferReply) {
+            await interaction.editReply('\u200b').catch((e) => {
+              console.log(e);
+            });
+          }
         }
 
         if (commandName === 'mostactive') {
@@ -551,17 +566,20 @@ export const discordRouter = async (
           }
           const setting = await db.setting.findOne();
           await queue.add(async () => {
-            const task = await discordStats(
+            usedDeferReply = await discordStats(
               discordClient,
               interaction,
               setting,
               io,
               queue,
+              true, // Is Defered by command?
             );
           });
-          await interaction.editReply('\u200b').catch((e) => {
-            console.log(e);
-          });
+          if (!usedDeferReply) {
+            await interaction.editReply('\u200b').catch((e) => {
+              console.log(e);
+            });
+          }
         }
 
         if (commandName === 'inventory') {
@@ -581,17 +599,20 @@ export const discordRouter = async (
           }
           const setting = await db.setting.findOne();
           await queue.add(async () => {
-            const task = await discordShowInventory(
+            usedDeferReply = await discordShowInventory(
               discordClient,
               interaction,
               setting,
               io,
               queue,
+              true, // Is Defered by command?
             );
           });
-          await interaction.editReply('\u200b').catch((e) => {
-            console.log(e);
-          });
+          if (!usedDeferReply) {
+            await interaction.editReply('\u200b').catch((e) => {
+              console.log(e);
+            });
+          }
         }
 
         if (commandName === 'skills') {
@@ -611,17 +632,20 @@ export const discordRouter = async (
           }
           const setting = await db.setting.findOne();
           await queue.add(async () => {
-            const task = await discordSkills(
+            usedDeferReply = await discordSkills(
               discordClient,
               interaction,
               setting,
               io,
               queue,
+              true, // Is Defered by command?
             );
           });
-          await interaction.editReply('\u200b').catch((e) => {
-            console.log(e);
-          });
+          if (!usedDeferReply) {
+            await interaction.editReply('\u200b').catch((e) => {
+              console.log(e);
+            });
+          }
         }
 
         if (commandName === 'equipment') {
@@ -641,17 +665,20 @@ export const discordRouter = async (
           }
           const setting = await db.setting.findOne();
           await queue.add(async () => {
-            const task = await discordShowEquipment(
+            usedDeferReply = await discordShowEquipment(
               discordClient,
               interaction,
               setting,
               io,
               queue,
+              true, // Is Defered by command?
             );
           });
-          await interaction.editReply('\u200b').catch((e) => {
-            console.log(e);
-          });
+          if (!usedDeferReply) {
+            await interaction.editReply('\u200b').catch((e) => {
+              console.log(e);
+            });
+          }
         }
 
         if (commandName === 'roll') {
@@ -909,6 +936,7 @@ export const discordRouter = async (
           discordClient,
           message,
           io,
+          false, // Is Defered by command?
         );
       });
     }
@@ -1068,6 +1096,7 @@ export const discordRouter = async (
         setting,
         io,
         queue,
+        false, // Is Defered by command?
       );
     }
 
@@ -1085,6 +1114,7 @@ export const discordRouter = async (
         setting,
         io,
         queue,
+        false, // Is Defered by command?
       );
     }
 
@@ -1102,6 +1132,7 @@ export const discordRouter = async (
         setting,
         io,
         queue,
+        false, // Is Defered by command?
       );
     }
 
@@ -1119,6 +1150,7 @@ export const discordRouter = async (
         setting,
         io,
         queue,
+        false, // Is Defered by command?
       );
     }
 
@@ -1209,7 +1241,7 @@ export const discordRouter = async (
         await discordBattle(
           discordClient,
           message,
-          false,
+          false, // Is Defered by command?
           queue,
         );
       });
@@ -1222,6 +1254,7 @@ export const discordRouter = async (
           message,
           io,
           queue,
+          false, // Is Defered by command?
         );
       });
     }
@@ -1239,6 +1272,7 @@ export const discordRouter = async (
         message,
         io,
         queue,
+        false, // Is Defered by command?
       );
     }
 
@@ -1255,6 +1289,7 @@ export const discordRouter = async (
         message,
         io,
         queue,
+        false, // Is Defered by command?
       );
     }
 

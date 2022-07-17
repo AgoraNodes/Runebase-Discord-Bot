@@ -26,12 +26,14 @@ import {
   playingOnRealmMessage,
   notSelectedClassYetMessage,
 } from '../messages';
+import testPlayerReadyness from '../helpers/testPlayerReadyness';
 
 export const discordResetSkills = async (
   discordClient,
   message,
   io,
   queue,
+  isDefered,
 ) => {
   const activity = [];
   const userId = await fetchDiscordUserIdFromMessageOrInteraction(
@@ -48,13 +50,15 @@ export const discordResetSkills = async (
     false, // Need inventory?
   );
 
-  if (!userCurrentCharacter) {
-    await message.reply({
-      content: notSelectedClassYetMessage(),
-      ephemeral: true,
-    });
-    return;
-  }
+  const [
+    failed,
+    usedDeferReply,
+  ] = await testPlayerReadyness(
+    userCurrentCharacter,
+    message,
+    isDefered,
+  );
+  if (failed) return usedDeferReply;
 
   const userWallet = await db.wallet.findOne({
     where: {

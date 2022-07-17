@@ -9,9 +9,9 @@ exports.discordStats = void 0;
 
 var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
 
-var _slicedToArray2 = _interopRequireDefault(require("@babel/runtime/helpers/slicedToArray"));
-
 var _toConsumableArray2 = _interopRequireDefault(require("@babel/runtime/helpers/toConsumableArray"));
+
+var _slicedToArray2 = _interopRequireDefault(require("@babel/runtime/helpers/slicedToArray"));
 
 var _asyncToGenerator2 = _interopRequireDefault(require("@babel/runtime/helpers/asyncToGenerator"));
 
@@ -51,10 +51,12 @@ var _buttons = require("../buttons");
 
 var _messages = require("../messages");
 
+var _testPlayerReadyness = _interopRequireDefault(require("../helpers/testPlayerReadyness"));
+
 /* eslint-disable import/prefer-default-export */
 var discordStats = /*#__PURE__*/function () {
-  var _ref = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee3(discordClient, message, setting, io, queue) {
-    var activity, userId, discordChannel, userCurrentCharacter, _yield$calculateChara, unspendAttributes, generateCancelClassPicked, loadingEmbed, calc, embedMessage, collector;
+  var _ref = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee3(discordClient, message, setting, io, queue, isDefered) {
+    var activity, userId, discordChannel, userCurrentCharacter, _yield$testPlayerRead, _yield$testPlayerRead2, failed, usedDeferReply, _yield$calculateChara, unspendAttributes, generateCancelClassPicked, loadingEmbed, calc, embedMessage, collector;
 
     return _regenerator["default"].wrap(function _callee3$(_context3) {
       while (1) {
@@ -78,26 +80,27 @@ var discordStats = /*#__PURE__*/function () {
 
           case 9:
             userCurrentCharacter = _context3.sent;
+            _context3.next = 12;
+            return (0, _testPlayerReadyness["default"])(userCurrentCharacter, message, isDefered);
 
-            if (userCurrentCharacter) {
-              _context3.next = 14;
+          case 12:
+            _yield$testPlayerRead = _context3.sent;
+            _yield$testPlayerRead2 = (0, _slicedToArray2["default"])(_yield$testPlayerRead, 2);
+            failed = _yield$testPlayerRead2[0];
+            usedDeferReply = _yield$testPlayerRead2[1];
+
+            if (!failed) {
+              _context3.next = 18;
               break;
             }
 
-            _context3.next = 13;
-            return message.reply({
-              content: (0, _messages.notSelectedClassYetMessage)(),
-              ephemeral: true
-            });
+            return _context3.abrupt("return", usedDeferReply);
 
-          case 13:
-            return _context3.abrupt("return");
-
-          case 14:
-            _context3.next = 16;
+          case 18:
+            _context3.next = 20;
             return (0, _calculateCharacterStats.calculateCharacterStats)(userCurrentCharacter);
 
-          case 16:
+          case 20:
             _yield$calculateChara = _context3.sent;
             unspendAttributes = _yield$calculateChara.unspendAttributes;
 
@@ -143,10 +146,10 @@ var discordStats = /*#__PURE__*/function () {
             _context3.t0 = discordChannel;
             _context3.t1 = (0, _messages.playingOnRealmMessage)(userCurrentCharacter);
             _context3.t2 = _discord.MessageAttachment;
-            _context3.next = 26;
+            _context3.next = 30;
             return (0, _stats.renderStatsImage)(userCurrentCharacter, false);
 
-          case 26:
+          case 30:
             _context3.t3 = _context3.sent;
             _context3.t4 = new _context3.t2(_context3.t3, 'class.png');
             _context3.t5 = [_context3.t4];
@@ -162,10 +165,10 @@ var discordStats = /*#__PURE__*/function () {
               files: _context3.t5,
               components: _context3.t6
             };
-            _context3.next = 33;
+            _context3.next = 37;
             return _context3.t0.send.call(_context3.t0, _context3.t7);
 
-          case 33:
+          case 37:
             embedMessage = _context3.sent;
             collector = embedMessage.createMessageComponentCollector({// filter: ({ user: discordUser }) => discordUser.id === userCurrentCharacter.user.user_id,
             });
@@ -329,12 +332,12 @@ var discordStats = /*#__PURE__*/function () {
                 }, _callee2);
               }));
 
-              return function (_x6) {
+              return function (_x7) {
                 return _ref3.apply(this, arguments);
               };
             }());
 
-          case 36:
+          case 40:
           case "end":
             return _context3.stop();
         }
@@ -342,7 +345,7 @@ var discordStats = /*#__PURE__*/function () {
     }, _callee3);
   }));
 
-  return function discordStats(_x, _x2, _x3, _x4, _x5) {
+  return function discordStats(_x, _x2, _x3, _x4, _x5, _x6) {
     return _ref.apply(this, arguments);
   };
 }();
