@@ -8,8 +8,8 @@ import calculateUserRetaliation from './calculateUserRetaliation';
 
 const monstersApplyAttack = async (
   userState, // Current User State
-  saveToDatabasePromises,
-  battleMonsterState,
+  saveToDatabasePromises, // Save to database promises
+  battleMonsterState, // BattleMonsters Current State
   lvl, // Users Level
   block, // users Block
   defense, // Users defense
@@ -23,6 +23,7 @@ const monstersApplyAttack = async (
   let totalDamageByMonsters = 0;
   const retaliationArray = [];
   // eslint-disable-next-line no-restricted-syntax
+  console.log('Processing Stage #2 - Applying Monster Attacks');
   for await (const remainingMonster of battleMonsterState) {
     if (
       remainingMonster.currentHp > 0
@@ -38,7 +39,7 @@ const monstersApplyAttack = async (
           remainingMonster,
         );
         const randomMonsterAttackDamage = randomIntFromInterval(useAttack.minDmg, useAttack.maxDmg); // Get Random Monster Damage
-
+        console.log('before attack test');
         [
           individualBattleObject,
           attackFailed,
@@ -56,7 +57,6 @@ const monstersApplyAttack = async (
           saveToDatabasePromises,
           t,
         );
-
         if (!attackFailed) {
           const log = `${remainingMonster.monster.name} used ${useAttack.name} on ${userState.UserGroup.user.username} for ${randomMonsterAttackDamage} damage`;
           saveToDatabasePromises.push(
@@ -121,12 +121,12 @@ const monstersApplyAttack = async (
   }
 
   return [
-    totalDamageByMonsters,
-    userState,
-    battleMonsterState,
-    stageTwoInfoArray,
-    retaliationArray,
-    saveToDatabasePromises,
+    totalDamageByMonsters, // Total Damage done by monster
+    userState, // The New user State
+    battleMonsterState, // The new battlemonster state
+    stageTwoInfoArray, // completed Stage Two Info Array
+    retaliationArray, // Retailiation Array, Should we retaliate in next move?
+    saveToDatabasePromises, // Database insertion promises
   ];
 };
 

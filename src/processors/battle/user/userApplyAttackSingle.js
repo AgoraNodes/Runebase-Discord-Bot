@@ -47,6 +47,7 @@ const userApplyAttackSingle = async (
   // TODO: Apply Damage reductions? based on attackType (useAttack.attackType)
 
   if (!attackFailed) {
+    console.log('Stage #1 - Attack Not Failed (User Attacking)');
     let randomAttackDamage = randomIntFromInterval(useAttack.min, useAttack.max); // Random attack damage between min-max
     lifeStolen = lifeSteal(randomAttackDamage, useAttack.lifeSteal);
     // Test Crit
@@ -58,12 +59,14 @@ const userApplyAttackSingle = async (
       randomAttackDamage,
       useAttack.crit,
     );
+    console.log('Stage #1 - After Calculating User Crit Damage');
     // Test Stun
     const didUserStun = Math.random() < Number(useAttack.stun) / 100;
 
     updatedMonster.currentHp -= randomAttackDamage;
 
     // Generate Battle log
+    console.log('Stage #1 - Generating Battle Logs');
     const log = `${userState.UserGroup.user.username} used ${useAttack.name} on ${updatedMonster.monster.name} for ${randomAttackDamage} damage${didUserCrit ? ' (crit)' : ''}`;
     saveToDatabasePromises.push(
       new Promise((resolve, reject) => {
@@ -127,6 +130,7 @@ const userApplyAttackSingle = async (
     userState: JSON.parse(JSON.stringify(userState)),
   });
 
+  console.log('Stage #1 - Returning Values');
   return [
     stageOneInfoArray,
     userState,

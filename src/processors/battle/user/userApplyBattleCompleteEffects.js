@@ -9,11 +9,10 @@ const userApplyBattleCompleteEffects = async (
   saveToDatabasePromises,
   t,
 ) => {
-  console.log(userState);
-  console.log('userState');
+  console.log('Stage #7 - Starting to Apply Battle Complete effects');
 
   if (userState.class.name === 'Warrior') {
-    const relieve = userState.UserClassSkills.find((element) => element.skill.name === 'Relieve');
+    const relieve = userState.UserGroupClassSkills.find((element) => element.skill.name === 'Relieve');
     if (relieve) {
       const battleLogs = [];
       const percentageHealed = 10 + ((relieve.points - 1) * 1);
@@ -45,7 +44,7 @@ const userApplyBattleCompleteEffects = async (
       });
     }
   }
-
+  console.log('Stage #7 - Ending Apply Battle Complete effects');
   return [
     stageSevenInfoArray,
     userState,

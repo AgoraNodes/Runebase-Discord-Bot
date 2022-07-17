@@ -219,8 +219,8 @@ export const processBattleMove = async (
       userState, // Return new userState
       battleMonsterState, // Return new Battlemonster state
       allRoundEffectsInfoArray,
-      totalHealedByLifeSteal,
-      saveToDatabasePromisesTwo,
+      totalHealedByLifeSteal, // Return total healed by lifeSteal
+      saveToDatabasePromisesTwo, // Return Database promises to fulfill
     ] = await userApplyAttackSingle(
       userState, // pass the userState
       battleMonsterState, // pass the battlemonster state
@@ -240,12 +240,15 @@ export const processBattleMove = async (
   const isBattleMonsterAlive = battleMonsterState.filter((obj) => obj.currentHp > 0);
   if (!isBattleMonsterAlive || isBattleMonsterAlive.length < 1) {
     isBattleComplete = true;
+    console.log('Stage #1 - Battle Completion');
   }
 
   // Stage Two
   console.log('Stage #2 Processing');
+  console.log('Stage #2-1 Processing');
   // Process Monster Moves/Attacks
   if (!isBattleComplete) {
+    console.log('battle is not complete');
     // TODO: ADD ABILITY FOR ENEMY TO APPLY BUFFS TO SELF OR GROUP
     // TODO: ADD ABILITY FOR ENEMY TO APPLY DEBUFFS TO USER
     [
@@ -311,9 +314,12 @@ export const processBattleMove = async (
     );
   }
 
+  console.log('awaiting promises');
+
   await Promise.all(saveToDatabasePromisesOne);
 
   if (!isBattleComplete) {
+    console.log('Stage #5 - Processing');
     // Stage 5
     // Count Down buffs, debuffs / after round effects (heal?)
     [
@@ -339,6 +345,7 @@ export const processBattleMove = async (
   }
 
   // Stage 7 (Battle Complete effects) (Mana/Health REGEN)
+  console.log('Stage #7 - Processing');
   if (isBattleComplete) {
     [
       stageSevenInfoArray, // Return completed stageSevenInfoArray Array
