@@ -218,6 +218,7 @@ export const discordChangeRealm = async (
             }
 
             console.log('joining realm');
+            console.log(newSelectedId);
             await myUser.update({
               currentRealmId: newSelectedId,
               currentClassId: null,
