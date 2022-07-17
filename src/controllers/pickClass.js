@@ -4,8 +4,8 @@ import {
 } from "sequelize";
 import {
   MessageActionRow,
-  MessageButton,
-  MessageAttachment,
+  // MessageButton,
+  // MessageAttachment,
 } from 'discord.js';
 import {
   cannotSendMessageUser,
@@ -23,7 +23,10 @@ import {
   generateCancelPickClassButton,
   generatePickClassButton,
 } from '../buttons';
-import { notSelectedRealmYetMessage } from "../messages";
+import {
+  notSelectedRealmYetMessage,
+  playingOnRealmMessage,
+} from "../messages";
 
 export const discordPickClass = async (
   discordClient,
@@ -46,6 +49,22 @@ export const discordPickClass = async (
     where: {
       user_id: `${userId}`,
     },
+    include: [
+      {
+        model: db.UserGroup,
+        as: 'UserGroup',
+        include: [
+          {
+            model: db.user,
+            as: 'user',
+          },
+          {
+            model: db.group,
+            as: 'group',
+          },
+        ],
+      },
+    ],
   });
 
   if (!user) return;
@@ -83,6 +102,7 @@ export const discordPickClass = async (
 
   const canFitOnOnePage = classes.length <= 1;
   const embedMessage = await discordChannel.send({
+    content: playingOnRealmMessage(user),
     files: [
       await renderPickClassImage(
         0,
@@ -102,7 +122,11 @@ export const discordPickClass = async (
             await generateCancelPickClassButton(),
           ],
         }),
-        new MessageActionRow({ components: [generateForwardButton()] }),
+        new MessageActionRow({
+          components: [
+            generateForwardButton(),
+          ],
+        }),
       ],
   });
 
@@ -185,7 +209,6 @@ export const discordPickClass = async (
             });
             console.log('5-4');
             userGroupClass = await db.UserGroupClass.create({
-              userId: 1, // to be removed
               UserGroupId: UserGroup.id,
               classId: CurrentClassSelectionId,
               statsId: newStats.id,

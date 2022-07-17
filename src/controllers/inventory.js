@@ -392,6 +392,7 @@ export const discordShowInventory = async (
     let cannotEquip = false;
     let cannotEquipReason = '';
     if (interaction.customId.startsWith('Compare:')) {
+      // The stuff in here is a placeholder for item comparing
       let updatedUserCharacter;
       await queue.add(async () => {
         await db.sequelize.transaction({
@@ -548,12 +549,16 @@ export const discordShowInventory = async (
             }),
           ] : []
         ),
-        new MessageActionRow({
-          components: [
-            ...(currentIndex ? [generateBackButton()] : []),
-            ...(currentIndex + 1 < userCurrentCharacter.inventory.items.length ? [generateForwardButton()] : []),
-          ],
-        }),
+        ...(
+          userCurrentCharacter.inventory.items.length > 1 ? [
+            new MessageActionRow({
+              components: [
+                ...(currentIndex ? [generateBackButton()] : []),
+                ...(currentIndex + 1 < userCurrentCharacter.inventory.items.length ? [generateForwardButton()] : []),
+              ],
+            }),
+          ] : []
+        ),
         new MessageActionRow({
           components: [
             await generateExitInventoryButton(),

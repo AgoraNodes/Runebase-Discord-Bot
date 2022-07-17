@@ -7,11 +7,6 @@ import path from 'path';
 export const renderEquipmentImage = async (
   userCurrentCharacter,
 ) => {
-  const equipmentBackground = await loadImage(path.join(__dirname, '../assets/images/equipment', `background.png`));
-  const canvas = createCanvas(equipmentBackground.width, equipmentBackground.height);
-  const ctx = canvas.getContext('2d');
-
-  ctx.drawImage(equipmentBackground, 0, 0, equipmentBackground.width, equipmentBackground.height);
   let helmImage;
   let amuletImage;
   let mainHandImage;
@@ -22,11 +17,19 @@ export const renderEquipmentImage = async (
   let ringSlotTwoImage;
   let beltImage;
   let bootsImage;
+
+  const equipmentBackground = await loadImage(path.join(__dirname, '../../assets/images/equipment', `background.png`));
+
+  const canvas = createCanvas(equipmentBackground.width, equipmentBackground.height);
+  const ctx = canvas.getContext('2d');
+
+  ctx.drawImage(equipmentBackground, 0, 0, equipmentBackground.width, equipmentBackground.height);
+
   if (userCurrentCharacter.equipment.helm) {
     helmImage = await loadImage(
       path.join(
         __dirname,
-        `../assets/images/items/${userCurrentCharacter.equipment.helm.itemBase.itemFamily.itemType.name}/${userCurrentCharacter.equipment.helm.itemBase.itemFamily.name}`,
+        `../../assets/images/items/${userCurrentCharacter.equipment.helm.itemBase.itemFamily.itemType.name}/${userCurrentCharacter.equipment.helm.itemBase.itemFamily.name}`,
         `${userCurrentCharacter.equipment.helm.itemBase.name}.png`,
       ),
     );
@@ -35,7 +38,7 @@ export const renderEquipmentImage = async (
     armorImage = await loadImage(
       path.join(
         __dirname,
-        `../assets/images/items/${userCurrentCharacter.equipment.armor.itemBase.itemFamily.itemType.name}/${userCurrentCharacter.equipment.armor.itemBase.itemFamily.name}`,
+        `../../assets/images/items/${userCurrentCharacter.equipment.armor.itemBase.itemFamily.itemType.name}/${userCurrentCharacter.equipment.armor.itemBase.itemFamily.name}`,
         `${userCurrentCharacter.equipment.armor.itemBase.name}.png`,
       ),
     );
@@ -44,7 +47,7 @@ export const renderEquipmentImage = async (
     mainHandImage = await loadImage(
       path.join(
         __dirname,
-        `../assets/images/items/${userCurrentCharacter.equipment.mainHand.itemBase.itemFamily.itemType.name}/${userCurrentCharacter.equipment.mainHand.itemBase.itemFamily.name}`,
+        `../../assets/images/items/${userCurrentCharacter.equipment.mainHand.itemBase.itemFamily.itemType.name}/${userCurrentCharacter.equipment.mainHand.itemBase.itemFamily.name}`,
         `${userCurrentCharacter.equipment.mainHand.itemBase.name}.png`,
       ),
     );
@@ -53,7 +56,7 @@ export const renderEquipmentImage = async (
     offHandImage = await loadImage(
       path.join(
         __dirname,
-        `../assets/images/items/${userCurrentCharacter.equipment.offHand.itemBase.itemFamily.itemType.name}/${userCurrentCharacter.equipment.offHand.itemBase.itemFamily.name}`,
+        `../../assets/images/items/${userCurrentCharacter.equipment.offHand.itemBase.itemFamily.itemType.name}/${userCurrentCharacter.equipment.offHand.itemBase.itemFamily.name}`,
         `${userCurrentCharacter.equipment.offHand.itemBase.name}.png`,
       ),
     );
@@ -62,7 +65,7 @@ export const renderEquipmentImage = async (
     bootsImage = await loadImage(
       path.join(
         __dirname,
-        `../assets/images/items/${userCurrentCharacter.equipment.boots.itemBase.itemFamily.itemType.name}/${userCurrentCharacter.equipment.boots.itemBase.itemFamily.name}`,
+        `../../assets/images/items/${userCurrentCharacter.equipment.boots.itemBase.itemFamily.itemType.name}/${userCurrentCharacter.equipment.boots.itemBase.itemFamily.name}`,
         `${userCurrentCharacter.equipment.boots.itemBase.name}.png`,
       ),
     );
@@ -72,7 +75,7 @@ export const renderEquipmentImage = async (
     glovesImage = await loadImage(
       path.join(
         __dirname,
-        `../assets/images/items/${userCurrentCharacter.equipment.gloves.itemBase.itemFamily.itemType.name}/${userCurrentCharacter.equipment.gloves.itemBase.itemFamily.name}`,
+        `../../assets/images/items/${userCurrentCharacter.equipment.gloves.itemBase.itemFamily.itemType.name}/${userCurrentCharacter.equipment.gloves.itemBase.itemFamily.name}`,
         `${userCurrentCharacter.equipment.gloves.itemBase.name}.png`,
       ),
     );
@@ -82,7 +85,7 @@ export const renderEquipmentImage = async (
     beltImage = await loadImage(
       path.join(
         __dirname,
-        `../assets/images/items/${userCurrentCharacter.equipment.belt.itemBase.itemFamily.itemType.name}/${userCurrentCharacter.equipment.belt.itemBase.itemFamily.name}`,
+        `../../assets/images/items/${userCurrentCharacter.equipment.belt.itemBase.itemFamily.itemType.name}/${userCurrentCharacter.equipment.belt.itemBase.itemFamily.name}`,
         `${userCurrentCharacter.equipment.belt.itemBase.name}.png`,
       ),
     );
@@ -92,7 +95,7 @@ export const renderEquipmentImage = async (
     amuletImage = await loadImage(
       path.join(
         __dirname,
-        `../assets/images/items/${userCurrentCharacter.equipment.amulet.itemBase.itemFamily.itemType.name}/${userCurrentCharacter.equipment.amulet.itemBase.itemFamily.name}`,
+        `../../assets/images/items/${userCurrentCharacter.equipment.amulet.itemBase.itemFamily.itemType.name}/${userCurrentCharacter.equipment.amulet.itemBase.itemFamily.name}`,
         `${userCurrentCharacter.equipment.amulet.itemBase.name}.png`,
       ),
     );
@@ -102,7 +105,7 @@ export const renderEquipmentImage = async (
     ringSlotOneImage = await loadImage(
       path.join(
         __dirname,
-        `../assets/images/items/${userCurrentCharacter.equipment.ringSlotOne.itemBase.itemFamily.itemType.name}/${userCurrentCharacter.equipment.ringSlotOne.itemBase.itemFamily.name}`,
+        `../../assets/images/items/${userCurrentCharacter.equipment.ringSlotOne.itemBase.itemFamily.itemType.name}/${userCurrentCharacter.equipment.ringSlotOne.itemBase.itemFamily.name}`,
         `${userCurrentCharacter.equipment.ringSlotOne.itemBase.name}.png`,
       ),
     );
@@ -112,7 +115,7 @@ export const renderEquipmentImage = async (
     ringSlotTwoImage = await loadImage(
       path.join(
         __dirname,
-        `../assets/images/items/${userCurrentCharacter.equipment.ringSlotTwo.itemBase.itemFamily.itemType.name}/${userCurrentCharacter.equipment.ringSlotTwo.itemBase.itemFamily.name}`,
+        `../../assets/images/items/${userCurrentCharacter.equipment.ringSlotTwo.itemBase.itemFamily.itemType.name}/${userCurrentCharacter.equipment.ringSlotTwo.itemBase.itemFamily.name}`,
         `${userCurrentCharacter.equipment.ringSlotTwo.itemBase.name}.png`,
       ),
     );
