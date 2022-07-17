@@ -19,7 +19,7 @@ var _logger = _interopRequireDefault(require("../logger"));
 
 var _models = _interopRequireDefault(require("../../models"));
 
-var _messages = require("../../messages");
+var _embeds = require("../../embeds");
 
 var preWithdraw = /*#__PURE__*/function () {
   var _ref = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee19(discordClient, message) {
@@ -75,7 +75,7 @@ var preWithdraw = /*#__PURE__*/function () {
                         discordChannel = _context17.sent;
                         _context17.next = 10;
                         return discordChannel.send({
-                          embeds: [(0, _messages.enterWithdrawalAddress)()]
+                          embeds: [(0, _embeds.enterWithdrawalAddress)()]
                         });
 
                       case 10:
@@ -113,7 +113,7 @@ var preWithdraw = /*#__PURE__*/function () {
                                     console.log(collected);
                                     _context2.next = 3;
                                     return discordChannel.send({
-                                      embeds: [(0, _messages.timeOutMessage)()]
+                                      embeds: [(0, _embeds.timeOutMessage)()]
                                     });
 
                                   case 3:
@@ -136,7 +136,7 @@ var preWithdraw = /*#__PURE__*/function () {
                       case 14:
                         _context17.next = 16;
                         return discordUser.send({
-                          embeds: [(0, _messages.enterWithdrawalAddress)()]
+                          embeds: [(0, _embeds.enterWithdrawalAddress)()]
                         });
 
                       case 16:
@@ -175,7 +175,7 @@ var preWithdraw = /*#__PURE__*/function () {
                                     console.log(collected);
                                     _context4.next = 3;
                                     return discordUser.send({
-                                      embeds: [(0, _messages.timeOutMessage)()]
+                                      embeds: [(0, _embeds.timeOutMessage)()]
                                     });
 
                                   case 3:
@@ -203,7 +203,7 @@ var preWithdraw = /*#__PURE__*/function () {
 
                         _context17.next = 24;
                         return message.author.send({
-                          embeds: [(0, _messages.enterWithdrawalAddress)()]
+                          embeds: [(0, _embeds.enterWithdrawalAddress)()]
                         });
 
                       case 24:
@@ -241,7 +241,7 @@ var preWithdraw = /*#__PURE__*/function () {
                                     console.log(collected);
                                     _context6.next = 3;
                                     return message.author.send({
-                                      embeds: [(0, _messages.timeOutMessage)()]
+                                      embeds: [(0, _embeds.timeOutMessage)()]
                                     });
 
                                   case 3:
@@ -265,7 +265,7 @@ var preWithdraw = /*#__PURE__*/function () {
 
                         _context17.next = 29;
                         return message.channel.send({
-                          embeds: [(0, _messages.enterWithdrawalAddress)()]
+                          embeds: [(0, _embeds.enterWithdrawalAddress)()]
                         });
 
                       case 29:
@@ -303,7 +303,7 @@ var preWithdraw = /*#__PURE__*/function () {
                                     console.log(collected);
                                     _context8.next = 3;
                                     return message.channel.send({
-                                      embeds: [(0, _messages.timeOutMessage)()]
+                                      embeds: [(0, _embeds.timeOutMessage)()]
                                     });
 
                                   case 3:
@@ -377,7 +377,7 @@ var preWithdraw = /*#__PURE__*/function () {
                         _discordChannel = _context17.sent;
                         _context17.next = 57;
                         return _discordChannel.send({
-                          embeds: [(0, _messages.invalidAddressMessage)(userId)]
+                          embeds: [(0, _embeds.invalidAddressMessage)(userId)]
                         });
 
                       case 57:
@@ -387,7 +387,7 @@ var preWithdraw = /*#__PURE__*/function () {
                       case 59:
                         _context17.next = 61;
                         return _discordUser.send({
-                          embeds: [(0, _messages.invalidAddressMessage)(userId)]
+                          embeds: [(0, _embeds.invalidAddressMessage)(userId)]
                         });
 
                       case 61:
@@ -402,7 +402,7 @@ var preWithdraw = /*#__PURE__*/function () {
 
                         _context17.next = 66;
                         return message.author.send({
-                          embeds: [(0, _messages.invalidAddressMessage)(userId)]
+                          embeds: [(0, _embeds.invalidAddressMessage)(userId)]
                         });
 
                       case 66:
@@ -413,7 +413,7 @@ var preWithdraw = /*#__PURE__*/function () {
 
                         _context17.next = 69;
                         return message.channel.send({
-                          embeds: [(0, _messages.invalidAddressMessage)(userId)]
+                          embeds: [(0, _embeds.invalidAddressMessage)(userId)]
                         });
 
                       case 69:
@@ -443,7 +443,7 @@ var preWithdraw = /*#__PURE__*/function () {
                         _discordChannel2 = _context17.sent;
                         _context17.next = 80;
                         return _discordChannel2.send({
-                          embeds: [(0, _messages.enterWithdrawalAmount)()]
+                          embeds: [(0, _embeds.enterWithdrawalAmount)()]
                         });
 
                       case 80:
@@ -481,7 +481,7 @@ var preWithdraw = /*#__PURE__*/function () {
                                     console.log(collected);
                                     _context10.next = 3;
                                     return _discordChannel2.send({
-                                      embeds: [(0, _messages.timeOutMessage)()]
+                                      embeds: [(0, _embeds.timeOutMessage)()]
                                     });
 
                                   case 3:
@@ -504,7 +504,7 @@ var preWithdraw = /*#__PURE__*/function () {
                       case 84:
                         _context17.next = 86;
                         return _discordUser2.send({
-                          embeds: [(0, _messages.enterWithdrawalAmount)()]
+                          embeds: [(0, _embeds.enterWithdrawalAmount)()]
                         });
 
                       case 86:
@@ -543,7 +543,7 @@ var preWithdraw = /*#__PURE__*/function () {
                                     console.log(collected);
                                     _context12.next = 3;
                                     return _discordUser2.send({
-                                      embeds: [(0, _messages.timeOutMessage)()]
+                                      embeds: [(0, _embeds.timeOutMessage)()]
                                     });
 
                                   case 3:
@@ -571,7 +571,7 @@ var preWithdraw = /*#__PURE__*/function () {
 
                         _context17.next = 94;
                         return message.author.send({
-                          embeds: [(0, _messages.enterWithdrawalAmount)()]
+                          embeds: [(0, _embeds.enterWithdrawalAmount)()]
                         });
 
                       case 94:
@@ -609,7 +609,7 @@ var preWithdraw = /*#__PURE__*/function () {
                                     console.log(collected);
                                     _context14.next = 3;
                                     return message.author.send({
-                                      embeds: [(0, _messages.timeOutMessage)()]
+                                      embeds: [(0, _embeds.timeOutMessage)()]
                                     });
 
                                   case 3:
@@ -633,7 +633,7 @@ var preWithdraw = /*#__PURE__*/function () {
 
                         _context17.next = 99;
                         return message.channel.send({
-                          embeds: [(0, _messages.enterWithdrawalAmount)()]
+                          embeds: [(0, _embeds.enterWithdrawalAmount)()]
                         });
 
                       case 99:
@@ -671,7 +671,7 @@ var preWithdraw = /*#__PURE__*/function () {
                                     console.log(collected);
                                     _context16.next = 3;
                                     return message.channel.send({
-                                      embeds: [(0, _messages.timeOutMessage)()]
+                                      embeds: [(0, _embeds.timeOutMessage)()]
                                     });
 
                                   case 3:
@@ -763,7 +763,7 @@ var preWithdraw = /*#__PURE__*/function () {
                         discordChannel = _context18.sent;
                         _context18.next = 16;
                         return discordChannel.send({
-                          embeds: [(0, _messages.cannotSendMessageUser)("Withdraw", message)]
+                          embeds: [(0, _embeds.cannotSendMessageUser)("Withdraw", message)]
                         })["catch"](function (e) {
                           console.log(e);
                         });
@@ -775,7 +775,7 @@ var preWithdraw = /*#__PURE__*/function () {
                       case 18:
                         _context18.next = 20;
                         return message.channel.send({
-                          embeds: [(0, _messages.cannotSendMessageUser)("Withdraw", message)]
+                          embeds: [(0, _embeds.cannotSendMessageUser)("Withdraw", message)]
                         })["catch"](function (e) {
                           console.log(e);
                         });
@@ -797,7 +797,7 @@ var preWithdraw = /*#__PURE__*/function () {
                         _discordChannel3 = _context18.sent;
                         _context18.next = 28;
                         return _discordChannel3.send({
-                          embeds: [(0, _messages.discordErrorMessage)("Withdraw")]
+                          embeds: [(0, _embeds.discordErrorMessage)("Withdraw")]
                         })["catch"](function (e) {
                           console.log(e);
                         });
@@ -809,7 +809,7 @@ var preWithdraw = /*#__PURE__*/function () {
                       case 30:
                         _context18.next = 32;
                         return message.channel.send({
-                          embeds: [(0, _messages.discordErrorMessage)("Withdraw")]
+                          embeds: [(0, _embeds.discordErrorMessage)("Withdraw")]
                         })["catch"](function (e) {
                           console.log(e);
                         });

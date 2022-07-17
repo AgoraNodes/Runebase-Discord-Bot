@@ -21,7 +21,7 @@ var _logger = _interopRequireDefault(require("../helpers/logger"));
 
 var _rclient = require("../services/rclient");
 
-var _messages = require("../messages");
+var _embeds = require("../embeds");
 
 var generateUserWalletAndAddress = /*#__PURE__*/function () {
   var _ref = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(userInfo, t) {
@@ -246,7 +246,7 @@ var createUpdateDiscordUser = /*#__PURE__*/function () {
 
                                             _context2.next = 7;
                                             return userClient.send({
-                                              embeds: [(0, _messages.discordWelcomeMessage)(userInfo)]
+                                              embeds: [(0, _embeds.discordWelcomeMessage)(userInfo)]
                                             })["catch"](function (e) {
                                               console.log(e);
                                             });

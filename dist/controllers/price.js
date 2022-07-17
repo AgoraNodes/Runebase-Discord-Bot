@@ -15,7 +15,7 @@ var _asyncToGenerator2 = _interopRequireDefault(require("@babel/runtime/helpers/
 
 var _sequelize = require("sequelize");
 
-var _messages = require("../messages");
+var _embeds = require("../embeds");
 
 var _models = _interopRequireDefault(require("../models"));
 
@@ -96,7 +96,7 @@ var discordPrice = /*#__PURE__*/function () {
                         discordChannel = _context.sent;
                         _context.next = 24;
                         return discordChannel.send({
-                          embeds: [(0, _messages.priceMessage)(replyString)]
+                          embeds: [(0, _embeds.priceMessage)(replyString)]
                         });
 
                       case 24:
@@ -106,7 +106,7 @@ var discordPrice = /*#__PURE__*/function () {
                       case 26:
                         _context.next = 28;
                         return discordUser.send({
-                          embeds: [(0, _messages.priceMessage)(replyString)]
+                          embeds: [(0, _embeds.priceMessage)(replyString)]
                         });
 
                       case 28:
@@ -121,7 +121,7 @@ var discordPrice = /*#__PURE__*/function () {
 
                         _context.next = 33;
                         return message.author.send({
-                          embeds: [(0, _messages.priceMessage)(replyString)]
+                          embeds: [(0, _embeds.priceMessage)(replyString)]
                         });
 
                       case 33:
@@ -132,7 +132,7 @@ var discordPrice = /*#__PURE__*/function () {
 
                         _context.next = 36;
                         return message.channel.send({
-                          embeds: [(0, _messages.priceMessage)(replyString)]
+                          embeds: [(0, _embeds.priceMessage)(replyString)]
                         });
 
                       case 36:
@@ -223,7 +223,7 @@ var discordPrice = /*#__PURE__*/function () {
                         discordChannel = _context2.sent;
                         _context2.next = 16;
                         return discordChannel.send({
-                          embeds: [(0, _messages.cannotSendMessageUser)("Deposit", message)]
+                          embeds: [(0, _embeds.cannotSendMessageUser)("Deposit", message)]
                         })["catch"](function (e) {
                           console.log(e);
                         });
@@ -235,7 +235,7 @@ var discordPrice = /*#__PURE__*/function () {
                       case 18:
                         _context2.next = 20;
                         return message.channel.send({
-                          embeds: [(0, _messages.cannotSendMessageUser)("Deposit", message)]
+                          embeds: [(0, _embeds.cannotSendMessageUser)("Deposit", message)]
                         })["catch"](function (e) {
                           console.log(e);
                         });
@@ -257,7 +257,7 @@ var discordPrice = /*#__PURE__*/function () {
                         _discordChannel = _context2.sent;
                         _context2.next = 28;
                         return _discordChannel.send({
-                          embeds: [(0, _messages.discordErrorMessage)("Deposit")]
+                          embeds: [(0, _embeds.discordErrorMessage)("Deposit")]
                         })["catch"](function (e) {
                           console.log(e);
                         });
@@ -269,7 +269,7 @@ var discordPrice = /*#__PURE__*/function () {
                       case 30:
                         _context2.next = 32;
                         return message.channel.send({
-                          embeds: [(0, _messages.discordErrorMessage)("Deposit")]
+                          embeds: [(0, _embeds.discordErrorMessage)("Deposit")]
                         })["catch"](function (e) {
                           console.log(e);
                         });

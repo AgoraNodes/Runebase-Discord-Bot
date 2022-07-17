@@ -17,7 +17,7 @@ var _models = _interopRequireDefault(require("../../models"));
 
 var _logger = _interopRequireDefault(require("../logger"));
 
-var _messages = require("../../messages");
+var _embeds = require("../../embeds");
 
 var destroyItem = /*#__PURE__*/function () {
   var _ref = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee4(userCurrentCharacter, itemId, discordChannel, io, queue) {

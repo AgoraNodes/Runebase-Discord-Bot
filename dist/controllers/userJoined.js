@@ -15,7 +15,7 @@ var _asyncToGenerator2 = _interopRequireDefault(require("@babel/runtime/helpers/
 
 var _sequelize = require("sequelize");
 
-var _messages = require("../messages");
+var _embeds = require("../embeds");
 
 var _models = _interopRequireDefault(require("../models"));
 
@@ -213,7 +213,7 @@ var discordUserJoined = /*#__PURE__*/function () {
                         discordChannel = _context2.sent;
                         _context2.next = 15;
                         return discordChannel.send({
-                          embeds: [(0, _messages.cannotSendMessageUser)("userJoined", message)]
+                          embeds: [(0, _embeds.cannotSendMessageUser)("userJoined", message)]
                         })["catch"](function (e) {
                           console.log(e);
                         });
@@ -225,7 +225,7 @@ var discordUserJoined = /*#__PURE__*/function () {
                       case 17:
                         _context2.next = 19;
                         return message.channel.send({
-                          embeds: [(0, _messages.cannotSendMessageUser)("userJoined", message)]
+                          embeds: [(0, _embeds.cannotSendMessageUser)("userJoined", message)]
                         })["catch"](function (e) {
                           console.log(e);
                         });
@@ -247,7 +247,7 @@ var discordUserJoined = /*#__PURE__*/function () {
                         _discordChannel = _context2.sent;
                         _context2.next = 27;
                         return _discordChannel.send({
-                          embeds: [(0, _messages.discordErrorMessage)("userJoined")]
+                          embeds: [(0, _embeds.discordErrorMessage)("userJoined")]
                         })["catch"](function (e) {
                           console.log(e);
                         });
@@ -259,7 +259,7 @@ var discordUserJoined = /*#__PURE__*/function () {
                       case 29:
                         _context2.next = 31;
                         return message.channel.send({
-                          embeds: [(0, _messages.discordErrorMessage)("userJoined")]
+                          embeds: [(0, _embeds.discordErrorMessage)("userJoined")]
                         })["catch"](function (e) {
                           console.log(e);
                         });

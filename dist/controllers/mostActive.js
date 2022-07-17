@@ -23,7 +23,7 @@ var _discord = require("discord.js");
 
 var _path = _interopRequireDefault(require("path"));
 
-var _messages = require("../messages");
+var _embeds = require("../embeds");
 
 var _models = _interopRequireDefault(require("../models"));
 
@@ -552,7 +552,7 @@ var discordMostActive = /*#__PURE__*/function () {
                         discordChannel = _context4.sent;
                         _context4.next = 16;
                         return discordChannel.send({
-                          embeds: [(0, _messages.cannotSendMessageUser)("MostActive", message)]
+                          embeds: [(0, _embeds.cannotSendMessageUser)("MostActive", message)]
                         })["catch"](function (e) {
                           console.log(e);
                         });
@@ -564,7 +564,7 @@ var discordMostActive = /*#__PURE__*/function () {
                       case 18:
                         _context4.next = 20;
                         return message.channel.send({
-                          embeds: [(0, _messages.cannotSendMessageUser)("MostActive", message)]
+                          embeds: [(0, _embeds.cannotSendMessageUser)("MostActive", message)]
                         })["catch"](function (e) {
                           console.log(e);
                         });
@@ -586,7 +586,7 @@ var discordMostActive = /*#__PURE__*/function () {
                         _discordChannel = _context4.sent;
                         _context4.next = 28;
                         return _discordChannel.send({
-                          embeds: [(0, _messages.discordErrorMessage)("MostActive")]
+                          embeds: [(0, _embeds.discordErrorMessage)("MostActive")]
                         })["catch"](function (e) {
                           console.log(e);
                         });
@@ -598,7 +598,7 @@ var discordMostActive = /*#__PURE__*/function () {
                       case 30:
                         _context4.next = 32;
                         return message.channel.send({
-                          embeds: [(0, _messages.discordErrorMessage)("MostActive")]
+                          embeds: [(0, _embeds.discordErrorMessage)("MostActive")]
                         })["catch"](function (e) {
                           console.log(e);
                         });

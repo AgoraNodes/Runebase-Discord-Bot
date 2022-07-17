@@ -27,6 +27,8 @@ var _fetchDiscordChannel = require("../helpers/client/fetchDiscordChannel");
 
 var _buttons = require("../buttons");
 
+var _embeds = require("../embeds");
+
 var _messages = require("../messages");
 
 function _createForOfIteratorHelper(o, allowArrayLike) { var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"]; if (!it) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = it.call(o); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it["return"] != null) it["return"](); } finally { if (didErr) throw err; } } }; }
@@ -68,7 +70,7 @@ var discordResetSkills = /*#__PURE__*/function () {
 
             _context5.next = 13;
             return message.reply({
-              content: 'You have not selected a class yet\n`!runebase pickclass`\n`/pickclass`',
+              content: (0, _messages.notSelectedClassYetMessage)(),
               ephemeral: true
             });
 
@@ -106,37 +108,39 @@ var discordResetSkills = /*#__PURE__*/function () {
             }, 0);
             totalSkillsCost = sumSkillPoints * 1;
             _context5.t0 = discordChannel;
-            _context5.next = 25;
-            return (0, _messages.skillConfirmationMessage)(userId, userWallet.available, totalSkillsCost);
+            _context5.t1 = (0, _messages.playingOnRealmMessage)(userCurrentCharacter);
+            _context5.next = 26;
+            return (0, _embeds.skillConfirmationMessage)(userId, userWallet.available, totalSkillsCost);
 
-          case 25:
-            _context5.t1 = _context5.sent;
-            _context5.t2 = [_context5.t1];
-            _context5.t3 = _discord.MessageActionRow;
-            _context5.next = 30;
+          case 26:
+            _context5.t2 = _context5.sent;
+            _context5.t3 = [_context5.t2];
+            _context5.t4 = _discord.MessageActionRow;
+            _context5.next = 31;
             return (0, _buttons.generateAcceptButton)();
 
-          case 30:
-            _context5.t4 = _context5.sent;
-            _context5.next = 33;
+          case 31:
+            _context5.t5 = _context5.sent;
+            _context5.next = 34;
             return (0, _buttons.generateDeclineButton)();
 
-          case 33:
-            _context5.t5 = _context5.sent;
-            _context5.t6 = [_context5.t4, _context5.t5];
-            _context5.t7 = {
-              components: _context5.t6
+          case 34:
+            _context5.t6 = _context5.sent;
+            _context5.t7 = [_context5.t5, _context5.t6];
+            _context5.t8 = {
+              components: _context5.t7
             };
-            _context5.t8 = new _context5.t3(_context5.t7);
-            _context5.t9 = [_context5.t8];
-            _context5.t10 = {
-              embeds: _context5.t2,
-              components: _context5.t9
+            _context5.t9 = new _context5.t4(_context5.t8);
+            _context5.t10 = [_context5.t9];
+            _context5.t11 = {
+              content: _context5.t1,
+              embeds: _context5.t3,
+              components: _context5.t10
             };
-            _context5.next = 41;
-            return _context5.t0.send.call(_context5.t0, _context5.t10);
+            _context5.next = 42;
+            return _context5.t0.send.call(_context5.t0, _context5.t11);
 
-          case 41:
+          case 42:
             embedMessage = _context5.sent;
             collector = embedMessage.createMessageComponentCollector({// filter: ({ user: discordUser }) => discordUser.id === userCurrentCharacter.user.user_id,
             });
@@ -147,7 +151,7 @@ var discordResetSkills = /*#__PURE__*/function () {
                     switch (_context4.prev = _context4.next) {
                       case 0:
                         if (!interaction.isButton()) {
-                          _context4.next = 21;
+                          _context4.next = 22;
                           break;
                         }
 
@@ -171,35 +175,37 @@ var discordResetSkills = /*#__PURE__*/function () {
 
                       case 7:
                         if (!(interaction.customId === 'decline')) {
-                          _context4.next = 18;
+                          _context4.next = 19;
                           break;
                         }
 
                         _context4.t0 = interaction;
-                        _context4.next = 11;
-                        return (0, _messages.declineResetSkillsMessage)(userCurrentCharacter.UserGroup.user.user_id);
+                        _context4.t1 = (0, _messages.playingOnRealmMessage)(userCurrentCharacter);
+                        _context4.next = 12;
+                        return (0, _embeds.declineResetSkillsMessage)(userCurrentCharacter.UserGroup.user.user_id);
 
-                      case 11:
-                        _context4.t1 = _context4.sent;
-                        _context4.t2 = [_context4.t1];
-                        _context4.t3 = [];
-                        _context4.t4 = {
-                          embeds: _context4.t2,
-                          components: _context4.t3
+                      case 12:
+                        _context4.t2 = _context4.sent;
+                        _context4.t3 = [_context4.t2];
+                        _context4.t4 = [];
+                        _context4.t5 = {
+                          content: _context4.t1,
+                          embeds: _context4.t3,
+                          components: _context4.t4
                         };
-                        _context4.next = 17;
-                        return _context4.t0.editReply.call(_context4.t0, _context4.t4);
-
-                      case 17:
-                        return _context4.abrupt("return");
+                        _context4.next = 18;
+                        return _context4.t0.editReply.call(_context4.t0, _context4.t5);
 
                       case 18:
+                        return _context4.abrupt("return");
+
+                      case 19:
                         if (!(interaction.customId === 'accept')) {
-                          _context4.next = 21;
+                          _context4.next = 22;
                           break;
                         }
 
-                        _context4.next = 21;
+                        _context4.next = 22;
                         return queue.add( /*#__PURE__*/(0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee3() {
                           return _regenerator["default"].wrap(function _callee3$(_context3) {
                             while (1) {
@@ -280,35 +286,37 @@ var discordResetSkills = /*#__PURE__*/function () {
                                               resetCost = sumResetSkillPoints * 1 * 1e8;
 
                                               if (!(userSkills.length > 0)) {
-                                                _context.next = 45;
+                                                _context.next = 46;
                                                 break;
                                               }
 
                                               if (!(findWallet.available < resetCost)) {
-                                                _context.next = 26;
+                                                _context.next = 27;
                                                 break;
                                               }
 
                                               _context.t0 = interaction;
-                                              _context.next = 19;
-                                              return (0, _messages.insufficientBalanceMessage)(userCurrentCharacter.UserGroup.user.user_id, 'Reset Skills');
+                                              _context.t1 = (0, _messages.playingOnRealmMessage)(userCurrentCharacter);
+                                              _context.next = 20;
+                                              return (0, _embeds.insufficientBalanceMessage)(userCurrentCharacter.UserGroup.user.user_id, 'Reset Skills');
 
-                                            case 19:
-                                              _context.t1 = _context.sent;
-                                              _context.t2 = [_context.t1];
-                                              _context.t3 = [];
-                                              _context.t4 = {
-                                                embeds: _context.t2,
-                                                components: _context.t3
+                                            case 20:
+                                              _context.t2 = _context.sent;
+                                              _context.t3 = [_context.t2];
+                                              _context.t4 = [];
+                                              _context.t5 = {
+                                                content: _context.t1,
+                                                embeds: _context.t3,
+                                                components: _context.t4
                                               };
-                                              _context.next = 25;
-                                              return _context.t0.editReply.call(_context.t0, _context.t4);
-
-                                            case 25:
-                                              return _context.abrupt("return");
+                                              _context.next = 26;
+                                              return _context.t0.editReply.call(_context.t0, _context.t5);
 
                                             case 26:
-                                              _context.next = 28;
+                                              return _context.abrupt("return");
+
+                                            case 27:
+                                              _context.next = 29;
                                               return findWallet.update({
                                                 available: findWallet.available - resetCost
                                               }, {
@@ -316,71 +324,71 @@ var discordResetSkills = /*#__PURE__*/function () {
                                                 transaction: t
                                               });
 
-                                            case 28:
+                                            case 29:
                                               // eslint-disable-next-line no-restricted-syntax
                                               _iterator = _createForOfIteratorHelper(userSkills);
-                                              _context.prev = 29;
+                                              _context.prev = 30;
 
                                               _iterator.s();
 
-                                            case 31:
+                                            case 32:
                                               if ((_step = _iterator.n()).done) {
-                                                _context.next = 37;
+                                                _context.next = 38;
                                                 break;
                                               }
 
                                               userSkill = _step.value;
-                                              _context.next = 35;
+                                              _context.next = 36;
                                               return userSkill.destroy({
                                                 lock: t.LOCK.UPDATE,
                                                 transaction: t
                                               });
 
-                                            case 35:
-                                              _context.next = 31;
+                                            case 36:
+                                              _context.next = 32;
                                               break;
 
-                                            case 37:
-                                              _context.next = 42;
+                                            case 38:
+                                              _context.next = 43;
                                               break;
 
-                                            case 39:
-                                              _context.prev = 39;
-                                              _context.t5 = _context["catch"](29);
+                                            case 40:
+                                              _context.prev = 40;
+                                              _context.t6 = _context["catch"](30);
 
-                                              _iterator.e(_context.t5);
+                                              _iterator.e(_context.t6);
 
-                                            case 42:
-                                              _context.prev = 42;
+                                            case 43:
+                                              _context.prev = 43;
 
                                               _iterator.f();
 
-                                              return _context.finish(42);
+                                              return _context.finish(43);
 
-                                            case 45:
-                                              _context.t6 = interaction;
-                                              _context.t7 = "<@".concat(userCurrentCharacter.UserGroup.user.user_id, ">");
-                                              _context.next = 49;
-                                              return (0, _messages.resetSkillCompleteMessage)(userCurrentCharacter.UserGroup.user.user_id);
+                                            case 46:
+                                              _context.t7 = interaction;
+                                              _context.t8 = (0, _messages.playingOnRealmMessage)(userCurrentCharacter);
+                                              _context.next = 50;
+                                              return (0, _embeds.resetSkillCompleteMessage)(userCurrentCharacter.UserGroup.user.user_id);
 
-                                            case 49:
-                                              _context.t8 = _context.sent;
-                                              _context.t9 = [_context.t8];
-                                              _context.t10 = [];
-                                              _context.t11 = {
-                                                content: _context.t7,
-                                                embeds: _context.t9,
-                                                components: _context.t10
+                                            case 50:
+                                              _context.t9 = _context.sent;
+                                              _context.t10 = [_context.t9];
+                                              _context.t11 = [];
+                                              _context.t12 = {
+                                                content: _context.t8,
+                                                embeds: _context.t10,
+                                                components: _context.t11
                                               };
-                                              _context.next = 55;
-                                              return _context.t6.editReply.call(_context.t6, _context.t11);
+                                              _context.next = 56;
+                                              return _context.t7.editReply.call(_context.t7, _context.t12);
 
-                                            case 55:
+                                            case 56:
                                             case "end":
                                               return _context.stop();
                                           }
                                         }
-                                      }, _callee, null, [[29, 39, 42, 45]]);
+                                      }, _callee, null, [[30, 40, 43, 46]]);
                                     }));
 
                                     return function (_x6) {
@@ -437,7 +445,7 @@ var discordResetSkills = /*#__PURE__*/function () {
                           }, _callee3);
                         })));
 
-                      case 21:
+                      case 22:
                       case "end":
                         return _context4.stop();
                     }
@@ -450,7 +458,7 @@ var discordResetSkills = /*#__PURE__*/function () {
               };
             }());
 
-          case 44:
+          case 45:
           case "end":
             return _context5.stop();
         }

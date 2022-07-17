@@ -25,9 +25,11 @@ var _fetchDiscordChannel = require("../helpers/client/fetchDiscordChannel");
 
 var _buttons = require("../buttons");
 
-var _messages = require("../messages");
+var _embeds = require("../embeds");
 
 var _calculateCharacterStats = require("../helpers/stats/calculateCharacterStats");
+
+var _messages = require("../messages");
 
 /* eslint-disable import/prefer-default-export */
 var discordHeal = /*#__PURE__*/function () {
@@ -63,7 +65,7 @@ var discordHeal = /*#__PURE__*/function () {
 
             _context5.next = 13;
             return message.reply({
-              content: 'You have not selected a class yet\n`!runebase pickclass`\n`/pickclass`',
+              content: (0, _messages.notSelectedClassYetMessage)(),
               ephemeral: true
             });
 
@@ -81,37 +83,39 @@ var discordHeal = /*#__PURE__*/function () {
           case 16:
             userWallet = _context5.sent;
             _context5.t0 = discordChannel;
-            _context5.next = 20;
-            return (0, _messages.confirmationHealMessage)(userCurrentCharacter.UserGroup.user.user_id, userWallet.available);
+            _context5.t1 = (0, _messages.playingOnRealmMessage)(userCurrentCharacter);
+            _context5.next = 21;
+            return (0, _embeds.confirmationHealMessage)(userCurrentCharacter.UserGroup.user.user_id, userWallet.available);
 
-          case 20:
-            _context5.t1 = _context5.sent;
-            _context5.t2 = [_context5.t1];
-            _context5.t3 = _discord.MessageActionRow;
-            _context5.next = 25;
+          case 21:
+            _context5.t2 = _context5.sent;
+            _context5.t3 = [_context5.t2];
+            _context5.t4 = _discord.MessageActionRow;
+            _context5.next = 26;
             return (0, _buttons.generateAcceptButton)();
 
-          case 25:
-            _context5.t4 = _context5.sent;
-            _context5.next = 28;
+          case 26:
+            _context5.t5 = _context5.sent;
+            _context5.next = 29;
             return (0, _buttons.generateDeclineButton)();
 
-          case 28:
-            _context5.t5 = _context5.sent;
-            _context5.t6 = [_context5.t4, _context5.t5];
-            _context5.t7 = {
-              components: _context5.t6
+          case 29:
+            _context5.t6 = _context5.sent;
+            _context5.t7 = [_context5.t5, _context5.t6];
+            _context5.t8 = {
+              components: _context5.t7
             };
-            _context5.t8 = new _context5.t3(_context5.t7);
-            _context5.t9 = [_context5.t8];
-            _context5.t10 = {
-              embeds: _context5.t2,
-              components: _context5.t9
+            _context5.t9 = new _context5.t4(_context5.t8);
+            _context5.t10 = [_context5.t9];
+            _context5.t11 = {
+              content: _context5.t1,
+              embeds: _context5.t3,
+              components: _context5.t10
             };
-            _context5.next = 36;
-            return _context5.t0.send.call(_context5.t0, _context5.t10);
+            _context5.next = 37;
+            return _context5.t0.send.call(_context5.t0, _context5.t11);
 
-          case 36:
+          case 37:
             embedMessage = _context5.sent;
             collector = embedMessage.createMessageComponentCollector({// filter: ({ user: discordUser }) => discordUser.id === userCurrentCharacter.user.user_id,
             });
@@ -152,7 +156,7 @@ var discordHeal = /*#__PURE__*/function () {
 
                         _context4.t0 = interaction;
                         _context4.next = 11;
-                        return (0, _messages.declineHealMessage)(userCurrentCharacter.UserGroup.user.user_id);
+                        return (0, _embeds.declineHealMessage)(userCurrentCharacter.UserGroup.user.user_id);
 
                       case 11:
                         _context4.t1 = _context4.sent;
@@ -204,30 +208,32 @@ var discordHeal = /*#__PURE__*/function () {
                                               findWallet = _context.sent;
 
                                               if (!(findWallet.available < 10000000)) {
-                                                _context.next = 14;
+                                                _context.next = 15;
                                                 break;
                                               }
 
                                               _context.t0 = interaction;
-                                              _context.next = 7;
-                                              return (0, _messages.insufficientBalanceMessage)(userCurrentCharacter.UserGroup.user.user_id, 'Heal');
+                                              _context.t1 = (0, _messages.playingOnRealmMessage)(userCurrentCharacter);
+                                              _context.next = 8;
+                                              return (0, _embeds.insufficientBalanceMessage)(userCurrentCharacter.UserGroup.user.user_id, 'Heal');
 
-                                            case 7:
-                                              _context.t1 = _context.sent;
-                                              _context.t2 = [_context.t1];
-                                              _context.t3 = [];
-                                              _context.t4 = {
-                                                embeds: _context.t2,
-                                                components: _context.t3
+                                            case 8:
+                                              _context.t2 = _context.sent;
+                                              _context.t3 = [_context.t2];
+                                              _context.t4 = [];
+                                              _context.t5 = {
+                                                content: _context.t1,
+                                                embeds: _context.t3,
+                                                components: _context.t4
                                               };
-                                              _context.next = 13;
-                                              return _context.t0.editReply.call(_context.t0, _context.t4);
-
-                                            case 13:
-                                              return _context.abrupt("return");
+                                              _context.next = 14;
+                                              return _context.t0.editReply.call(_context.t0, _context.t5);
 
                                             case 14:
-                                              _context.next = 16;
+                                              return _context.abrupt("return");
+
+                                            case 15:
+                                              _context.next = 17;
                                               return findWallet.update({
                                                 available: findWallet.available - 10000000
                                               }, {
@@ -235,9 +241,9 @@ var discordHeal = /*#__PURE__*/function () {
                                                 transaction: t
                                               });
 
-                                            case 16:
+                                            case 17:
                                               console.log('fetch usergroupclass');
-                                              _context.next = 19;
+                                              _context.next = 20;
                                               return _models["default"].UserGroupClass.findOne({
                                                 where: {
                                                   UserGroupId: userCurrentCharacter.UserGroup.id,
@@ -257,17 +263,17 @@ var discordHeal = /*#__PURE__*/function () {
                                                 transaction: t
                                               });
 
-                                            case 19:
+                                            case 20:
                                               userToUpdate = _context.sent;
-                                              _context.next = 22;
+                                              _context.next = 23;
                                               return (0, _calculateCharacterStats.calculateCharacterStats)(userCurrentCharacter);
 
-                                            case 22:
+                                            case 23:
                                               _yield$calculateChara = _context.sent;
                                               hp = _yield$calculateChara.hp;
                                               mp = _yield$calculateChara.mp;
                                               console.log('before condition update');
-                                              _context.next = 28;
+                                              _context.next = 29;
                                               return userToUpdate.condition.update({
                                                 life: hp.max,
                                                 mana: mp.max
@@ -276,25 +282,25 @@ var discordHeal = /*#__PURE__*/function () {
                                                 transaction: t
                                               });
 
-                                            case 28:
-                                              _context.t5 = interaction;
-                                              _context.t6 = "<@".concat(userCurrentCharacter.UserGroup.user.user_id, ">");
-                                              _context.next = 32;
-                                              return (0, _messages.healCompleteMessage)(userCurrentCharacter.UserGroup.user.user_id);
+                                            case 29:
+                                              _context.t6 = interaction;
+                                              _context.t7 = (0, _messages.playingOnRealmMessage)(userCurrentCharacter);
+                                              _context.next = 33;
+                                              return (0, _embeds.healCompleteMessage)(userCurrentCharacter.UserGroup.user.user_id);
 
-                                            case 32:
-                                              _context.t7 = _context.sent;
-                                              _context.t8 = [_context.t7];
-                                              _context.t9 = [];
-                                              _context.t10 = {
-                                                content: _context.t6,
-                                                embeds: _context.t8,
-                                                components: _context.t9
+                                            case 33:
+                                              _context.t8 = _context.sent;
+                                              _context.t9 = [_context.t8];
+                                              _context.t10 = [];
+                                              _context.t11 = {
+                                                content: _context.t7,
+                                                embeds: _context.t9,
+                                                components: _context.t10
                                               };
-                                              _context.next = 38;
-                                              return _context.t5.editReply.call(_context.t5, _context.t10);
+                                              _context.next = 39;
+                                              return _context.t6.editReply.call(_context.t6, _context.t11);
 
-                                            case 38:
+                                            case 39:
                                             case "end":
                                               return _context.stop();
                                           }
@@ -369,7 +375,7 @@ var discordHeal = /*#__PURE__*/function () {
               };
             }());
 
-          case 39:
+          case 40:
           case "end":
             return _context5.stop();
         }

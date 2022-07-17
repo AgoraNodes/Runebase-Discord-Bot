@@ -11,7 +11,7 @@ var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"))
 
 var _asyncToGenerator2 = _interopRequireDefault(require("@babel/runtime/helpers/asyncToGenerator"));
 
-var _messages = require("../../../messages");
+var _embeds = require("../../../embeds");
 
 var handleInsufficientBalanceMessage = /*#__PURE__*/function () {
   var _ref = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(discordClient, message, capType) {
@@ -43,7 +43,7 @@ var handleInsufficientBalanceMessage = /*#__PURE__*/function () {
             discordChannel = _context.sent;
             _context.next = 10;
             return discordChannel.send({
-              embeds: [(0, _messages.insufficientBalanceMessage)(message.user.id, capType)]
+              embeds: [(0, _embeds.insufficientBalanceMessage)(message.user.id, capType)]
             });
 
           case 10:
@@ -53,7 +53,7 @@ var handleInsufficientBalanceMessage = /*#__PURE__*/function () {
           case 12:
             _context.next = 14;
             return discordUser.send({
-              embeds: [(0, _messages.insufficientBalanceMessage)(message.user.id, capType)]
+              embeds: [(0, _embeds.insufficientBalanceMessage)(message.user.id, capType)]
             });
 
           case 14:
@@ -68,7 +68,7 @@ var handleInsufficientBalanceMessage = /*#__PURE__*/function () {
 
             _context.next = 19;
             return message.author.send({
-              embeds: [(0, _messages.insufficientBalanceMessage)(message.author.id, capType)]
+              embeds: [(0, _embeds.insufficientBalanceMessage)(message.author.id, capType)]
             });
 
           case 19:
@@ -79,7 +79,7 @@ var handleInsufficientBalanceMessage = /*#__PURE__*/function () {
 
             _context.next = 22;
             return message.channel.send({
-              embeds: [(0, _messages.insufficientBalanceMessage)(message.author.id, capType)]
+              embeds: [(0, _embeds.insufficientBalanceMessage)(message.author.id, capType)]
             });
 
           case 22:

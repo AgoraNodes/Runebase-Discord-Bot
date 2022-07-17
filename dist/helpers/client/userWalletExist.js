@@ -13,7 +13,7 @@ var _asyncToGenerator2 = _interopRequireDefault(require("@babel/runtime/helpers/
 
 var _models = _interopRequireDefault(require("../../models"));
 
-var _messages = require("../../messages");
+var _embeds = require("../../embeds");
 
 var capitalize = function capitalize(s) {
   return s && s[0].toUpperCase() + s.slice(1);
@@ -79,7 +79,7 @@ var userWalletExist = /*#__PURE__*/function () {
 
             _context.next = 11;
             return message.reply({
-              embeds: [(0, _messages.userNotFoundMessage)(message, capitalize(functionName))]
+              embeds: [(0, _embeds.userNotFoundMessage)(message, capitalize(functionName))]
             });
 
           case 11:

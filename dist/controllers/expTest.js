@@ -15,7 +15,7 @@ var _asyncToGenerator2 = _interopRequireDefault(require("@babel/runtime/helpers/
 
 var _sequelize = require("sequelize");
 
-var _messages = require("../messages");
+var _embeds = require("../embeds");
 
 var _models = _interopRequireDefault(require("../models"));
 
@@ -130,7 +130,7 @@ var discordExpTest = /*#__PURE__*/function () {
                         discordChannel = _context2.sent;
                         _context2.next = 16;
                         return discordChannel.send({
-                          embeds: [(0, _messages.cannotSendMessageUser)("expTest", message)]
+                          embeds: [(0, _embeds.cannotSendMessageUser)("expTest", message)]
                         })["catch"](function (e) {
                           console.log(e);
                         });
@@ -142,7 +142,7 @@ var discordExpTest = /*#__PURE__*/function () {
                       case 18:
                         _context2.next = 20;
                         return message.channel.send({
-                          embeds: [(0, _messages.cannotSendMessageUser)("expTest", message)]
+                          embeds: [(0, _embeds.cannotSendMessageUser)("expTest", message)]
                         })["catch"](function (e) {
                           console.log(e);
                         });
@@ -164,7 +164,7 @@ var discordExpTest = /*#__PURE__*/function () {
                         _discordChannel = _context2.sent;
                         _context2.next = 28;
                         return _discordChannel.send({
-                          embeds: [(0, _messages.discordErrorMessage)("expTest")]
+                          embeds: [(0, _embeds.discordErrorMessage)("expTest")]
                         })["catch"](function (e) {
                           console.log(e);
                         });
@@ -176,7 +176,7 @@ var discordExpTest = /*#__PURE__*/function () {
                       case 30:
                         _context2.next = 32;
                         return message.channel.send({
-                          embeds: [(0, _messages.discordErrorMessage)("expTest")]
+                          embeds: [(0, _embeds.discordErrorMessage)("expTest")]
                         })["catch"](function (e) {
                           console.log(e);
                         });

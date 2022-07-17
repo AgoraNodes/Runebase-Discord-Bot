@@ -11,7 +11,7 @@ var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"))
 
 var _asyncToGenerator2 = _interopRequireDefault(require("@babel/runtime/helpers/asyncToGenerator"));
 
-var _messages = require("../messages");
+var _embeds = require("../embeds");
 
 var _models = _interopRequireDefault(require("../models"));
 
@@ -100,7 +100,7 @@ var discordFeatureSettings = /*#__PURE__*/function () {
 
             _context.next = 20;
             return message.channel.send({
-              embeds: [(0, _messages.featureDisabledChannelMessage)((0, _utils.capitalize)(name))]
+              embeds: [(0, _embeds.featureDisabledChannelMessage)((0, _utils.capitalize)(name))]
             })["catch"](function (e) {
               console.log(e);
             });
@@ -116,7 +116,7 @@ var discordFeatureSettings = /*#__PURE__*/function () {
 
             _context.next = 24;
             return message.channel.send({
-              embeds: [(0, _messages.featureDisabledServerMessage)((0, _utils.capitalize)(name))]
+              embeds: [(0, _embeds.featureDisabledServerMessage)((0, _utils.capitalize)(name))]
             })["catch"](function (e) {
               console.log(e);
             });
@@ -132,7 +132,7 @@ var discordFeatureSettings = /*#__PURE__*/function () {
 
             _context.next = 28;
             return message.channel.send({
-              embeds: [(0, _messages.featureDisabledGlobalMessage)((0, _utils.capitalize)(name))]
+              embeds: [(0, _embeds.featureDisabledGlobalMessage)((0, _utils.capitalize)(name))]
             })["catch"](function (e) {
               console.log(e);
             });

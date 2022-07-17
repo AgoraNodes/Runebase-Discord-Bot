@@ -13,7 +13,7 @@ var _asyncToGenerator2 = _interopRequireDefault(require("@babel/runtime/helpers/
 
 var _models = _interopRequireDefault(require("../models"));
 
-var _messages = require("../messages");
+var _embeds = require("../embeds");
 
 var isMaintenanceOrDisabled = /*#__PURE__*/function () {
   var _ref = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(message, side) {
@@ -42,7 +42,7 @@ var isMaintenanceOrDisabled = /*#__PURE__*/function () {
 
             _context.next = 7;
             return message.reply({
-              embeds: [(0, _messages.discordBotDisabledMessage)()]
+              embeds: [(0, _embeds.discordBotDisabledMessage)()]
             })["catch"](function (e) {
               console.log(e);
             });
@@ -59,7 +59,7 @@ var isMaintenanceOrDisabled = /*#__PURE__*/function () {
 
             _context.next = 12;
             return message.reply({
-              embeds: [(0, _messages.discordBotMaintenanceMessage)()]
+              embeds: [(0, _embeds.discordBotMaintenanceMessage)()]
             })["catch"](function (e) {
               console.log(e);
             });

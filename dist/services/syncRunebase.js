@@ -23,7 +23,7 @@ var _rclient = require("./rclient");
 
 var _logger = _interopRequireDefault(require("../helpers/logger"));
 
-var _messages = require("../messages");
+var _embeds = require("../embeds");
 
 function _asyncIterator(iterable) { var method, async, sync, retry = 2; for ("undefined" != typeof Symbol && (async = Symbol.asyncIterator, sync = Symbol.iterator); retry--;) { if (async && null != (method = iterable[async])) return method.call(iterable); if (sync && null != (method = iterable[sync])) return new AsyncFromSyncIterator(method.call(iterable)); async = "@@asyncIterator", sync = "@@iterator"; } throw new TypeError("Object is not async iterable"); }
 
@@ -374,7 +374,7 @@ var syncTransactions = /*#__PURE__*/function () {
                                                       myClient = _context3.sent;
                                                       _context3.next = 7;
                                                       return myClient.send({
-                                                        embeds: [(0, _messages.discordDepositConfirmedMessage)(detail.amount, trans)]
+                                                        embeds: [(0, _embeds.discordDepositConfirmedMessage)(detail.amount, trans)]
                                                       });
 
                                                     case 7:
@@ -390,7 +390,7 @@ var syncTransactions = /*#__PURE__*/function () {
                                                       _myClient = _context3.sent;
                                                       _context3.next = 13;
                                                       return _myClient.send({
-                                                        embeds: [(0, _messages.discordWithdrawalConfirmedMessage)(userToMessage.user_id, trans)]
+                                                        embeds: [(0, _embeds.discordWithdrawalConfirmedMessage)(userToMessage.user_id, trans)]
                                                       });
 
                                                     case 13:

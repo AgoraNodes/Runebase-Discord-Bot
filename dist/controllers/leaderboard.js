@@ -23,7 +23,7 @@ var _discord = require("discord.js");
 
 var _path = _interopRequireDefault(require("path"));
 
-var _messages = require("../messages");
+var _embeds = require("../embeds");
 
 var _models = _interopRequireDefault(require("../models"));
 
@@ -537,7 +537,7 @@ var discordLeaderboard = /*#__PURE__*/function () {
                         discordChannel = _context4.sent;
                         _context4.next = 15;
                         return discordChannel.send({
-                          embeds: [(0, _messages.cannotSendMessageUser)("Leaderboard", message)]
+                          embeds: [(0, _embeds.cannotSendMessageUser)("Leaderboard", message)]
                         })["catch"](function (e) {
                           console.log(e);
                         });
@@ -549,7 +549,7 @@ var discordLeaderboard = /*#__PURE__*/function () {
                       case 17:
                         _context4.next = 19;
                         return message.channel.send({
-                          embeds: [(0, _messages.cannotSendMessageUser)("Leaderboard", message)]
+                          embeds: [(0, _embeds.cannotSendMessageUser)("Leaderboard", message)]
                         })["catch"](function (e) {
                           console.log(e);
                         });
@@ -571,7 +571,7 @@ var discordLeaderboard = /*#__PURE__*/function () {
                         _discordChannel = _context4.sent;
                         _context4.next = 27;
                         return _discordChannel.send({
-                          embeds: [(0, _messages.discordErrorMessage)("Leaderboard")]
+                          embeds: [(0, _embeds.discordErrorMessage)("Leaderboard")]
                         })["catch"](function (e) {
                           console.log(e);
                         });
@@ -583,7 +583,7 @@ var discordLeaderboard = /*#__PURE__*/function () {
                       case 29:
                         _context4.next = 31;
                         return message.channel.send({
-                          embeds: [(0, _messages.discordErrorMessage)("Leaderboard")]
+                          embeds: [(0, _embeds.discordErrorMessage)("Leaderboard")]
                         })["catch"](function (e) {
                           console.log(e);
                         });

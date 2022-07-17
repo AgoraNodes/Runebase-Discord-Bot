@@ -35,9 +35,11 @@ var _buttons = require("../buttons");
 
 var _skillInfo = _interopRequireDefault(require("../render/skills/skillInfo"));
 
-var _messages = require("../messages");
+var _embeds = require("../embeds");
 
 var _skillEmoji = _interopRequireDefault(require("../config/skillEmoji"));
+
+var _messages = require("../messages");
 
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
 
@@ -75,7 +77,7 @@ var discordSkills = /*#__PURE__*/function () {
 
             _context2.next = 12;
             return message.reply({
-              content: 'You have not selected a class yet\n`!runebase pickclass`\n`/pickclass`',
+              content: (0, _messages.notSelectedClassYetMessage)(),
               ephemeral: true
             });
 
@@ -106,7 +108,7 @@ var discordSkills = /*#__PURE__*/function () {
               } : false);
             });
             _context2.t0 = discordChannel;
-            _context2.t1 = "<@".concat(userCurrentCharacter.UserGroup.user.user_id, ">");
+            _context2.t1 = (0, _messages.playingOnRealmMessage)(userCurrentCharacter);
             _context2.next = 19;
             return (0, _skills.renderSkillScreen)(userCurrentCharacter, userCurrentCharacter["class"].skillTrees[0], 0, // skillTreeIndex
             false, // selected skill
@@ -184,7 +186,7 @@ var discordSkills = /*#__PURE__*/function () {
 
                       case 6:
                         if (!interaction.isButton()) {
-                          _context.next = 36;
+                          _context.next = 37;
                           break;
                         }
 
@@ -194,9 +196,9 @@ var discordSkills = /*#__PURE__*/function () {
                         }
 
                         _context.t0 = interaction;
-                        _context.t1 = "<@".concat(userCurrentCharacter.UserGroup.user.user_id, ">");
+                        _context.t1 = (0, _messages.playingOnRealmMessage)(userCurrentCharacter);
                         _context.next = 12;
-                        return (0, _messages.loadingSkillAddEmbed)(userCurrentCharacter.UserGroup.user.username);
+                        return (0, _embeds.loadingSkillAddEmbed)(userCurrentCharacter.UserGroup.user.username);
 
                       case 12:
                         _context.t2 = _context.sent;
@@ -221,50 +223,54 @@ var discordSkills = /*#__PURE__*/function () {
 
                       case 24:
                         if (!(interaction.customId === 'cancelSkillPick')) {
-                          _context.next = 36;
+                          _context.next = 37;
                           break;
                         }
 
                         _context.t5 = interaction;
-                        _context.t6 = [];
-                        _context.next = 29;
+                        _context.t6 = (0, _messages.playingOnRealmMessage)(userCurrentCharacter);
+                        _context.t7 = [];
+                        _context.next = 30;
                         return (0, _cancelSkillPick.renderCancelSkillPick)(userCurrentCharacter);
 
-                      case 29:
-                        _context.t7 = _context.sent;
-                        _context.t8 = [_context.t7];
-                        _context.t9 = [];
-                        _context.t10 = {
-                          embeds: _context.t6,
-                          files: _context.t8,
-                          components: _context.t9
+                      case 30:
+                        _context.t8 = _context.sent;
+                        _context.t9 = [_context.t8];
+                        _context.t10 = [];
+                        _context.t11 = {
+                          content: _context.t6,
+                          embeds: _context.t7,
+                          files: _context.t9,
+                          components: _context.t10
                         };
-                        _context.next = 35;
-                        return _context.t5.editReply.call(_context.t5, _context.t10);
-
-                      case 35:
-                        return _context.abrupt("return");
+                        _context.next = 36;
+                        return _context.t5.editReply.call(_context.t5, _context.t11);
 
                       case 36:
+                        return _context.abrupt("return");
+
+                      case 37:
                         if (!interaction.isSelectMenu()) {
-                          _context.next = 47;
+                          _context.next = 49;
                           break;
                         }
 
-                        _context.t11 = interaction;
-                        _context.next = 40;
-                        return (0, _messages.loadingSkillSelectEmbed)(userCurrentCharacter.UserGroup.user.username);
+                        _context.t12 = interaction;
+                        _context.t13 = (0, _messages.playingOnRealmMessage)(userCurrentCharacter);
+                        _context.next = 42;
+                        return (0, _embeds.loadingSkillSelectEmbed)(userCurrentCharacter.UserGroup.user.username);
 
-                      case 40:
-                        _context.t12 = _context.sent;
-                        _context.t13 = [_context.t12];
-                        _context.t14 = {
-                          embeds: _context.t13
+                      case 42:
+                        _context.t14 = _context.sent;
+                        _context.t15 = [_context.t14];
+                        _context.t16 = {
+                          content: _context.t13,
+                          embeds: _context.t15
                         };
-                        _context.next = 45;
-                        return _context.t11.editReply.call(_context.t11, _context.t14);
+                        _context.next = 47;
+                        return _context.t12.editReply.call(_context.t12, _context.t16);
 
-                      case 45:
+                      case 47:
                         if (interaction.customId === 'select-skilltree') {
                           if (interaction.values[0].startsWith('skilltree-')) {
                             skillTreeIndex = Number(interaction.values[0].replace('skilltree-', ''));
@@ -280,7 +286,7 @@ var discordSkills = /*#__PURE__*/function () {
                           }
                         }
 
-                      case 47:
+                      case 49:
                         console.log(_skillInfo["default"]);
                         console.log('skills');
                         jsonSkillInfo = _skillInfo["default"].find(function (x) {
@@ -307,81 +313,81 @@ var discordSkills = /*#__PURE__*/function () {
                             emoji: emoji.emoji
                           } : false);
                         });
-                        _context.t15 = interaction;
-                        _context.t16 = "<@".concat(userCurrentCharacter.UserGroup.user.user_id, ">");
-                        _context.t17 = (0, _toConsumableArray2["default"])(jsonSkillInfo ? [(0, _messages.skillInfoMessage)(jsonSkillInfo && jsonSkillInfo.name, jsonSkillInfo && jsonSkillInfo.description)] : []);
-                        _context.next = 57;
+                        _context.t17 = interaction;
+                        _context.t18 = (0, _messages.playingOnRealmMessage)(userCurrentCharacter);
+                        _context.t19 = (0, _toConsumableArray2["default"])(jsonSkillInfo ? [(0, _embeds.skillInfoMessage)(jsonSkillInfo && jsonSkillInfo.name, jsonSkillInfo && jsonSkillInfo.description)] : []);
+                        _context.next = 59;
                         return (0, _skills.renderSkillScreen)(userCurrentCharacter, userCurrentCharacter["class"].skillTrees[skillTreeIndex], skillTreeIndex, selectedSkill, jsonSkillInfo, failAddSkillReason);
 
-                      case 57:
-                        _context.t18 = _context.sent;
-                        _context.t19 = [_context.t18];
-                        _context.t20 = [];
-                        _context.t21 = _toConsumableArray2["default"];
+                      case 59:
+                        _context.t20 = _context.sent;
+                        _context.t21 = [_context.t20];
+                        _context.t22 = [];
+                        _context.t23 = _toConsumableArray2["default"];
 
                         if (!selectedSkill) {
-                          _context.next = 72;
+                          _context.next = 74;
                           break;
                         }
 
-                        _context.t23 = _discord.MessageActionRow;
-                        _context.next = 65;
+                        _context.t25 = _discord.MessageActionRow;
+                        _context.next = 67;
                         return (0, _buttons.generateAddSkillButton)(selectedSkill);
 
-                      case 65:
-                        _context.t24 = _context.sent;
-                        _context.t25 = [_context.t24];
-                        _context.t26 = {
-                          components: _context.t25
+                      case 67:
+                        _context.t26 = _context.sent;
+                        _context.t27 = [_context.t26];
+                        _context.t28 = {
+                          components: _context.t27
                         };
-                        _context.t27 = new _context.t23(_context.t26);
-                        _context.t22 = [_context.t27];
-                        _context.next = 73;
+                        _context.t29 = new _context.t25(_context.t28);
+                        _context.t24 = [_context.t29];
+                        _context.next = 75;
                         break;
 
-                      case 72:
-                        _context.t22 = [];
+                      case 74:
+                        _context.t24 = [];
 
-                      case 73:
-                        _context.t28 = _context.t22;
-                        _context.t29 = (0, _context.t21)(_context.t28);
-                        _context.t30 = new _discord.MessageActionRow({
+                      case 75:
+                        _context.t30 = _context.t24;
+                        _context.t31 = (0, _context.t23)(_context.t30);
+                        _context.t32 = new _discord.MessageActionRow({
                           components: [new _discord.MessageSelectMenu({
                             type: 'SELECT_MENU',
                             customId: 'select-skilltree',
                             options: skillTreeMapEdit
                           })]
                         });
-                        _context.t31 = new _discord.MessageActionRow({
+                        _context.t33 = new _discord.MessageActionRow({
                           components: [new _discord.MessageSelectMenu({
                             type: 'SELECT_MENU',
                             customId: 'select-skill',
                             options: skillMapEdit
                           })]
                         });
-                        _context.t32 = _discord.MessageActionRow;
-                        _context.next = 80;
+                        _context.t34 = _discord.MessageActionRow;
+                        _context.next = 82;
                         return (0, _buttons.generateCancelSkillButton)();
 
-                      case 80:
-                        _context.t33 = _context.sent;
-                        _context.t34 = [_context.t33];
-                        _context.t35 = {
-                          components: _context.t34
+                      case 82:
+                        _context.t35 = _context.sent;
+                        _context.t36 = [_context.t35];
+                        _context.t37 = {
+                          components: _context.t36
                         };
-                        _context.t36 = new _context.t32(_context.t35);
-                        _context.t37 = [_context.t30, _context.t31, _context.t36];
-                        _context.t38 = _context.t20.concat.call(_context.t20, _context.t29, _context.t37);
-                        _context.t39 = {
-                          content: _context.t16,
-                          embeds: _context.t17,
-                          files: _context.t19,
-                          components: _context.t38
+                        _context.t38 = new _context.t34(_context.t37);
+                        _context.t39 = [_context.t32, _context.t33, _context.t38];
+                        _context.t40 = _context.t22.concat.call(_context.t22, _context.t31, _context.t39);
+                        _context.t41 = {
+                          content: _context.t18,
+                          embeds: _context.t19,
+                          files: _context.t21,
+                          components: _context.t40
                         };
-                        _context.next = 89;
-                        return _context.t15.editReply.call(_context.t15, _context.t39);
+                        _context.next = 91;
+                        return _context.t17.editReply.call(_context.t17, _context.t41);
 
-                      case 89:
+                      case 91:
                       case "end":
                         return _context.stop();
                     }

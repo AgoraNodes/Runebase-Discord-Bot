@@ -15,7 +15,7 @@ var _asyncToGenerator2 = _interopRequireDefault(require("@babel/runtime/helpers/
 
 var _sequelize = require("sequelize");
 
-var _messages = require("../messages");
+var _embeds = require("../embeds");
 
 var _models = _interopRequireDefault(require("../models"));
 
@@ -98,7 +98,7 @@ var discordBalance = /*#__PURE__*/function () {
                         discordChannel = _context.sent;
                         _context.next = 22;
                         return discordChannel.send({
-                          embeds: [(0, _messages.balanceMessage)(user.user_id, user, priceInfo)]
+                          embeds: [(0, _embeds.balanceMessage)(user.user_id, user, priceInfo)]
                         });
 
                       case 22:
@@ -108,7 +108,7 @@ var discordBalance = /*#__PURE__*/function () {
                       case 24:
                         _context.next = 26;
                         return discordUser.send({
-                          embeds: [(0, _messages.balanceMessage)(user.user_id, user, priceInfo)]
+                          embeds: [(0, _embeds.balanceMessage)(user.user_id, user, priceInfo)]
                         });
 
                       case 26:
@@ -123,7 +123,7 @@ var discordBalance = /*#__PURE__*/function () {
 
                         _context.next = 31;
                         return message.author.send({
-                          embeds: [(0, _messages.balanceMessage)(user.user_id, user, priceInfo)]
+                          embeds: [(0, _embeds.balanceMessage)(user.user_id, user, priceInfo)]
                         });
 
                       case 31:
@@ -134,7 +134,7 @@ var discordBalance = /*#__PURE__*/function () {
 
                         _context.next = 34;
                         return message.channel.send({
-                          embeds: [(0, _messages.balanceMessage)(user.user_id, user, priceInfo)]
+                          embeds: [(0, _embeds.balanceMessage)(user.user_id, user, priceInfo)]
                         });
 
                       case 34:
@@ -226,7 +226,7 @@ var discordBalance = /*#__PURE__*/function () {
                         discordChannel = _context2.sent;
                         _context2.next = 16;
                         return discordChannel.send({
-                          embeds: [(0, _messages.cannotSendMessageUser)("Balance", message)]
+                          embeds: [(0, _embeds.cannotSendMessageUser)("Balance", message)]
                         })["catch"](function (e) {
                           console.log(e);
                         });
@@ -238,7 +238,7 @@ var discordBalance = /*#__PURE__*/function () {
                       case 18:
                         _context2.next = 20;
                         return message.channel.send({
-                          embeds: [(0, _messages.cannotSendMessageUser)("Balance", message)]
+                          embeds: [(0, _embeds.cannotSendMessageUser)("Balance", message)]
                         })["catch"](function (e) {
                           console.log(e);
                         });
@@ -260,7 +260,7 @@ var discordBalance = /*#__PURE__*/function () {
                         _discordChannel = _context2.sent;
                         _context2.next = 28;
                         return _discordChannel.send({
-                          embeds: [(0, _messages.discordErrorMessage)("Balance")]
+                          embeds: [(0, _embeds.discordErrorMessage)("Balance")]
                         })["catch"](function (e) {
                           console.log(e);
                         });
@@ -272,7 +272,7 @@ var discordBalance = /*#__PURE__*/function () {
                       case 30:
                         _context2.next = 32;
                         return message.channel.send({
-                          embeds: [(0, _messages.discordErrorMessage)("Balance")]
+                          embeds: [(0, _embeds.discordErrorMessage)("Balance")]
                         })["catch"](function (e) {
                           console.log(e);
                         });

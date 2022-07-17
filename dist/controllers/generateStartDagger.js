@@ -19,7 +19,7 @@ var _canvas = require("canvas");
 
 var _path = _interopRequireDefault(require("path"));
 
-var _messages = require("../messages");
+var _embeds = require("../embeds");
 
 var _models = _interopRequireDefault(require("../models"));
 

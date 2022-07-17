@@ -87,7 +87,7 @@ var _onUserJoinRealm = _interopRequireDefault(require("../helpers/realm/onUserJo
 
 var _settings = _interopRequireDefault(require("../config/settings"));
 
-var _messages = require("../messages");
+var _embeds = require("../embeds");
 
 var _models = _interopRequireDefault(require("../models"));
 
@@ -1811,7 +1811,7 @@ var discordRouter = /*#__PURE__*/function () {
 
                         _context47.next = 34;
                         return message.channel.send({
-                          embeds: [(0, _messages.discordServerBannedMessage)(groupTask)]
+                          embeds: [(0, _embeds.discordServerBannedMessage)(groupTask)]
                         })["catch"](function (e) {
                           console.log(e);
                         });
@@ -1829,7 +1829,7 @@ var discordRouter = /*#__PURE__*/function () {
 
                         _context47.next = 39;
                         return message.channel.send({
-                          embeds: [(0, _messages.discordChannelBannedMessage)(channelTask)]
+                          embeds: [(0, _embeds.discordChannelBannedMessage)(channelTask)]
                         })["catch"](function (e) {
                           console.log(e);
                         });
@@ -1847,7 +1847,7 @@ var discordRouter = /*#__PURE__*/function () {
 
                         _context47.next = 44;
                         return message.channel.send({
-                          embeds: [(0, _messages.discordUserBannedMessage)(lastSeenDiscordTask)]
+                          embeds: [(0, _embeds.discordUserBannedMessage)(lastSeenDiscordTask)]
                         })["catch"](function (e) {
                           console.log(e);
                         });

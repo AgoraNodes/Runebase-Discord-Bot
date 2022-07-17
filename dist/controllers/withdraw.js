@@ -17,7 +17,7 @@ var _sequelize = require("sequelize");
 
 var _models = _interopRequireDefault(require("../models"));
 
-var _messages = require("../messages");
+var _embeds = require("../embeds");
 
 var _logger = _interopRequireDefault(require("../helpers/logger"));
 
@@ -117,7 +117,7 @@ var discordWithdraw = /*#__PURE__*/function () {
 
                         _context.next = 32;
                         return message.author.send({
-                          embeds: [(0, _messages.invalidAddressMessage)(message)]
+                          embeds: [(0, _embeds.invalidAddressMessage)(message)]
                         });
 
                       case 32:
@@ -133,7 +133,7 @@ var discordWithdraw = /*#__PURE__*/function () {
 
                         _context.next = 36;
                         return message.channel.send({
-                          embeds: [(0, _messages.warnDirectMessage)(user.user_id, 'Withdraw')]
+                          embeds: [(0, _embeds.warnDirectMessage)(user.user_id, 'Withdraw')]
                         });
 
                       case 36:
@@ -159,7 +159,7 @@ var discordWithdraw = /*#__PURE__*/function () {
 
                         _context.next = 45;
                         return message.author.send({
-                          embeds: [(0, _messages.unableToWithdrawToSelfMessage)(message)]
+                          embeds: [(0, _embeds.unableToWithdrawToSelfMessage)(message)]
                         });
 
                       case 45:
@@ -170,7 +170,7 @@ var discordWithdraw = /*#__PURE__*/function () {
 
                         _context.next = 48;
                         return message.channel.send({
-                          embeds: [(0, _messages.warnDirectMessage)(user.user_id, 'Withdraw')]
+                          embeds: [(0, _embeds.warnDirectMessage)(user.user_id, 'Withdraw')]
                         });
 
                       case 48:
@@ -250,7 +250,7 @@ var discordWithdraw = /*#__PURE__*/function () {
                         discordChannel = _context.sent;
                         _context.next = 74;
                         return discordChannel.send({
-                          embeds: [(0, _messages.reviewMessage)(message.user.id, transaction)]
+                          embeds: [(0, _embeds.reviewMessage)(message.user.id, transaction)]
                         });
 
                       case 74:
@@ -260,7 +260,7 @@ var discordWithdraw = /*#__PURE__*/function () {
                       case 76:
                         _context.next = 78;
                         return discordUser.send({
-                          embeds: [(0, _messages.reviewMessage)(message.user.id, transaction)]
+                          embeds: [(0, _embeds.reviewMessage)(message.user.id, transaction)]
                         });
 
                       case 78:
@@ -275,7 +275,7 @@ var discordWithdraw = /*#__PURE__*/function () {
 
                         _context.next = 83;
                         return message.author.send({
-                          embeds: [(0, _messages.reviewMessage)(message.author.id, transaction)]
+                          embeds: [(0, _embeds.reviewMessage)(message.author.id, transaction)]
                         });
 
                       case 83:
@@ -286,7 +286,7 @@ var discordWithdraw = /*#__PURE__*/function () {
 
                         _context.next = 86;
                         return message.channel.send({
-                          embeds: [(0, _messages.reviewMessage)(message.author.id, transaction)]
+                          embeds: [(0, _embeds.reviewMessage)(message.author.id, transaction)]
                         });
 
                       case 86:
@@ -350,7 +350,7 @@ var discordWithdraw = /*#__PURE__*/function () {
                         discordChannel = _context2.sent;
                         _context2.next = 16;
                         return discordChannel.send({
-                          embeds: [(0, _messages.cannotSendMessageUser)("Withdraw", message)]
+                          embeds: [(0, _embeds.cannotSendMessageUser)("Withdraw", message)]
                         })["catch"](function (e) {
                           console.log(e);
                         });
@@ -362,7 +362,7 @@ var discordWithdraw = /*#__PURE__*/function () {
                       case 18:
                         _context2.next = 20;
                         return message.channel.send({
-                          embeds: [(0, _messages.cannotSendMessageUser)("Withdraw", message)]
+                          embeds: [(0, _embeds.cannotSendMessageUser)("Withdraw", message)]
                         })["catch"](function (e) {
                           console.log(e);
                         });
@@ -384,7 +384,7 @@ var discordWithdraw = /*#__PURE__*/function () {
                         _discordChannel = _context2.sent;
                         _context2.next = 28;
                         return _discordChannel.send({
-                          embeds: [(0, _messages.discordErrorMessage)("Withdraw")]
+                          embeds: [(0, _embeds.discordErrorMessage)("Withdraw")]
                         })["catch"](function (e) {
                           console.log(e);
                         });
@@ -396,7 +396,7 @@ var discordWithdraw = /*#__PURE__*/function () {
                       case 30:
                         _context2.next = 32;
                         return message.channel.send({
-                          embeds: [(0, _messages.discordErrorMessage)("Withdraw")]
+                          embeds: [(0, _embeds.discordErrorMessage)("Withdraw")]
                         })["catch"](function (e) {
                           console.log(e);
                         });

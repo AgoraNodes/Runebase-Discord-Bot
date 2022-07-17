@@ -17,9 +17,9 @@ var _sequelize = require("sequelize");
 
 var _models = _interopRequireDefault(require("../../models"));
 
-var _messages = require("../../messages");
+var _embeds = require("../../embeds");
 
-//import { processWithdrawal } from '../../services/processWithdrawal';
+// import { processWithdrawal } from '../../services/processWithdrawal';
 var acceptWithdrawal = /*#__PURE__*/function () {
   var _ref = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee3(req, res, next) {
     var updatedTrans, newTransaction;
@@ -181,7 +181,7 @@ var acceptWithdrawal = /*#__PURE__*/function () {
                                   myClient = _context.sent;
                                   _context.next = 8;
                                   return myClient.send({
-                                    embeds: [(0, _messages.discordWithdrawalAcceptedMessage)(res.locals.withdrawal)]
+                                    embeds: [(0, _embeds.discordWithdrawalAcceptedMessage)(res.locals.withdrawal)]
                                   });
 
                                 case 8:
@@ -414,7 +414,7 @@ var declineWithdrawal = /*#__PURE__*/function () {
                                   myClient = _context4.sent;
                                   _context4.next = 8;
                                   return myClient.send({
-                                    embeds: [(0, _messages.discordWithdrawalRejectedMessage)(updatedTransaction)]
+                                    embeds: [(0, _embeds.discordWithdrawalRejectedMessage)(updatedTransaction)]
                                   });
 
                                 case 8:

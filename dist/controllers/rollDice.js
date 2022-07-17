@@ -21,7 +21,7 @@ var _canvas = require("canvas");
 
 var _path = _interopRequireDefault(require("path"));
 
-var _messages = require("../messages");
+var _embeds = require("../embeds");
 
 var _models = _interopRequireDefault(require("../models"));
 
@@ -123,7 +123,7 @@ var discordRollDice = /*#__PURE__*/function () {
                         activity.push(activityT);
                         _context.next = 26;
                         return message.channel.send({
-                          embeds: [(0, _messages.rollDiceTooFastMessage)(user.user_id, distance)],
+                          embeds: [(0, _embeds.rollDiceTooFastMessage)(user.user_id, distance)],
                           components: [row]
                         });
 
@@ -439,7 +439,7 @@ var discordRollDice = /*#__PURE__*/function () {
                         _context.next = 230;
                         return discordChannel.send({
                           files: [attachment],
-                          embeds: [(0, _messages.rolledDiceMessage)(user.user_id, expRewarded, randomNumberOne, randomNumberTwo, rewardAmount)],
+                          embeds: [(0, _embeds.rolledDiceMessage)(user.user_id, expRewarded, randomNumberOne, randomNumberTwo, rewardAmount)],
                           components: [row]
                         });
 
@@ -503,7 +503,7 @@ var discordRollDice = /*#__PURE__*/function () {
                         discordChannel = _context2.sent;
                         _context2.next = 16;
                         return discordChannel.send({
-                          embeds: [(0, _messages.cannotSendMessageUser)("RollDice", message)]
+                          embeds: [(0, _embeds.cannotSendMessageUser)("RollDice", message)]
                         })["catch"](function (e) {
                           console.log(e);
                         });
@@ -515,7 +515,7 @@ var discordRollDice = /*#__PURE__*/function () {
                       case 18:
                         _context2.next = 20;
                         return message.channel.send({
-                          embeds: [(0, _messages.cannotSendMessageUser)("RollDice", message)]
+                          embeds: [(0, _embeds.cannotSendMessageUser)("RollDice", message)]
                         })["catch"](function (e) {
                           console.log(e);
                         });
@@ -537,7 +537,7 @@ var discordRollDice = /*#__PURE__*/function () {
                         _discordChannel = _context2.sent;
                         _context2.next = 28;
                         return _discordChannel.send({
-                          embeds: [(0, _messages.discordErrorMessage)("RollDice")]
+                          embeds: [(0, _embeds.discordErrorMessage)("RollDice")]
                         })["catch"](function (e) {
                           console.log(e);
                         });
@@ -549,7 +549,7 @@ var discordRollDice = /*#__PURE__*/function () {
                       case 30:
                         _context2.next = 32;
                         return message.channel.send({
-                          embeds: [(0, _messages.discordErrorMessage)("RollDice")]
+                          embeds: [(0, _embeds.discordErrorMessage)("RollDice")]
                         })["catch"](function (e) {
                           console.log(e);
                         });

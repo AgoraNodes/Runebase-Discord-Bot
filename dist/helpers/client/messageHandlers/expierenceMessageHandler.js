@@ -11,7 +11,7 @@ var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"))
 
 var _asyncToGenerator2 = _interopRequireDefault(require("@babel/runtime/helpers/asyncToGenerator"));
 
-var _messages = require("../../../messages");
+var _embeds = require("../../../embeds");
 
 var handleExperienceMessage = /*#__PURE__*/function () {
   var _ref = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(discordChannel, updatedUserGroup, amount, gainExpType) {
@@ -31,7 +31,7 @@ var handleExperienceMessage = /*#__PURE__*/function () {
             _context.next = 4;
             return discordChannel.send({
               content: "<@".concat(updatedUserGroup.user.user_id, ">"),
-              embeds: [(0, _messages.gainBattleExpExpMessage)(updatedUserGroup.user.user_id, amount)]
+              embeds: [(0, _embeds.gainBattleExpExpMessage)(updatedUserGroup.user.user_id, amount)]
             });
 
           case 4:
@@ -43,7 +43,7 @@ var handleExperienceMessage = /*#__PURE__*/function () {
             _context.next = 7;
             return discordChannel.send({
               content: "<@".concat(updatedUserGroup.user.user_id, ">"),
-              embeds: [(0, _messages.gainActiveTalkerExpMessage)(updatedUserGroup.user.user_id, amount)]
+              embeds: [(0, _embeds.gainActiveTalkerExpMessage)(updatedUserGroup.user.user_id, amount)]
             });
 
           case 7:
@@ -55,7 +55,7 @@ var handleExperienceMessage = /*#__PURE__*/function () {
             _context.next = 10;
             return discordChannel.send({
               content: "<@".concat(updatedUserGroup.user.user_id, ">"),
-              embeds: [(0, _messages.gainVoteTopggExpMessage)(updatedUserGroup.user.user_id, amount)]
+              embeds: [(0, _embeds.gainVoteTopggExpMessage)(updatedUserGroup.user.user_id, amount)]
             });
 
           case 10:
@@ -67,7 +67,7 @@ var handleExperienceMessage = /*#__PURE__*/function () {
             _context.next = 13;
             return discordChannel.send({
               content: "<@".concat(updatedUserGroup.user.user_id, ">"),
-              embeds: [(0, _messages.invitedNewUserRewardMessage)(updatedUserGroup.user.user_id, userJoined, amount)]
+              embeds: [(0, _embeds.invitedNewUserRewardMessage)(updatedUserGroup.user.user_id, userJoined, amount)]
             });
 
           case 13:

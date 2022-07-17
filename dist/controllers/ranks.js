@@ -21,7 +21,7 @@ var _discord = require("discord.js");
 
 var _path = _interopRequireDefault(require("path"));
 
-var _messages = require("../messages");
+var _embeds = require("../embeds");
 
 var _models = _interopRequireDefault(require("../models"));
 
@@ -279,7 +279,7 @@ var discordRanks = /*#__PURE__*/function () {
                         discordChannel = _context2.sent;
                         _context2.next = 16;
                         return discordChannel.send({
-                          embeds: [(0, _messages.cannotSendMessageUser)("Ranks", message)]
+                          embeds: [(0, _embeds.cannotSendMessageUser)("Ranks", message)]
                         })["catch"](function (e) {
                           console.log(e);
                         });
@@ -291,7 +291,7 @@ var discordRanks = /*#__PURE__*/function () {
                       case 18:
                         _context2.next = 20;
                         return message.channel.send({
-                          embeds: [(0, _messages.cannotSendMessageUser)("Ranks", message)]
+                          embeds: [(0, _embeds.cannotSendMessageUser)("Ranks", message)]
                         })["catch"](function (e) {
                           console.log(e);
                         });
@@ -313,7 +313,7 @@ var discordRanks = /*#__PURE__*/function () {
                         _discordChannel = _context2.sent;
                         _context2.next = 28;
                         return _discordChannel.send({
-                          embeds: [(0, _messages.discordErrorMessage)("Ranks")]
+                          embeds: [(0, _embeds.discordErrorMessage)("Ranks")]
                         })["catch"](function (e) {
                           console.log(e);
                         });
@@ -325,7 +325,7 @@ var discordRanks = /*#__PURE__*/function () {
                       case 30:
                         _context2.next = 32;
                         return message.channel.send({
-                          embeds: [(0, _messages.discordErrorMessage)("Ranks")]
+                          embeds: [(0, _embeds.discordErrorMessage)("Ranks")]
                         })["catch"](function (e) {
                           console.log(e);
                         });

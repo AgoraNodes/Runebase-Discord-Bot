@@ -15,7 +15,7 @@ var _sequelize = require("sequelize");
 
 var _discord = require("discord.js");
 
-var _messages = require("../messages");
+var _embeds = require("../embeds");
 
 var _models = _interopRequireDefault(require("../models"));
 
@@ -265,7 +265,7 @@ var discordChangeRealm = /*#__PURE__*/function () {
                                     _context.t0 = interaction;
                                     _context.t1 = "<@".concat(user.user_id, ">, ").concat(realm.inviteLink);
                                     _context.next = 25;
-                                    return (0, _messages.needToBeInDiscordRealmEmbed)(realm);
+                                    return (0, _embeds.needToBeInDiscordRealmEmbed)(realm);
 
                                   case 25:
                                     _context.t2 = _context.sent;
@@ -321,7 +321,8 @@ var discordChangeRealm = /*#__PURE__*/function () {
 
                                   case 39:
                                     console.log('joining realm');
-                                    _context.next = 42;
+                                    console.log(newSelectedId);
+                                    _context.next = 43;
                                     return myUser.update({
                                       currentRealmId: newSelectedId,
                                       currentClassId: null
@@ -330,13 +331,13 @@ var discordChangeRealm = /*#__PURE__*/function () {
                                       lock: t.LOCK.UPDATE
                                     });
 
-                                  case 42:
+                                  case 43:
                                     _context.t6 = interaction;
                                     _context.t7 = "<@".concat(user.user_id, ">");
-                                    _context.next = 46;
-                                    return (0, _messages.realmChangeSuccessEmbed)(realm);
+                                    _context.next = 47;
+                                    return (0, _embeds.realmChangeSuccessEmbed)(realm);
 
-                                  case 46:
+                                  case 47:
                                     _context.t8 = _context.sent;
                                     _context.t9 = [_context.t8];
                                     _context.t10 = [];
@@ -345,10 +346,10 @@ var discordChangeRealm = /*#__PURE__*/function () {
                                       embeds: _context.t9,
                                       components: _context.t10
                                     };
-                                    _context.next = 52;
+                                    _context.next = 53;
                                     return _context.t6.editReply.call(_context.t6, _context.t11);
 
-                                  case 52:
+                                  case 53:
                                   case "end":
                                     return _context.stop();
                                 }

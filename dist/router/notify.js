@@ -19,7 +19,7 @@ var _walletNotify = _interopRequireDefault(require("../helpers/blockchain/runeba
 
 var _syncRunebase = require("../services/syncRunebase");
 
-var _messages = require("../messages");
+var _embeds = require("../embeds");
 
 var _topggVote = require("../controllers/topggVote");
 
@@ -121,7 +121,7 @@ var notifyRouter = function notifyRouter(app, discordClient, io, queue) {
               myClient = _context2.sent;
               _context2.next = 20;
               return myClient.send({
-                embeds: [(0, _messages.discordIncomingDepositMessage)(detail)]
+                embeds: [(0, _embeds.discordIncomingDepositMessage)(detail)]
               });
 
             case 20:

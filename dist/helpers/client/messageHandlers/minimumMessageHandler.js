@@ -11,7 +11,7 @@ var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"))
 
 var _asyncToGenerator2 = _interopRequireDefault(require("@babel/runtime/helpers/asyncToGenerator"));
 
-var _messages = require("../../../messages");
+var _embeds = require("../../../embeds");
 
 var handleMinimumMessage = /*#__PURE__*/function () {
   var _ref = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(discordClient, message, setting, capType) {
@@ -43,7 +43,7 @@ var handleMinimumMessage = /*#__PURE__*/function () {
             discordChannel = _context.sent;
             _context.next = 10;
             return discordChannel.send({
-              embeds: [(0, _messages.minimumMessage)(message.user.id, setting, capType)]
+              embeds: [(0, _embeds.minimumMessage)(message.user.id, setting, capType)]
             });
 
           case 10:
@@ -54,7 +54,7 @@ var handleMinimumMessage = /*#__PURE__*/function () {
             console.log('before min amount send');
             _context.next = 15;
             return discordUser.send({
-              embeds: [(0, _messages.minimumMessage)(message.user.id, setting, capType)]
+              embeds: [(0, _embeds.minimumMessage)(message.user.id, setting, capType)]
             });
 
           case 15:
@@ -72,7 +72,7 @@ var handleMinimumMessage = /*#__PURE__*/function () {
 
             _context.next = 21;
             return message.author.send({
-              embeds: [(0, _messages.minimumMessage)(message.author.id, setting, capType)]
+              embeds: [(0, _embeds.minimumMessage)(message.author.id, setting, capType)]
             });
 
           case 21:
@@ -83,7 +83,7 @@ var handleMinimumMessage = /*#__PURE__*/function () {
 
             _context.next = 24;
             return message.channel.send({
-              embeds: [(0, _messages.minimumMessage)(message.author.id, setting, capType)]
+              embeds: [(0, _embeds.minimumMessage)(message.author.id, setting, capType)]
             });
 
           case 24:

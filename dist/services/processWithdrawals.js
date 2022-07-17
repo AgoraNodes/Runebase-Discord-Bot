@@ -19,7 +19,7 @@ var _dotenv = require("dotenv");
 
 var _models = _interopRequireDefault(require("../models"));
 
-var _messages = require("../messages");
+var _embeds = require("../embeds");
 
 var _processWithdrawal = require("./processWithdrawal");
 
@@ -174,7 +174,7 @@ var processWithdrawals = /*#__PURE__*/function () {
                                   myClient = _context.sent;
                                   _context.next = 9;
                                   return myClient.send({
-                                    embeds: [(0, _messages.discordWithdrawalAcceptedMessage)(updatedTrans)]
+                                    embeds: [(0, _embeds.discordWithdrawalAcceptedMessage)(updatedTrans)]
                                   });
 
                                 case 9:

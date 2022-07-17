@@ -23,7 +23,7 @@ var _discord = require("discord.js");
 
 var _path = _interopRequireDefault(require("path"));
 
-var _messages = require("../messages");
+var _embeds = require("../embeds");
 
 var _models = _interopRequireDefault(require("../models"));
 
@@ -48,6 +48,8 @@ var _fetchDiscordChannel = require("../helpers/client/fetchDiscordChannel");
 var _calculateCharacterStats = require("../helpers/stats/calculateCharacterStats");
 
 var _buttons = require("../buttons");
+
+var _messages = require("../messages");
 
 /* eslint-disable import/prefer-default-export */
 var discordStats = /*#__PURE__*/function () {
@@ -84,7 +86,7 @@ var discordStats = /*#__PURE__*/function () {
 
             _context3.next = 13;
             return message.reply({
-              content: 'You have not selected a class yet\n`!runebase pickclass`\n`/pickclass`',
+              content: (0, _messages.notSelectedClassYetMessage)(),
               ephemeral: true
             });
 
@@ -139,29 +141,31 @@ var discordStats = /*#__PURE__*/function () {
 
             calc = unspendAttributes > 0;
             _context3.t0 = discordChannel;
-            _context3.t1 = _discord.MessageAttachment;
-            _context3.next = 25;
+            _context3.t1 = (0, _messages.playingOnRealmMessage)(userCurrentCharacter);
+            _context3.t2 = _discord.MessageAttachment;
+            _context3.next = 26;
             return (0, _stats.renderStatsImage)(userCurrentCharacter, false);
 
-          case 25:
-            _context3.t2 = _context3.sent;
-            _context3.t3 = new _context3.t1(_context3.t2, 'class.png');
-            _context3.t4 = [_context3.t3];
-            _context3.t5 = [].concat((0, _toConsumableArray2["default"])(calc ? [new _discord.MessageActionRow({
+          case 26:
+            _context3.t3 = _context3.sent;
+            _context3.t4 = new _context3.t2(_context3.t3, 'class.png');
+            _context3.t5 = [_context3.t4];
+            _context3.t6 = [].concat((0, _toConsumableArray2["default"])(calc ? [new _discord.MessageActionRow({
               components: [(0, _buttons.generateAddStrengthButton)(), (0, _buttons.generateAddDexterityButton)()]
             })] : []), (0, _toConsumableArray2["default"])(calc ? [new _discord.MessageActionRow({
               components: [(0, _buttons.generateAddVitalityButton)(), (0, _buttons.generateAddEnergyButton)()]
             })] : []), [new _discord.MessageActionRow({
               components: [(0, _buttons.generateCancelStatsPickButton)()]
             })]);
-            _context3.t6 = {
-              files: _context3.t4,
-              components: _context3.t5
+            _context3.t7 = {
+              content: _context3.t1,
+              files: _context3.t5,
+              components: _context3.t6
             };
-            _context3.next = 32;
-            return _context3.t0.send.call(_context3.t0, _context3.t6);
+            _context3.next = 33;
+            return _context3.t0.send.call(_context3.t0, _context3.t7);
 
-          case 32:
+          case 33:
             embedMessage = _context3.sent;
             collector = embedMessage.createMessageComponentCollector({// filter: ({ user: discordUser }) => discordUser.id === userCurrentCharacter.user.user_id,
             });
@@ -260,60 +264,64 @@ var discordStats = /*#__PURE__*/function () {
 
                       case 36:
                         if (!(interaction.customId === 'strength' || interaction.customId === 'dexterity' || interaction.customId === 'vitality' || interaction.customId === 'energy')) {
-                          _context2.next = 50;
+                          _context2.next = 51;
                           break;
                         }
 
                         newCalc = updatedUser.stats.strength + updatedUser.stats.dexterity + updatedUser.stats.vitality + updatedUser.stats.energy < updatedUser.UserGroup.UserGroupRank.rank.level * 5;
                         _context2.t0 = interaction;
-                        _context2.t1 = [];
-                        _context2.t2 = _discord.MessageAttachment;
-                        _context2.next = 43;
+                        _context2.t1 = (0, _messages.playingOnRealmMessage)(userCurrentCharacter);
+                        _context2.t2 = [];
+                        _context2.t3 = _discord.MessageAttachment;
+                        _context2.next = 44;
                         return (0, _stats.renderStatsImage)(updatedUser, false);
 
-                      case 43:
-                        _context2.t3 = _context2.sent;
-                        _context2.t4 = new _context2.t2(_context2.t3, 'class.png');
-                        _context2.t5 = [_context2.t4];
-                        _context2.t6 = [].concat((0, _toConsumableArray2["default"])(newCalc ? [new _discord.MessageActionRow({
+                      case 44:
+                        _context2.t4 = _context2.sent;
+                        _context2.t5 = new _context2.t3(_context2.t4, 'class.png');
+                        _context2.t6 = [_context2.t5];
+                        _context2.t7 = [].concat((0, _toConsumableArray2["default"])(newCalc ? [new _discord.MessageActionRow({
                           components: [(0, _buttons.generateAddStrengthButton)(), (0, _buttons.generateAddDexterityButton)()]
                         })] : []), (0, _toConsumableArray2["default"])(newCalc ? [new _discord.MessageActionRow({
                           components: [(0, _buttons.generateAddVitalityButton)(), (0, _buttons.generateAddEnergyButton)()]
                         })] : []), [new _discord.MessageActionRow({
                           components: [(0, _buttons.generateCancelStatsPickButton)()]
                         })]);
-                        _context2.t7 = {
-                          embeds: _context2.t1,
-                          files: _context2.t5,
-                          components: _context2.t6
+                        _context2.t8 = {
+                          content: _context2.t1,
+                          embeds: _context2.t2,
+                          files: _context2.t6,
+                          components: _context2.t7
                         };
-                        _context2.next = 50;
-                        return _context2.t0.editReply.call(_context2.t0, _context2.t7);
+                        _context2.next = 51;
+                        return _context2.t0.editReply.call(_context2.t0, _context2.t8);
 
-                      case 50:
+                      case 51:
                         if (!(interaction.customId === 'cancelStatsPick')) {
-                          _context2.next = 61;
+                          _context2.next = 63;
                           break;
                         }
 
-                        _context2.t8 = interaction;
-                        _context2.next = 54;
+                        _context2.t9 = interaction;
+                        _context2.t10 = (0, _messages.playingOnRealmMessage)(userCurrentCharacter);
+                        _context2.next = 56;
                         return generateCancelClassPicked();
 
-                      case 54:
-                        _context2.t9 = _context2.sent;
-                        _context2.t10 = [_context2.t9];
-                        _context2.t11 = [];
-                        _context2.t12 = [];
-                        _context2.t13 = {
-                          files: _context2.t10,
-                          components: _context2.t11,
-                          embeds: _context2.t12
+                      case 56:
+                        _context2.t11 = _context2.sent;
+                        _context2.t12 = [_context2.t11];
+                        _context2.t13 = [];
+                        _context2.t14 = [];
+                        _context2.t15 = {
+                          content: _context2.t10,
+                          files: _context2.t12,
+                          components: _context2.t13,
+                          embeds: _context2.t14
                         };
-                        _context2.next = 61;
-                        return _context2.t8.editReply.call(_context2.t8, _context2.t13);
+                        _context2.next = 63;
+                        return _context2.t9.editReply.call(_context2.t9, _context2.t15);
 
-                      case 61:
+                      case 63:
                       case "end":
                         return _context2.stop();
                     }
@@ -326,7 +334,7 @@ var discordStats = /*#__PURE__*/function () {
               };
             }());
 
-          case 35:
+          case 36:
           case "end":
             return _context3.stop();
         }

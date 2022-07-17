@@ -21,7 +21,7 @@ var _qrcode = _interopRequireDefault(require("qrcode"));
 
 var _models = _interopRequireDefault(require("../models"));
 
-var _messages = require("../messages");
+var _embeds = require("../embeds");
 
 var _logger = _interopRequireDefault(require("../helpers/logger"));
 
@@ -110,7 +110,7 @@ var discordDeposit = /*#__PURE__*/function () {
                         discordChannel = _context.sent;
                         _context.next = 28;
                         return discordChannel.send({
-                          embeds: [(0, _messages.depositAddressMessage)(user.user_id, user)],
+                          embeds: [(0, _embeds.depositAddressMessage)(user.user_id, user)],
                           files: [new _discord.MessageAttachment(Buffer.from(depositQrFixed, 'base64'), 'qr.png')],
                           s: s
                         });
@@ -122,7 +122,7 @@ var discordDeposit = /*#__PURE__*/function () {
                       case 30:
                         _context.next = 32;
                         return discordUser.send({
-                          embeds: [(0, _messages.depositAddressMessage)(user.user_id, user)],
+                          embeds: [(0, _embeds.depositAddressMessage)(user.user_id, user)],
                           files: [new _discord.MessageAttachment(Buffer.from(depositQrFixed, 'base64'), 'qr.png')]
                         });
 
@@ -138,7 +138,7 @@ var discordDeposit = /*#__PURE__*/function () {
 
                         _context.next = 37;
                         return message.author.send({
-                          embeds: [(0, _messages.depositAddressMessage)(user.user_id, user)],
+                          embeds: [(0, _embeds.depositAddressMessage)(user.user_id, user)],
                           files: [new _discord.MessageAttachment(Buffer.from(depositQrFixed, 'base64'), 'qr.png')]
                         });
 
@@ -150,7 +150,7 @@ var discordDeposit = /*#__PURE__*/function () {
 
                         _context.next = 40;
                         return message.channel.send({
-                          embeds: [(0, _messages.depositAddressMessage)(user.user_id, user)],
+                          embeds: [(0, _embeds.depositAddressMessage)(user.user_id, user)],
                           files: [new _discord.MessageAttachment(Buffer.from(depositQrFixed, 'base64'), 'qr.png')]
                         });
 
@@ -241,7 +241,7 @@ var discordDeposit = /*#__PURE__*/function () {
                         discordChannel = _context2.sent;
                         _context2.next = 16;
                         return discordChannel.send({
-                          embeds: [(0, _messages.cannotSendMessageUser)("Deposit", message)]
+                          embeds: [(0, _embeds.cannotSendMessageUser)("Deposit", message)]
                         })["catch"](function (e) {
                           console.log(e);
                         });
@@ -253,7 +253,7 @@ var discordDeposit = /*#__PURE__*/function () {
                       case 18:
                         _context2.next = 20;
                         return message.channel.send({
-                          embeds: [(0, _messages.cannotSendMessageUser)("Deposit", message)]
+                          embeds: [(0, _embeds.cannotSendMessageUser)("Deposit", message)]
                         })["catch"](function (e) {
                           console.log(e);
                         });
@@ -275,7 +275,7 @@ var discordDeposit = /*#__PURE__*/function () {
                         _discordChannel = _context2.sent;
                         _context2.next = 28;
                         return _discordChannel.send({
-                          embeds: [(0, _messages.discordErrorMessage)("Deposit")]
+                          embeds: [(0, _embeds.discordErrorMessage)("Deposit")]
                         })["catch"](function (e) {
                           console.log(e);
                         });
@@ -287,7 +287,7 @@ var discordDeposit = /*#__PURE__*/function () {
                       case 30:
                         _context2.next = 32;
                         return message.channel.send({
-                          embeds: [(0, _messages.discordErrorMessage)("Deposit")]
+                          embeds: [(0, _embeds.discordErrorMessage)("Deposit")]
                         })["catch"](function (e) {
                           console.log(e);
                         });

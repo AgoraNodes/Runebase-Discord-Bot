@@ -17,7 +17,7 @@ var _sequelize = require("sequelize");
 
 var _models = _interopRequireDefault(require("../../models"));
 
-var _messages = require("../../messages");
+var _embeds = require("../../embeds");
 
 var _expierenceMessageHandler = require("./messageHandlers/expierenceMessageHandler");
 
@@ -328,7 +328,7 @@ var gainMultiExp = /*#__PURE__*/function () {
           case 109:
             _context.next = 111;
             return discordChannel.send({
-              embeds: [(0, _messages.grantRoleExpMessage)(userDiscordIdArray.length, filteredMessage[3], amount)]
+              embeds: [(0, _embeds.grantRoleExpMessage)(userDiscordIdArray.length, filteredMessage[3], amount)]
             });
 
           case 111:
@@ -355,7 +355,7 @@ var gainMultiExp = /*#__PURE__*/function () {
             userUp = _step2.value;
             _context.next = 122;
             return discordChannel.send({
-              embeds: [(0, _messages.levelUpMessage)(userUp.user_id, userUp.rank)]
+              embeds: [(0, _embeds.levelUpMessage)(userUp.user_id, userUp.rank)]
             });
 
           case 122:
@@ -596,7 +596,7 @@ var gainExp = /*#__PURE__*/function () {
           case 45:
             _context2.next = 47;
             return discordChannel.send({
-              embeds: [(0, _messages.levelUpMessage)(updatedUserGroup.user.user_id, currentRank)]
+              embeds: [(0, _embeds.levelUpMessage)(updatedUserGroup.user.user_id, currentRank)]
             });
 
           case 47:

@@ -17,7 +17,7 @@ var _sequelize = require("sequelize");
 
 var _discord = require("discord.js");
 
-var _messages = require("../../messages");
+var _embeds = require("../../embeds");
 
 var _models = _interopRequireDefault(require("../../models"));
 
@@ -176,7 +176,7 @@ var onUserJoinRealm = /*#__PURE__*/function () {
                         console.log('hah');
                         _context.next = 48;
                         return discordChannel.send({
-                          embeds: [(0, _messages.levelUpMessage)(myUser.user_id, currentRank)]
+                          embeds: [(0, _embeds.levelUpMessage)(myUser.user_id, currentRank)]
                         });
 
                       case 48:

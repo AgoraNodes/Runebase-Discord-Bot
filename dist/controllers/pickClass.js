@@ -17,7 +17,7 @@ var _sequelize = require("sequelize");
 
 var _discord = require("discord.js");
 
-var _messages = require("../messages");
+var _embeds = require("../embeds");
 
 var _models = _interopRequireDefault(require("../models"));
 
@@ -572,7 +572,7 @@ var discordPickClass = /*#__PURE__*/function () {
                                               _discordChannel = _context2.sent;
                                               _context2.next = 16;
                                               return _discordChannel.send({
-                                                embeds: [(0, _messages.cannotSendMessageUser)("ClassSelection", message)]
+                                                embeds: [(0, _embeds.cannotSendMessageUser)("ClassSelection", message)]
                                               })["catch"](function (e) {
                                                 console.log(e);
                                               });
@@ -584,7 +584,7 @@ var discordPickClass = /*#__PURE__*/function () {
                                             case 18:
                                               _context2.next = 20;
                                               return message.channel.send({
-                                                embeds: [(0, _messages.cannotSendMessageUser)("ClassSelection", message)]
+                                                embeds: [(0, _embeds.cannotSendMessageUser)("ClassSelection", message)]
                                               })["catch"](function (e) {
                                                 console.log(e);
                                               });
@@ -606,7 +606,7 @@ var discordPickClass = /*#__PURE__*/function () {
                                               _discordChannel2 = _context2.sent;
                                               _context2.next = 28;
                                               return _discordChannel2.send({
-                                                embeds: [(0, _messages.discordErrorMessage)("ClassSelection")]
+                                                embeds: [(0, _embeds.discordErrorMessage)("ClassSelection")]
                                               })["catch"](function (e) {
                                                 console.log(e);
                                               });
@@ -618,7 +618,7 @@ var discordPickClass = /*#__PURE__*/function () {
                                             case 30:
                                               _context2.next = 32;
                                               return message.channel.send({
-                                                embeds: [(0, _messages.discordErrorMessage)("ClassSelection")]
+                                                embeds: [(0, _embeds.discordErrorMessage)("ClassSelection")]
                                               })["catch"](function (e) {
                                                 console.log(e);
                                               });

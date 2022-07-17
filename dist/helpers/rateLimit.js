@@ -15,7 +15,7 @@ var _asyncToGenerator2 = _interopRequireDefault(require("@babel/runtime/helpers/
 
 var RateLimiterFlexible = _interopRequireWildcard(require("rate-limiter-flexible"));
 
-var _messages = require("../messages");
+var _embeds = require("../embeds");
 
 function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
 
@@ -410,7 +410,7 @@ var myRateLimiter = /*#__PURE__*/function () {
 
             _context.next = 105;
             return discordChannel.send({
-              embeds: [(0, _messages.discordLimitSpamMessage)(userId, title)]
+              embeds: [(0, _embeds.discordLimitSpamMessage)(userId, title)]
             })["catch"](function (e) {
               console.log(e);
             });
