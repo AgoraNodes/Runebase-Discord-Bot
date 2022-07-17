@@ -48,9 +48,10 @@ let currentSelectedMonster;
 export const discordBattle = async (
   discordClient,
   message,
-  io,
+  isDefered,
   queue,
 ) => {
+  let usedDeferReply = false;
   let allRoundBuffsInfoArray = [];
   let allRoundDebuffsInfoArray = [];
   let allRoundEffectsInfoArray = [];
@@ -75,13 +76,21 @@ export const discordBattle = async (
   console.log('battle1');
 
   if (!userCurrentCharacter) {
-    await message.reply({
+    if (!isDefered) {
+      await message.reply({
+        content: 'You have not selected a class yet\n`!runebase pickclass`\n`/pickclass`',
+        ephemeral: true,
+      });
+      return;
+    }
+    await message.editReply({
       content: 'You have not selected a class yet\n`!runebase pickclass`\n`/pickclass`',
       ephemeral: true,
     });
-    return;
+    usedDeferReply = true;
+    return usedDeferReply;
   }
-
+  console.log('battle2');
   if (userCurrentCharacter.condition.stamina < 20) {
     await discordChannel.send({
       files: [
@@ -93,7 +102,7 @@ export const discordBattle = async (
     });
     return;
   }
-  console.log('battle2');
+  console.log('battle3');
   if (userCurrentCharacter.condition.life < 1) {
     await discordChannel.send({
       files: [

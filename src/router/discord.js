@@ -197,21 +197,24 @@ export const discordRouter = async (
         }
 
         if (commandName === 'battle') {
+          let usedDeferReply;
           await interaction.deferReply().catch((e) => {
             console.log(e);
           });
 
           await queue.add(async () => {
-            const task = await discordBattle(
+            usedDeferReply = await discordBattle(
               discordClient,
               interaction,
-              io,
+              true, // Is Defered by command?
               queue,
             );
           });
-          await interaction.editReply('\u200b').catch((e) => {
-            console.log(e);
-          });
+          if (!usedDeferReply) {
+            await interaction.editReply('\u200b').catch((e) => {
+              console.log(e);
+            });
+          }
         }
 
         if (commandName === 'heal') {
@@ -1203,10 +1206,10 @@ export const discordRouter = async (
 
     if (filteredMessageDiscord[1] && filteredMessageDiscord[1].toLowerCase() === 'battle') {
       await queue.add(async () => {
-        const task = await discordBattle(
+        await discordBattle(
           discordClient,
           message,
-          io,
+          false,
           queue,
         );
       });

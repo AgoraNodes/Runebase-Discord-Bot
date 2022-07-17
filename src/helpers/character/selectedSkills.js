@@ -22,6 +22,7 @@ export const fetchUserCurrentSelectedSkills = async (
     where: {
       // classId: { [Op.col]: 'user.currentClassId' },
       classId: user.currentClassId,
+      '$UserGroup.groupId$': user.currentRealmId,
       // userId: user.id,
     },
     ...(t && [

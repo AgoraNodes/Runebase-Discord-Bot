@@ -29,6 +29,7 @@ export const fetchUserCurrentCharacter = async (
     where: {
       // classId: { [Op.col]: 'user.currentClassId' },
       classId: user.currentClassId,
+      '$UserGroup.groupId$': user.currentRealmId,
       // groupId: user.currentRealmId,
     },
     ...(t && [
