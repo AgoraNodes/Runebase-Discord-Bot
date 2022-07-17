@@ -26,11 +26,6 @@ import logger from "../helpers/logger";
 import { userWalletExist } from "../helpers/client/userWalletExist";
 import { generateLoot } from "../helpers/items/generateLoot";
 import { generateRandomStartDagger } from '../helpers/items/generateStartingDagger';
-import { generateRandomMagicItem } from "../helpers/items/generateRandomMagicItem";
-import { generateRandomNormalItem } from "../helpers/items/generateRandomNormalItem";
-import { generateRandomLowQualityItem } from "../helpers/items/generateRandomLowQualityItem";
-import { generateRandomSuperiorItem } from "../helpers/items/generateRandomSuperiorItem";
-import { generateModifierStringArray } from "../helpers/items/generateModifierStringArray";
 import { renderItemImage } from "../render/item";
 
 import { fetchUserCurrentCharacter } from "../helpers/character/character";
@@ -91,13 +86,13 @@ const generateLootImage = async (
     );
   } else if (lootItem.inventoryId) {
     ctx.strokeText(
-      `Looted by ${lootItem.inventory.UserClass.user.username}`,
+      `Looted by ${lootItem.inventory.UserGroupClass.UserGroup.user.username}`,
       backgroundItemImage.width / 2,
       backgroundItemImage.height + 10,
       backgroundItemImage.width,
     );
     ctx.fillText(
-      `Looted by ${lootItem.inventory.UserClass.user.username}`,
+      `Looted by ${lootItem.inventory.UserGroupClass.UserGroup.user.username}`,
       backgroundItemImage.width / 2,
       backgroundItemImage.height + 10,
       backgroundItemImage.width,
@@ -183,12 +178,18 @@ const listenLoot = async (
                   as: 'inventory',
                   include: [
                     {
-                      model: db.UserClass,
-                      as: 'UserClass',
+                      model: db.UserGroupClass,
+                      as: 'UserGroupClass',
                       include: [
                         {
-                          model: db.user,
-                          as: 'user',
+                          model: db.UserGroup,
+                          as: 'UserGroup',
+                          include: [
+                            {
+                              model: db.user,
+                              as: 'user',
+                            },
+                          ],
                         },
                       ],
                     },
@@ -370,7 +371,10 @@ export const discordStartDagger = async (
     );
 
     if (!userCurrentCharacter) {
-      console.log('user has not selected a class yet'); // Add notice message here to warn user to select a class
+      await message.reply({
+        content: 'You have not selected a class yet\n`!runebase pickclass`\n`/pickclass`',
+        ephemeral: true,
+      });
       return;
     }
 

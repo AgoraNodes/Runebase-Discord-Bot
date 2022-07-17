@@ -33,22 +33,39 @@ export const unEquipItem = async (
     await db.sequelize.transaction({
       isolationLevel: Transaction.ISOLATION_LEVELS.SERIALIZABLE,
     }, async (t) => {
-      const findUserCharacter = await db.UserClass.findOne({
+      console.log('uneq 1');
+      const findUserCharacter = await db.UserGroupClass.findOne({
         where: {
           id: userCurrentCharacter.id,
         },
         include: [
           {
-            model: db.user,
-            as: 'user',
+            model: db.UserGroup,
+            as: 'UserGroup',
             include: [
               {
-                model: db.class,
-                as: 'currentClass',
+                model: db.UserGroupRank,
+                as: 'UserGroupRank',
+                include: [
+                  {
+                    model: db.rank,
+                    as: 'rank',
+                  },
+                ],
               },
               {
-                model: db.UserRank,
-                as: 'UserRank',
+                model: db.group,
+                as: 'group',
+              },
+              {
+                model: db.user,
+                as: 'user',
+                include: [
+                  {
+                    model: db.class,
+                    as: 'currentClass',
+                  },
+                ],
               },
             ],
           },
@@ -106,7 +123,7 @@ export const unEquipItem = async (
         lock: t.LOCK.UPDATE,
         transaction: t,
       });
-
+      console.log('uneq 2');
       findItemToUnEquip = await db.item.findOne({
         where: {
           id: itemId,
@@ -136,7 +153,7 @@ export const unEquipItem = async (
         lock: t.LOCK.UPDATE,
         transaction: t,
       });
-
+      console.log('uneq 3');
       if (
         findItemToUnEquip.itemBase.itemFamily.itemType.name === 'Helms'
         || findItemToUnEquip.itemBase.itemFamily.itemType.name === 'Circlets'
@@ -220,10 +237,10 @@ export const unEquipItem = async (
           t,
         );
       }
-
+      console.log('uneq 4');
       const preActivity = await db.activity.create({
         type: 'equipItem_s',
-        earnerId: userCurrentCharacter.user.id,
+        earnerId: userCurrentCharacter.UserGroup.user.id,
       }, {
         lock: t.LOCK.UPDATE,
         transaction: t,
@@ -262,7 +279,7 @@ export const unEquipItem = async (
   });
 
   const myUpdatedUser = await fetchUserCurrentCharacter(
-    userCurrentCharacter.user.user_id, // user discord id
+    userCurrentCharacter.UserGroup.user.user_id, // user discord id
     true, // Need inventory?
   );
 

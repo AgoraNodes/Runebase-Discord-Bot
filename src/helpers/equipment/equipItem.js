@@ -15,6 +15,7 @@ import { equipGloves } from './equip/Gloves';
 import { equipAmulet } from './equip/Amulet';
 import { equipMainHand } from './equip/MainHand';
 import { equipRing } from './equip/Rings';
+import { fetchUserCurrentCharacter } from "../character/character";
 
 export const equipItem = async (
   userCurrentCharacter,
@@ -31,22 +32,46 @@ export const equipItem = async (
     await db.sequelize.transaction({
       isolationLevel: Transaction.ISOLATION_LEVELS.SERIALIZABLE,
     }, async (t) => {
-      const findUserCharacter = await db.UserClass.findOne({
+      console.log('eq 1');
+      // const findUserCharacter = await fetchUserCurrentCharacter(
+      //   userCurrentCharacter.UserGroup.user.user_id, // user discord id
+      //   false, // Need inventory?
+      //   t,
+      // );
+
+      const findUserCharacter = await db.UserGroupClass.findOne({
         where: {
           id: userCurrentCharacter.id,
+          // '$UserGroup.group.id$': userCurrentCharacter.currentRealmId,
         },
         include: [
           {
-            model: db.user,
-            as: 'user',
+            model: db.UserGroup,
+            as: 'UserGroup',
             include: [
               {
-                model: db.class,
-                as: 'currentClass',
+                model: db.UserGroupRank,
+                as: 'UserGroupRank',
+                include: [
+                  {
+                    model: db.rank,
+                    as: 'rank',
+                  },
+                ],
               },
               {
-                model: db.UserRank,
-                as: 'UserRank',
+                model: db.group,
+                as: 'group',
+              },
+              {
+                model: db.user,
+                as: 'user',
+                include: [
+                  {
+                    model: db.class,
+                    as: 'currentClass',
+                  },
+                ],
               },
             ],
           },
@@ -140,14 +165,14 @@ export const equipItem = async (
         lock: t.LOCK.UPDATE,
         transaction: t,
       });
-
+      console.log('eq 2');
       const [
         userStrength,
         userDexterity,
       ] = await calcStrengthDexforReq(
         findUserCharacter,
       );
-
+      console.log('eq 3');
       const findItemToEquip = await db.item.findOne({
         where: {
           id: itemId,
@@ -178,7 +203,7 @@ export const equipItem = async (
         lock: t.LOCK.UPDATE,
         transaction: t,
       });
-
+      console.log('eq 4');
       if (
         findItemToEquip.itemBase.strengthReq
         && userStrength < findItemToEquip.itemBase.strengthReq
@@ -205,36 +230,36 @@ export const equipItem = async (
         cannotEquip = true;
         return;
       }
-      console.log(userCurrentCharacter.user.currentClass.name);
+      console.log(userCurrentCharacter.UserGroup.user.currentClass.name);
 
       if (
         (
           findItemToEquip.itemBase.itemFamily.itemType.name === 'Sorceress Orbs'
-          && userCurrentCharacter.user.currentClass.name !== 'Sorceress'
+          && userCurrentCharacter.UserGroup.user.currentClass.name !== 'Sorceress'
         )
         || (
           findItemToEquip.itemBase.itemFamily.itemType.name === 'Paladin Shields'
-          && userCurrentCharacter.user.currentClass.name !== 'Paladin'
+          && userCurrentCharacter.UserGroup.user.currentClass.name !== 'Paladin'
         )
         || (
           findItemToEquip.itemBase.itemFamily.itemType.name === 'Necromancer Shrunken Heads'
-          && userCurrentCharacter.user.currentClass.name !== 'Necromancer'
+          && userCurrentCharacter.UserGroup.user.currentClass.name !== 'Necromancer'
         )
         || (
           findItemToEquip.itemBase.itemFamily.itemType.name === 'Amazon Weapons'
-          && userCurrentCharacter.user.currentClass.name !== 'Amazon'
+          && userCurrentCharacter.UserGroup.user.currentClass.name !== 'Amazon'
         )
         || (
           findItemToEquip.itemBase.itemFamily.itemType.name === 'Assasin Katars'
-          && userCurrentCharacter.user.currentClass.name !== 'Assasin'
+          && userCurrentCharacter.UserGroup.user.currentClass.name !== 'Assasin'
         )
         || (
           findItemToEquip.itemBase.itemFamily.itemType.name === 'Druid Pelts'
-          && userCurrentCharacter.user.currentClass.name !== 'Druid'
+          && userCurrentCharacter.UserGroup.user.currentClass.name !== 'Druid'
         )
         || (
           findItemToEquip.itemBase.itemFamily.itemType.name === 'Warrior Helms'
-          && userCurrentCharacter.user.currentClass.name !== 'Warrior'
+          && userCurrentCharacter.UserGroup.user.currentClass.name !== 'Warrior'
         )
       ) {
         cannotEquipReason = 'Cannot Equip with this class';
@@ -345,7 +370,7 @@ export const equipItem = async (
 
       const preActivity = await db.activity.create({
         type: 'equipItem_s',
-        earnerId: userCurrentCharacter.user.id,
+        earnerId: userCurrentCharacter.UserGroup.user.id,
       }, {
         lock: t.LOCK.UPDATE,
         transaction: t,
@@ -366,6 +391,7 @@ export const equipItem = async (
       });
       activity.unshift(finalActivity);
     }).catch(async (err) => {
+      console.log('error during equiping transaction');
       console.log(err);
       try {
         await db.error.create({
@@ -383,25 +409,40 @@ export const equipItem = async (
     }
   });
 
-  const myUpdatedUser = await db.UserClass.findOne({
+  const myUpdatedUser = await db.UserGroupClass.findOne({
     where: {
-      classId: userCurrentCharacter.user.currentClassId,
+      id: userCurrentCharacter.id,
+      // classId: userCurrentCharacter.UserGroup.user.currentClassId,
+      // '$UserGroup.group.id$': userCurrentCharacter.currentRealmId,
     },
     include: [
       {
-        model: db.user,
-        as: 'user',
-        where: {
-          id: `${userCurrentCharacter.user.id}`,
-        },
+        model: db.UserGroup,
+        as: 'UserGroup',
         include: [
           {
-            model: db.class,
-            as: 'currentClass',
+            model: db.UserGroupRank,
+            as: 'UserGroupRank',
+            include: [
+              {
+                model: db.rank,
+                as: 'rank',
+              },
+            ],
           },
           {
-            model: db.rank,
-            as: 'ranks',
+            model: db.group,
+            as: 'group',
+          },
+          {
+            model: db.user,
+            as: 'user',
+            include: [
+              {
+                model: db.class,
+                as: 'currentClass',
+              },
+            ],
           },
         ],
       },
@@ -457,6 +498,7 @@ export const equipItem = async (
     ],
   });
 
+  console.log('done equiping');
   return [
     myUpdatedUser,
     findItemToEquip,

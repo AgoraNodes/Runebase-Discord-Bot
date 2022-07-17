@@ -373,7 +373,7 @@ export const discordShowInventory = async (
   });
 
   const collector = embedMessage.createMessageComponentCollector({
-    filter: ({ user: discordUser }) => discordUser.id === userCurrentCharacter.user.user_id,
+    filter: ({ user: discordUser }) => discordUser.id === userCurrentCharacter.UserGroup.user.user_id,
   });
 
   let currentIndex = 0;
