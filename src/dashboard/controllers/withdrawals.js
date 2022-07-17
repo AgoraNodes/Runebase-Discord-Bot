@@ -3,9 +3,9 @@ import db from '../../models';
 import {
   discordWithdrawalAcceptedMessage,
   discordWithdrawalRejectedMessage,
-} from "../../messages";
+} from "../../embeds";
 
-//import { processWithdrawal } from '../../services/processWithdrawal';
+// import { processWithdrawal } from '../../services/processWithdrawal';
 
 export const acceptWithdrawal = async (
   req,

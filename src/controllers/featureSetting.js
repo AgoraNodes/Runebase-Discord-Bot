@@ -3,7 +3,7 @@ import {
   featureDisabledChannelMessage,
   featureDisabledServerMessage,
   featureDisabledGlobalMessage,
-} from '../messages';
+} from '../embeds';
 import db from '../models';
 import { capitalize } from '../helpers/utils';
 

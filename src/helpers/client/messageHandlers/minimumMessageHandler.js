@@ -1,6 +1,6 @@
 import {
   minimumMessage,
-} from '../../../messages';
+} from '../../../embeds';
 
 export const handleMinimumMessage = async (
   discordClient,

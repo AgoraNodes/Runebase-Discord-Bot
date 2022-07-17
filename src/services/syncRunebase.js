@@ -9,7 +9,7 @@ import logger from "../helpers/logger";
 import {
   discordDepositConfirmedMessage,
   discordWithdrawalConfirmedMessage,
-} from '../messages';
+} from '../embeds';
 
 const sequentialLoop = async (
   iterations,

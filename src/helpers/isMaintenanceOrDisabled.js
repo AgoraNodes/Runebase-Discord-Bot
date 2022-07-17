@@ -3,7 +3,7 @@ import db from '../models';
 import {
   discordBotMaintenanceMessage,
   discordBotDisabledMessage,
-} from '../messages';
+} from '../embeds';
 
 export const isMaintenanceOrDisabled = async (
   message,

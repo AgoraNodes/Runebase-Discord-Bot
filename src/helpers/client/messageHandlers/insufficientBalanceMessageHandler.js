@@ -1,6 +1,6 @@
 import {
   insufficientBalanceMessage,
-} from '../../../messages';
+} from '../../../embeds';
 
 export const handleInsufficientBalanceMessage = async (
   discordClient,

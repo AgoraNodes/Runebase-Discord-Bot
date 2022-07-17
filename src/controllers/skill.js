@@ -20,7 +20,7 @@ import {
   skillInfoMessage,
   loadingSkillAddEmbed,
   loadingSkillSelectEmbed,
-} from '../messages';
+} from '../embeds';
 import skillEmoji from "../config/skillEmoji";
 
 export const discordSkills = async (

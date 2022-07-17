@@ -12,7 +12,7 @@ import {
   timeOutMessage,
   enterWithdrawalAmount,
   unableToWithdrawToSelfMessage,
-} from '../../messages';
+} from '../../embeds';
 
 export const preWithdraw = async (
   discordClient,

@@ -4,7 +4,7 @@ import db from "../../models";
 import {
   levelUpMessage,
   grantRoleExpMessage,
-} from '../../messages';
+} from '../../embeds';
 import { handleExperienceMessage } from './messageHandlers/expierenceMessageHandler';
 
 export const gainMultiExp = async (

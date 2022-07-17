@@ -17,7 +17,7 @@ import {
   insufficientBalanceMessage,
   resetStatsDeclinedMessage,
   resetStatsConfirmationMessage,
-} from '../messages';
+} from '../embeds';
 import {
   generateAcceptButton,
   generateDeclineButton,

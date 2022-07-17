@@ -4,7 +4,7 @@ import db from '../models';
 import {
   discordWithdrawalAcceptedMessage,
   // discordUserWithdrawalRejectMessage,
-} from "../messages";
+} from "../embeds";
 import { processWithdrawal } from "./processWithdrawal";
 
 config();

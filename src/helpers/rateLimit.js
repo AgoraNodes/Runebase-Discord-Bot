@@ -1,5 +1,5 @@
 import * as RateLimiterFlexible from "rate-limiter-flexible";
-import { discordLimitSpamMessage } from "../messages";
+import { discordLimitSpamMessage } from "../embeds";
 
 const errorConsumer = new RateLimiterFlexible.default.RateLimiterMemory({
   points: 2,

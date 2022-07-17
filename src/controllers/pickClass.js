@@ -10,7 +10,7 @@ import {
 import {
   cannotSendMessageUser,
   discordErrorMessage,
-} from '../messages';
+} from '../embeds';
 import db from '../models';
 import logger from "../helpers/logger";
 import { fetchDiscordChannel } from '../helpers/client/fetchDiscordChannel';

@@ -5,7 +5,7 @@ import walletNotifyRunebase from '../helpers/blockchain/runebase/walletNotify';
 import { startRunebaseSync } from "../services/syncRunebase";
 import {
   discordIncomingDepositMessage,
-} from '../messages';
+} from '../embeds';
 import { discordTopggVote } from '../controllers/topggVote';
 
 const Topgg = require("@top-gg/sdk");

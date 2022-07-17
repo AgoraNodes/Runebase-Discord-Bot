@@ -21,7 +21,7 @@ import {
   insufficientBalanceMessage,
   declineResetSkillsMessage,
   resetSkillCompleteMessage,
-} from '../messages';
+} from '../embeds';
 
 export const discordResetSkills = async (
   discordClient,

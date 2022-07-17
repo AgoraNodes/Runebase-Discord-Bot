@@ -7,7 +7,7 @@ import logger from "../logger";
 import {
   cannotSendMessageUser,
   discordErrorMessage,
-} from '../../messages';
+} from '../../embeds';
 
 export const destroyItem = async (
   userCurrentCharacter,

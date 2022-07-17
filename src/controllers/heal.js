@@ -20,7 +20,7 @@ import {
   insufficientBalanceMessage,
   declineHealMessage,
   healCompleteMessage,
-} from '../messages';
+} from '../embeds';
 import { calculateCharacterStats } from '../helpers/stats/calculateCharacterStats';
 
 export const discordHeal = async (

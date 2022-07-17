@@ -40,7 +40,7 @@ import {
   confirmationHealMessage,
   insufficientBalanceMessage,
   healCompleteMessage,
-} from '../messages';
+} from '../embeds';
 import skillEmoji from "../config/skillEmoji";
 
 let currentSelectedMonster;
@@ -346,7 +346,8 @@ export const discordBattle = async (
 
   console.log('battle9');
   const embedMessage = await discordChannel.send({
-    content: `<@${userCurrentCharacter.UserGroup.user.user_id}>`,
+    content: `You are playing on: ${userCurrentCharacter.UserGroup.group.name}
+<@${userCurrentCharacter.UserGroup.user.user_id}>`,
     files: [
       new MessageAttachment(
         await renderBattleGif(
@@ -501,7 +502,8 @@ ${newLootC.length > 0 ? `__found ${newLootC.length} ${newLootC.length === 1 ? `i
       await interaction.deferUpdate();
       console.log(userWallet);
       await interaction.editReply({
-        content: `<@${userCurrentCharacter.UserGroup.user.user_id}>`,
+        content: `You are playing on: ${userCurrentCharacter.UserGroup.group.name}
+<@${userCurrentCharacter.UserGroup.user.user_id}>`,
         embeds: [
           await confirmationHealMessage(
             userCurrentCharacter.UserGroup.user.user_id,

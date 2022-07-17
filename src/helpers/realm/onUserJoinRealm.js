@@ -12,7 +12,7 @@ import {
 } from 'discord.js';
 import {
   levelUpMessage,
-} from '../../messages';
+} from '../../embeds';
 import db from '../../models';
 import logger from "../logger";
 

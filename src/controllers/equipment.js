@@ -26,7 +26,7 @@ import { fetchDiscordUserIdFromMessageOrInteraction } from '../helpers/client/fe
 import { fetchDiscordChannel } from '../helpers/client/fetchDiscordChannel';
 import { unEquipItem } from '../helpers/equipment/unEquipItem';
 
-import { needToBeInDiscordRealmEmbed } from "../messages";
+import { needToBeInDiscordRealmEmbed } from "../embeds";
 import isUserInRealm from "../helpers/realm/isUserInRealm";
 
 const showEquipmentImage = async (

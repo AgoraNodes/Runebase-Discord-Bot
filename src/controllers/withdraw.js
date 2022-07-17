@@ -8,7 +8,7 @@ import {
   discordErrorMessage,
   cannotSendMessageUser,
   unableToWithdrawToSelfMessage,
-} from '../messages';
+} from '../embeds';
 import logger from "../helpers/logger";
 import { validateAmount } from "../helpers/client/validateAmount";
 import { userWalletExist } from "../helpers/client/userWalletExist";

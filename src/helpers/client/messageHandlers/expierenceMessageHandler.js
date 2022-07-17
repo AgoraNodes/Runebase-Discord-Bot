@@ -4,7 +4,7 @@ import {
   invitedNewUserRewardMessage,
   gainActiveTalkerExpMessage,
   gainBattleExpExpMessage,
-} from '../../../messages';
+} from '../../../embeds';
 
 export const handleExperienceMessage = async (
   discordChannel,

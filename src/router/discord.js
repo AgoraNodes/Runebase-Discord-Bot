@@ -41,7 +41,7 @@ import {
   discordUserBannedMessage,
   discordServerBannedMessage,
   discordChannelBannedMessage,
-} from '../messages';
+} from '../embeds';
 import db from "../models";
 
 config();

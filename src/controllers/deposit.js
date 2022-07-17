@@ -7,7 +7,7 @@ import {
   depositAddressMessage,
   discordErrorMessage,
   cannotSendMessageUser,
-} from '../messages';
+} from '../embeds';
 import logger from "../helpers/logger";
 import { userWalletExist } from "../helpers/client/userWalletExist";
 

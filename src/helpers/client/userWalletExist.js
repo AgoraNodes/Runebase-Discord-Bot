@@ -1,7 +1,7 @@
 import db from '../../models';
 import {
   userNotFoundMessage,
-} from '../../messages';
+} from '../../embeds';
 
 const capitalize = (s) => s && s[0].toUpperCase() + s.slice(1);
 

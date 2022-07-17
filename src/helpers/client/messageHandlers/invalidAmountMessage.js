@@ -1,6 +1,6 @@
 import {
   invalidAmountMessage,
-} from '../../../messages';
+} from '../../../embeds';
 
 export const handleInvalidAmountMessage = async (
   discordClient,
