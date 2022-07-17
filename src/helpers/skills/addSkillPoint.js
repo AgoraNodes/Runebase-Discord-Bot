@@ -131,7 +131,6 @@ export const addSkillPoint = async (
       }
       if (!findUserSkillToAdd) {
         await db.UserGroupClassSkill.create({
-          UserClassId: 1, // This needs to be removed after successful migrations to new realm based setup
           UserGroupClassId: userCurrentCharacter.id,
           skillId: skillToAddId,
           points: 1,

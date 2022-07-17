@@ -52,7 +52,7 @@ var userApplyBuffSingle = /*#__PURE__*/function () {
 
             buffObject = {
               name: useAttack.name,
-              UserClassId: userState.id,
+              UserGroupClassId: userState.id,
               damageBonus: useAttack.damageBonus ? useAttack.damageBonus : null,
               attackBonus: useAttack.attackBonus ? useAttack.attackBonus : null,
               defenseBonus: useAttack.defenseBonus ? useAttack.defenseBonus : null,

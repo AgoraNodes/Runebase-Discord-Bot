@@ -106,7 +106,9 @@ var updateUserCurrentSelectedSkills = /*#__PURE__*/function () {
             _context.next = 20;
             return _models["default"].UserGroupClass.findOne(_objectSpread(_objectSpread({
               where: {
-                classId: user.currentClassId
+                classId: user.currentClassId,
+                '$UserGroup.groupId$': user.currentRealmId,
+                '$UserGroup.userId$': user.id
               }
             }, t && [{
               lock: t.LOCK.UPDATE,
@@ -115,11 +117,11 @@ var updateUserCurrentSelectedSkills = /*#__PURE__*/function () {
               include: [{
                 model: _models["default"].UserGroup,
                 as: 'UserGroup',
-                required: true,
-                where: {
-                  groupId: user.currentRealmId,
-                  userId: user.id
-                }
+                required: true // where: {
+                //   groupId: user.currentRealmId,
+                //   userId: user.id,
+                // },
+
               }, {
                 model: _models["default"].UserGroupClassSkill,
                 as: 'UserGroupClassSkills',

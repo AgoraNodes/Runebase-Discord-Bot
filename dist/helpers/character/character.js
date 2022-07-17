@@ -65,6 +65,14 @@ var fetchUserCurrentCharacter = /*#__PURE__*/function () {
               transaction: t
             }]), {}, {
               include: [{
+                model: _models["default"].UserGroupClassSkill,
+                as: 'UserGroupClassSkills',
+                include: [{
+                  model: _models["default"].skill,
+                  as: 'skill'
+                }],
+                separate: true
+              }, {
                 model: _models["default"].UserGroup,
                 as: 'UserGroup',
                 required: true,
@@ -99,14 +107,6 @@ var fetchUserCurrentCharacter = /*#__PURE__*/function () {
               }, {
                 model: _models["default"].debuff,
                 as: 'debuffs',
-                separate: true
-              }, {
-                model: _models["default"].UserGroupClassSkill,
-                as: 'UserGroupClassSkills',
-                include: [{
-                  model: _models["default"].skill,
-                  as: 'skill'
-                }],
                 separate: true
               }, {
                 model: _models["default"]["class"],

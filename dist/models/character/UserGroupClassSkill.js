@@ -27,9 +27,6 @@ module.exports = function (sequelize, DataTypes) {
     UserClassSkillModel.belongsTo(model.UserGroupClass, {
       foreignKey: 'UserGroupClassId'
     });
-    UserClassSkillModel.belongsTo(model.UserGroupClass, {
-      foreignKey: 'UserClassId'
-    }); // remove this after moving with seeds
   };
 
   return UserClassSkillModel;

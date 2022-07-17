@@ -200,8 +200,6 @@ var addSkillPoint = /*#__PURE__*/function () {
 
                                   _context.next = 42;
                                   return _models["default"].UserGroupClassSkill.create({
-                                    UserClassId: 1,
-                                    // This needs to be removed after successful migrations to new realm based setup
                                     UserGroupClassId: userCurrentCharacter.id,
                                     skillId: skillToAddId,
                                     points: 1

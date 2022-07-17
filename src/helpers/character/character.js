@@ -40,6 +40,17 @@ export const fetchUserCurrentCharacter = async (
     ),
     include: [
       {
+        model: db.UserGroupClassSkill,
+        as: 'UserGroupClassSkills',
+        include: [
+          {
+            model: db.skill,
+            as: 'skill',
+          },
+        ],
+        separate: true,
+      },
+      {
         model: db.UserGroup,
         as: 'UserGroup',
         required: true,
@@ -84,17 +95,6 @@ export const fetchUserCurrentCharacter = async (
       {
         model: db.debuff,
         as: 'debuffs',
-        separate: true,
-      },
-      {
-        model: db.UserGroupClassSkill,
-        as: 'UserGroupClassSkills',
-        include: [
-          {
-            model: db.skill,
-            as: 'skill',
-          },
-        ],
         separate: true,
       },
       {

@@ -136,6 +136,7 @@ export const discordPickClass = async (
               classId: CurrentClassSelectionId,
             },
           });
+          console.log(userGroupClass);
           console.log('5');
           if (!userGroupClass) {
             const newStats = await db.stats.create({
@@ -262,7 +263,6 @@ export const discordPickClass = async (
           if (!userAttackSkill) {
             console.log('before create UserGroupClassSkill');
             userAttackSkill = await db.UserGroupClassSkill.create({
-              UserClassId: 2, // to be removed
               UserGroupClassId: userGroupClass.id,
               skillId: findAttackSkill.id,
               points: 1,

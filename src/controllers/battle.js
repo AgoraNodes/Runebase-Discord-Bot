@@ -70,9 +70,6 @@ export const discordBattle = async (
     false, // Need inventory?
   );
 
-  let userCurrentSelectedSkills = await fetchUserCurrentSelectedSkills(
-    userId,
-  );
   console.log('battle1');
 
   if (!userCurrentCharacter) {
@@ -249,6 +246,10 @@ export const discordBattle = async (
       ],
     });
   }
+
+  let userCurrentSelectedSkills = await fetchUserCurrentSelectedSkills(
+    userId,
+  );
   console.log('battle5');
   let mainSkillMap = userCurrentSelectedSkills.UserGroupClassSkills.reduce((filtered, mySkill) => {
     if (!mySkill.skill.passive) {

@@ -45,13 +45,22 @@ var fetchUserCurrentSelectedSkills = /*#__PURE__*/function () {
 
           case 3:
             user = _context.sent;
-            _context.next = 6;
+            console.log(user.currentRealmId);
+            console.log('current realm id');
+            console.log(user.currentClassId);
+            console.log('current class id');
+
+            if (!(user.currentRealmId && user.currentClassId)) {
+              _context.next = 12;
+              break;
+            }
+
+            _context.next = 11;
             return _models["default"].UserGroupClass.findOne(_objectSpread(_objectSpread({
               where: {
-                // classId: { [Op.col]: 'user.currentClassId' },
                 classId: user.currentClassId,
-                '$UserGroup.groupId$': user.currentRealmId // userId: user.id,
-
+                '$UserGroup.groupId$': user.currentRealmId,
+                '$UserGroup.userId$': user.id
               }
             }, t && [{
               lock: t.LOCK.UPDATE,
@@ -61,9 +70,17 @@ var fetchUserCurrentSelectedSkills = /*#__PURE__*/function () {
                 model: _models["default"].UserGroup,
                 as: 'UserGroup',
                 required: true,
-                where: {
-                  groupId: user.currentRealmId
-                }
+                // where: {
+                //   groupId: user.currentRealmId,
+                //   userId: user.id,
+                // },
+                include: [{
+                  model: _models["default"].group,
+                  as: 'group'
+                }, {
+                  model: _models["default"].user,
+                  as: 'user'
+                }]
               }, {
                 model: _models["default"].UserGroupClassSkill,
                 as: 'UserGroupClassSkills',
@@ -104,12 +121,15 @@ var fetchUserCurrentSelectedSkills = /*#__PURE__*/function () {
               }]
             }));
 
-          case 6:
+          case 11:
             userCurrentSelectedSkill = _context.sent;
+
+          case 12:
             console.log(userCurrentSelectedSkill);
+            console.log(userCurrentSelectedSkill.UserGroup);
             return _context.abrupt("return", userCurrentSelectedSkill);
 
-          case 9:
+          case 15:
           case "end":
             return _context.stop();
         }

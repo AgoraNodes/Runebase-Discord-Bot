@@ -73,6 +73,8 @@ export const updateUserCurrentSelectedSkills = async (
   const userCurrentSelectedSkill = await db.UserGroupClass.findOne({
     where: {
       classId: user.currentClassId,
+      '$UserGroup.groupId$': user.currentRealmId,
+      '$UserGroup.userId$': user.id,
     },
     ...(t && [
       {
@@ -85,10 +87,10 @@ export const updateUserCurrentSelectedSkills = async (
         model: db.UserGroup,
         as: 'UserGroup',
         required: true,
-        where: {
-          groupId: user.currentRealmId,
-          userId: user.id,
-        },
+        // where: {
+        //   groupId: user.currentRealmId,
+        //   userId: user.id,
+        // },
       },
       {
         model: db.UserGroupClassSkill,

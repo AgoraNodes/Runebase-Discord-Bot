@@ -66,7 +66,7 @@ var renderSkillTreeImage = /*#__PURE__*/function () {
           case 0:
             console.log('before render skill tree');
             console.log(userCharacter);
-            userCurrentRank = userCharacter.UserGroup.UserGroupRank.rank ? userCharacter.UserGroup.UserGroupRank.rank : {
+            userCurrentRank = userCharacter.UserGroup.UserGroupRank && userCharacter.UserGroup.UserGroupRank.rank ? userCharacter.UserGroup.UserGroupRank.rank : {
               level: 0
             };
             _context2.next = 5;

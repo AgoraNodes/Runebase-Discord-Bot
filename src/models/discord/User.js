@@ -82,7 +82,6 @@ module.exports = (sequelize, DataTypes) => {
       },
     );
     UserModel.hasOne(model.UserGroup);
-    UserModel.hasOne(model.UserGroupClass); // Can this be removed?
   };
 
   return UserModel;
