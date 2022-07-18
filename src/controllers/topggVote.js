@@ -31,12 +31,10 @@ export const discordTopggVote = async (
       'topggvote',
     );
     if (userActivity) {
-      console.log('user not found');
       activity.unshift(userActivity);
     }
     if (!user) return;
 
-    console.log(new Date(Date.now() - (12 * 60 * 60 * 1000)));
     const topggVoteRecord = await db.topggVote.findOne({
       where: {
         userId: user.id,
@@ -47,10 +45,8 @@ export const discordTopggVote = async (
       lock: t.LOCK.UPDATE,
       transaction: t,
     });
-    console.log('after topgg voteRecord');
-    console.log(topggVoteRecord);
+
     if (topggVoteRecord) {
-      console.log('record found skip voting');
       const setting = await db.setting.findOne();
       const findGroupToPost = await db.group.findOne({
         where: {
@@ -75,7 +71,6 @@ export const discordTopggVote = async (
       lock: t.LOCK.UPDATE,
       transaction: t,
     });
-    console.log('after record create');
 
     const newExp = await gainExp(
       discordClient,

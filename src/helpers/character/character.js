@@ -32,12 +32,6 @@ export const fetchUserCurrentCharacter = async (
       '$UserGroup.groupId$': user.currentRealmId,
       // groupId: user.currentRealmId,
     },
-    ...(t && [
-      {
-        lock: t.LOCK.UPDATE,
-        transaction: t,
-      }]
-    ),
     include: [
       {
         model: db.UserGroupClassSkill,
@@ -442,6 +436,12 @@ export const fetchUserCurrentCharacter = async (
         ],
       }] : []),
     ],
+    ...(t && [
+      {
+        lock: t.LOCK.UPDATE,
+        transaction: t,
+      }]
+    ),
   });
   console.log(userCurrentCharacter);
   // console.log(userCurrentCharacter.UserGroup);

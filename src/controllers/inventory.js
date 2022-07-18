@@ -4,7 +4,6 @@ import {
 } from "sequelize";
 import {
   ActionRowBuilder,
-  MessageAttachment,
 } from 'discord.js';
 import db from '../models';
 import { destroyItem } from '../helpers/items/destroyItem';
@@ -66,20 +65,20 @@ export const discordShowInventory = async (
   );
   if (failed) return usedDeferReply;
 
-  const row = new ActionRowBuilder();
+  // const row = new ActionRowBuilder();
 
-  if (
-    userCurrentCharacter.inventory
-    && userCurrentCharacter.inventory.items
-    && userCurrentCharacter.inventory.items.length > 0
-  ) {
-    row.addComponents(
-      await generateEquipmentCompareButton(
-        userCurrentCharacter,
-        0,
-      ),
-    );
-  }
+  // if (
+  //   userCurrentCharacter.inventory
+  //   && userCurrentCharacter.inventory.items
+  //   && userCurrentCharacter.inventory.items.length > 0
+  // ) {
+  //   row.addComponents(
+  //     await generateEquipmentCompareButton(
+  //       userCurrentCharacter,
+  //       0,
+  //     ),
+  //   );
+  // }
 
   const canFitOnOnePage = userCurrentCharacter.inventory.items.length <= 1;
 
@@ -188,12 +187,12 @@ export const discordShowInventory = async (
 
       await interaction.update({
         files: [
-          new MessageAttachment(
-            await renderItemCompareImage(
+          {
+            attachment: await renderItemCompareImage(
               currentIndex,
             ),
-            'itemCompare.png',
-          ),
+            name: 'itemCompare.png',
+          },
         ],
         components: [],
       });
@@ -224,18 +223,18 @@ export const discordShowInventory = async (
         files: [
           ...(
             userCurrentCharacter.inventory.items.length > 0 ? [
-              new MessageAttachment(
-                await renderDestroyIventoryItemImage(
+              {
+                attachment: await renderDestroyIventoryItemImage(
                   currentIndex,
                   userCurrentCharacter,
                 ),
-                'destroyInventoryItem.png',
-              ),
+                name: 'destroyInventoryItem.png',
+              },
             ] : [
-              new MessageAttachment(
-                await renderEmptyInventoryImage(userCurrentCharacter),
-                'emptyInventory.png',
-              ),
+              {
+                attachment: await renderEmptyInventoryImage(userCurrentCharacter),
+                name: 'emptyInventory.png',
+              },
             ]
           ),
         ],
@@ -259,6 +258,7 @@ export const discordShowInventory = async (
     }
     if (interaction.customId.startsWith('ConfirmDestroy:')) {
       const itemId = Number(interaction.customId.replace("ConfirmDestroy:", ""));
+      console.log('before item destroy');
       [
         userCurrentCharacter,
         destroyedItem,
@@ -278,10 +278,10 @@ export const discordShowInventory = async (
       await interaction.editReply({
         content: playingOnRealmMessage(userCurrentCharacter),
         files: [
-          new MessageAttachment(
-            await renderCancelInventoryImage(userCurrentCharacter),
-            'inventory.png',
-          ),
+          {
+            attachment: await renderCancelInventoryImage(userCurrentCharacter),
+            name: 'inventory.png',
+          },
         ],
         components: [],
       });
@@ -299,8 +299,8 @@ export const discordShowInventory = async (
       files: [
         ...(
           userCurrentCharacter.inventory.items.length > 0 ? [
-            new MessageAttachment(
-              await renderInventoryImage(
+            {
+              attachment: await renderInventoryImage(
                 userCurrentCharacter,
                 destroyedItem,
                 equipedItem,
@@ -308,13 +308,13 @@ export const discordShowInventory = async (
                 cannotEquipReason,
                 currentIndex,
               ),
-              'inventory.png',
-            ),
+              name: 'inventory.png',
+            },
           ] : [
-            new MessageAttachment(
-              await renderEmptyInventoryImage(userCurrentCharacter),
-              'emptyInventory.png',
-            ),
+            {
+              attachment: await renderEmptyInventoryImage(userCurrentCharacter),
+              name: 'emptyInventory.png',
+            },
           ]
         ),
       ],

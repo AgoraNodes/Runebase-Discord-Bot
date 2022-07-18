@@ -75,13 +75,13 @@ const generateLootImage = async (
     );
   } else if (lootItem.inventoryId) {
     ctx.strokeText(
-      `Looted by ${lootItem.inventory.UserClass.user.username}`,
+      `Looted by ${lootItem.inventory.UserGroupClass.UserGroup.user.username}`,
       backgroundItemImage.width / 2,
       backgroundItemImage.height + 10,
       backgroundItemImage.width,
     );
     ctx.fillText(
-      `Looted by ${lootItem.inventory.UserClass.user.username}`,
+      `Looted by ${lootItem.inventory.UserGroupClass.UserGroup.user.username}`,
       backgroundItemImage.width / 2,
       backgroundItemImage.height + 10,
       backgroundItemImage.width,
@@ -113,7 +113,10 @@ const listenLoot = async (
   distance,
   updateMessage,
 ) => {
-  const collector = messageDropLoot.createMessageComponentCollector({ componentType: 'BUTTON', time: distance });
+  const collector = messageDropLoot.createMessageComponentCollector({
+    // componentType: 'BUTTON', // Stopped working in discord.js v14 <- no mention in documentation that it would stop working
+    time: distance,
+  });
 
   collector.on('collect', async (
     button,
@@ -515,7 +518,7 @@ export const discordShowCaseMagicItem = async (
 
     const preActivity = await db.activity.create({
       type: 'myrank_s',
-      earnerId: userCurrentCharacter.user.id,
+      earnerId: userCurrentCharacter.UserGroup.user.id,
     }, {
       lock: t.LOCK.UPDATE,
       transaction: t,

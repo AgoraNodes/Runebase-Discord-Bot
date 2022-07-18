@@ -112,10 +112,36 @@ const listenLoot = async (
   distance,
   updateMessage,
 ) => {
+  console.log(messageDropLoot);
+  console.log(distance);
   console.log('creating collector...');
+  console.log('creating collector...');
+  console.log('creating collector...');
+  console.log('creating collector...');
+  console.log('creating collector...');
+  console.log('creating collector...');
+  console.log('creating collector...');
+  console.log('creating collector...');
+  console.log('creating collector...');
+  console.log('creating collector...');
+  console.log('creating collector...');
+  console.log('creating collector...');
+  console.log('creating collector...');
+  console.log('creating collector...');
+  console.log('creating collector...');
+  console.log('creating collector...');
+  console.log('creating collector...');
+  console.log('creating collector...');
+  console.log('creating collector...');
+  console.log('creating collector...');
+  console.log('creating collector...');
+  console.log('creating collector...');
+  console.log('creating collector...');
+
   const collector = messageDropLoot.createMessageComponentCollector({
-    componentType: 'BUTTON',
-    time: distance,
+    // componentType: 'BUTTON',
+    // componentType: 'BUTTON',
+    time: Number(distance),
   });
 
   collector.on('collect', async (
