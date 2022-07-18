@@ -5,11 +5,17 @@ var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefau
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.generateSecondarySkillButton = exports.generatePickClassButton = exports.generateMainSkillButton = exports.generateHealButton = exports.generateForwardButton = exports.generateExitInventoryButton = exports.generateEquipItemButton = exports.generateDestroyYesButton = exports.generateDestroyNoButton = exports.generateDestroyItemButton = exports.generateDeclineButton = exports.generateCancelStatsPickButton = exports.generateCancelSkillButton = exports.generateCancelPickClassButton = exports.generateBackButton = exports.generateAddVitalityButton = exports.generateAddStrengthButton = exports.generateAddSkillButton = exports.generateAddEnergyButton = exports.generateAddDexterityButton = exports.generateAcceptButton = void 0;
+exports.generateSecondarySkillButton = exports.generatePickClassButton = exports.generateMainSkillButton = exports.generateHealButton = exports.generateForwardButton = exports.generateExitInventoryButton = exports.generateEquipmentCompareButton = exports.generateEquipItemButton = exports.generateDestroyYesButton = exports.generateDestroyNoButton = exports.generateDestroyItemButton = exports.generateDeclineButton = exports.generateCancelStatsPickButton = exports.generateCancelSkillButton = exports.generateCancelPickClassButton = exports.generateBackButton = exports.generateAddVitalityButton = exports.generateAddStrengthButton = exports.generateAddSkillButton = exports.generateAddEnergyButton = exports.generateAddDexterityButton = exports.generateAcceptButton = void 0;
+
+var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
+
+var _asyncToGenerator2 = _interopRequireDefault(require("@babel/runtime/helpers/asyncToGenerator"));
 
 var _defineProperty2 = _interopRequireDefault(require("@babel/runtime/helpers/defineProperty"));
 
 var _discord = require("discord.js");
+
+var _lodash = require("lodash");
 
 var _skillEmoji = _interopRequireDefault(require("../config/skillEmoji"));
 
@@ -290,3 +296,35 @@ var generateHealButton = function generateHealButton() {
 };
 
 exports.generateHealButton = generateHealButton;
+
+var generateEquipmentCompareButton = /*#__PURE__*/function () {
+  var _ref = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(userCurrentCharacter, start) {
+    var current, equipItemId, result;
+    return _regenerator["default"].wrap(function _callee$(_context) {
+      while (1) {
+        switch (_context.prev = _context.next) {
+          case 0:
+            current = userCurrentCharacter.inventory.items.slice(start, start + 1);
+            equipItemId = "Compare:".concat(current[0].id);
+            result = new _discord.MessageButton({
+              style: 'SECONDARY',
+              label: "Compare ".concat(current[0].name),
+              emoji: '👀',
+              customId: equipItemId
+            }).setDisabled(true);
+            return _context.abrupt("return", result);
+
+          case 4:
+          case "end":
+            return _context.stop();
+        }
+      }
+    }, _callee);
+  }));
+
+  return function generateEquipmentCompareButton(_x, _x2) {
+    return _ref.apply(this, arguments);
+  };
+}();
+
+exports.generateEquipmentCompareButton = generateEquipmentCompareButton;

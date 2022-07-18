@@ -9,7 +9,7 @@ var _asyncToGenerator2 = _interopRequireDefault(require("@babel/runtime/helpers/
 module.exports = {
   up: function () {
     var _up = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(queryInterface, Sequelize) {
-      var barbarian, assasin, druid, amazon, necromancer, paladin, sorceress;
+      var barbarian, assassin, druid, amazon, necromancer, paladin, sorceress;
       return _regenerator["default"].wrap(function _callee$(_context) {
         while (1) {
           switch (_context.prev = _context.next) {
@@ -26,12 +26,12 @@ module.exports = {
               _context.next = 5;
               return queryInterface.rawSelect('class', {
                 where: {
-                  name: 'Assasin'
+                  name: 'Assassin'
                 }
               }, ['id']);
 
             case 5:
-              assasin = _context.sent;
+              assassin = _context.sent;
               _context.next = 8;
               return queryInterface.rawSelect('class', {
                 where: {
@@ -110,17 +110,17 @@ module.exports = {
                 updatedAt: new Date()
               }, {
                 name: 'Martial Arts',
-                classId: assasin,
+                classId: assassin,
                 createdAt: new Date(),
                 updatedAt: new Date()
               }, {
                 name: 'Shadow Disciplines',
-                classId: assasin,
+                classId: assassin,
                 createdAt: new Date(),
                 updatedAt: new Date()
               }, {
                 name: 'Traps',
-                classId: assasin,
+                classId: assassin,
                 createdAt: new Date(),
                 updatedAt: new Date()
               }, {

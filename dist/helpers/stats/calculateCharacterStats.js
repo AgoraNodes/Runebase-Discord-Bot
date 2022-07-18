@@ -193,7 +193,7 @@ var calculateCharacterStats = /*#__PURE__*/function () {
               addedManaByItemEnergy = Math.round((energy - initialEnergy) * 1.5);
             }
 
-            if (currentCharacter["class"].name === 'Assasin') {
+            if (currentCharacter["class"].name === 'Assassin') {
               addedLifeByItemVitality = (vitality - initialVitality) * 3;
               addedManaByItemEnergy = Math.round((energy - initialEnergy) * 1.75);
             }

@@ -112,7 +112,7 @@ var addEnergy = /*#__PURE__*/function () {
                                     if (user.UserGroup.UserGroupClass.stats.energy % 2 === 0) {
                                       addMana = 2;
                                     }
-                                  } else if (user.currentClass.name === 'Assasin') {
+                                  } else if (user.currentClass.name === 'Assassin') {
                                     addMana = 2;
 
                                     if (user.UserGroup.UserGroupClass.stats.energy % 4 === 0) {

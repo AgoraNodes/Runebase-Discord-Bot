@@ -15,7 +15,7 @@ var _warrior = require("./warrior");
 
 var _amazon = require("./amazon");
 
-var _assasin = require("./assasin");
+var _assassin = require("./assassin");
 
 var _paladin = require("./paladin");
 
@@ -48,13 +48,13 @@ var calculateSkillDamage = /*#__PURE__*/function () {
             attack = _context.sent;
 
           case 6:
-            if (!(userCharacter["class"].name === 'Assasin')) {
+            if (!(userCharacter["class"].name === 'Assassin')) {
               _context.next = 10;
               break;
             }
 
             _context.next = 9;
-            return (0, _assasin.calculateAssaSkillDamage)(skillToCalculate, attackOne);
+            return (0, _assassin.calculateAssaSkillDamage)(skillToCalculate, attackOne);
 
           case 9:
             attack = _context.sent;

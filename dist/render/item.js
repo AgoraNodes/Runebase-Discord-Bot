@@ -162,8 +162,8 @@ var renderItemImage = /*#__PURE__*/function () {
             }
 
             if (newItem.itemBase.itemFamily.itemType.name === "Assassin Katars") {
-              ctx.strokeText("(Assasin Only)", 100, itemImage.height + 95 + shieldAndBootsDamageHeight + extraWeaponsHeight + extraShieldBlockHeight + extraThrowingJavelinHeight, 200);
-              ctx.fillText("(Assasin Only)", 100, itemImage.height + 95 + shieldAndBootsDamageHeight + extraWeaponsHeight + extraShieldBlockHeight + extraThrowingJavelinHeight, 200);
+              ctx.strokeText("(Assassin Only)", 100, itemImage.height + 95 + shieldAndBootsDamageHeight + extraWeaponsHeight + extraShieldBlockHeight + extraThrowingJavelinHeight, 200);
+              ctx.fillText("(Assassin Only)", 100, itemImage.height + 95 + shieldAndBootsDamageHeight + extraWeaponsHeight + extraShieldBlockHeight + extraThrowingJavelinHeight, 200);
             }
 
             if (newItem.itemBase.itemFamily.itemType.name === "Amazon Weapons") {

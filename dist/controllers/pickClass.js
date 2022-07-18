@@ -11,6 +11,8 @@ var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"))
 
 var _toConsumableArray2 = _interopRequireDefault(require("@babel/runtime/helpers/toConsumableArray"));
 
+var _slicedToArray2 = _interopRequireDefault(require("@babel/runtime/helpers/slicedToArray"));
+
 var _asyncToGenerator2 = _interopRequireDefault(require("@babel/runtime/helpers/asyncToGenerator"));
 
 var _sequelize = require("sequelize");
@@ -30,6 +32,8 @@ var _pickClass = require("../render/pickClass/pickClass");
 var _classPicked = require("../render/pickClass/classPicked");
 
 var _cancelClassPick = require("../render/pickClass/cancelClassPick");
+
+var _generateStartingGear = require("../helpers/items/generateStartingGear");
 
 var _buttons = require("../buttons");
 
@@ -213,7 +217,7 @@ var discordPickClass = /*#__PURE__*/function () {
                                     isolationLevel: _sequelize.Transaction.ISOLATION_LEVELS.SERIALIZABLE
                                   }, /*#__PURE__*/function () {
                                     var _ref5 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(t) {
-                                      var findCurrentUser, selectedClass, UserGroup, userGroupClass, newStats, newCondition, newInventory, newEquipment, _newCondition, _newStats, inventory, equipment, findAttackSkill, userAttackSkill, preActivity, finalActivity;
+                                      var findCurrentUser, selectedClass, UserGroup, userGroupClass, newCondition, newStats, inventory, _yield$generateStartG, _yield$generateStartG2, mainHand, offHand, equipment, findAttackSkill, userAttackSkill, preActivity, finalActivity;
 
                                       return _regenerator["default"].wrap(function _callee$(_context) {
                                         while (1) {
@@ -230,7 +234,8 @@ var discordPickClass = /*#__PURE__*/function () {
 
                                             case 2:
                                               findCurrentUser = _context.sent;
-                                              console.log('1');
+                                              console.log('1'); // Find the Class The User is trying to pick
+
                                               _context.next = 6;
                                               return _models["default"]["class"].findOne({
                                                 where: {
@@ -242,7 +247,8 @@ var discordPickClass = /*#__PURE__*/function () {
 
                                             case 6:
                                               selectedClass = _context.sent;
-                                              console.log('2');
+                                              console.log('2'); // Update What Class The user Currently has Selected
+
                                               _context.next = 10;
                                               return findCurrentUser.update({
                                                 currentClassId: CurrentClassSelectionId
@@ -252,45 +258,60 @@ var discordPickClass = /*#__PURE__*/function () {
                                               });
 
                                             case 10:
-                                              console.log('3');
+                                              console.log('3'); // Find the UserGroup Record (Realm related, user's experience is stored in this record)
+
                                               _context.next = 13;
                                               return _models["default"].UserGroup.findOne({
                                                 where: {
                                                   userId: findCurrentUser.id,
                                                   groupId: findCurrentUser.currentRealmId
-                                                }
+                                                },
+                                                transaction: t,
+                                                lock: t.LOCK.UPDATE
                                               });
 
                                             case 13:
                                               UserGroup = _context.sent;
-                                              console.log('4');
+                                              console.log('4'); // Find The userGroupClass (Does User already have class record for the realm he is trying to join?)
+
                                               _context.next = 17;
                                               return _models["default"].UserGroupClass.findOne({
                                                 where: {
                                                   UserGroupId: UserGroup.id,
                                                   classId: CurrentClassSelectionId
-                                                }
-                                              });
-
-                                            case 17:
-                                              userGroupClass = _context.sent;
-                                              console.log(userGroupClass);
-                                              console.log('5');
-
-                                              if (userGroupClass) {
-                                                _context.next = 41;
-                                                break;
-                                              }
-
-                                              _context.next = 23;
-                                              return _models["default"].stats.create({}, {
+                                                },
                                                 transaction: t,
                                                 lock: t.LOCK.UPDATE
                                               });
 
-                                            case 23:
-                                              newStats = _context.sent;
-                                              console.log('5-1');
+                                            case 17:
+                                              userGroupClass = _context.sent;
+                                              console.log('5'); // If the user has no class record for this realm yet
+
+                                              if (userGroupClass) {
+                                                _context.next = 24;
+                                                break;
+                                              }
+
+                                              _context.next = 22;
+                                              return _models["default"].UserGroupClass.create({
+                                                UserGroupId: UserGroup.id,
+                                                classId: CurrentClassSelectionId
+                                              }, {
+                                                transaction: t,
+                                                lock: t.LOCK.UPDATE
+                                              });
+
+                                            case 22:
+                                              userGroupClass = _context.sent;
+                                              console.log('5-5');
+
+                                            case 24:
+                                              if (userGroupClass.conditionId) {
+                                                _context.next = 29;
+                                                break;
+                                              }
+
                                               _context.next = 27;
                                               return _models["default"].condition.create({
                                                 life: selectedClass.life,
@@ -303,113 +324,49 @@ var discordPickClass = /*#__PURE__*/function () {
 
                                             case 27:
                                               newCondition = _context.sent;
-                                              console.log('5-2');
-                                              _context.next = 31;
-                                              return _models["default"].inventory.create({}, {
-                                                transaction: t,
-                                                lock: t.LOCK.UPDATE
-                                              });
-
-                                            case 31:
-                                              newInventory = _context.sent;
-                                              console.log('5-3');
-                                              _context.next = 35;
-                                              return _models["default"].equipment.create({}, {
-                                                transaction: t,
-                                                lock: t.LOCK.UPDATE
-                                              });
-
-                                            case 35:
-                                              newEquipment = _context.sent;
-                                              console.log('5-4');
-                                              _context.next = 39;
-                                              return _models["default"].UserGroupClass.create({
-                                                UserGroupId: UserGroup.id,
-                                                classId: CurrentClassSelectionId,
-                                                statsId: newStats.id,
-                                                conditionId: newCondition.id,
-                                                inventoryId: newInventory.id,
-                                                equipmentId: newEquipment.id
-                                              }, {
-                                                transaction: t,
-                                                lock: t.LOCK.UPDATE
-                                              });
-
-                                            case 39:
-                                              userGroupClass = _context.sent;
-                                              console.log('5-5');
-
-                                            case 41:
-                                              // else {
-                                              //   userClass.update({
-                                              //     classId: CurrentClassSelectionId,
-                                              //   }, {
-                                              //     transaction: t,
-                                              //     lock: t.LOCK.UPDATE,
-                                              //   });
-                                              // }
-                                              console.log('7');
-
-                                              if (userGroupClass.conditionId) {
-                                                _context.next = 47;
-                                                break;
-                                              }
-
-                                              _context.next = 45;
-                                              return _models["default"].condition.create({
-                                                life: selectedClass.life,
-                                                mana: selectedClass.mana,
-                                                stamina: selectedClass.stamina
-                                              }, {
-                                                transaction: t,
-                                                lock: t.LOCK.UPDATE
-                                              });
-
-                                            case 45:
-                                              _newCondition = _context.sent;
                                               userGroupClass.update({
-                                                conditionId: _newCondition.id
+                                                conditionId: newCondition.id
                                               }, {
                                                 transaction: t,
                                                 lock: t.LOCK.UPDATE
                                               });
 
-                                            case 47:
-                                              console.log('8');
+                                            case 29:
+                                              console.log('8'); // If User Has No Stats Record Yet;
 
                                               if (userGroupClass.statsId) {
-                                                _context.next = 53;
+                                                _context.next = 35;
                                                 break;
                                               }
 
-                                              _context.next = 51;
+                                              _context.next = 33;
                                               return _models["default"].stats.create({}, {
                                                 transaction: t,
                                                 lock: t.LOCK.UPDATE
                                               });
 
-                                            case 51:
-                                              _newStats = _context.sent;
+                                            case 33:
+                                              newStats = _context.sent;
                                               userGroupClass.update({
-                                                statsId: _newStats.id
+                                                statsId: newStats.id
                                               }, {
                                                 transaction: t,
                                                 lock: t.LOCK.UPDATE
                                               });
 
-                                            case 53:
+                                            case 35:
                                               if (userGroupClass.inventoryId) {
-                                                _context.next = 58;
+                                                _context.next = 40;
                                                 break;
                                               }
 
-                                              _context.next = 56;
+                                              _context.next = 38;
                                               return _models["default"].inventory.create({}, {
                                                 transaction: t,
                                                 lock: t.LOCK.UPDATE
                                               });
 
-                                            case 56:
+                                            case 38:
                                               inventory = _context.sent;
                                               userGroupClass.update({
                                                 inventoryId: inventory.id
@@ -418,19 +375,30 @@ var discordPickClass = /*#__PURE__*/function () {
                                                 lock: t.LOCK.UPDATE
                                               });
 
-                                            case 58:
+                                            case 40:
                                               if (userGroupClass.equipmentId) {
-                                                _context.next = 63;
+                                                _context.next = 51;
                                                 break;
                                               }
 
-                                              _context.next = 61;
-                                              return _models["default"].equipment.create({}, {
+                                              _context.next = 43;
+                                              return (0, _generateStartingGear.generateStartGear)(selectedClass.name);
+
+                                            case 43:
+                                              _yield$generateStartG = _context.sent;
+                                              _yield$generateStartG2 = (0, _slicedToArray2["default"])(_yield$generateStartG, 2);
+                                              mainHand = _yield$generateStartG2[0];
+                                              offHand = _yield$generateStartG2[1];
+                                              _context.next = 49;
+                                              return _models["default"].equipment.create({
+                                                mainHandId: mainHand ? mainHand.id : null,
+                                                offHandId: offHand ? offHand.id : null
+                                              }, {
                                                 transaction: t,
                                                 lock: t.LOCK.UPDATE
                                               });
 
-                                            case 61:
+                                            case 49:
                                               equipment = _context.sent;
                                               userGroupClass.update({
                                                 equipmentId: equipment.id
@@ -439,8 +407,8 @@ var discordPickClass = /*#__PURE__*/function () {
                                                 lock: t.LOCK.UPDATE
                                               });
 
-                                            case 63:
-                                              _context.next = 65;
+                                            case 51:
+                                              _context.next = 53;
                                               return _models["default"].skill.findOne({
                                                 where: {
                                                   name: 'Attack'
@@ -449,9 +417,9 @@ var discordPickClass = /*#__PURE__*/function () {
                                                 lock: t.LOCK.UPDATE
                                               });
 
-                                            case 65:
+                                            case 53:
                                               findAttackSkill = _context.sent;
-                                              _context.next = 68;
+                                              _context.next = 56;
                                               return _models["default"].UserGroupClassSkill.findOne({
                                                 where: {
                                                   UserGroupClassId: userGroupClass.id,
@@ -461,16 +429,16 @@ var discordPickClass = /*#__PURE__*/function () {
                                                 lock: t.LOCK.UPDATE
                                               });
 
-                                            case 68:
+                                            case 56:
                                               userAttackSkill = _context.sent;
 
                                               if (userAttackSkill) {
-                                                _context.next = 75;
+                                                _context.next = 63;
                                                 break;
                                               }
 
                                               console.log('before create UserGroupClassSkill');
-                                              _context.next = 73;
+                                              _context.next = 61;
                                               return _models["default"].UserGroupClassSkill.create({
                                                 UserGroupClassId: userGroupClass.id,
                                                 skillId: findAttackSkill.id,
@@ -480,17 +448,17 @@ var discordPickClass = /*#__PURE__*/function () {
                                                 lock: t.LOCK.UPDATE
                                               });
 
-                                            case 73:
+                                            case 61:
                                               userAttackSkill = _context.sent;
                                               console.log('after create UserGroupClassSkill');
 
-                                            case 75:
+                                            case 63:
                                               if (userGroupClass.selectedMainSkillId) {
-                                                _context.next = 79;
+                                                _context.next = 67;
                                                 break;
                                               }
 
-                                              _context.next = 78;
+                                              _context.next = 66;
                                               return userGroupClass.update({
                                                 selectedMainSkillId: userAttackSkill.id
                                               }, {
@@ -498,16 +466,16 @@ var discordPickClass = /*#__PURE__*/function () {
                                                 lock: t.LOCK.UPDATE
                                               });
 
-                                            case 78:
+                                            case 66:
                                               userGroupClass = _context.sent;
 
-                                            case 79:
+                                            case 67:
                                               if (userGroupClass.selectedSecondarySkillId) {
-                                                _context.next = 83;
+                                                _context.next = 71;
                                                 break;
                                               }
 
-                                              _context.next = 82;
+                                              _context.next = 70;
                                               return userGroupClass.update({
                                                 selectedSecondarySkillId: userAttackSkill.id
                                               }, {
@@ -515,15 +483,15 @@ var discordPickClass = /*#__PURE__*/function () {
                                                 lock: t.LOCK.UPDATE
                                               });
 
-                                            case 82:
+                                            case 70:
                                               userGroupClass = _context.sent;
 
-                                            case 83:
+                                            case 71:
                                               _context.t0 = interaction;
-                                              _context.next = 86;
+                                              _context.next = 74;
                                               return (0, _classPicked.renderClassPicked)(currentIndex, classes, user);
 
-                                            case 86:
+                                            case 74:
                                               _context.t1 = _context.sent;
                                               _context.t2 = [_context.t1];
                                               _context.t3 = [];
@@ -531,11 +499,11 @@ var discordPickClass = /*#__PURE__*/function () {
                                                 files: _context.t2,
                                                 components: _context.t3
                                               };
-                                              _context.next = 92;
+                                              _context.next = 80;
                                               return _context.t0.update.call(_context.t0, _context.t4);
 
-                                            case 92:
-                                              _context.next = 94;
+                                            case 80:
+                                              _context.next = 82;
                                               return _models["default"].activity.create({
                                                 type: 'pickClass_s',
                                                 earnerId: user.id
@@ -544,9 +512,9 @@ var discordPickClass = /*#__PURE__*/function () {
                                                 transaction: t
                                               });
 
-                                            case 94:
+                                            case 82:
                                               preActivity = _context.sent;
-                                              _context.next = 97;
+                                              _context.next = 85;
                                               return _models["default"].activity.findOne({
                                                 where: {
                                                   id: preActivity.id
@@ -559,11 +527,11 @@ var discordPickClass = /*#__PURE__*/function () {
                                                 transaction: t
                                               });
 
-                                            case 97:
+                                            case 85:
                                               finalActivity = _context.sent;
                                               activity.unshift(finalActivity);
 
-                                            case 99:
+                                            case 87:
                                             case "end":
                                               return _context.stop();
                                           }

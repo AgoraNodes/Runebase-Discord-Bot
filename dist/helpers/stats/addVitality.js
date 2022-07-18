@@ -101,7 +101,7 @@ var addVitality = /*#__PURE__*/function () {
                                   addLife = 0;
                                   addStamina = 1;
 
-                                  if (user.currentClass.name === 'Assasin') {
+                                  if (user.currentClass.name === 'Assassin') {
                                     if (user.UserGroup.UserGroupClass.stats.vitality % 4 === 0) {
                                       addStamina = 2;
                                     }
@@ -111,7 +111,7 @@ var addVitality = /*#__PURE__*/function () {
 
                                   if (user.currentClass.name === 'Warrior') {
                                     addLife = 4;
-                                  } else if (user.currentClass.name === 'Amazon' || user.currentClass.name === 'Assasin' || user.currentClass.name === 'Paladin') {
+                                  } else if (user.currentClass.name === 'Amazon' || user.currentClass.name === 'Assassin' || user.currentClass.name === 'Paladin') {
                                     addLife = 3;
                                   } else if (user.currentClass.name === 'Druid' || user.currentClass.name === 'Necromancer' || user.currentClass.name === 'Sorceress') {
                                     addLife = 2;

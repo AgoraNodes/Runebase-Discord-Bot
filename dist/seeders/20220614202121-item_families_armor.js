@@ -1215,7 +1215,7 @@ module.exports = {
                 twoHanded: false,
                 createdAt: new Date(),
                 updatedAt: new Date()
-              }, // Assasin Katars
+              }, // Assassin Katars
               {
                 name: 'Katar',
                 itemTypeId: itemTypeAssaKatars,

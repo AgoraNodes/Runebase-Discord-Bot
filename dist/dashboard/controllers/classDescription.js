@@ -38,45 +38,37 @@ var updateClassDescription = /*#__PURE__*/function () {
             throw new Error("description is required");
 
           case 5:
-            if (req.body.image) {
-              _context.next = 7;
-              break;
-            }
-
-            throw new Error("image is required");
-
-          case 7:
-            _context.next = 9;
+            _context.next = 7;
             return _models["default"].classDescription.findOne({
               where: {
                 id: req.body.id
               }
             });
 
-          case 9:
+          case 7:
             classDescription = _context.sent;
-            _context.next = 12;
+            _context.next = 10;
             return classDescription.update({
               name: req.body.name,
               description: req.body.description,
               image: req.body.image
             });
 
-          case 12:
+          case 10:
             updatedRank = _context.sent;
             res.locals.name = 'updateClassDescription';
-            _context.next = 16;
+            _context.next = 14;
             return _models["default"].classDescription.findOne({
               where: {
                 id: updatedRank.id
               }
             });
 
-          case 16:
+          case 14:
             res.locals.result = _context.sent;
             next();
 
-          case 18:
+          case 16:
           case "end":
             return _context.stop();
         }
@@ -191,45 +183,37 @@ var addClassDescription = /*#__PURE__*/function () {
             throw new Error("description is required");
 
           case 5:
-            if (req.body.image) {
-              _context4.next = 7;
-              break;
-            }
-
-            throw new Error("Image is required");
-
-          case 7:
-            _context4.next = 9;
+            _context4.next = 7;
             return _models["default"].classDescription.findOne({
               where: {
                 name: req.body.name
               }
             });
 
-          case 9:
+          case 7:
             classDescription = _context4.sent;
 
             if (!classDescription) {
-              _context4.next = 12;
+              _context4.next = 10;
               break;
             }
 
             throw new Error("Already Exists");
 
-          case 12:
+          case 10:
             res.locals.name = 'addClassDescription';
-            _context4.next = 15;
+            _context4.next = 13;
             return _models["default"].classDescription.create({
               name: req.body.name,
               description: req.body.description,
               image: req.body.image
             });
 
-          case 15:
+          case 13:
             res.locals.result = _context4.sent;
             next();
 
-          case 17:
+          case 15:
           case "end":
             return _context4.stop();
         }

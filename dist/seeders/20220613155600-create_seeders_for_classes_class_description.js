@@ -9,7 +9,7 @@ var _asyncToGenerator2 = _interopRequireDefault(require("@babel/runtime/helpers/
 module.exports = {
   up: function () {
     var _up = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(queryInterface, Sequelize) {
-      var BarbarianDescription, WarriorDescription, Barbarian, Warrior, newWarriorDescription, AmazonDescription, NecromancerDescription, PaladinDescription, AssasinDescription, SorceressDescription, DruidDescription, NewAmazonDescription, Amazon, NewDruidDescription, Druid, NewSorceressDescription, Sorceress, NewAssasinDescription, Assasin, NewPaladinDescription, Paladin, NewNecromancerDescription, Necromancer;
+      var BarbarianDescription, WarriorDescription, Barbarian, Warrior, newWarriorDescription, AmazonDescription, NecromancerDescription, PaladinDescription, AssassinDescription, SorceressDescription, DruidDescription, NewAmazonDescription, Amazon, NewDruidDescription, Druid, NewSorceressDescription, Sorceress, NewAssassinDescription, Assassin, NewPaladinDescription, Paladin, NewNecromancerDescription, Necromancer;
       return _regenerator["default"].wrap(function _callee$(_context) {
         while (1) {
           switch (_context.prev = _context.next) {
@@ -173,22 +173,22 @@ module.exports = {
               _context.next = 41;
               return queryInterface.rawSelect('classDescription', {
                 where: {
-                  name: 'Assasin'
+                  name: 'Assassin'
                 }
               }, ['id']);
 
             case 41:
-              AssasinDescription = _context.sent;
+              AssassinDescription = _context.sent;
 
-              if (AssasinDescription) {
+              if (AssassinDescription) {
                 _context.next = 45;
                 break;
               }
 
               _context.next = 45;
               return queryInterface.bulkInsert('classDescription', [{
-                name: 'Assasin',
-                description: 'Assasin Description',
+                name: 'Assassin',
+                description: 'Assassin Description',
                 createdAt: new Date(),
                 updatedAt: new Date()
               }]);
@@ -371,30 +371,30 @@ module.exports = {
               _context.next = 86;
               return queryInterface.rawSelect('classDescription', {
                 where: {
-                  name: 'Assasin'
+                  name: 'Assassin'
                 }
               }, ['id']);
 
             case 86:
-              NewAssasinDescription = _context.sent;
+              NewAssassinDescription = _context.sent;
               _context.next = 89;
               return queryInterface.rawSelect('class', {
                 where: {
-                  name: 'Assasin'
+                  name: 'Assassin'
                 }
               }, ['id']);
 
             case 89:
-              Assasin = _context.sent;
+              Assassin = _context.sent;
 
-              if (Assasin) {
+              if (Assassin) {
                 _context.next = 93;
                 break;
               }
 
               _context.next = 93;
               return queryInterface.bulkInsert('class', [{
-                name: 'Assasin',
+                name: 'Assassin',
                 strength: 20,
                 dexterity: 20,
                 vitality: 20,
@@ -404,7 +404,7 @@ module.exports = {
                 stamina: 95,
                 attackRating: 50,
                 defense: 50,
-                classDescriptionId: NewAssasinDescription,
+                classDescriptionId: NewAssassinDescription,
                 createdAt: new Date(),
                 updatedAt: new Date()
               }]);
