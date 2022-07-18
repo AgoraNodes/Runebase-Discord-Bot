@@ -5,7 +5,7 @@ var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefau
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.generateSecondarySkillButton = exports.generatePickClassButton = exports.generateMainSkillButton = exports.generateHealButton = exports.generateForwardButton = exports.generateExitInventoryButton = exports.generateEquipmentCompareButton = exports.generateEquipItemButton = exports.generateDestroyYesButton = exports.generateDestroyNoButton = exports.generateDestroyItemButton = exports.generateDeclineButton = exports.generateCancelStatsPickButton = exports.generateCancelSkillButton = exports.generateCancelPickClassButton = exports.generateBackButton = exports.generateAddVitalityButton = exports.generateAddStrengthButton = exports.generateAddSkillButton = exports.generateAddEnergyButton = exports.generateAddDexterityButton = exports.generateAcceptButton = void 0;
+exports.generateSecondarySkillButton = exports.generateRollDiceButton = exports.generatePickClassButton = exports.generateMainSkillButton = exports.generateLootButton = exports.generateHealButton = exports.generateForwardButton = exports.generateExitInventoryButton = exports.generateEquipmentCompareButton = exports.generateEquipItemButton = exports.generateDestroyYesButton = exports.generateDestroyNoButton = exports.generateDestroyItemButton = exports.generateDeclineButton = exports.generateCancelStatsPickButton = exports.generateCancelSkillButton = exports.generateCancelPickClassButton = exports.generateBackButton = exports.generateAfterBattleLootButton = exports.generateAddVitalityButton = exports.generateAddStrengthButton = exports.generateAddSkillButton = exports.generateAddEnergyButton = exports.generateAddDexterityButton = exports.generateAcceptButton = void 0;
 
 var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
 
@@ -15,8 +15,6 @@ var _defineProperty2 = _interopRequireDefault(require("@babel/runtime/helpers/de
 
 var _discord = require("discord.js");
 
-var _lodash = require("lodash");
-
 var _skillEmoji = _interopRequireDefault(require("../config/skillEmoji"));
 
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
@@ -24,8 +22,8 @@ function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (O
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { (0, _defineProperty2["default"])(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
 
 var generateAcceptButton = function generateAcceptButton() {
-  var result = new _discord.MessageButton({
-    style: 'SECONDARY',
+  var result = new _discord.ButtonBuilder({
+    style: _discord.ButtonStyle.Secondary,
     label: "Accept",
     emoji: '<a:checkmark:993469790343671848>',
     customId: 'accept'
@@ -36,8 +34,8 @@ var generateAcceptButton = function generateAcceptButton() {
 exports.generateAcceptButton = generateAcceptButton;
 
 var generateDeclineButton = function generateDeclineButton() {
-  var result = new _discord.MessageButton({
-    style: 'SECONDARY',
+  var result = new _discord.ButtonBuilder({
+    style: _discord.ButtonStyle.Secondary,
     label: "Decline",
     emoji: '<a:rejected:993469997596815393>',
     customId: 'decline'
@@ -48,8 +46,8 @@ var generateDeclineButton = function generateDeclineButton() {
 exports.generateDeclineButton = generateDeclineButton;
 
 var generateBackButton = function generateBackButton() {
-  var result = new _discord.MessageButton({
-    style: 'SECONDARY',
+  var result = new _discord.ButtonBuilder({
+    style: _discord.ButtonStyle.Secondary,
     label: 'Back',
     emoji: '<a:backArrow:993514069795557488>',
     customId: 'back'
@@ -60,8 +58,8 @@ var generateBackButton = function generateBackButton() {
 exports.generateBackButton = generateBackButton;
 
 var generateForwardButton = function generateForwardButton() {
-  var result = new _discord.MessageButton({
-    style: 'SECONDARY',
+  var result = new _discord.ButtonBuilder({
+    style: _discord.ButtonStyle.Secondary,
     label: 'Forward',
     emoji: '<a:forwardArrow:993514566585683988>',
     customId: 'forward'
@@ -72,8 +70,8 @@ var generateForwardButton = function generateForwardButton() {
 exports.generateForwardButton = generateForwardButton;
 
 var generateCancelPickClassButton = function generateCancelPickClassButton() {
-  var result = new _discord.MessageButton({
-    style: 'SECONDARY',
+  var result = new _discord.ButtonBuilder({
+    style: _discord.ButtonStyle.Secondary,
     label: "Cancel class selection",
     emoji: '<a:rejected:993469997596815393>',
     customId: 'cancelClass'
@@ -85,8 +83,8 @@ exports.generateCancelPickClassButton = generateCancelPickClassButton;
 
 var generatePickClassButton = function generatePickClassButton(start, classes) {
   var current = classes.slice(start, start + 1);
-  var result = new _discord.MessageButton({
-    style: 'SECONDARY',
+  var result = new _discord.ButtonBuilder({
+    style: _discord.ButtonStyle.Secondary,
     label: "Pick ".concat(current[0].name),
     emoji: '⛏️',
     customId: "pickClass:".concat(current[0].id)
@@ -97,8 +95,8 @@ var generatePickClassButton = function generatePickClassButton(start, classes) {
 exports.generatePickClassButton = generatePickClassButton;
 
 var generateCancelSkillButton = function generateCancelSkillButton() {
-  var result = new _discord.MessageButton({
-    style: 'SECONDARY',
+  var result = new _discord.ButtonBuilder({
+    style: _discord.ButtonStyle.Secondary,
     label: "Cancel skill selection",
     emoji: '<a:rejected:993469997596815393>',
     customId: 'cancelSkillPick'
@@ -110,8 +108,8 @@ exports.generateCancelSkillButton = generateCancelSkillButton;
 
 var generateAddSkillButton = function generateAddSkillButton(mySelectedSkill) {
   var addSkillId = "addSkill:".concat(mySelectedSkill.id);
-  var result = new _discord.MessageButton({
-    style: 'SECONDARY',
+  var result = new _discord.ButtonBuilder({
+    style: _discord.ButtonStyle.Secondary,
     label: "Add Skillpoint to ".concat(mySelectedSkill.name),
     emoji: '➕',
     customId: addSkillId
@@ -122,8 +120,8 @@ var generateAddSkillButton = function generateAddSkillButton(mySelectedSkill) {
 exports.generateAddSkillButton = generateAddSkillButton;
 
 var generateAddStrengthButton = function generateAddStrengthButton() {
-  var result = new _discord.MessageButton({
-    style: 'SECONDARY',
+  var result = new _discord.ButtonBuilder({
+    style: _discord.ButtonStyle.Secondary,
     label: 'Strength ➕',
     emoji: '💪',
     customId: 'strength'
@@ -134,8 +132,8 @@ var generateAddStrengthButton = function generateAddStrengthButton() {
 exports.generateAddStrengthButton = generateAddStrengthButton;
 
 var generateAddDexterityButton = function generateAddDexterityButton() {
-  var result = new _discord.MessageButton({
-    style: 'SECONDARY',
+  var result = new _discord.ButtonBuilder({
+    style: _discord.ButtonStyle.Secondary,
     label: 'Dexterity ➕',
     emoji: '🏃‍♂️',
     customId: 'dexterity'
@@ -146,8 +144,8 @@ var generateAddDexterityButton = function generateAddDexterityButton() {
 exports.generateAddDexterityButton = generateAddDexterityButton;
 
 var generateAddVitalityButton = function generateAddVitalityButton() {
-  var result = new _discord.MessageButton({
-    style: 'SECONDARY',
+  var result = new _discord.ButtonBuilder({
+    style: _discord.ButtonStyle.Secondary,
     label: 'Vitality ➕',
     emoji: '❤️',
     customId: 'vitality'
@@ -158,8 +156,8 @@ var generateAddVitalityButton = function generateAddVitalityButton() {
 exports.generateAddVitalityButton = generateAddVitalityButton;
 
 var generateAddEnergyButton = function generateAddEnergyButton() {
-  var result = new _discord.MessageButton({
-    style: 'SECONDARY',
+  var result = new _discord.ButtonBuilder({
+    style: _discord.ButtonStyle.Secondary,
     label: 'Energy ➕',
     emoji: '🧙',
     customId: 'energy'
@@ -170,8 +168,8 @@ var generateAddEnergyButton = function generateAddEnergyButton() {
 exports.generateAddEnergyButton = generateAddEnergyButton;
 
 var generateCancelStatsPickButton = function generateCancelStatsPickButton() {
-  var result = new _discord.MessageButton({
-    style: 'SECONDARY',
+  var result = new _discord.ButtonBuilder({
+    style: _discord.ButtonStyle.Secondary,
     label: 'Cancel Stats Selection',
     emoji: '<a:rejected:993469997596815393>',
     customId: 'cancelStatsPick'
@@ -182,8 +180,8 @@ var generateCancelStatsPickButton = function generateCancelStatsPickButton() {
 exports.generateCancelStatsPickButton = generateCancelStatsPickButton;
 
 var generateExitInventoryButton = function generateExitInventoryButton() {
-  var result = new _discord.MessageButton({
-    style: 'SECONDARY',
+  var result = new _discord.ButtonBuilder({
+    style: _discord.ButtonStyle.Secondary,
     label: "Exit Inventory",
     emoji: '<a:rejected:993469997596815393>',
     customId: 'exitInventory'
@@ -196,8 +194,8 @@ exports.generateExitInventoryButton = generateExitInventoryButton;
 var generateDestroyItemButton = function generateDestroyItemButton(start, userCurrentCharacter) {
   var current = userCurrentCharacter.inventory.items.slice(start, start + 1);
   var destroyItemId = "Destroy:".concat(current[0].id);
-  var result = new _discord.MessageButton({
-    style: 'SECONDARY',
+  var result = new _discord.ButtonBuilder({
+    style: _discord.ButtonStyle.Secondary,
     label: "Destroy ".concat(current[0].name),
     emoji: '<a:rejected:993469997596815393>',
     customId: destroyItemId
@@ -208,8 +206,8 @@ var generateDestroyItemButton = function generateDestroyItemButton(start, userCu
 exports.generateDestroyItemButton = generateDestroyItemButton;
 
 var generateDestroyNoButton = function generateDestroyNoButton() {
-  var result = new _discord.MessageButton({
-    style: 'SECONDARY',
+  var result = new _discord.ButtonBuilder({
+    style: _discord.ButtonStyle.Secondary,
     label: "No, go back",
     emoji: '<a:backArrow:993514069795557488>',
     customId: 'cancelDestroy'
@@ -222,8 +220,8 @@ exports.generateDestroyNoButton = generateDestroyNoButton;
 var generateEquipItemButton = function generateEquipItemButton(start, userCurrentCharacter) {
   var current = userCurrentCharacter.inventory.items.slice(start, start + 1);
   var equipItemId = "Equip:".concat(current[0].id);
-  var result = new _discord.MessageButton({
-    style: 'SECONDARY',
+  var result = new _discord.ButtonBuilder({
+    style: _discord.ButtonStyle.Secondary,
     label: "Equip ".concat(current[0].name),
     emoji: '⛏️',
     customId: equipItemId
@@ -236,8 +234,8 @@ exports.generateEquipItemButton = generateEquipItemButton;
 var generateDestroyYesButton = function generateDestroyYesButton(start, userCurrentCharacter) {
   var current = userCurrentCharacter.inventory.items.slice(start, start + 1);
   var destroyYesButtonId = "ConfirmDestroy:".concat(current[0].id);
-  var result = new _discord.MessageButton({
-    style: 'SECONDARY',
+  var result = new _discord.ButtonBuilder({
+    style: _discord.ButtonStyle.Secondary,
     label: "Yes, destroy ".concat(current[0].name),
     emoji: '🚮',
     customId: destroyYesButtonId
@@ -252,10 +250,8 @@ var generateMainSkillButton = function generateMainSkillButton(mySelectedSkill) 
     return a.name === mySelectedSkill.skill.name;
   });
 
-  console.log(emoji);
-  console.log('emoji');
-  var result = new _discord.MessageButton(_objectSpread({
-    style: 'SECONDARY',
+  var result = new _discord.ButtonBuilder(_objectSpread({
+    style: _discord.ButtonStyle.Secondary,
     label: "".concat(mySelectedSkill.skill.name),
     // emoji: emoji ? emoji.emoji : '',
     customId: "attackMain:".concat(mySelectedSkill.id)
@@ -272,8 +268,8 @@ var generateSecondarySkillButton = function generateSecondarySkillButton(mySelec
     return a.name === mySelectedSkill.skill.name;
   });
 
-  var result = new _discord.MessageButton(_objectSpread({
-    style: 'SECONDARY',
+  var result = new _discord.ButtonBuilder(_objectSpread({
+    style: _discord.ButtonStyle.Secondary,
     label: "".concat(mySelectedSkill.skill.name),
     // emoji: '➕',
     customId: "attackSecondary:".concat(mySelectedSkill.id)
@@ -286,8 +282,8 @@ var generateSecondarySkillButton = function generateSecondarySkillButton(mySelec
 exports.generateSecondarySkillButton = generateSecondarySkillButton;
 
 var generateHealButton = function generateHealButton() {
-  var result = new _discord.MessageButton({
-    style: 'SECONDARY',
+  var result = new _discord.ButtonBuilder({
+    style: _discord.ButtonStyle.Secondary,
     label: "Heal",
     emoji: '<a:heal:994509319573876786>',
     customId: 'Heal'
@@ -306,8 +302,8 @@ var generateEquipmentCompareButton = /*#__PURE__*/function () {
           case 0:
             current = userCurrentCharacter.inventory.items.slice(start, start + 1);
             equipItemId = "Compare:".concat(current[0].id);
-            result = new _discord.MessageButton({
-              style: 'SECONDARY',
+            result = new _discord.ButtonBuilder({
+              style: _discord.ButtonStyle.Secondary,
               label: "Compare ".concat(current[0].name),
               emoji: '👀',
               customId: equipItemId
@@ -328,3 +324,39 @@ var generateEquipmentCompareButton = /*#__PURE__*/function () {
 }();
 
 exports.generateEquipmentCompareButton = generateEquipmentCompareButton;
+
+var generateRollDiceButton = function generateRollDiceButton() {
+  var result = new _discord.ButtonBuilder({
+    style: _discord.ButtonStyle.Primary,
+    label: "Roll Dice",
+    emoji: '<a:diceroll:998536293443186708>',
+    customId: 'roll'
+  });
+  return result;
+};
+
+exports.generateRollDiceButton = generateRollDiceButton;
+
+var generateLootButton = function generateLootButton() {
+  var result = new _discord.ButtonBuilder({
+    style: _discord.ButtonStyle.Secondary,
+    label: "Loot Item",
+    emoji: '🤏',
+    customId: 'lootItem'
+  });
+  return result;
+};
+
+exports.generateLootButton = generateLootButton;
+
+var generateAfterBattleLootButton = function generateAfterBattleLootButton(loot) {
+  var result = new _discord.ButtonBuilder({
+    style: _discord.ButtonStyle.Secondary,
+    label: "Loot ".concat(loot.name),
+    emoji: '🤏',
+    customId: "lootItem:".concat(loot.id)
+  });
+  return result;
+};
+
+exports.generateAfterBattleLootButton = generateAfterBattleLootButton;

@@ -31,6 +31,12 @@ var _userWalletExist = require("../helpers/client/userWalletExist");
 
 var _experience = require("../helpers/client/experience");
 
+var _fetchDiscordChannel = require("../helpers/client/fetchDiscordChannel");
+
+var _buttons = require("../buttons");
+
+var _diceResults = require("../render/dice/diceResults");
+
 var discordRollDice = /*#__PURE__*/function () {
   var _ref = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee3(discordClient, message, setting, io) {
     var activity;
@@ -44,7 +50,7 @@ var discordRollDice = /*#__PURE__*/function () {
               isolationLevel: _sequelize.Transaction.ISOLATION_LEVELS.SERIALIZABLE
             }, /*#__PURE__*/function () {
               var _ref2 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(t) {
-                var _yield$userWalletExis, _yield$userWalletExis2, user, userActivity, row, rollDiceRecord, dateFuture, dateNow, distance, activityTpre, activityT, randomNumberOne, randomNumberTwo, totalResult, firstDiceImage, secondDiceImage, canvas, ctx, attachment, expRewarded, rewardAmount, createNewDiceRecord, updateWallet, createActivity, findActivity, newExp, discordChannel;
+                var _yield$userWalletExis, _yield$userWalletExis2, user, userActivity, rollDiceRecord, dateFuture, dateNow, distance, activityTpre, activityT, randomNumberOne, randomNumberTwo, totalResult, finalImage, expRewarded, rewardAmount, createNewDiceRecord, updateWallet, createActivity, findActivity, newExp, discordChannel;
 
                 return _regenerator["default"].wrap(function _callee$(_context) {
                   while (1) {
@@ -71,8 +77,7 @@ var discordRollDice = /*#__PURE__*/function () {
                         return _context.abrupt("return");
 
                       case 9:
-                        row = new _discord.MessageActionRow().addComponents(new _discord.MessageButton().setCustomId('roll').setLabel('Roll Dice').setStyle('PRIMARY'));
-                        _context.next = 12;
+                        _context.next = 11;
                         return _models["default"].rollDice.findOne({
                           where: {
                             userId: user.id
@@ -82,7 +87,7 @@ var discordRollDice = /*#__PURE__*/function () {
                           order: [['id', 'DESC']]
                         });
 
-                      case 12:
+                      case 11:
                         rollDiceRecord = _context.sent;
                         dateFuture = rollDiceRecord && rollDiceRecord.createdAt.getTime() + 3 * 60 * 60 * 1000; // (3 * 60 * 60 * 1000)
 
@@ -90,11 +95,11 @@ var discordRollDice = /*#__PURE__*/function () {
                         distance = dateFuture && dateFuture - dateNow;
 
                         if (!(distance && distance > 0)) {
-                          _context.next = 27;
+                          _context.next = 37;
                           break;
                         }
 
-                        _context.next = 19;
+                        _context.next = 18;
                         return _models["default"].activity.create({
                           type: 'rollDice_t',
                           earnerId: user.id
@@ -103,9 +108,9 @@ var discordRollDice = /*#__PURE__*/function () {
                           transaction: t
                         });
 
-                      case 19:
+                      case 18:
                         activityTpre = _context.sent;
-                        _context.next = 22;
+                        _context.next = 21;
                         return _models["default"].activity.findOne({
                           where: {
                             id: activityTpre.id
@@ -118,251 +123,42 @@ var discordRollDice = /*#__PURE__*/function () {
                           transaction: t
                         });
 
-                      case 22:
+                      case 21:
                         activityT = _context.sent;
                         activity.push(activityT);
-                        _context.next = 26;
-                        return message.channel.send({
-                          embeds: [(0, _embeds.rollDiceTooFastMessage)(user.user_id, distance)],
-                          components: [row]
-                        });
+                        _context.t0 = message.channel;
+                        _context.t1 = [(0, _embeds.rollDiceTooFastMessage)(user.user_id, distance)];
+                        _context.t2 = _discord.ActionRowBuilder;
+                        _context.next = 28;
+                        return (0, _buttons.generateRollDiceButton)();
 
-                      case 26:
+                      case 28:
+                        _context.t3 = _context.sent;
+                        _context.t4 = [_context.t3];
+                        _context.t5 = {
+                          components: _context.t4
+                        };
+                        _context.t6 = new _context.t2(_context.t5);
+                        _context.t7 = [_context.t6];
+                        _context.t8 = {
+                          embeds: _context.t1,
+                          components: _context.t7
+                        };
+                        _context.next = 36;
+                        return _context.t0.send.call(_context.t0, _context.t8);
+
+                      case 36:
                         return _context.abrupt("return");
 
-                      case 27:
+                      case 37:
                         randomNumberOne = Math.floor(Math.random() * 6) + 1;
                         randomNumberTwo = Math.floor(Math.random() * 6) + 1;
                         totalResult = randomNumberOne + randomNumberTwo;
-                        _context.next = 32;
-                        return (0, _canvas.loadImage)(_path["default"].join(__dirname, '../assets/images/dice', "dice-".concat(randomNumberOne, ".svg")));
+                        _context.next = 42;
+                        return (0, _diceResults.renderDiceResultsImage)(randomNumberOne, randomNumberTwo, totalResult);
 
-                      case 32:
-                        firstDiceImage = _context.sent;
-                        _context.next = 35;
-                        return (0, _canvas.loadImage)(_path["default"].join(__dirname, '../assets/images/dice', "dice-".concat(randomNumberTwo, ".svg")));
-
-                      case 35:
-                        secondDiceImage = _context.sent;
-                        canvas = (0, _canvas.createCanvas)(300 + 300, 680);
-                        ctx = canvas.getContext('2d');
-                        ctx.drawImage(firstDiceImage, 100, 480, 200, 200);
-                        ctx.drawImage(secondDiceImage, 300, 480, 200, 200); // Content text & lines
-
-                        ctx.fillStyle = "rgba(16, 12, 131, 0.3)";
-
-                        if (totalResult === 2) {
-                          ctx.fillRect(0, 35, 600, 40);
-                        }
-
-                        if (totalResult === 12) {
-                          ctx.fillRect(0, 75, 600, 40);
-                        }
-
-                        if (totalResult === 11) {
-                          ctx.fillRect(0, 115, 600, 40);
-                        }
-
-                        if (totalResult === 10) {
-                          ctx.fillRect(0, 155, 600, 40);
-                        }
-
-                        if (totalResult === 9) {
-                          ctx.fillRect(0, 195, 600, 40);
-                        }
-
-                        if (totalResult === 8) {
-                          ctx.fillRect(0, 235, 600, 40);
-                        }
-
-                        if (totalResult === 7) {
-                          ctx.fillRect(0, 275, 600, 40);
-                        }
-
-                        if (totalResult === 6) {
-                          ctx.fillRect(0, 315, 600, 40);
-                        }
-
-                        if (totalResult === 5) {
-                          ctx.fillRect(0, 355, 600, 40);
-                        }
-
-                        if (totalResult === 4) {
-                          ctx.fillRect(0, 395, 600, 40);
-                        }
-
-                        if (totalResult === 3) {
-                          ctx.fillRect(0, 435, 600, 40);
-                        }
-
-                        ctx.font = 'bold 20px "HeartWarming"';
-                        ctx.fillStyle = "#ccc";
-                        ctx.textAlign = "center";
-                        ctx.strokeStyle = 'black';
-                        ctx.lineWidth = 3;
-                        ctx.strokeText('Result', 100, 25, 200);
-                        ctx.fillText('Result', 100, 25, 200);
-                        ctx.strokeText('RUNES', 300, 25, 200);
-                        ctx.fillText('RUNES', 300, 25, 200);
-                        ctx.strokeText('Exp', 500, 25, 200);
-                        ctx.fillText('Exp', 500, 25, 200); // Draw horizontal line
-
-                        ctx.strokeStyle = '#ccc';
-                        ctx.lineWidth = 1; // 1 + 1
-
-                        ctx.beginPath();
-                        ctx.moveTo(0, 1 * 40 + 35);
-                        ctx.lineTo(600, 1 * 40 + 35);
-                        ctx.stroke();
-                        ctx.strokeText(2, 100, 1 * 40 + 25, 200);
-                        ctx.fillText(2, 100, 1 * 40 + 25, 200);
-                        ctx.strokeText(0.5, 300, 1 * 40 + 25, 200);
-                        ctx.fillText(0.5, 300, 1 * 40 + 25, 200);
-                        ctx.strokeText(20, 500, 1 * 40 + 25, 200);
-                        ctx.fillText(20, 500, 1 * 40 + 25, 200); // 12
-
-                        ctx.beginPath();
-                        ctx.moveTo(0, 2 * 40 + 35);
-                        ctx.lineTo(600, 2 * 40 + 35);
-                        ctx.stroke();
-                        ctx.strokeText(12, 100, 2 * 40 + 25, 200);
-                        ctx.fillText(12, 100, 2 * 40 + 25, 200);
-                        ctx.strokeText(0.24, 300, 2 * 40 + 25, 200);
-                        ctx.fillText(0.24, 300, 2 * 40 + 25, 200);
-                        ctx.strokeText(6, 500, 2 * 40 + 25, 200);
-                        ctx.fillText(6, 500, 2 * 40 + 25, 200); // 11
-
-                        ctx.beginPath();
-                        ctx.moveTo(0, 3 * 40 + 35);
-                        ctx.lineTo(600, 3 * 40 + 35);
-                        ctx.stroke();
-                        ctx.strokeText(11, 100, 3 * 40 + 25, 200);
-                        ctx.fillText(11, 100, 3 * 40 + 25, 200);
-                        ctx.strokeText(0.22, 300, 3 * 40 + 25, 200);
-                        ctx.fillText(0.22, 300, 3 * 40 + 25, 200);
-                        ctx.strokeText(6, 500, 3 * 40 + 25, 200);
-                        ctx.fillText(6, 500, 3 * 40 + 25, 200); // 10
-
-                        ctx.beginPath();
-                        ctx.moveTo(0, 4 * 40 + 35);
-                        ctx.lineTo(600, 4 * 40 + 35);
-                        ctx.stroke();
-                        ctx.strokeText(10, 100, 4 * 40 + 25, 200);
-                        ctx.fillText(10, 100, 4 * 40 + 25, 200);
-                        ctx.strokeText(0.2, 300, 4 * 40 + 25, 200);
-                        ctx.fillText(0.2, 300, 4 * 40 + 25, 200);
-                        ctx.strokeText(5, 500, 4 * 40 + 25, 200);
-                        ctx.fillText(5, 500, 4 * 40 + 25, 200); // 9
-
-                        ctx.beginPath();
-                        ctx.moveTo(0, 5 * 40 + 35);
-                        ctx.lineTo(600, 5 * 40 + 35);
-                        ctx.stroke();
-                        ctx.strokeText(9, 100, 5 * 40 + 25, 200);
-                        ctx.fillText(9, 100, 5 * 40 + 25, 200);
-                        ctx.strokeText(0.18, 300, 5 * 40 + 25, 200);
-                        ctx.fillText(0.18, 300, 5 * 40 + 25, 200);
-                        ctx.strokeText(5, 500, 5 * 40 + 25, 200);
-                        ctx.fillText(5, 500, 5 * 40 + 25, 200); // 8
-
-                        ctx.beginPath();
-                        ctx.moveTo(0, 6 * 40 + 35);
-                        ctx.lineTo(600, 6 * 40 + 35);
-                        ctx.stroke();
-                        ctx.strokeText(8, 100, 6 * 40 + 25, 200);
-                        ctx.fillText(8, 100, 6 * 40 + 25, 200);
-                        ctx.strokeText(0.16, 300, 6 * 40 + 25, 200);
-                        ctx.fillText(0.16, 300, 6 * 40 + 25, 200);
-                        ctx.strokeText(4, 500, 6 * 40 + 25, 200);
-                        ctx.fillText(4, 500, 6 * 40 + 25, 200); // 7
-
-                        ctx.beginPath();
-                        ctx.moveTo(0, 7 * 40 + 35);
-                        ctx.lineTo(600, 7 * 40 + 35);
-                        ctx.stroke();
-                        ctx.strokeText(7, 100, 7 * 40 + 25, 200);
-                        ctx.fillText(7, 100, 7 * 40 + 25, 200);
-                        ctx.strokeText(0.14, 300, 7 * 40 + 25, 200);
-                        ctx.fillText(0.14, 300, 7 * 40 + 25, 200);
-                        ctx.strokeText(4, 500, 7 * 40 + 25, 200);
-                        ctx.fillText(4, 500, 7 * 40 + 25, 200); // 6
-
-                        ctx.beginPath();
-                        ctx.moveTo(0, 8 * 40 + 35);
-                        ctx.lineTo(600, 8 * 40 + 35);
-                        ctx.stroke();
-                        ctx.strokeText(6, 100, 8 * 40 + 25, 200);
-                        ctx.fillText(6, 100, 8 * 40 + 25, 200);
-                        ctx.strokeText(0.12, 300, 8 * 40 + 25, 200);
-                        ctx.fillText(0.12, 300, 8 * 40 + 25, 200);
-                        ctx.strokeText(3, 500, 8 * 40 + 25, 200);
-                        ctx.fillText(3, 500, 8 * 40 + 25, 200); // 5
-
-                        ctx.beginPath();
-                        ctx.moveTo(0, 9 * 40 + 35);
-                        ctx.lineTo(600, 9 * 40 + 35);
-                        ctx.stroke();
-                        ctx.strokeText(5, 100, 9 * 40 + 25, 200);
-                        ctx.fillText(5, 100, 9 * 40 + 25, 200);
-                        ctx.strokeText(0.1, 300, 9 * 40 + 25, 200);
-                        ctx.fillText(0.1, 300, 9 * 40 + 25, 200);
-                        ctx.strokeText(3, 500, 9 * 40 + 25, 200);
-                        ctx.fillText(3, 500, 9 * 40 + 25, 200); // 4
-
-                        ctx.beginPath();
-                        ctx.moveTo(0, 10 * 40 + 35);
-                        ctx.lineTo(600, 10 * 40 + 35);
-                        ctx.stroke();
-                        ctx.strokeText(4, 100, 10 * 40 + 25, 200);
-                        ctx.fillText(4, 100, 10 * 40 + 25, 200);
-                        ctx.strokeText(0.08, 300, 10 * 40 + 25, 200);
-                        ctx.fillText(0.08, 300, 10 * 40 + 25, 200);
-                        ctx.strokeText(2, 500, 10 * 40 + 25, 200);
-                        ctx.fillText(2, 500, 10 * 40 + 25, 200); // 3
-
-                        ctx.beginPath();
-                        ctx.moveTo(0, 11 * 40 + 35);
-                        ctx.lineTo(600, 11 * 40 + 35);
-                        ctx.stroke();
-                        ctx.strokeText(3, 100, 11 * 40 + 25, 200);
-                        ctx.fillText(3, 100, 11 * 40 + 25, 200);
-                        ctx.strokeText(0.06, 300, 11 * 40 + 25, 200);
-                        ctx.fillText(0.06, 300, 11 * 40 + 25, 200);
-                        ctx.strokeText(2, 500, 11 * 40 + 25, 200);
-                        ctx.fillText(2, 500, 11 * 40 + 25, 200); // draw horizonal lines
-
-                        ctx.strokeStyle = '#ccc';
-                        ctx.lineWidth = 3;
-                        ctx.beginPath();
-                        ctx.moveTo(0, 1.5);
-                        ctx.lineTo(600, 1.5);
-                        ctx.stroke();
-                        ctx.beginPath();
-                        ctx.moveTo(0, 35);
-                        ctx.lineTo(600, 35);
-                        ctx.stroke();
-                        ctx.beginPath();
-                        ctx.moveTo(0, 480 - 1.5);
-                        ctx.lineTo(600, 480 - 1.5);
-                        ctx.stroke(); // draw vertical lines
-
-                        ctx.beginPath();
-                        ctx.moveTo(1.5, 0);
-                        ctx.lineTo(1.5, 480);
-                        ctx.stroke();
-                        ctx.beginPath();
-                        ctx.moveTo(200, 0);
-                        ctx.lineTo(200, 480);
-                        ctx.stroke();
-                        ctx.beginPath();
-                        ctx.moveTo(400, 0);
-                        ctx.lineTo(400, 480);
-                        ctx.stroke();
-                        ctx.beginPath();
-                        ctx.moveTo(598.5, 0);
-                        ctx.lineTo(598.5, 480);
-                        ctx.stroke();
-                        attachment = new _discord.MessageAttachment(canvas.toBuffer(), 'rollDice.png');
+                      case 42:
+                        finalImage = _context.sent;
                         expRewarded = 0;
                         rewardAmount = 0;
 
@@ -374,7 +170,7 @@ var discordRollDice = /*#__PURE__*/function () {
                           expRewarded = Number((0.5 * (randomNumberOne + randomNumberTwo)).toFixed(0));
                         }
 
-                        _context.next = 211;
+                        _context.next = 48;
                         return _models["default"].rollDice.create({
                           userId: user.id,
                           diceOne: randomNumberOne,
@@ -386,9 +182,9 @@ var discordRollDice = /*#__PURE__*/function () {
                           transaction: t
                         });
 
-                      case 211:
+                      case 48:
                         createNewDiceRecord = _context.sent;
-                        _context.next = 214;
+                        _context.next = 51;
                         return user.wallet.update({
                           available: Number(user.wallet.available) + rewardAmount
                         }, {
@@ -396,9 +192,9 @@ var discordRollDice = /*#__PURE__*/function () {
                           transaction: t
                         });
 
-                      case 214:
+                      case 51:
                         updateWallet = _context.sent;
-                        _context.next = 217;
+                        _context.next = 54;
                         return _models["default"].activity.create({
                           type: 'rollDice_s',
                           earnerId: user.id,
@@ -408,9 +204,9 @@ var discordRollDice = /*#__PURE__*/function () {
                           transaction: t
                         });
 
-                      case 217:
+                      case 54:
                         createActivity = _context.sent;
-                        _context.next = 220;
+                        _context.next = 57;
                         return _models["default"].activity.findOne({
                           where: {
                             id: createActivity.id
@@ -423,32 +219,51 @@ var discordRollDice = /*#__PURE__*/function () {
                           transaction: t
                         });
 
-                      case 220:
+                      case 57:
                         findActivity = _context.sent;
                         activity.unshift(findActivity);
-                        _context.next = 224;
+                        _context.next = 61;
                         return (0, _experience.gainExp)(discordClient, user.user_id, expRewarded, 'rollDice', t);
 
-                      case 224:
+                      case 61:
                         newExp = _context.sent;
-                        _context.next = 227;
+                        _context.next = 64;
                         return discordClient.channels.cache.get(setting.roleDiceChannelId);
 
-                      case 227:
+                      case 64:
                         discordChannel = _context.sent;
-                        _context.next = 230;
-                        return discordChannel.send({
-                          files: [attachment],
-                          embeds: [(0, _embeds.rolledDiceMessage)(user.user_id, expRewarded, randomNumberOne, randomNumberTwo, rewardAmount)],
-                          components: [row]
-                        });
+                        _context.t9 = discordChannel;
+                        _context.t10 = [{
+                          attachment: finalImage,
+                          name: 'rollDice.png'
+                        }];
+                        _context.t11 = [(0, _embeds.rolledDiceMessage)(user.user_id, expRewarded, randomNumberOne, randomNumberTwo, rewardAmount)];
+                        _context.t12 = _discord.ActionRowBuilder;
+                        _context.next = 71;
+                        return (0, _buttons.generateRollDiceButton)();
 
-                      case 230:
+                      case 71:
+                        _context.t13 = _context.sent;
+                        _context.t14 = [_context.t13];
+                        _context.t15 = {
+                          components: _context.t14
+                        };
+                        _context.t16 = new _context.t12(_context.t15);
+                        _context.t17 = [_context.t16];
+                        _context.t18 = {
+                          files: _context.t10,
+                          embeds: _context.t11,
+                          components: _context.t17
+                        };
+                        _context.next = 79;
+                        return _context.t9.send.call(_context.t9, _context.t18);
+
+                      case 79:
                         t.afterCommit(function () {
                           console.log('done rollDice request');
                         });
 
-                      case 231:
+                      case 80:
                       case "end":
                         return _context.stop();
                     }
@@ -461,8 +276,7 @@ var discordRollDice = /*#__PURE__*/function () {
               };
             }())["catch"]( /*#__PURE__*/function () {
               var _ref3 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee2(err) {
-                var discordChannel, _discordChannel;
-
+                var discordChannel;
                 return _regenerator["default"].wrap(function _callee2$(_context2) {
                   while (1) {
                     switch (_context2.prev = _context2.next) {
@@ -486,75 +300,37 @@ var discordRollDice = /*#__PURE__*/function () {
                         _logger["default"].error("Error Discord: ".concat(_context2.t0));
 
                       case 9:
-                        if (!(err.code && err.code === 50007)) {
-                          _context2.next = 22;
-                          break;
-                        }
+                        _context2.next = 11;
+                        return (0, _fetchDiscordChannel.fetchDiscordChannel)(discordClient, message);
 
-                        if (!(message.type && message.type === 'APPLICATION_COMMAND')) {
-                          _context2.next = 18;
-                          break;
-                        }
-
-                        _context2.next = 13;
-                        return discordClient.channels.cache.get(message.channelId);
-
-                      case 13:
+                      case 11:
                         discordChannel = _context2.sent;
-                        _context2.next = 16;
+
+                        if (!(err.code && err.code === 50007)) {
+                          _context2.next = 17;
+                          break;
+                        }
+
+                        _context2.next = 15;
                         return discordChannel.send({
                           embeds: [(0, _embeds.cannotSendMessageUser)("RollDice", message)]
                         })["catch"](function (e) {
                           console.log(e);
                         });
 
-                      case 16:
-                        _context2.next = 20;
+                      case 15:
+                        _context2.next = 19;
                         break;
 
-                      case 18:
-                        _context2.next = 20;
-                        return message.channel.send({
-                          embeds: [(0, _embeds.cannotSendMessageUser)("RollDice", message)]
-                        })["catch"](function (e) {
-                          console.log(e);
-                        });
-
-                      case 20:
-                        _context2.next = 32;
-                        break;
-
-                      case 22:
-                        if (!(message.type && message.type === 'APPLICATION_COMMAND')) {
-                          _context2.next = 30;
-                          break;
-                        }
-
-                        _context2.next = 25;
-                        return discordClient.channels.cache.get(message.channelId);
-
-                      case 25:
-                        _discordChannel = _context2.sent;
-                        _context2.next = 28;
-                        return _discordChannel.send({
+                      case 17:
+                        _context2.next = 19;
+                        return discordChannel.send({
                           embeds: [(0, _embeds.discordErrorMessage)("RollDice")]
                         })["catch"](function (e) {
                           console.log(e);
                         });
 
-                      case 28:
-                        _context2.next = 32;
-                        break;
-
-                      case 30:
-                        _context2.next = 32;
-                        return message.channel.send({
-                          embeds: [(0, _embeds.discordErrorMessage)("RollDice")]
-                        })["catch"](function (e) {
-                          console.log(e);
-                        });
-
-                      case 32:
+                      case 19:
                       case "end":
                         return _context2.stop();
                     }

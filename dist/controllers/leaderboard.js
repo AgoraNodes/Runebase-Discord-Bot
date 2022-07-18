@@ -19,10 +19,6 @@ var _sequelize = require("sequelize");
 
 var _canvas = require("canvas");
 
-var _discord = require("discord.js");
-
-var _path = _interopRequireDefault(require("path"));
-
 var _embeds = require("../embeds");
 
 var _models = _interopRequireDefault(require("../models"));
@@ -31,7 +27,10 @@ var _logger = _interopRequireDefault(require("../helpers/logger"));
 
 var _userWalletExist = require("../helpers/client/userWalletExist");
 
+var _fetchDiscordChannel = require("../helpers/client/fetchDiscordChannel");
+
 /* eslint-disable import/prefer-default-export */
+// import path from 'path';
 var discordLeaderboard = /*#__PURE__*/function () {
   var _ref = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee5(discordClient, message, setting, io) {
     var activity;
@@ -45,7 +44,7 @@ var discordLeaderboard = /*#__PURE__*/function () {
               isolationLevel: _sequelize.Transaction.ISOLATION_LEVELS.SERIALIZABLE
             }, /*#__PURE__*/function () {
               var _ref2 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee3(t) {
-                var _yield$userWalletExis, _yield$userWalletExis2, user, userActivity, allRanks, setting, findGroupToPost, topUsers, promises, newTopUsers, canvasAddedRanksHeight, canvas, ctx, expBarWidth, attachment, discordChannel, preActivity, finalActivity;
+                var _yield$userWalletExis, _yield$userWalletExis2, user, userActivity, discordChannel, allRanks, setting, findGroupToPost, topUsers, promises, newTopUsers, canvasAddedRanksHeight, canvas, ctx, expBarWidth, finalImage, preActivity, finalActivity;
 
                 return _regenerator["default"].wrap(function _callee3$(_context3) {
                   while (1) {
@@ -73,28 +72,33 @@ var discordLeaderboard = /*#__PURE__*/function () {
 
                       case 9:
                         _context3.next = 11;
+                        return (0, _fetchDiscordChannel.fetchDiscordChannel)(discordClient, message);
+
+                      case 11:
+                        discordChannel = _context3.sent;
+                        _context3.next = 14;
                         return _models["default"].rank.findAll({
                           lock: t.LOCK.UPDATE,
                           transaction: t
                         });
 
-                      case 11:
+                      case 14:
                         allRanks = _context3.sent;
-                        _context3.next = 14;
+                        _context3.next = 17;
                         return _models["default"].setting.findOne();
 
-                      case 14:
+                      case 17:
                         setting = _context3.sent;
-                        _context3.next = 17;
+                        _context3.next = 20;
                         return _models["default"].group.findOne({
                           where: {
                             groupId: setting.discordHomeServerGuildId
                           }
                         });
 
-                      case 17:
+                      case 20:
                         findGroupToPost = _context3.sent;
-                        _context3.next = 20;
+                        _context3.next = 23;
                         return _models["default"].user.findAll({
                           include: [{
                             model: _models["default"].UserGroup,
@@ -110,7 +114,7 @@ var discordLeaderboard = /*#__PURE__*/function () {
                           transaction: t
                         });
 
-                      case 20:
+                      case 23:
                         topUsers = _context3.sent;
                         promises = topUsers.map( /*#__PURE__*/function () {
                           var _ref3 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(topUser, index) {
@@ -254,19 +258,13 @@ var discordLeaderboard = /*#__PURE__*/function () {
                             return _ref3.apply(this, arguments);
                           };
                         }());
-                        _context3.next = 24;
+                        _context3.next = 27;
                         return Promise.all(promises);
 
-                      case 24:
+                      case 27:
                         newTopUsers = _context3.sent;
                         console.log(newTopUsers);
                         canvasAddedRanksHeight = newTopUsers.length * 300 + 36.5;
-                        _context3.next = 29;
-                        return (0, _canvas.registerFont)(_path["default"].join(__dirname, '../assets/fonts/', 'Heart_warming.otf'), {
-                          family: 'HeartWarming'
-                        });
-
-                      case 29:
                         canvas = (0, _canvas.createCanvas)(1040, canvasAddedRanksHeight);
                         ctx = canvas.getContext('2d');
                         expBarWidth = 600;
@@ -422,40 +420,17 @@ var discordLeaderboard = /*#__PURE__*/function () {
                         ctx.moveTo(1038.5, 0);
                         ctx.lineTo(1038.5, canvasAddedRanksHeight);
                         ctx.stroke();
-                        attachment = new _discord.MessageAttachment(canvas.toBuffer(), 'leaderboard.png');
-
-                        if (!(message.type && message.type === 'APPLICATION_COMMAND')) {
-                          _context3.next = 78;
-                          break;
-                        }
-
-                        if (!message.guildId) {
-                          _context3.next = 76;
-                          break;
-                        }
-
-                        _context3.next = 73;
-                        return discordClient.channels.cache.get(message.channelId);
-
-                      case 73:
-                        discordChannel = _context3.sent;
-                        _context3.next = 76;
+                        finalImage = canvas.toBuffer();
+                        _context3.next = 72;
                         return discordChannel.send({
-                          files: [attachment]
+                          files: [{
+                            attachment: finalImage,
+                            name: 'leaderboard.png'
+                          }]
                         });
 
-                      case 76:
-                        _context3.next = 80;
-                        break;
-
-                      case 78:
-                        _context3.next = 80;
-                        return message.channel.send({
-                          files: [attachment]
-                        });
-
-                      case 80:
-                        _context3.next = 82;
+                      case 72:
+                        _context3.next = 74;
                         return _models["default"].activity.create({
                           type: 'leaderboard_s',
                           earnerId: user.id
@@ -464,9 +439,9 @@ var discordLeaderboard = /*#__PURE__*/function () {
                           transaction: t
                         });
 
-                      case 82:
+                      case 74:
                         preActivity = _context3.sent;
-                        _context3.next = 85;
+                        _context3.next = 77;
                         return _models["default"].activity.findOne({
                           where: {
                             id: preActivity.id
@@ -479,11 +454,11 @@ var discordLeaderboard = /*#__PURE__*/function () {
                           transaction: t
                         });
 
-                      case 85:
+                      case 77:
                         finalActivity = _context3.sent;
                         activity.unshift(finalActivity);
 
-                      case 87:
+                      case 79:
                       case "end":
                         return _context3.stop();
                     }

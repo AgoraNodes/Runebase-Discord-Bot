@@ -121,7 +121,7 @@ var discordResetSkills = /*#__PURE__*/function () {
           case 30:
             _context5.t2 = _context5.sent;
             _context5.t3 = [_context5.t2];
-            _context5.t4 = _discord.MessageActionRow;
+            _context5.t4 = _discord.ActionRowBuilder;
             _context5.next = 35;
             return (0, _buttons.generateAcceptButton)();
 

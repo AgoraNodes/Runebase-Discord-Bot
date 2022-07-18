@@ -5,7 +5,7 @@ var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefau
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.renderCancelClassPicked = void 0;
+exports.renderCancelStatsImage = void 0;
 
 var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
 
@@ -13,12 +13,8 @@ var _asyncToGenerator2 = _interopRequireDefault(require("@babel/runtime/helpers/
 
 var _canvas = require("canvas");
 
-var _lodash = _interopRequireDefault(require("lodash"));
-
-var _discord = require("discord.js");
-
-var renderCancelClassPicked = /*#__PURE__*/function () {
-  var _ref = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(user) {
+var renderCancelStatsImage = /*#__PURE__*/function () {
+  var _ref = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(userCurrentCharacter) {
     var canvas, ctx, finalImage;
     return _regenerator["default"].wrap(function _callee$(_context) {
       while (1) {
@@ -31,16 +27,12 @@ var renderCancelClassPicked = /*#__PURE__*/function () {
             ctx.strokeStyle = 'black';
             ctx.lineWidth = 3;
             ctx.textAlign = "center";
-            ctx.strokeText("".concat(user.username, " canceled class selection"), 250, 60, 500);
-            ctx.fillText("".concat(user.username, " canceled class selection"), 250, 60, 500);
-            _context.next = 11;
-            return canvas.toBuffer();
-
-          case 11:
-            finalImage = _context.sent;
+            ctx.strokeText("".concat(userCurrentCharacter.UserGroup.user.username, " canceled stats selection"), 250, 60, 500);
+            ctx.fillText("".concat(userCurrentCharacter.UserGroup.user.username, " canceled stats selection"), 250, 60, 500);
+            finalImage = canvas.toBuffer();
             return _context.abrupt("return", finalImage);
 
-          case 13:
+          case 11:
           case "end":
             return _context.stop();
         }
@@ -48,9 +40,9 @@ var renderCancelClassPicked = /*#__PURE__*/function () {
     }, _callee);
   }));
 
-  return function renderCancelClassPicked(_x) {
+  return function renderCancelStatsImage(_x) {
     return _ref.apply(this, arguments);
   };
 }();
 
-exports.renderCancelClassPicked = renderCancelClassPicked;
+exports.renderCancelStatsImage = renderCancelStatsImage;

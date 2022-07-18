@@ -59,20 +59,14 @@ var generateLootImage = /*#__PURE__*/function () {
             seconds = Math.floor(distance % (1000 * 60) / 1000);
             ended = days < 1 && hours < 1 && minutes < 1 && seconds < 1 || lootItem.inventoryId || trueEnd;
             _context.next = 8;
-            return (0, _canvas.registerFont)(_path["default"].join(__dirname, '../assets/fonts/', 'Heart_warming.otf'), {
-              family: 'HeartWarming'
-            });
-
-          case 8:
-            _context.next = 10;
             return (0, _item.renderItemImage)(lootItem);
 
-          case 10:
+          case 8:
             itemImage = _context.sent;
-            _context.next = 13;
+            _context.next = 11;
             return (0, _canvas.loadImage)(itemImage);
 
-          case 13:
+          case 11:
             backgroundItemImage = _context.sent;
             canvas = (0, _canvas.createCanvas)(backgroundItemImage.width, backgroundItemImage.height + 20);
             ctx = canvas.getContext('2d');
@@ -96,14 +90,14 @@ var generateLootImage = /*#__PURE__*/function () {
               ctx.fillText("".concat(!ended ? "Time remaining ".concat(days > 0 ? "".concat(days, " days") : '', "  ").concat(hours > 0 ? "".concat(hours, " hours") : '', " ").concat(minutes > 0 ? "".concat(minutes, " minutes") : '', " ").concat(seconds > 0 ? "".concat(seconds, " seconds") : '') : "Ended"), backgroundItemImage.width / 2, backgroundItemImage.height + 10, backgroundItemImage.width);
             }
 
-            _context.next = 25;
+            _context.next = 23;
             return canvas.toBuffer();
 
-          case 25:
+          case 23:
             finalImage = _context.sent;
             return _context.abrupt("return", finalImage);
 
-          case 27:
+          case 25:
           case "end":
             return _context.stop();
         }
@@ -123,9 +117,35 @@ var listenLoot = /*#__PURE__*/function () {
       while (1) {
         switch (_context10.prev = _context10.next) {
           case 0:
+            console.log(messageDropLoot);
+            console.log(distance);
+            console.log('creating collector...');
+            console.log('creating collector...');
+            console.log('creating collector...');
+            console.log('creating collector...');
+            console.log('creating collector...');
+            console.log('creating collector...');
+            console.log('creating collector...');
+            console.log('creating collector...');
+            console.log('creating collector...');
+            console.log('creating collector...');
+            console.log('creating collector...');
+            console.log('creating collector...');
+            console.log('creating collector...');
+            console.log('creating collector...');
+            console.log('creating collector...');
+            console.log('creating collector...');
+            console.log('creating collector...');
+            console.log('creating collector...');
+            console.log('creating collector...');
+            console.log('creating collector...');
+            console.log('creating collector...');
+            console.log('creating collector...');
+            console.log('creating collector...');
             collector = messageDropLoot.createMessageComponentCollector({
-              componentType: 'BUTTON',
-              time: distance
+              // componentType: 'BUTTON',
+              // componentType: 'BUTTON',
+              time: Number(distance)
             });
             collector.on('collect', /*#__PURE__*/function () {
               var _ref3 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee5(button) {
@@ -133,12 +153,16 @@ var listenLoot = /*#__PURE__*/function () {
                   while (1) {
                     switch (_context5.prev = _context5.next) {
                       case 0:
+                        console.log('collection');
+                        console.log(button);
+                        console.log('collecting');
+
                         if (button.user.bot) {
-                          _context5.next = 3;
+                          _context5.next = 6;
                           break;
                         }
 
-                        _context5.next = 3;
+                        _context5.next = 6;
                         return queue.add( /*#__PURE__*/(0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee4() {
                           return _regenerator["default"].wrap(function _callee4$(_context4) {
                             while (1) {
@@ -149,42 +173,37 @@ var listenLoot = /*#__PURE__*/function () {
                                     isolationLevel: _sequelize.Transaction.ISOLATION_LEVELS.SERIALIZABLE
                                   }, /*#__PURE__*/function () {
                                     var _ref5 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee2(t) {
-                                      var userCollectingId, userCurrentCharacterCollecting, findItem, waitForUpdateItem, itemLootedFinal, updatedLootImage, newAttachmentFinal;
+                                      var userCurrentCharacterCollecting, findItem, waitForUpdateItem, itemLootedFinal;
                                       return _regenerator["default"].wrap(function _callee2$(_context2) {
                                         while (1) {
                                           switch (_context2.prev = _context2.next) {
                                             case 0:
                                               _context2.next = 2;
-                                              return (0, _fetchDiscordUserIdFromMessageOrInteraction.fetchDiscordUserIdFromMessageOrInteraction)(button);
-
-                                            case 2:
-                                              userCollectingId = _context2.sent;
-                                              _context2.next = 5;
                                               return (0, _character.fetchUserCurrentCharacter)(button.user.id, // user discord id
                                               true, // Need inventory?
                                               t);
 
-                                            case 5:
+                                            case 2:
                                               userCurrentCharacterCollecting = _context2.sent;
 
                                               if (userCurrentCharacterCollecting) {
-                                                _context2.next = 11;
+                                                _context2.next = 8;
                                                 break;
                                               }
 
-                                              _context2.next = 9;
+                                              _context2.next = 6;
                                               return button.reply({
                                                 content: 'You have not selected a class yet\n!runebase pickclass\n/pickclass',
                                                 ephemeral: true
                                               });
 
-                                            case 9:
+                                            case 6:
                                               console.log('user has not selected a class yet'); // Add notice message here to warn user to select a class
 
                                               return _context2.abrupt("return");
 
-                                            case 11:
-                                              _context2.next = 13;
+                                            case 8:
+                                              _context2.next = 10;
                                               return _models["default"].item.findOne({
                                                 where: {
                                                   id: newItem.id
@@ -193,15 +212,15 @@ var listenLoot = /*#__PURE__*/function () {
                                                 transaction: t
                                               });
 
-                                            case 13:
+                                            case 10:
                                               findItem = _context2.sent;
 
                                               if (findItem.inventoryId) {
-                                                _context2.next = 30;
+                                                _context2.next = 31;
                                                 break;
                                               }
 
-                                              _context2.next = 17;
+                                              _context2.next = 14;
                                               return findItem.update({
                                                 inventoryId: userCurrentCharacterCollecting.inventoryId
                                               }, {
@@ -209,9 +228,9 @@ var listenLoot = /*#__PURE__*/function () {
                                                 transaction: t
                                               });
 
-                                            case 17:
+                                            case 14:
                                               waitForUpdateItem = _context2.sent;
-                                              _context2.next = 20;
+                                              _context2.next = 17;
                                               return _models["default"].item.findOne({
                                                 where: {
                                                   id: waitForUpdateItem.id
@@ -254,33 +273,40 @@ var listenLoot = /*#__PURE__*/function () {
                                                 }]
                                               });
 
-                                            case 20:
+                                            case 17:
                                               itemLootedFinal = _context2.sent;
-                                              _context2.next = 23;
+                                              _context2.t0 = messageDropLoot;
+                                              _context2.next = 21;
                                               return generateLootImage(itemLootedFinal, distance, true);
 
-                                            case 23:
-                                              updatedLootImage = _context2.sent;
-                                              newAttachmentFinal = new _discord.MessageAttachment(updatedLootImage, 'lootItem.png');
-                                              _context2.next = 27;
-                                              return messageDropLoot.edit({
-                                                files: [newAttachmentFinal],
-                                                components: []
-                                              });
+                                            case 21:
+                                              _context2.t1 = _context2.sent;
+                                              _context2.t2 = {
+                                                attachment: _context2.t1,
+                                                name: 'lootItem.png'
+                                              };
+                                              _context2.t3 = [_context2.t2];
+                                              _context2.t4 = [];
+                                              _context2.t5 = {
+                                                files: _context2.t3,
+                                                components: _context2.t4
+                                              };
+                                              _context2.next = 28;
+                                              return _context2.t0.edit.call(_context2.t0, _context2.t5);
 
-                                            case 27:
+                                            case 28:
                                               clearInterval(updateMessage);
-                                              _context2.next = 32;
+                                              _context2.next = 33;
                                               break;
 
-                                            case 30:
-                                              _context2.next = 32;
+                                            case 31:
+                                              _context2.next = 33;
                                               return button.reply({
                                                 content: 'Somebody else already looted',
                                                 ephemeral: true
                                               });
 
-                                            case 32:
+                                            case 33:
                                             case "end":
                                               return _context2.stop();
                                           }
@@ -340,7 +366,7 @@ var listenLoot = /*#__PURE__*/function () {
                           }, _callee4);
                         })));
 
-                      case 3:
+                      case 6:
                       case "end":
                         return _context5.stop();
                     }
@@ -371,7 +397,7 @@ var listenLoot = /*#__PURE__*/function () {
                                   isolationLevel: _sequelize.Transaction.ISOLATION_LEVELS.SERIALIZABLE
                                 }, /*#__PURE__*/function () {
                                   var _ref9 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee6(t) {
-                                    var itemLootedFinal, updatedLootImage, newAttachmentFinal;
+                                    var itemLootedFinal;
                                     return _regenerator["default"].wrap(function _callee6$(_context6) {
                                       while (1) {
                                         switch (_context6.prev = _context6.next) {
@@ -385,11 +411,15 @@ var listenLoot = /*#__PURE__*/function () {
                                                 model: _models["default"].inventory,
                                                 as: 'inventory',
                                                 include: [{
-                                                  model: _models["default"].UserClass,
-                                                  as: 'UserClass',
+                                                  model: _models["default"].UserGroupClass,
+                                                  as: 'UserGroupClass',
                                                   include: [{
-                                                    model: _models["default"].user,
-                                                    as: 'user'
+                                                    model: _models["default"].UserGroup,
+                                                    as: 'UserGroup',
+                                                    include: [{
+                                                      model: _models["default"].user,
+                                                      as: 'user'
+                                                    }]
                                                   }]
                                                 }]
                                               }, {
@@ -415,22 +445,29 @@ var listenLoot = /*#__PURE__*/function () {
 
                                           case 2:
                                             itemLootedFinal = _context6.sent;
-                                            _context6.next = 5;
+                                            _context6.t0 = messageDropLoot;
+                                            _context6.next = 6;
                                             return generateLootImage(itemLootedFinal, distance);
 
-                                          case 5:
-                                            updatedLootImage = _context6.sent;
-                                            newAttachmentFinal = new _discord.MessageAttachment(updatedLootImage, 'lootItem.png');
-                                            _context6.next = 9;
-                                            return messageDropLoot.edit({
-                                              files: [newAttachmentFinal],
-                                              components: []
-                                            });
+                                          case 6:
+                                            _context6.t1 = _context6.sent;
+                                            _context6.t2 = {
+                                              attachment: _context6.t1,
+                                              name: 'lootItem.png'
+                                            };
+                                            _context6.t3 = [_context6.t2];
+                                            _context6.t4 = [];
+                                            _context6.t5 = {
+                                              files: _context6.t3,
+                                              components: _context6.t4
+                                            };
+                                            _context6.next = 13;
+                                            return _context6.t0.edit.call(_context6.t0, _context6.t5);
 
-                                          case 9:
+                                          case 13:
                                             clearInterval(updateMessage);
 
-                                          case 10:
+                                          case 14:
                                           case "end":
                                             return _context6.stop();
                                         }
@@ -505,7 +542,7 @@ var listenLoot = /*#__PURE__*/function () {
               }, _callee9);
             })));
 
-          case 3:
+          case 28:
           case "end":
             return _context10.stop();
         }
@@ -531,7 +568,7 @@ var discordStartDagger = /*#__PURE__*/function () {
               isolationLevel: _sequelize.Transaction.ISOLATION_LEVELS.SERIALIZABLE
             }, /*#__PURE__*/function () {
               var _ref12 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee13(t) {
-                var userId, discordChannel, userCurrentCharacter, newItem, generateLootButton, countDownDate, now, distance, lootImage, attachment, messageDropLoot, updateMessage, preActivity, finalActivity;
+                var userId, discordChannel, userCurrentCharacter, newItem, generateLootButton, countDownDate, now, distance, messageDropLoot, updateMessage, preActivity, finalActivity;
                 return _regenerator["default"].wrap(function _callee13$(_context13) {
                   while (1) {
                     switch (_context13.prev = _context13.next) {
@@ -582,8 +619,8 @@ var discordStartDagger = /*#__PURE__*/function () {
                               while (1) {
                                 switch (_context11.prev = _context11.next) {
                                   case 0:
-                                    return _context11.abrupt("return", new _discord.MessageButton({
-                                      style: 'SECONDARY',
+                                    return _context11.abrupt("return", new _discord.ButtonBuilder({
+                                      style: _discord.ButtonStyle.Secondary,
                                       label: "Loot Item",
                                       emoji: '🤏',
                                       customId: 'lootItem'
@@ -620,37 +657,40 @@ var discordStartDagger = /*#__PURE__*/function () {
                       case 27:
                         now = _context13.sent;
                         distance = countDownDate - now;
-                        _context13.next = 31;
+                        _context13.t3 = discordChannel;
+                        _context13.next = 32;
                         return generateLootImage(newItem, distance);
 
-                      case 31:
-                        lootImage = _context13.sent;
-                        attachment = new _discord.MessageAttachment(lootImage, 'lootItem.png');
-                        _context13.t3 = discordChannel;
-                        _context13.t4 = [attachment];
-                        _context13.t5 = _discord.MessageActionRow;
+                      case 32:
+                        _context13.t4 = _context13.sent;
+                        _context13.t5 = {
+                          attachment: _context13.t4,
+                          name: 'lootItem.png'
+                        };
+                        _context13.t6 = [_context13.t5];
+                        _context13.t7 = _discord.ActionRowBuilder;
                         _context13.next = 38;
                         return generateLootButton();
 
                       case 38:
-                        _context13.t6 = _context13.sent;
-                        _context13.t7 = [_context13.t6];
-                        _context13.t8 = {
-                          components: _context13.t7
+                        _context13.t8 = _context13.sent;
+                        _context13.t9 = [_context13.t8];
+                        _context13.t10 = {
+                          components: _context13.t9
                         };
-                        _context13.t9 = new _context13.t5(_context13.t8);
-                        _context13.t10 = [_context13.t9];
-                        _context13.t11 = {
-                          files: _context13.t4,
-                          components: _context13.t10
+                        _context13.t11 = new _context13.t7(_context13.t10);
+                        _context13.t12 = [_context13.t11];
+                        _context13.t13 = {
+                          files: _context13.t6,
+                          components: _context13.t12
                         };
                         _context13.next = 46;
-                        return _context13.t3.send.call(_context13.t3, _context13.t11);
+                        return _context13.t3.send.call(_context13.t3, _context13.t13);
 
                       case 46:
                         messageDropLoot = _context13.sent;
                         updateMessage = setInterval( /*#__PURE__*/(0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee12() {
-                          var findItem, updatedLootImage, newAttachment;
+                          var findItem;
                           return _regenerator["default"].wrap(function _callee12$(_context12) {
                             while (1) {
                               switch (_context12.prev = _context12.next) {
@@ -666,11 +706,15 @@ var discordStartDagger = /*#__PURE__*/function () {
                                       model: _models["default"].inventory,
                                       as: 'inventory',
                                       include: [{
-                                        model: _models["default"].UserClass,
-                                        as: 'UserClass',
+                                        model: _models["default"].UserGroupClass,
+                                        as: 'UserGroupClass',
                                         include: [{
-                                          model: _models["default"].user,
-                                          as: 'user'
+                                          model: _models["default"].UserGroup,
+                                          as: 'UserGroup',
+                                          include: [{
+                                            model: _models["default"].user,
+                                            as: 'user'
+                                          }]
                                         }]
                                       }]
                                     }, {
@@ -696,12 +740,6 @@ var discordStartDagger = /*#__PURE__*/function () {
 
                                 case 4:
                                   findItem = _context12.sent;
-                                  _context12.next = 7;
-                                  return generateLootImage(findItem, distance);
-
-                                case 7:
-                                  updatedLootImage = _context12.sent;
-                                  newAttachment = new _discord.MessageAttachment(updatedLootImage, 'lootItem.png');
 
                                   if (findItem.inventoryId) {
                                     _context12.next = 23;
@@ -709,47 +747,69 @@ var discordStartDagger = /*#__PURE__*/function () {
                                   }
 
                                   _context12.t0 = messageDropLoot;
-                                  _context12.t1 = [newAttachment];
-                                  _context12.t2 = _discord.MessageActionRow;
+                                  _context12.next = 9;
+                                  return generateLootImage(newItem, distance);
+
+                                case 9:
+                                  _context12.t1 = _context12.sent;
+                                  _context12.t2 = {
+                                    attachment: _context12.t1,
+                                    name: 'lootItem.png'
+                                  };
+                                  _context12.t3 = [_context12.t2];
+                                  _context12.t4 = _discord.ActionRowBuilder;
                                   _context12.next = 15;
                                   return generateLootButton();
 
                                 case 15:
-                                  _context12.t3 = _context12.sent;
-                                  _context12.t4 = [_context12.t3];
-                                  _context12.t5 = {
-                                    components: _context12.t4
+                                  _context12.t5 = _context12.sent;
+                                  _context12.t6 = [_context12.t5];
+                                  _context12.t7 = {
+                                    components: _context12.t6
                                   };
-                                  _context12.t6 = new _context12.t2(_context12.t5);
-                                  _context12.t7 = [_context12.t6];
-                                  _context12.t8 = {
-                                    files: _context12.t1,
-                                    components: _context12.t7
+                                  _context12.t8 = new _context12.t4(_context12.t7);
+                                  _context12.t9 = [_context12.t8];
+                                  _context12.t10 = {
+                                    files: _context12.t3,
+                                    components: _context12.t9
                                   };
                                   _context12.next = 23;
-                                  return _context12.t0.edit.call(_context12.t0, _context12.t8);
+                                  return _context12.t0.edit.call(_context12.t0, _context12.t10);
 
                                 case 23:
                                   if (!findItem.inventoryId) {
-                                    _context12.next = 27;
+                                    _context12.next = 35;
                                     break;
                                   }
 
-                                  _context12.next = 26;
-                                  return messageDropLoot.edit({
-                                    files: [newAttachment],
-                                    components: []
-                                  });
-
-                                case 26:
-                                  clearInterval(updateMessage);
+                                  _context12.t11 = messageDropLoot;
+                                  _context12.next = 27;
+                                  return generateLootImage(newItem, distance);
 
                                 case 27:
+                                  _context12.t12 = _context12.sent;
+                                  _context12.t13 = {
+                                    attachment: _context12.t12,
+                                    name: 'lootItem.png'
+                                  };
+                                  _context12.t14 = [_context12.t13];
+                                  _context12.t15 = [];
+                                  _context12.t16 = {
+                                    files: _context12.t14,
+                                    components: _context12.t15
+                                  };
+                                  _context12.next = 34;
+                                  return _context12.t11.edit.call(_context12.t11, _context12.t16);
+
+                                case 34:
+                                  clearInterval(updateMessage);
+
+                                case 35:
                                   if (distance < 0) {
                                     clearInterval(updateMessage);
                                   }
 
-                                case 28:
+                                case 36:
                                 case "end":
                                   return _context12.stop();
                               }
@@ -763,7 +823,7 @@ var discordStartDagger = /*#__PURE__*/function () {
                         _context13.next = 52;
                         return _models["default"].activity.create({
                           type: 'myrank_s',
-                          earnerId: userCurrentCharacter.user.id
+                          earnerId: userCurrentCharacter.UserGroup.user.id
                         }, {
                           lock: t.LOCK.UPDATE,
                           transaction: t

@@ -21,7 +21,7 @@ var _discord = require("discord.js");
 
 var renderClassPicked = /*#__PURE__*/function () {
   var _ref = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(start, classes, user) {
-    var current, canvas, ctx, newClassImage;
+    var current, canvas, ctx, newClassImage, finalImage;
     return _regenerator["default"].wrap(function _callee$(_context) {
       while (1) {
         switch (_context.prev = _context.next) {
@@ -44,9 +44,14 @@ var renderClassPicked = /*#__PURE__*/function () {
             ctx.fillText("".concat(user.username), 250, 850, 500);
             ctx.strokeText("picked ".concat(current[0].name, "!"), 250, 920, 500);
             ctx.fillText("picked ".concat(current[0].name, "!"), 250, 920, 500);
-            return _context.abrupt("return", new _discord.MessageAttachment(canvas.toBuffer(), 'picked.png'));
+            _context.next = 18;
+            return canvas.toBuffer();
 
-          case 17:
+          case 18:
+            finalImage = _context.sent;
+            return _context.abrupt("return", finalImage);
+
+          case 20:
           case "end":
             return _context.stop();
         }

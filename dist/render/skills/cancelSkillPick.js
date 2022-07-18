@@ -15,11 +15,9 @@ var _canvas = require("canvas");
 
 var _lodash = _interopRequireDefault(require("lodash"));
 
-var _discord = require("discord.js");
-
 var renderCancelSkillPick = /*#__PURE__*/function () {
   var _ref = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(userCurrentCharacter) {
-    var canvas, ctx;
+    var canvas, ctx, finalImage;
     return _regenerator["default"].wrap(function _callee$(_context) {
       while (1) {
         switch (_context.prev = _context.next) {
@@ -33,9 +31,10 @@ var renderCancelSkillPick = /*#__PURE__*/function () {
             ctx.textAlign = "center";
             ctx.strokeText("".concat(userCurrentCharacter.UserGroup.user.username, " canceled skill selection"), 250, 60, 500);
             ctx.fillText("".concat(userCurrentCharacter.UserGroup.user.username, " canceled skill selection"), 250, 60, 500);
-            return _context.abrupt("return", new _discord.MessageAttachment(canvas.toBuffer(), 'cancelSelection.png'));
+            finalImage = canvas.toBuffer();
+            return _context.abrupt("return", finalImage);
 
-          case 10:
+          case 11:
           case "end":
             return _context.stop();
         }

@@ -217,8 +217,9 @@ var conditionalCSRF = function conditionalCSRF(req, res, next) {
             };
           }());
           discordClient = new _discord.Client({
-            intents: [_discord.Intents.FLAGS.GUILDS, _discord.Intents.FLAGS.GUILD_MEMBERS, _discord.Intents.FLAGS.GUILD_PRESENCES, _discord.Intents.FLAGS.GUILD_MESSAGES, _discord.Intents.FLAGS.DIRECT_MESSAGES, _discord.Intents.FLAGS.GUILD_MESSAGE_REACTIONS, _discord.Intents.FLAGS.DIRECT_MESSAGE_REACTIONS, _discord.Intents.FLAGS.GUILD_EMOJIS_AND_STICKERS, _discord.Intents.FLAGS.GUILD_VOICE_STATES],
-            partials: ['MESSAGE', 'CHANNEL', 'REACTION']
+            intents: [_discord.GatewayIntentBits.Guilds, _discord.GatewayIntentBits.GuildMembers, _discord.GatewayIntentBits.GuildMessages, _discord.GatewayIntentBits.DirectMessages, _discord.GatewayIntentBits.GuildMessageReactions, _discord.GatewayIntentBits.DirectMessageReactions, _discord.GatewayIntentBits.GuildEmojisAndStickers, _discord.GatewayIntentBits.GuildVoiceStates, _discord.GatewayIntentBits.MessageContent, _discord.GatewayIntentBits.GuildPresences, _discord.GatewayIntentBits.GuildInvites // GatewayIntentBits.
+            ],
+            partials: [_discord.Partials.Message, _discord.Partials.Channel, _discord.Partials.Reaction]
           });
           _context4.next = 32;
           return (0, _router.router)(app, discordClient, io, queue);

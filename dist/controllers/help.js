@@ -23,6 +23,8 @@ var _logger = _interopRequireDefault(require("../helpers/logger"));
 
 var _userWalletExist = require("../helpers/client/userWalletExist");
 
+var _fetchDiscordChannel = require("../helpers/client/fetchDiscordChannel");
+
 /* eslint-disable import/prefer-default-export */
 var discordHelp = /*#__PURE__*/function () {
   var _ref = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee3(discordClient, message, io) {
@@ -31,13 +33,14 @@ var discordHelp = /*#__PURE__*/function () {
       while (1) {
         switch (_context3.prev = _context3.next) {
           case 0:
+            console.log('help 1');
             activity = [];
-            _context3.next = 3;
+            _context3.next = 4;
             return _models["default"].sequelize.transaction({
               isolationLevel: _sequelize.Transaction.ISOLATION_LEVELS.SERIALIZABLE
             }, /*#__PURE__*/function () {
               var _ref2 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(t) {
-                var _yield$userWalletExis, _yield$userWalletExis2, user, userActivity, discordUser, discordChannel, preActivity, finalActivity;
+                var _yield$userWalletExis, _yield$userWalletExis2, user, userActivity, discordChannel, preActivity, finalActivity;
 
                 return _regenerator["default"].wrap(function _callee$(_context) {
                   while (1) {
@@ -64,72 +67,30 @@ var discordHelp = /*#__PURE__*/function () {
                         return _context.abrupt("return");
 
                       case 9:
-                        if (!(message.type && message.type === 'APPLICATION_COMMAND')) {
-                          _context.next = 23;
-                          break;
-                        }
-
+                        console.log('help 2');
                         _context.next = 12;
-                        return discordClient.users.cache.get(message.user.id);
+                        return (0, _fetchDiscordChannel.fetchDiscordChannel)(discordClient, message);
 
                       case 12:
-                        discordUser = _context.sent;
-
-                        if (!message.guildId) {
-                          _context.next = 19;
-                          break;
-                        }
-
-                        _context.next = 16;
-                        return discordClient.channels.cache.get(message.channelId);
-
-                      case 16:
                         discordChannel = _context.sent;
-                        _context.next = 19;
+
+                        if (discordChannel) {
+                          _context.next = 15;
+                          break;
+                        }
+
+                        return _context.abrupt("return");
+
+                      case 15:
+                        console.log('help 3');
+                        _context.next = 18;
                         return discordChannel.send({
-                          embeds: [(0, _embeds.warnDirectMessage)(message.user.id, 'Help')]
+                          embeds: [(0, _embeds.helpMessage)()]
                         });
 
-                      case 19:
+                      case 18:
+                        console.log('help 4');
                         _context.next = 21;
-                        return discordUser.send({
-                          embeds: [(0, _embeds.helpMessage)()]
-                        });
-
-                      case 21:
-                        _context.next = 31;
-                        break;
-
-                      case 23:
-                        if (!(message.channel.type === 'DM')) {
-                          _context.next = 26;
-                          break;
-                        }
-
-                        _context.next = 26;
-                        return message.author.send({
-                          embeds: [(0, _embeds.helpMessage)()]
-                        });
-
-                      case 26:
-                        if (!(message.channel.type === 'GUILD_TEXT')) {
-                          _context.next = 31;
-                          break;
-                        }
-
-                        _context.next = 29;
-                        return message.author.send({
-                          embeds: [(0, _embeds.helpMessage)()]
-                        });
-
-                      case 29:
-                        _context.next = 31;
-                        return message.channel.send({
-                          embeds: [(0, _embeds.warnDirectMessage)(message.author.id, 'Help')]
-                        });
-
-                      case 31:
-                        _context.next = 33;
                         return _models["default"].activity.create({
                           type: 'help_s',
                           earnerId: user.id
@@ -138,9 +99,10 @@ var discordHelp = /*#__PURE__*/function () {
                           transaction: t
                         });
 
-                      case 33:
+                      case 21:
                         preActivity = _context.sent;
-                        _context.next = 36;
+                        console.log('help 4');
+                        _context.next = 25;
                         return _models["default"].activity.findOne({
                           where: {
                             id: preActivity.id
@@ -153,11 +115,11 @@ var discordHelp = /*#__PURE__*/function () {
                           transaction: t
                         });
 
-                      case 36:
+                      case 25:
                         finalActivity = _context.sent;
                         activity.unshift(finalActivity);
 
-                      case 38:
+                      case 27:
                       case "end":
                         return _context.stop();
                     }
@@ -277,14 +239,14 @@ var discordHelp = /*#__PURE__*/function () {
               };
             }());
 
-          case 3:
+          case 4:
             if (activity.length > 0) {
               io.to('admin').emit('updateActivity', {
                 activity: activity
               });
             }
 
-          case 4:
+          case 5:
           case "end":
             return _context3.stop();
         }

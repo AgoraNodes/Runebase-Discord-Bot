@@ -53,17 +53,13 @@ var fetchUserCurrentCharacter = /*#__PURE__*/function () {
             console.log(user.currentClassId);
             console.log('user current ids');
             _context.next = 9;
-            return _models["default"].UserGroupClass.findOne(_objectSpread(_objectSpread({
+            return _models["default"].UserGroupClass.findOne(_objectSpread({
               where: {
                 // classId: { [Op.col]: 'user.currentClassId' },
                 classId: user.currentClassId,
                 '$UserGroup.groupId$': user.currentRealmId // groupId: user.currentRealmId,
 
-              }
-            }, t && [{
-              lock: t.LOCK.UPDATE,
-              transaction: t
-            }]), {}, {
+              },
               include: [{
                 model: _models["default"].UserGroupClassSkill,
                 as: 'UserGroupClassSkills',
@@ -350,7 +346,10 @@ var fetchUserCurrentCharacter = /*#__PURE__*/function () {
                   }]
                 }]
               }] : []))
-            }));
+            }, t && [{
+              lock: t.LOCK.UPDATE,
+              transaction: t
+            }]));
 
           case 9:
             userCurrentCharacter = _context.sent;

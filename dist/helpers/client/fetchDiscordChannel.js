@@ -11,6 +11,8 @@ var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"))
 
 var _asyncToGenerator2 = _interopRequireDefault(require("@babel/runtime/helpers/asyncToGenerator"));
 
+var _discord = require("discord.js");
+
 var fetchDiscordChannel = /*#__PURE__*/function () {
   var _ref = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(discordClient, message) {
     var discordChannel;
@@ -18,65 +20,63 @@ var fetchDiscordChannel = /*#__PURE__*/function () {
       while (1) {
         switch (_context.prev = _context.next) {
           case 0:
-            console.log(message);
-
-            if (!(message.type && message.type === 'APPLICATION_COMMAND')) {
-              _context.next = 13;
+            if (!(message.type && message.type === _discord.InteractionType.ApplicationCommand)) {
+              _context.next = 12;
               break;
             }
 
             if (!message.guildId) {
-              _context.next = 8;
+              _context.next = 7;
               break;
             }
 
-            _context.next = 5;
+            _context.next = 4;
             return discordClient.channels.cache.get(message.channelId);
 
-          case 5:
+          case 4:
             discordChannel = _context.sent;
-            _context.next = 11;
+            _context.next = 10;
             break;
 
-          case 8:
-            _context.next = 10;
+          case 7:
+            _context.next = 9;
             return discordClient.users.cache.get(message.user.id);
 
-          case 10:
+          case 9:
             discordChannel = _context.sent;
 
-          case 11:
-            _context.next = 21;
+          case 10:
+            _context.next = 20;
             break;
 
-          case 13:
-            if (!(message.channel.type === 'DM')) {
-              _context.next = 17;
+          case 12:
+            if (!(message.channel.type === _discord.ChannelType.DM)) {
+              _context.next = 16;
               break;
             }
 
-            _context.next = 16;
+            _context.next = 15;
             return discordClient.channels.cache.get(message.channelId);
+
+          case 15:
+            discordChannel = _context.sent;
 
           case 16:
-            discordChannel = _context.sent;
-
-          case 17:
-            if (!(message.channel.type === 'GUILD_TEXT')) {
-              _context.next = 21;
+            if (!(message.channel.type === _discord.ChannelType.GuildText)) {
+              _context.next = 20;
               break;
             }
 
-            _context.next = 20;
+            _context.next = 19;
             return discordClient.channels.cache.get(message.channelId);
 
-          case 20:
+          case 19:
             discordChannel = _context.sent;
 
-          case 21:
+          case 20:
             return _context.abrupt("return", discordChannel);
 
-          case 22:
+          case 21:
           case "end":
             return _context.stop();
         }

@@ -23,6 +23,8 @@ var _logger = _interopRequireDefault(require("../helpers/logger"));
 
 var _userWalletExist = require("../helpers/client/userWalletExist");
 
+var _fetchDiscordChannel = require("../helpers/client/fetchDiscordChannel");
+
 var discordBalance = /*#__PURE__*/function () {
   var _ref = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee3(discordClient, message, io) {
     var activity;
@@ -36,7 +38,7 @@ var discordBalance = /*#__PURE__*/function () {
               isolationLevel: _sequelize.Transaction.ISOLATION_LEVELS.SERIALIZABLE
             }, /*#__PURE__*/function () {
               var _ref2 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(t) {
-                var _yield$userWalletExis, _yield$userWalletExis2, user, userActivity, priceInfo, discordUser, discordChannel, createActivity, findActivity;
+                var _yield$userWalletExis, _yield$userWalletExis2, user, userActivity, discordChannel, priceInfo, createActivity, findActivity;
 
                 return _regenerator["default"].wrap(function _callee$(_context) {
                   while (1) {
@@ -64,6 +66,20 @@ var discordBalance = /*#__PURE__*/function () {
 
                       case 9:
                         _context.next = 11;
+                        return (0, _fetchDiscordChannel.fetchDiscordChannel)(discordClient, message);
+
+                      case 11:
+                        discordChannel = _context.sent;
+
+                        if (discordChannel) {
+                          _context.next = 14;
+                          break;
+                        }
+
+                        return _context.abrupt("return");
+
+                      case 14:
+                        _context.next = 16;
                         return _models["default"].currency.findOne({
                           where: {
                             iso: 'USD'
@@ -72,73 +88,15 @@ var discordBalance = /*#__PURE__*/function () {
                           transaction: t
                         });
 
-                      case 11:
+                      case 16:
                         priceInfo = _context.sent;
-
-                        if (!(message.type && message.type === 'APPLICATION_COMMAND')) {
-                          _context.next = 28;
-                          break;
-                        }
-
-                        _context.next = 15;
-                        return discordClient.users.cache.get(message.user.id);
-
-                      case 15:
-                        discordUser = _context.sent;
-
-                        if (!message.guildId) {
-                          _context.next = 24;
-                          break;
-                        }
-
                         _context.next = 19;
-                        return discordClient.channels.cache.get(message.channelId);
-
-                      case 19:
-                        discordChannel = _context.sent;
-                        _context.next = 22;
                         return discordChannel.send({
                           embeds: [(0, _embeds.balanceMessage)(user.user_id, user, priceInfo)]
                         });
 
-                      case 22:
-                        _context.next = 26;
-                        break;
-
-                      case 24:
-                        _context.next = 26;
-                        return discordUser.send({
-                          embeds: [(0, _embeds.balanceMessage)(user.user_id, user, priceInfo)]
-                        });
-
-                      case 26:
-                        _context.next = 34;
-                        break;
-
-                      case 28:
-                        if (!(message.channel.type === 'DM')) {
-                          _context.next = 31;
-                          break;
-                        }
-
-                        _context.next = 31;
-                        return message.author.send({
-                          embeds: [(0, _embeds.balanceMessage)(user.user_id, user, priceInfo)]
-                        });
-
-                      case 31:
-                        if (!(message.channel.type === 'GUILD_TEXT')) {
-                          _context.next = 34;
-                          break;
-                        }
-
-                        _context.next = 34;
-                        return message.channel.send({
-                          embeds: [(0, _embeds.balanceMessage)(user.user_id, user, priceInfo)]
-                        });
-
-                      case 34:
-                        _context.next = 36;
+                      case 19:
+                        _context.next = 21;
                         return _models["default"].activity.create({
                           type: 'balance_s',
                           earnerId: user.id,
@@ -148,9 +106,9 @@ var discordBalance = /*#__PURE__*/function () {
                           transaction: t
                         });
 
-                      case 36:
+                      case 21:
                         createActivity = _context.sent;
-                        _context.next = 39;
+                        _context.next = 24;
                         return _models["default"].activity.findOne({
                           where: {
                             id: createActivity.id
@@ -163,14 +121,14 @@ var discordBalance = /*#__PURE__*/function () {
                           transaction: t
                         });
 
-                      case 39:
+                      case 24:
                         findActivity = _context.sent;
                         activity.unshift(findActivity);
                         t.afterCommit(function () {
                           console.log('done balance request');
                         });
 
-                      case 42:
+                      case 27:
                       case "end":
                         return _context.stop();
                     }

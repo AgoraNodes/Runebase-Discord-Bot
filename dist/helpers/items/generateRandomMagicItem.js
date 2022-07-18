@@ -25,14 +25,49 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 
 var generateRandomMagicItem = /*#__PURE__*/function () {
   var _ref = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(level) {
-    var randomBaseItem, itemQualityRecord, randomItemModifiers, prefixModifier, suffixModifier, levelReq, rndDefense, minDamage, maxDamage, minThrowDamage, maxThrowDamage, addStrength, addDexterity, addVitality, addEnergy, addEdefense, addEdamage, rndStrength, _rndStrength, rndDexterity, _rndDexterity, rndVitality, _rndVitality, rndEnergy, _rndEnergy, rndEdefense, _rndEdefense, rndEdamage, _rndEdamage, baseItemName, itemName, createNewItem, newItem;
+    var t,
+        randomBaseItem,
+        itemQualityRecord,
+        randomItemModifiers,
+        prefixModifier,
+        suffixModifier,
+        levelReq,
+        rndDefense,
+        minDamage,
+        maxDamage,
+        minThrowDamage,
+        maxThrowDamage,
+        addStrength,
+        addDexterity,
+        addVitality,
+        addEnergy,
+        addEdefense,
+        addEdamage,
+        rndStrength,
+        _rndStrength,
+        rndDexterity,
+        _rndDexterity,
+        rndVitality,
+        _rndVitality,
+        rndEnergy,
+        _rndEnergy,
+        rndEdefense,
+        _rndEdefense,
+        rndEdamage,
+        _rndEdamage,
+        baseItemName,
+        itemName,
+        createNewItem,
+        newItem,
+        _args = arguments;
 
     return _regenerator["default"].wrap(function _callee$(_context) {
       while (1) {
         switch (_context.prev = _context.next) {
           case 0:
-            _context.next = 2;
-            return _models["default"].itemBase.findOne({
+            t = _args.length > 1 && _args[1] !== undefined ? _args[1] : false;
+            _context.next = 3;
+            return _models["default"].itemBase.findOne(_objectSpread({
               order: [[_sequelize.Sequelize.literal('RAND()')]],
               where: {
                 // '$itemFamily.itemType.name$': 'Assassin Katars',
@@ -47,21 +82,27 @@ var generateRandomMagicItem = /*#__PURE__*/function () {
                   as: 'itemType'
                 }]
               }]
-            });
+            }, t && [{
+              lock: t.LOCK.UPDATE,
+              transaction: t
+            }]));
 
-          case 2:
+          case 3:
             randomBaseItem = _context.sent;
-            _context.next = 5;
-            return _models["default"].itemQuality.findOne({
+            _context.next = 6;
+            return _models["default"].itemQuality.findOne(_objectSpread({
               where: {
                 name: 'Magic'
               }
-            });
+            }, t && [{
+              lock: t.LOCK.UPDATE,
+              transaction: t
+            }]));
 
-          case 5:
+          case 6:
             itemQualityRecord = _context.sent;
-            _context.next = 8;
-            return _models["default"].itemModifier.findAll({
+            _context.next = 9;
+            return _models["default"].itemModifier.findAll(_objectSpread({
               order: [[_sequelize.Sequelize.literal('RAND()')]],
               where: {
                 levelReq: (0, _defineProperty2["default"])({}, _sequelize.Op.or, [(0, _defineProperty2["default"])({}, _sequelize.Op.lte, level), null])
@@ -82,9 +123,12 @@ var generateRandomMagicItem = /*#__PURE__*/function () {
                   itemTypeId: randomBaseItem.itemFamily.itemType.id
                 }
               }]
-            });
+            }, t && [{
+              lock: t.LOCK.UPDATE,
+              transaction: t
+            }]));
 
-          case 8:
+          case 9:
             randomItemModifiers = _context.sent;
             randomItemModifiers.forEach(function (modifier) {
               if (modifier.prefix && !prefixModifier) {
@@ -200,7 +244,7 @@ var generateRandomMagicItem = /*#__PURE__*/function () {
             }
 
             itemName = "".concat(prefixModifier && prefixModifier.prefix ? "".concat(prefixModifier.prefix, " ") : '').concat(baseItemName).concat(suffixModifier && suffixModifier.suffix ? " ".concat(suffixModifier.suffix) : '');
-            _context.next = 36;
+            _context.next = 37;
             return _models["default"].item.create(_objectSpread(_objectSpread(_objectSpread(_objectSpread(_objectSpread(_objectSpread(_objectSpread(_objectSpread(_objectSpread(_objectSpread(_objectSpread(_objectSpread({
               name: itemName,
               itemBaseId: randomBaseItem.id,
@@ -231,12 +275,15 @@ var generateRandomMagicItem = /*#__PURE__*/function () {
               vitality: addVitality
             }), addEnergy !== 0 && {
               energy: addEnergy
-            }));
+            }), _objectSpread({}, t && [{
+              lock: t.LOCK.UPDATE,
+              transaction: t
+            }]));
 
-          case 36:
+          case 37:
             createNewItem = _context.sent;
-            _context.next = 39;
-            return _models["default"].item.findOne({
+            _context.next = 40;
+            return _models["default"].item.findOne(_objectSpread({
               where: {
                 id: createNewItem.id
               },
@@ -259,13 +306,16 @@ var generateRandomMagicItem = /*#__PURE__*/function () {
                   }]
                 }]
               }]
-            });
+            }, t && [{
+              lock: t.LOCK.UPDATE,
+              transaction: t
+            }]));
 
-          case 39:
+          case 40:
             newItem = _context.sent;
             return _context.abrupt("return", newItem);
 
-          case 41:
+          case 42:
           case "end":
             return _context.stop();
         }

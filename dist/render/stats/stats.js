@@ -15,7 +15,7 @@ var _canvas = require("canvas");
 
 var _path = _interopRequireDefault(require("path"));
 
-var _calculateCharacterStats = require("../helpers/stats/calculateCharacterStats");
+var _calculateCharacterStats = require("../../helpers/stats/calculateCharacterStats");
 
 var renderStatsImage = /*#__PURE__*/function () {
   var _ref = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(currentUser, cannotSpendWarning) {
@@ -54,12 +54,12 @@ var renderStatsImage = /*#__PURE__*/function () {
             canvas = (0, _canvas.createCanvas)(960, 1400);
             ctx = canvas.getContext('2d');
             _context.next = 28;
-            return (0, _canvas.loadImage)(_path["default"].join(__dirname, '../assets/images', "stats_background.png"));
+            return (0, _canvas.loadImage)(_path["default"].join(__dirname, '../../assets/images', "stats_background.png"));
 
           case 28:
             BackgroundImageStats = _context.sent;
             _context.next = 31;
-            return (0, _canvas.loadImage)(_path["default"].join(__dirname, '../assets/images', "unspendAttributesBox.png"));
+            return (0, _canvas.loadImage)(_path["default"].join(__dirname, '../../assets/images', "unspendAttributesBox.png"));
 
           case 31:
             unspendAttributesBoxImage = _context.sent;

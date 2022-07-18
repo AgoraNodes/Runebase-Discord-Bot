@@ -19,7 +19,7 @@ var _discord = require("discord.js");
 
 var renderOutOfStamina = /*#__PURE__*/function () {
   var _ref = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(currentCharacter) {
-    var canvas, ctx;
+    var canvas, ctx, finalImage;
     return _regenerator["default"].wrap(function _callee$(_context) {
       while (1) {
         switch (_context.prev = _context.next) {
@@ -34,9 +34,10 @@ var renderOutOfStamina = /*#__PURE__*/function () {
 
             ctx.strokeText("".concat(currentCharacter.UserGroup.user.username, " you are out of stamina, come back tomorrow"), 700, 150, 1400);
             ctx.fillText("".concat(currentCharacter.UserGroup.user.username, " you are out of stamina, come back tomorrow"), 700, 150, 1400);
-            return _context.abrupt("return", new _discord.MessageAttachment(canvas.toBuffer(), 'outOfStamina.png'));
+            finalImage = canvas.toBuffer();
+            return _context.abrupt("return", finalImage);
 
-          case 10:
+          case 11:
           case "end":
             return _context.stop();
         }

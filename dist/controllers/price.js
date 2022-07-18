@@ -23,6 +23,8 @@ var _logger = _interopRequireDefault(require("../helpers/logger"));
 
 var _userWalletExist = require("../helpers/client/userWalletExist");
 
+var _fetchDiscordChannel = require("../helpers/client/fetchDiscordChannel");
+
 var discordPrice = /*#__PURE__*/function () {
   var _ref = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee3(discordClient, message, io) {
     var activity;
@@ -36,7 +38,7 @@ var discordPrice = /*#__PURE__*/function () {
               isolationLevel: _sequelize.Transaction.ISOLATION_LEVELS.SERIALIZABLE
             }, /*#__PURE__*/function () {
               var _ref2 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(t) {
-                var _yield$userWalletExis, _yield$userWalletExis2, user, userActivity, priceRecord, replyString, discordUser, discordChannel, createActivity, findActivity;
+                var _yield$userWalletExis, _yield$userWalletExis2, user, userActivity, discordChannel, priceRecord, replyString, createActivity, findActivity;
 
                 return _regenerator["default"].wrap(function _callee$(_context) {
                   while (1) {
@@ -64,79 +66,35 @@ var discordPrice = /*#__PURE__*/function () {
 
                       case 9:
                         _context.next = 11;
-                        return _models["default"].currency.findAll({});
+                        return (0, _fetchDiscordChannel.fetchDiscordChannel)(discordClient, message);
 
                       case 11:
+                        discordChannel = _context.sent;
+
+                        if (discordChannel) {
+                          _context.next = 14;
+                          break;
+                        }
+
+                        return _context.abrupt("return");
+
+                      case 14:
+                        _context.next = 16;
+                        return _models["default"].currency.findAll({});
+
+                      case 16:
                         priceRecord = _context.sent;
                         replyString = "";
                         replyString += priceRecord.map(function (a) {
                           return "".concat(a.iso, ": ").concat(a.price);
                         }).join('\n');
-
-                        if (!(message.type && message.type === 'APPLICATION_COMMAND')) {
-                          _context.next = 30;
-                          break;
-                        }
-
-                        _context.next = 17;
-                        return discordClient.users.cache.get(message.user.id);
-
-                      case 17:
-                        discordUser = _context.sent;
-
-                        if (!message.guildId) {
-                          _context.next = 26;
-                          break;
-                        }
-
                         _context.next = 21;
-                        return discordClient.channels.cache.get(message.channelId);
-
-                      case 21:
-                        discordChannel = _context.sent;
-                        _context.next = 24;
                         return discordChannel.send({
                           embeds: [(0, _embeds.priceMessage)(replyString)]
                         });
 
-                      case 24:
-                        _context.next = 28;
-                        break;
-
-                      case 26:
-                        _context.next = 28;
-                        return discordUser.send({
-                          embeds: [(0, _embeds.priceMessage)(replyString)]
-                        });
-
-                      case 28:
-                        _context.next = 36;
-                        break;
-
-                      case 30:
-                        if (!(message.channel.type === 'DM')) {
-                          _context.next = 33;
-                          break;
-                        }
-
-                        _context.next = 33;
-                        return message.author.send({
-                          embeds: [(0, _embeds.priceMessage)(replyString)]
-                        });
-
-                      case 33:
-                        if (!(message.channel.type === 'GUILD_TEXT')) {
-                          _context.next = 36;
-                          break;
-                        }
-
-                        _context.next = 36;
-                        return message.channel.send({
-                          embeds: [(0, _embeds.priceMessage)(replyString)]
-                        });
-
-                      case 36:
-                        _context.next = 38;
+                      case 21:
+                        _context.next = 23;
                         return _models["default"].activity.create({
                           type: 'price_s',
                           earnerId: user.id
@@ -145,9 +103,9 @@ var discordPrice = /*#__PURE__*/function () {
                           transaction: t
                         });
 
-                      case 38:
+                      case 23:
                         createActivity = _context.sent;
-                        _context.next = 41;
+                        _context.next = 26;
                         return _models["default"].activity.findOne({
                           where: {
                             id: createActivity.id
@@ -160,14 +118,14 @@ var discordPrice = /*#__PURE__*/function () {
                           transaction: t
                         });
 
-                      case 41:
+                      case 26:
                         findActivity = _context.sent;
                         activity.unshift(findActivity);
                         t.afterCommit(function () {
                           console.log('done price request');
                         });
 
-                      case 44:
+                      case 29:
                       case "end":
                         return _context.stop();
                     }

@@ -5,7 +5,11 @@ var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefau
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.warnDirectMessage = exports.walletNotFoundMessage = exports.userNotFoundMessage = exports.unableToWithdrawToSelfMessage = exports.timeOutMessage = exports.skillInfoMessage = exports.skillConfirmationMessage = exports.rolledDiceMessage = exports.rollDiceTooFastMessage = exports.reviewMessage = exports.resetStatsDeclinedMessage = exports.resetStatsConfirmationMessage = exports.resetStatsCompletemessage = exports.resetSkillCompleteMessage = exports.realmNotFoundEmbed = exports.realmChangeSuccessEmbed = exports.priceMessage = exports.needToBeInDiscordRealmEmbed = exports.minimumMessage = exports.loadingSkillSelectEmbed = exports.loadingSkillAddEmbed = exports.levelUpMessage = exports.invitedNewUserRewardMessage = exports.invalidAmountMessage = exports.invalidAddressMessage = exports.insufficientBalanceMessage = exports.helpMessage = exports.healCompleteMessage = exports.grantRoleExpMessage = exports.gainVoteTopggExpMessage = exports.gainTestExpMessage = exports.gainBattleExpExpMessage = exports.gainActiveTalkerExpMessage = exports.featureDisabledServerMessage = exports.featureDisabledGlobalMessage = exports.featureDisabledChannelMessage = exports.enterWithdrawalAmount = exports.enterWithdrawalAddress = exports.discordWithdrawalConfirmedMessage = exports.discordWithdrawalAcceptedMessage = exports.discordWelcomeMessage = exports.discordUserWithdrawalRejectMessage = exports.discordUserBannedMessage = exports.discordServerBannedMessage = exports.discordLimitSpamMessage = exports.discordIncomingDepositMessage = exports.discordErrorMessage = exports.discordDepositConfirmedMessage = exports.discordChannelBannedMessage = exports.discordBotMaintenanceMessage = exports.discordBotDisabledMessage = exports.depositAddressMessage = exports.declineResetSkillsMessage = exports.declineHealMessage = exports.confirmationHealMessage = exports.coinInfoMessage = exports.cannotSendMessageUser = exports.balanceMessage = exports.alreadyVotedTopGG = exports.alreadyInRealmEmbed = exports.addingAttributeEmbed = exports.NotInDirectMessage = exports.AccountInfoMessage = void 0;
+exports.warnDirectMessage = exports.walletNotFoundMessage = exports.userNotFoundMessage = exports.unableToWithdrawToSelfMessage = exports.timeOutMessage = exports.skillInfoMessage = exports.skillConfirmationMessage = exports.rolledDiceMessage = exports.rollDiceTooFastMessage = exports.reviewMessage = exports.resetStatsDeclinedMessage = exports.resetStatsConfirmationMessage = exports.resetStatsCompletemessage = exports.resetSkillCompleteMessage = exports.realmNotFoundEmbed = exports.realmChangeSuccessEmbed = exports.priceMessage = exports.needToBeInDiscordRealmEmbed = exports.minimumMessage = exports.loadingSkillSelectEmbed = exports.loadingSkillAddEmbed = exports.loadingBattleMoveEmbed = exports.levelUpMessage = exports.invitedNewUserRewardMessage = exports.invalidAmountMessage = exports.invalidAddressMessage = exports.insufficientBalanceMessage = exports.helpMessage = exports.healCompleteMessage = exports.grantRoleExpMessage = exports.gainVoteTopggExpMessage = exports.gainTestExpMessage = exports.gainBattleExpExpMessage = exports.gainActiveTalkerExpMessage = exports.featureDisabledServerMessage = exports.featureDisabledGlobalMessage = exports.featureDisabledChannelMessage = exports.enterWithdrawalAmount = exports.enterWithdrawalAddress = exports.discordWithdrawalConfirmedMessage = exports.discordWithdrawalAcceptedMessage = exports.discordWelcomeMessage = exports.discordUserWithdrawalRejectMessage = exports.discordUserBannedMessage = exports.discordServerBannedMessage = exports.discordLimitSpamMessage = exports.discordIncomingDepositMessage = exports.discordErrorMessage = exports.discordDepositConfirmedMessage = exports.discordChannelBannedMessage = exports.discordBotMaintenanceMessage = exports.discordBotDisabledMessage = exports.depositAddressMessage = exports.declineResetSkillsMessage = exports.declineHealMessage = exports.confirmationHealMessage = exports.coinInfoMessage = exports.cannotSendMessageUser = exports.battleCompleteEmbed = exports.balanceMessage = exports.alreadyVotedTopGG = exports.alreadyInRealmEmbed = exports.addingAttributeEmbed = exports.NotInDirectMessage = exports.AccountInfoMessage = void 0;
+
+var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
+
+var _asyncToGenerator2 = _interopRequireDefault(require("@babel/runtime/helpers/asyncToGenerator"));
 
 var _discord = require("discord.js");
 
@@ -15,9 +19,12 @@ var _package = _interopRequireDefault(require("../../package.json"));
 
 var _utils = require("../helpers/utils");
 
-// import moment from 'moment';
+function _asyncIterator(iterable) { var method, async, sync, retry = 2; for ("undefined" != typeof Symbol && (async = Symbol.asyncIterator, sync = Symbol.iterator); retry--;) { if (async && null != (method = iterable[async])) return method.call(iterable); if (sync && null != (method = iterable[sync])) return new AsyncFromSyncIterator(method.call(iterable)); async = "@@asyncIterator", sync = "@@iterator"; } throw new TypeError("Object is not async iterable"); }
+
+function AsyncFromSyncIterator(s) { function AsyncFromSyncIteratorContinuation(r) { if (Object(r) !== r) return Promise.reject(new TypeError(r + " is not an object.")); var done = r.done; return Promise.resolve(r.value).then(function (value) { return { value: value, done: done }; }); } return AsyncFromSyncIterator = function AsyncFromSyncIterator(s) { this.s = s, this.n = s.next; }, AsyncFromSyncIterator.prototype = { s: null, n: null, next: function next() { return AsyncFromSyncIteratorContinuation(this.n.apply(this.s, arguments)); }, "return": function _return(value) { var ret = this.s["return"]; return void 0 === ret ? Promise.resolve({ value: value, done: !0 }) : AsyncFromSyncIteratorContinuation(ret.apply(this.s, arguments)); }, "throw": function _throw(value) { var thr = this.s["return"]; return void 0 === thr ? Promise.reject(value) : AsyncFromSyncIteratorContinuation(thr.apply(this.s, arguments)); } }, new AsyncFromSyncIterator(s); }
+
 var discordUserBannedMessage = function discordUserBannedMessage(user) {
-  var result = new _discord.MessageEmbed().setColor("#C70039").setTitle("\uD83D\uDEAB     User: ".concat(user.username, " Banned     \uD83D\uDEAB")).setDescription("Reason:\n".concat(user.banMessage)).setTimestamp().setFooter({
+  var result = new _discord.EmbedBuilder().setColor("#C70039").setTitle("\uD83D\uDEAB     User: ".concat(user.username, " Banned     \uD83D\uDEAB")).setDescription("Reason:\n".concat(user.banMessage)).setTimestamp().setFooter({
     text: "".concat(_settings["default"].bot.name, " v").concat(_package["default"].version),
     iconURL: _settings["default"].bot.logo
   });
@@ -27,7 +34,7 @@ var discordUserBannedMessage = function discordUserBannedMessage(user) {
 exports.discordUserBannedMessage = discordUserBannedMessage;
 
 var discordServerBannedMessage = function discordServerBannedMessage(server) {
-  var result = new _discord.MessageEmbed().setColor("#C70039").setTitle('🚫     Server Banned     🚫').setDescription("Reason:\n".concat(server.banMessage)).setTimestamp().setFooter({
+  var result = new _discord.EmbedBuilder().setColor("#C70039").setTitle('🚫     Server Banned     🚫').setDescription("Reason:\n".concat(server.banMessage)).setTimestamp().setFooter({
     text: "".concat(_settings["default"].bot.name, " v").concat(_package["default"].version),
     iconURL: _settings["default"].bot.logo
   });
@@ -37,7 +44,7 @@ var discordServerBannedMessage = function discordServerBannedMessage(server) {
 exports.discordServerBannedMessage = discordServerBannedMessage;
 
 var priceMessage = function priceMessage(replyString) {
-  var result = new _discord.MessageEmbed().setColor(_settings["default"].bot.color).setTitle('Price').setThumbnail(_settings["default"].bot.logo).setDescription(replyString).setTimestamp().setFooter({
+  var result = new _discord.EmbedBuilder().setColor(_settings["default"].bot.color).setTitle('Price').setThumbnail(_settings["default"].bot.logo).setDescription(replyString).setTimestamp().setFooter({
     text: "".concat(_settings["default"].bot.name, " v").concat(_package["default"].version),
     iconURL: _settings["default"].bot.logo
   });
@@ -47,7 +54,7 @@ var priceMessage = function priceMessage(replyString) {
 exports.priceMessage = priceMessage;
 
 var discordChannelBannedMessage = function discordChannelBannedMessage(channel) {
-  var result = new _discord.MessageEmbed().setColor('#FF7900').setTitle('❗     Channel Restricted     ❗').setDescription("Reason:\n".concat(channel.banMessage)).setTimestamp().setFooter({
+  var result = new _discord.EmbedBuilder().setColor('#FF7900').setTitle('❗     Channel Restricted     ❗').setDescription("Reason:\n".concat(channel.banMessage)).setTimestamp().setFooter({
     text: "".concat(_settings["default"].bot.name, " v").concat(_package["default"].version),
     iconURL: _settings["default"].bot.logo
   });
@@ -57,7 +64,7 @@ var discordChannelBannedMessage = function discordChannelBannedMessage(channel) 
 exports.discordChannelBannedMessage = discordChannelBannedMessage;
 
 var coinInfoMessage = function coinInfoMessage(blockHeight, priceInfo, walletVersion) {
-  var result = new _discord.MessageEmbed().setColor(_settings["default"].bot.color).setTitle('Tipbot').addField("Coin Info", _settings["default"].coin.description).addField("\u200B", "\u200B").addFields({
+  var result = new _discord.EmbedBuilder().setColor(_settings["default"].bot.color).setTitle('Tipbot').addField("Coin Info", _settings["default"].coin.description).addField("\u200B", "\u200B").addFields({
     name: "Coin Name",
     value: _settings["default"].coin.name,
     inline: true
@@ -83,7 +90,7 @@ var coinInfoMessage = function coinInfoMessage(blockHeight, priceInfo, walletVer
 exports.coinInfoMessage = coinInfoMessage;
 
 var discordLimitSpamMessage = function discordLimitSpamMessage(userId, myFunctionName) {
-  var result = new _discord.MessageEmbed().setColor(_settings["default"].bot.color).setTitle(myFunctionName).setDescription("\uD83D\uDEAB Slow down! \uD83D\uDEAB\n<@".concat(userId, ">, you're using this command too fast, wait a while before using it again.")).setTimestamp().setFooter({
+  var result = new _discord.EmbedBuilder().setColor(_settings["default"].bot.color).setTitle(myFunctionName).setDescription("\uD83D\uDEAB Slow down! \uD83D\uDEAB\n<@".concat(userId, ">, you're using this command too fast, wait a while before using it again.")).setTimestamp().setFooter({
     text: "".concat(_settings["default"].bot.name, " v").concat(_package["default"].version),
     iconURL: _settings["default"].bot.logo
   });
@@ -93,7 +100,7 @@ var discordLimitSpamMessage = function discordLimitSpamMessage(userId, myFunctio
 exports.discordLimitSpamMessage = discordLimitSpamMessage;
 
 var cannotSendMessageUser = function cannotSendMessageUser(title, message) {
-  var result = new _discord.MessageEmbed().setColor(_settings["default"].bot.color).setTitle(title).setDescription("<@".concat(message.author.id, ">, ").concat(_settings["default"].bot.name, " was unable to send you a direct message.\nPlease check your discord privacy settings.")).setTimestamp().setFooter({
+  var result = new _discord.EmbedBuilder().setColor(_settings["default"].bot.color).setTitle(title).setDescription("<@".concat(message.author.id, ">, ").concat(_settings["default"].bot.name, " was unable to send you a direct message.\nPlease check your discord privacy settings.")).setTimestamp().setFooter({
     text: "".concat(_settings["default"].bot.name, " v").concat(_package["default"].version),
     iconURL: _settings["default"].bot.logo
   });
@@ -103,7 +110,7 @@ var cannotSendMessageUser = function cannotSendMessageUser(title, message) {
 exports.cannotSendMessageUser = cannotSendMessageUser;
 
 var discordErrorMessage = function discordErrorMessage(title) {
-  var result = new _discord.MessageEmbed().setColor(_settings["default"].bot.color).setTitle(title).setDescription("Something went wrong.").setTimestamp().setFooter({
+  var result = new _discord.EmbedBuilder().setColor(_settings["default"].bot.color).setTitle(title).setDescription("Something went wrong.").setTimestamp().setFooter({
     text: "".concat(_settings["default"].bot.name, " v").concat(_package["default"].version),
     iconURL: _settings["default"].bot.logo
   });
@@ -113,7 +120,7 @@ var discordErrorMessage = function discordErrorMessage(title) {
 exports.discordErrorMessage = discordErrorMessage;
 
 var discordDepositConfirmedMessage = function discordDepositConfirmedMessage(amount, trans) {
-  var result = new _discord.MessageEmbed().setColor(_settings["default"].bot.color).setTitle("Deposit #".concat(trans.id)).setDescription("Deposit Confirmed\n".concat(trans.amount / 1e8, " ").concat(_settings["default"].coin.ticker, " has been credited to your wallet")).setTimestamp().setFooter({
+  var result = new _discord.EmbedBuilder().setColor(_settings["default"].bot.color).setTitle("Deposit #".concat(trans.id)).setDescription("Deposit Confirmed\n".concat(trans.amount / 1e8, " ").concat(_settings["default"].coin.ticker, " has been credited to your wallet")).setTimestamp().setFooter({
     text: "".concat(_settings["default"].bot.name, " v").concat(_package["default"].version),
     iconURL: _settings["default"].bot.logo
   });
@@ -123,7 +130,7 @@ var discordDepositConfirmedMessage = function discordDepositConfirmedMessage(amo
 exports.discordDepositConfirmedMessage = discordDepositConfirmedMessage;
 
 var discordIncomingDepositMessage = function discordIncomingDepositMessage(detail) {
-  var result = new _discord.MessageEmbed().setColor(_settings["default"].bot.color).setTitle("Deposit #".concat(detail.transaction[0].id)).setDescription("incoming deposit detected for ".concat(detail.amount, " ").concat(_settings["default"].coin.ticker, "\nBalance will be reflected in your wallet in ~").concat(_settings["default"].confirmations, "+ confirmations\n").concat(_settings["default"].coin.explorer, "/tx/").concat(detail.transaction[0].txid)).setTimestamp().setFooter({
+  var result = new _discord.EmbedBuilder().setColor(_settings["default"].bot.color).setTitle("Deposit #".concat(detail.transaction[0].id)).setDescription("incoming deposit detected for ".concat(detail.amount, " ").concat(_settings["default"].coin.ticker, "\nBalance will be reflected in your wallet in ~").concat(_settings["default"].confirmations, "+ confirmations\n").concat(_settings["default"].coin.explorer, "/tx/").concat(detail.transaction[0].txid)).setTimestamp().setFooter({
     text: "".concat(_settings["default"].bot.name, " v").concat(_package["default"].version),
     iconURL: _settings["default"].bot.logo
   });
@@ -133,7 +140,7 @@ var discordIncomingDepositMessage = function discordIncomingDepositMessage(detai
 exports.discordIncomingDepositMessage = discordIncomingDepositMessage;
 
 var discordUserWithdrawalRejectMessage = function discordUserWithdrawalRejectMessage(title) {
-  var result = new _discord.MessageEmbed().setColor(_settings["default"].bot.color).setTitle('Withdraw').setDescription("Your withdrawal has been rejected").setTimestamp().setFooter({
+  var result = new _discord.EmbedBuilder().setColor(_settings["default"].bot.color).setTitle('Withdraw').setDescription("Your withdrawal has been rejected").setTimestamp().setFooter({
     text: "".concat(_settings["default"].bot.name, " v").concat(_package["default"].version),
     iconURL: _settings["default"].bot.logo
   });
@@ -142,11 +149,113 @@ var discordUserWithdrawalRejectMessage = function discordUserWithdrawalRejectMes
 
 exports.discordUserWithdrawalRejectMessage = discordUserWithdrawalRejectMessage;
 
+var loadingBattleMoveEmbed = function loadingBattleMoveEmbed(userCurrentCharacter) {
+  var result = new _discord.EmbedBuilder().setColor(_settings["default"].bot.color).setTitle('Battle').setDescription("".concat(userCurrentCharacter.UserGroup.user.username, ", Your next move is calculating..")).setTimestamp().setFooter({
+    text: "".concat(_settings["default"].bot.name, " v").concat(_package["default"].version),
+    iconURL: _settings["default"].bot.logo
+  });
+  return result;
+};
+
+exports.loadingBattleMoveEmbed = loadingBattleMoveEmbed;
+
+var battleCompleteEmbed = /*#__PURE__*/function () {
+  var _ref = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(userCurrentCharacter, battle, expEarned, newLootC) {
+    var itemString, _iteratorAbruptCompletion, _didIteratorError, _iteratorError, _iterator, _step, looot, result;
+
+    return _regenerator["default"].wrap(function _callee$(_context) {
+      while (1) {
+        switch (_context.prev = _context.next) {
+          case 0:
+            itemString = '';
+            _iteratorAbruptCompletion = false;
+            _didIteratorError = false;
+            _context.prev = 3;
+            _iterator = _asyncIterator(newLootC);
+
+          case 5:
+            _context.next = 7;
+            return _iterator.next();
+
+          case 7:
+            if (!(_iteratorAbruptCompletion = !(_step = _context.sent).done)) {
+              _context.next = 13;
+              break;
+            }
+
+            looot = _step.value;
+            itemString += "\n- **".concat(looot.name, "** [").concat(looot.itemQuality.name, "]");
+
+          case 10:
+            _iteratorAbruptCompletion = false;
+            _context.next = 5;
+            break;
+
+          case 13:
+            _context.next = 19;
+            break;
+
+          case 15:
+            _context.prev = 15;
+            _context.t0 = _context["catch"](3);
+            _didIteratorError = true;
+            _iteratorError = _context.t0;
+
+          case 19:
+            _context.prev = 19;
+            _context.prev = 20;
+
+            if (!(_iteratorAbruptCompletion && _iterator["return"] != null)) {
+              _context.next = 24;
+              break;
+            }
+
+            _context.next = 24;
+            return _iterator["return"]();
+
+          case 24:
+            _context.prev = 24;
+
+            if (!_didIteratorError) {
+              _context.next = 27;
+              break;
+            }
+
+            throw _iteratorError;
+
+          case 27:
+            return _context.finish(24);
+
+          case 28:
+            return _context.finish(19);
+
+          case 29:
+            result = new _discord.EmbedBuilder().setColor(_settings["default"].bot.color).setTitle("".concat(userCurrentCharacter.UserGroup.user.username, " battle#").concat(battle.id, " results")).setDescription("Exp earned: **".concat(expEarned, "**\n\n    ").concat(newLootC.length > 0 ? "__found ".concat(newLootC.length, " ").concat(newLootC.length === 1 ? "item" : "items", "__") : "").concat(itemString)).setTimestamp().setFooter({
+              text: "".concat(_settings["default"].bot.name, " v").concat(_package["default"].version),
+              iconURL: _settings["default"].bot.logo
+            });
+            return _context.abrupt("return", result);
+
+          case 31:
+          case "end":
+            return _context.stop();
+        }
+      }
+    }, _callee, null, [[3, 15, 19, 29], [20,, 24, 28]]);
+  }));
+
+  return function battleCompleteEmbed(_x, _x2, _x3, _x4) {
+    return _ref.apply(this, arguments);
+  };
+}();
+
+exports.battleCompleteEmbed = battleCompleteEmbed;
+
 var reviewMessage = function reviewMessage(userId, transaction) {
   var amount = (transaction.amount / 1e8).toFixed(8).replace(/(\.0+|0+)$/, '');
   var fee = (transaction.feeAmount / 1e8).toFixed(8).replace(/(\.0+|0+)$/, '');
   var total = ((transaction.amount - transaction.feeAmount) / 1e8).toFixed(8).replace(/(\.0+|0+)$/, '');
-  var result = new _discord.MessageEmbed().setColor(_settings["default"].bot.color).setTitle("Withdraw #".concat(transaction.id)).setDescription("<@".concat(userId, ">, Your withdrawal is being reviewed\n\namount: **").concat(amount, " ").concat(_settings["default"].coin.ticker, "**\nfee: **").concat(fee, " ").concat(_settings["default"].coin.ticker, "**\ntotal: **").concat(total, " ").concat(_settings["default"].coin.ticker, "**")).setTimestamp().setFooter({
+  var result = new _discord.EmbedBuilder().setColor(_settings["default"].bot.color).setTitle("Withdraw #".concat(transaction.id)).setDescription("<@".concat(userId, ">, Your withdrawal is being reviewed\n\namount: **").concat(amount, " ").concat(_settings["default"].coin.ticker, "**\nfee: **").concat(fee, " ").concat(_settings["default"].coin.ticker, "**\ntotal: **").concat(total, " ").concat(_settings["default"].coin.ticker, "**")).setTimestamp().setFooter({
     text: "".concat(_settings["default"].bot.name, " v").concat(_package["default"].version),
     iconURL: _settings["default"].bot.logo
   });
@@ -159,7 +268,7 @@ var discordWithdrawalAcceptedMessage = function discordWithdrawalAcceptedMessage
   var amount = (updatedTrans.amount / 1e8).toFixed(8).replace(/(\.0+|0+)$/, '');
   var fee = (updatedTrans.feeAmount / 1e8).toFixed(8).replace(/(\.0+|0+)$/, '');
   var total = ((updatedTrans.amount - updatedTrans.feeAmount) / 1e8).toFixed(8).replace(/(\.0+|0+)$/, '');
-  var result = new _discord.MessageEmbed().setColor(_settings["default"].bot.color).setTitle("Withdraw #".concat(updatedTrans.id)).setDescription("Your withdrawal has been accepted\n\namount: **".concat(amount, " ").concat(_settings["default"].coin.ticker, "**\nfee: **").concat(fee, " ").concat(_settings["default"].coin.ticker, "**\ntotal: **").concat(total, " ").concat(_settings["default"].coin.ticker, "**").concat(_settings["default"].coin.setting === 'Pirate' && updatedTrans.memo && updatedTrans.memo !== '' ? "\nmemo: **".concat(updatedTrans.memo, "**") : '', "\n\n").concat(_settings["default"].coin.explorer, "/tx/").concat(updatedTrans.txid)).setTimestamp().setFooter({
+  var result = new _discord.EmbedBuilder().setColor(_settings["default"].bot.color).setTitle("Withdraw #".concat(updatedTrans.id)).setDescription("Your withdrawal has been accepted\n\namount: **".concat(amount, " ").concat(_settings["default"].coin.ticker, "**\nfee: **").concat(fee, " ").concat(_settings["default"].coin.ticker, "**\ntotal: **").concat(total, " ").concat(_settings["default"].coin.ticker, "**").concat(_settings["default"].coin.setting === 'Pirate' && updatedTrans.memo && updatedTrans.memo !== '' ? "\nmemo: **".concat(updatedTrans.memo, "**") : '', "\n\n").concat(_settings["default"].coin.explorer, "/tx/").concat(updatedTrans.txid)).setTimestamp().setFooter({
     text: "".concat(_settings["default"].bot.name, " v").concat(_package["default"].version),
     iconURL: _settings["default"].bot.logo
   });
@@ -169,7 +278,7 @@ var discordWithdrawalAcceptedMessage = function discordWithdrawalAcceptedMessage
 exports.discordWithdrawalAcceptedMessage = discordWithdrawalAcceptedMessage;
 
 var discordWithdrawalConfirmedMessage = function discordWithdrawalConfirmedMessage(userId, trans) {
-  var result = new _discord.MessageEmbed().setColor(_settings["default"].bot.color).setTitle("Withdraw #".concat(trans.id)).setDescription("<@".concat(userId, ">, Your withdrawal has been complete")).setTimestamp().setFooter({
+  var result = new _discord.EmbedBuilder().setColor(_settings["default"].bot.color).setTitle("Withdraw #".concat(trans.id)).setDescription("<@".concat(userId, ">, Your withdrawal has been complete")).setTimestamp().setFooter({
     text: "".concat(_settings["default"].bot.name, " v").concat(_package["default"].version),
     iconURL: _settings["default"].bot.logo
   });
@@ -179,7 +288,7 @@ var discordWithdrawalConfirmedMessage = function discordWithdrawalConfirmedMessa
 exports.discordWithdrawalConfirmedMessage = discordWithdrawalConfirmedMessage;
 
 var balanceMessage = function balanceMessage(userId, user, priceInfo) {
-  var result = new _discord.MessageEmbed().setColor(_settings["default"].bot.color).setTitle('Balance').setDescription("<@".concat(userId, ">'s current available balance: ").concat(user.wallet.available / 1e8, " ").concat(_settings["default"].coin.ticker, "\n<@").concat(userId, ">'s current locked balance: ").concat(user.wallet.locked / 1e8, " ").concat(_settings["default"].coin.ticker, "\nEstimated value of <@").concat(userId, ">'s balance: $").concat(((user.wallet.available + user.wallet.locked) / 1e8 * priceInfo.price).toFixed(2))).setThumbnail(_settings["default"].bot.logo).setTimestamp().setFooter({
+  var result = new _discord.EmbedBuilder().setColor(_settings["default"].bot.color).setTitle('Balance').setDescription("<@".concat(userId, ">'s current available balance: ").concat(user.wallet.available / 1e8, " ").concat(_settings["default"].coin.ticker, "\n<@").concat(userId, ">'s current locked balance: ").concat(user.wallet.locked / 1e8, " ").concat(_settings["default"].coin.ticker, "\nEstimated value of <@").concat(userId, ">'s balance: $").concat(((user.wallet.available + user.wallet.locked) / 1e8 * priceInfo.price).toFixed(2))).setThumbnail(_settings["default"].bot.logo).setTimestamp().setFooter({
     text: "".concat(_settings["default"].bot.name, " v").concat(_package["default"].version),
     iconURL: _settings["default"].bot.logo
   });
@@ -189,7 +298,7 @@ var balanceMessage = function balanceMessage(userId, user, priceInfo) {
 exports.balanceMessage = balanceMessage;
 
 var depositAddressMessage = function depositAddressMessage(userId, user) {
-  var result = new _discord.MessageEmbed().setColor(_settings["default"].bot.color).setTitle('Deposit').setDescription("<@".concat(userId, ">'s deposit address:\n*").concat(user.wallet.address.address, "*")).setImage("attachment://qr.png").setTimestamp().setFooter({
+  var result = new _discord.EmbedBuilder().setColor(_settings["default"].bot.color).setTitle('Deposit').setDescription("<@".concat(userId, ">'s deposit address:\n*").concat(user.wallet.address.address, "*")).setImage("attachment://qr.png").setTimestamp().setFooter({
     text: "".concat(_settings["default"].bot.name, " v").concat(_package["default"].version),
     iconURL: _settings["default"].bot.logo
   });
@@ -199,7 +308,7 @@ var depositAddressMessage = function depositAddressMessage(userId, user) {
 exports.depositAddressMessage = depositAddressMessage;
 
 var walletNotFoundMessage = function walletNotFoundMessage(message, title) {
-  var result = new _discord.MessageEmbed().setColor(_settings["default"].bot.color).setTitle(title).setDescription("<@".concat(message.author.id, ">, Wallet not found")).setTimestamp().setFooter({
+  var result = new _discord.EmbedBuilder().setColor(_settings["default"].bot.color).setTitle(title).setDescription("<@".concat(message.author.id, ">, Wallet not found")).setTimestamp().setFooter({
     text: "".concat(_settings["default"].bot.name, " v").concat(_package["default"].version),
     iconURL: _settings["default"].bot.logo
   });
@@ -209,7 +318,7 @@ var walletNotFoundMessage = function walletNotFoundMessage(message, title) {
 exports.walletNotFoundMessage = walletNotFoundMessage;
 
 var userNotFoundMessage = function userNotFoundMessage(message, title) {
-  var result = new _discord.MessageEmbed().setColor(_settings["default"].bot.color).setTitle(title).setDescription("<@".concat(message.author.id, ">, User not found")).setTimestamp().setFooter({
+  var result = new _discord.EmbedBuilder().setColor(_settings["default"].bot.color).setTitle(title).setDescription("<@".concat(message.author.id, ">, User not found")).setTimestamp().setFooter({
     text: "".concat(_settings["default"].bot.name, " v").concat(_package["default"].version),
     iconURL: _settings["default"].bot.logo
   });
@@ -219,7 +328,7 @@ var userNotFoundMessage = function userNotFoundMessage(message, title) {
 exports.userNotFoundMessage = userNotFoundMessage;
 
 var NotInDirectMessage = function NotInDirectMessage(message, title) {
-  var result = new _discord.MessageEmbed().setColor(_settings["default"].bot.color).setTitle(title).setDescription("<@".concat(message.author.id, ">, Can't use this command in a direct message")).setThumbnail(_settings["default"].bot.logo).setTimestamp().setFooter({
+  var result = new _discord.EmbedBuilder().setColor(_settings["default"].bot.color).setTitle(title).setDescription("<@".concat(message.author.id, ">, Can't use this command in a direct message")).setThumbnail(_settings["default"].bot.logo).setTimestamp().setFooter({
     text: "".concat(_settings["default"].bot.name, " v").concat(_package["default"].version),
     iconURL: _settings["default"].bot.logo
   });
@@ -229,7 +338,7 @@ var NotInDirectMessage = function NotInDirectMessage(message, title) {
 exports.NotInDirectMessage = NotInDirectMessage;
 
 var discordWelcomeMessage = function discordWelcomeMessage(userInfo) {
-  var result = new _discord.MessageEmbed().setColor(_settings["default"].bot.color).setTitle("Bot").setDescription("Welcome <@".concat(userInfo.id, ">, Welcome to Runebase.\nType \"").concat(_settings["default"].bot.command, " help\" for bot usage info")).setThumbnail(_settings["default"].bot.logo).setTimestamp().setFooter({
+  var result = new _discord.EmbedBuilder().setColor(_settings["default"].bot.color).setTitle("Bot").setDescription("Welcome <@".concat(userInfo.id, ">, Welcome to Runebase.\nType \"").concat(_settings["default"].bot.command, " help\" for bot usage info")).setThumbnail(_settings["default"].bot.logo).setTimestamp().setFooter({
     text: "".concat(_settings["default"].bot.name, " v").concat(_package["default"].version),
     iconURL: _settings["default"].bot.logo
   });
@@ -239,7 +348,7 @@ var discordWelcomeMessage = function discordWelcomeMessage(userInfo) {
 exports.discordWelcomeMessage = discordWelcomeMessage;
 
 var discordBotMaintenanceMessage = function discordBotMaintenanceMessage() {
-  var result = new _discord.MessageEmbed().setColor(_settings["default"].bot.color).setTitle("Bot").setDescription("Discord tipbot maintenance").setThumbnail(_settings["default"].bot.logo).setTimestamp().setFooter({
+  var result = new _discord.EmbedBuilder().setColor(_settings["default"].bot.color).setTitle("Bot").setDescription("Discord tipbot maintenance").setThumbnail(_settings["default"].bot.logo).setTimestamp().setFooter({
     text: "".concat(_settings["default"].bot.name, " v").concat(_package["default"].version),
     iconURL: _settings["default"].bot.logo
   });
@@ -249,7 +358,7 @@ var discordBotMaintenanceMessage = function discordBotMaintenanceMessage() {
 exports.discordBotMaintenanceMessage = discordBotMaintenanceMessage;
 
 var gainTestExpMessage = function gainTestExpMessage(userId, amount) {
-  var result = new _discord.MessageEmbed().setColor(_settings["default"].bot.color).setTitle('Gain Exp').setDescription("<@".concat(userId, ">, you have been rewarded ").concat(amount, " test experience")).setTimestamp().setFooter({
+  var result = new _discord.EmbedBuilder().setColor(_settings["default"].bot.color).setTitle('Gain Exp').setDescription("<@".concat(userId, ">, you have been rewarded ").concat(amount, " test experience")).setTimestamp().setFooter({
     text: "".concat(_settings["default"].bot.name, " v").concat(_package["default"].version),
     iconURL: _settings["default"].bot.logo
   });
@@ -260,7 +369,7 @@ exports.gainTestExpMessage = gainTestExpMessage;
 
 var rolledDiceMessage = function rolledDiceMessage(userId, expRewarded, randomNumberOne, randomNumberTwo, rewardAmount) {
   var isSnakeEyes = !!(randomNumberOne === 1 && randomNumberTwo === 1);
-  var result = new _discord.MessageEmbed().setColor(_settings["default"].bot.color).setTitle('Roll Dice').setDescription("<@".concat(userId, ">, You rolled the dice!\n").concat(isSnakeEyes ? "\uD83D\uDC41 Snake eyes \uD83D\uDC41" : "dice: ".concat(randomNumberOne, "\ndice: ").concat(randomNumberTwo), "\n\nyou have been rewarded ").concat(rewardAmount / 1e8, " RUNES and ").concat(expRewarded, " experience")).setTimestamp().setFooter({
+  var result = new _discord.EmbedBuilder().setColor(_settings["default"].bot.color).setTitle('Roll Dice').setDescription("<@".concat(userId, ">, You rolled the dice!\n").concat(isSnakeEyes ? "\uD83D\uDC41 Snake eyes \uD83D\uDC41" : "dice: ".concat(randomNumberOne, "\ndice: ").concat(randomNumberTwo), "\n\nyou have been rewarded ").concat(rewardAmount / 1e8, " RUNES and ").concat(expRewarded, " experience")).setTimestamp().setFooter({
     text: "".concat(_settings["default"].bot.name, " v").concat(_package["default"].version),
     iconURL: _settings["default"].bot.logo
   });
@@ -273,7 +382,7 @@ var rollDiceTooFastMessage = function rollDiceTooFastMessage(userId, distance) {
   var hours = Math.floor(distance % (1000 * 60 * 60 * 24) / (1000 * 60 * 60));
   var minutes = Math.floor(distance % (1000 * 60 * 60) / (1000 * 60));
   var seconds = Math.floor(distance % (1000 * 60) / 1000);
-  var result = new _discord.MessageEmbed().setColor(_settings["default"].bot.color).setTitle('Roll Dice').setDescription("<@".concat(userId, ">, you have to wait ").concat(hours === 1 ? "".concat(hours, " hour") : '').concat(hours > 1 ? "".concat(hours, " hours,") : '', " ").concat(minutes === 1 ? "".concat(minutes, " minute") : '').concat(minutes > 1 ? "".concat(minutes, " minutes and") : '', " ").concat(seconds === 1 ? "".concat(seconds, " second") : '').concat(seconds > 1 ? "".concat(seconds, " seconds") : '', " before you can roll the dice again (you can roll the dice every 3 hours).")).setTimestamp().setFooter({
+  var result = new _discord.EmbedBuilder().setColor(_settings["default"].bot.color).setTitle('Roll Dice').setDescription("<@".concat(userId, ">, you have to wait ").concat(hours === 1 ? "".concat(hours, " hour") : '').concat(hours > 1 ? "".concat(hours, " hours,") : '', " ").concat(minutes === 1 ? "".concat(minutes, " minute") : '').concat(minutes > 1 ? "".concat(minutes, " minutes and") : '', " ").concat(seconds === 1 ? "".concat(seconds, " second") : '').concat(seconds > 1 ? "".concat(seconds, " seconds") : '', " before you can roll the dice again (you can roll the dice every 3 hours).")).setTimestamp().setFooter({
     text: "".concat(_settings["default"].bot.name, " v").concat(_package["default"].version),
     iconURL: _settings["default"].bot.logo
   });
@@ -283,7 +392,7 @@ var rollDiceTooFastMessage = function rollDiceTooFastMessage(userId, distance) {
 exports.rollDiceTooFastMessage = rollDiceTooFastMessage;
 
 var grantRoleExpMessage = function grantRoleExpMessage(userLength, role, amount) {
-  var result = new _discord.MessageEmbed().setColor(_settings["default"].bot.color).setTitle('Grant Exp to role').setDescription("Congratulations!\nThe ".concat(userLength, " users on the ").concat(role, " role have been granted ").concat(amount, " experience each!")).setTimestamp().setFooter({
+  var result = new _discord.EmbedBuilder().setColor(_settings["default"].bot.color).setTitle('Grant Exp to role').setDescription("Congratulations!\nThe ".concat(userLength, " users on the ").concat(role, " role have been granted ").concat(amount, " experience each!")).setTimestamp().setFooter({
     text: "".concat(_settings["default"].bot.name, " v").concat(_package["default"].version),
     iconURL: _settings["default"].bot.logo
   });
@@ -293,7 +402,7 @@ var grantRoleExpMessage = function grantRoleExpMessage(userLength, role, amount)
 exports.grantRoleExpMessage = grantRoleExpMessage;
 
 var gainBattleExpExpMessage = function gainBattleExpExpMessage(userId, amount) {
-  var result = new _discord.MessageEmbed().setColor(_settings["default"].bot.color).setTitle('Gain Exp').setDescription("<@".concat(userId, ">, Congratulations!\nyou gained ").concat(amount, " experience from your battle!")).setTimestamp().setFooter({
+  var result = new _discord.EmbedBuilder().setColor(_settings["default"].bot.color).setTitle('Gain Exp').setDescription("<@".concat(userId, ">, Congratulations!\nyou gained ").concat(amount, " experience from your battle!")).setTimestamp().setFooter({
     text: "".concat(_settings["default"].bot.name, " v").concat(_package["default"].version),
     iconURL: _settings["default"].bot.logo
   });
@@ -303,7 +412,7 @@ var gainBattleExpExpMessage = function gainBattleExpExpMessage(userId, amount) {
 exports.gainBattleExpExpMessage = gainBattleExpExpMessage;
 
 var gainActiveTalkerExpMessage = function gainActiveTalkerExpMessage(userId, amount) {
-  var result = new _discord.MessageEmbed().setColor(_settings["default"].bot.color).setTitle('Gain Exp').setDescription("<@".concat(userId, ">, Thank you for being so talkative in our community today!\nyou have been rewarded ").concat(amount, " experience")).setTimestamp().setFooter({
+  var result = new _discord.EmbedBuilder().setColor(_settings["default"].bot.color).setTitle('Gain Exp').setDescription("<@".concat(userId, ">, Thank you for being so talkative in our community today!\nyou have been rewarded ").concat(amount, " experience")).setTimestamp().setFooter({
     text: "".concat(_settings["default"].bot.name, " v").concat(_package["default"].version),
     iconURL: _settings["default"].bot.logo
   });
@@ -313,7 +422,7 @@ var gainActiveTalkerExpMessage = function gainActiveTalkerExpMessage(userId, amo
 exports.gainActiveTalkerExpMessage = gainActiveTalkerExpMessage;
 
 var alreadyVotedTopGG = function alreadyVotedTopGG(userId) {
-  var result = new _discord.MessageEmbed().setColor(_settings["default"].bot.color).setTitle('Gain Exp').setDescription("<@".concat(userId, ">, Thank you for your enthousiasme.\nYou already voted past 12h, so we could not grant you experience")).setTimestamp().setFooter({
+  var result = new _discord.EmbedBuilder().setColor(_settings["default"].bot.color).setTitle('Gain Exp').setDescription("<@".concat(userId, ">, Thank you for your enthousiasme.\nYou already voted past 12h, so we could not grant you experience")).setTimestamp().setFooter({
     text: "".concat(_settings["default"].bot.name, " v").concat(_package["default"].version),
     iconURL: _settings["default"].bot.logo
   });
@@ -323,7 +432,7 @@ var alreadyVotedTopGG = function alreadyVotedTopGG(userId) {
 exports.alreadyVotedTopGG = alreadyVotedTopGG;
 
 var invitedNewUserRewardMessage = function invitedNewUserRewardMessage(userId, joinedUserId, amount) {
-  var result = new _discord.MessageEmbed().setColor(_settings["default"].bot.color).setTitle('Gain Exp').setDescription("<@".concat(userId, ">, Thank you for inviting <@").concat(joinedUserId, "> to the Runebase server.\nyou have been rewarded ").concat(amount, " experience")).setTimestamp().setFooter({
+  var result = new _discord.EmbedBuilder().setColor(_settings["default"].bot.color).setTitle('Gain Exp').setDescription("<@".concat(userId, ">, Thank you for inviting <@").concat(joinedUserId, "> to the Runebase server.\nyou have been rewarded ").concat(amount, " experience")).setTimestamp().setFooter({
     text: "".concat(_settings["default"].bot.name, " v").concat(_package["default"].version),
     iconURL: _settings["default"].bot.logo
   });
@@ -333,7 +442,7 @@ var invitedNewUserRewardMessage = function invitedNewUserRewardMessage(userId, j
 exports.invitedNewUserRewardMessage = invitedNewUserRewardMessage;
 
 var realmChangeSuccessEmbed = function realmChangeSuccessEmbed(server) {
-  var result = new _discord.MessageEmbed().setColor(_settings["default"].bot.color).setTitle('Change Realm Success').setDescription("You are now on realm:\n".concat(server.groupName)).setTimestamp().setFooter({
+  var result = new _discord.EmbedBuilder().setColor(_settings["default"].bot.color).setTitle('Change Realm Success').setDescription("You are now on realm:\n".concat(server.groupName)).setTimestamp().setFooter({
     text: "".concat(_settings["default"].bot.name, " v").concat(_package["default"].version),
     iconURL: _settings["default"].bot.logo
   });
@@ -343,7 +452,7 @@ var realmChangeSuccessEmbed = function realmChangeSuccessEmbed(server) {
 exports.realmChangeSuccessEmbed = realmChangeSuccessEmbed;
 
 var needToBeInDiscordRealmEmbed = function needToBeInDiscordRealmEmbed(server) {
-  var result = new _discord.MessageEmbed().setColor(_settings["default"].bot.color).setTitle('Change Realm Failed').setDescription("You need to join the realm's discord server to be able to participate on this realm\n    \nInvite link:\n".concat(server.inviteLink, "\n\nOr choose another realm with \n`!runebase changerealm` \nor \n`/changerealm`")).setTimestamp().setFooter({
+  var result = new _discord.EmbedBuilder().setColor(_settings["default"].bot.color).setTitle('Change Realm Failed').setDescription("You need to join the realm's discord server to be able to participate on this realm\n    \nInvite link:\n".concat(server.inviteLink, "\n\nOr choose another realm with \n`!runebase changerealm` \nor \n`/changerealm`")).setTimestamp().setFooter({
     text: "".concat(_settings["default"].bot.name, " v").concat(_package["default"].version),
     iconURL: _settings["default"].bot.logo
   });
@@ -353,7 +462,7 @@ var needToBeInDiscordRealmEmbed = function needToBeInDiscordRealmEmbed(server) {
 exports.needToBeInDiscordRealmEmbed = needToBeInDiscordRealmEmbed;
 
 var gainVoteTopggExpMessage = function gainVoteTopggExpMessage(userId, amount) {
-  var result = new _discord.MessageEmbed().setColor(_settings["default"].bot.color).setTitle('Gain Exp').setDescription("<@".concat(userId, ">, Thank you for voting for Runebase on TopGG.\nyou have been rewarded ").concat(amount, " experience")).setTimestamp().setFooter({
+  var result = new _discord.EmbedBuilder().setColor(_settings["default"].bot.color).setTitle('Gain Exp').setDescription("<@".concat(userId, ">, Thank you for voting for Runebase on TopGG.\nyou have been rewarded ").concat(amount, " experience")).setTimestamp().setFooter({
     text: "".concat(_settings["default"].bot.name, " v").concat(_package["default"].version),
     iconURL: _settings["default"].bot.logo
   });
@@ -364,7 +473,7 @@ exports.gainVoteTopggExpMessage = gainVoteTopggExpMessage;
 
 var levelUpMessage = function levelUpMessage(userId, rank) {
   console.log('sending level up message');
-  var result = new _discord.MessageEmbed().setColor(_settings["default"].bot.color).setTitle('Gain Exp').setDescription("Congratulations <@".concat(userId, ">\nYou gained a level\nYou are now a ").concat(rank.name, " (lvl ").concat(rank.level, ")")).setTimestamp().setFooter({
+  var result = new _discord.EmbedBuilder().setColor(_settings["default"].bot.color).setTitle('Gain Exp').setDescription("Congratulations <@".concat(userId, ">\nYou gained a level\nYou are now a ").concat(rank.name, " (lvl ").concat(rank.level, ")")).setTimestamp().setFooter({
     text: "".concat(_settings["default"].bot.name, " v").concat(_package["default"].version),
     iconURL: _settings["default"].bot.logo
   });
@@ -374,7 +483,7 @@ var levelUpMessage = function levelUpMessage(userId, rank) {
 exports.levelUpMessage = levelUpMessage;
 
 var discordBotDisabledMessage = function discordBotDisabledMessage() {
-  var result = new _discord.MessageEmbed().setColor(_settings["default"].bot.color).setTitle("Bot").setDescription("Discord tipbot disabled").setThumbnail(_settings["default"].bot.logo).setTimestamp().setFooter({
+  var result = new _discord.EmbedBuilder().setColor(_settings["default"].bot.color).setTitle("Bot").setDescription("Discord tipbot disabled").setThumbnail(_settings["default"].bot.logo).setTimestamp().setFooter({
     text: "".concat(_settings["default"].bot.name, " v").concat(_package["default"].version),
     iconURL: _settings["default"].bot.logo
   });
@@ -384,7 +493,7 @@ var discordBotDisabledMessage = function discordBotDisabledMessage() {
 exports.discordBotDisabledMessage = discordBotDisabledMessage;
 
 var warnDirectMessage = function warnDirectMessage(userId, title) {
-  var result = new _discord.MessageEmbed().setColor(_settings["default"].bot.color).setTitle(title).setDescription("<@".concat(userId, ">, I've sent you a direct message.")).setThumbnail(_settings["default"].bot.logo).setTimestamp().setFooter({
+  var result = new _discord.EmbedBuilder().setColor(_settings["default"].bot.color).setTitle(title).setDescription("<@".concat(userId, ">, I've sent you a direct message.")).setThumbnail(_settings["default"].bot.logo).setTimestamp().setFooter({
     text: "".concat(_settings["default"].bot.name, " v").concat(_package["default"].version),
     iconURL: _settings["default"].bot.logo
   });
@@ -394,7 +503,7 @@ var warnDirectMessage = function warnDirectMessage(userId, title) {
 exports.warnDirectMessage = warnDirectMessage;
 
 var timeOutMessage = function timeOutMessage() {
-  var result = new _discord.MessageEmbed().setColor(_settings["default"].bot.color).setTitle('Time out').setDescription("Operation canceled").setThumbnail(_settings["default"].bot.logo).setTimestamp().setFooter({
+  var result = new _discord.EmbedBuilder().setColor(_settings["default"].bot.color).setTitle('Time out').setDescription("Operation canceled").setThumbnail(_settings["default"].bot.logo).setTimestamp().setFooter({
     text: "".concat(_settings["default"].bot.name, " v").concat(_package["default"].version),
     iconURL: _settings["default"].bot.logo
   });
@@ -404,7 +513,7 @@ var timeOutMessage = function timeOutMessage() {
 exports.timeOutMessage = timeOutMessage;
 
 var enterWithdrawalAddress = function enterWithdrawalAddress() {
-  var result = new _discord.MessageEmbed().setColor(_settings["default"].bot.color).setTitle('Withdraw').setDescription("Please enter a Runebase withdrawal address:").setTimestamp().setFooter({
+  var result = new _discord.EmbedBuilder().setColor(_settings["default"].bot.color).setTitle('Withdraw').setDescription("Please enter a Runebase withdrawal address:").setTimestamp().setFooter({
     text: "".concat(_settings["default"].bot.name, " v").concat(_package["default"].version),
     iconURL: _settings["default"].bot.logo
   });
@@ -414,7 +523,7 @@ var enterWithdrawalAddress = function enterWithdrawalAddress() {
 exports.enterWithdrawalAddress = enterWithdrawalAddress;
 
 var enterWithdrawalAmount = function enterWithdrawalAmount() {
-  var result = new _discord.MessageEmbed().setColor(_settings["default"].bot.color).setTitle('Withdraw').setDescription("Please enter the amount of runes you want to withdraw:").setTimestamp().setFooter({
+  var result = new _discord.EmbedBuilder().setColor(_settings["default"].bot.color).setTitle('Withdraw').setDescription("Please enter the amount of runes you want to withdraw:").setTimestamp().setFooter({
     text: "".concat(_settings["default"].bot.name, " v").concat(_package["default"].version),
     iconURL: _settings["default"].bot.logo
   });
@@ -424,7 +533,7 @@ var enterWithdrawalAmount = function enterWithdrawalAmount() {
 exports.enterWithdrawalAmount = enterWithdrawalAmount;
 
 var invalidAmountMessage = function invalidAmountMessage(userId, title) {
-  var result = new _discord.MessageEmbed().setColor(_settings["default"].bot.color).setTitle(title).setDescription("<@".concat(userId, ">, Invalid Amount")).setTimestamp().setFooter({
+  var result = new _discord.EmbedBuilder().setColor(_settings["default"].bot.color).setTitle(title).setDescription("<@".concat(userId, ">, Invalid Amount")).setTimestamp().setFooter({
     text: "".concat(_settings["default"].bot.name, " v").concat(_package["default"].version),
     iconURL: _settings["default"].bot.logo
   });
@@ -434,7 +543,7 @@ var invalidAmountMessage = function invalidAmountMessage(userId, title) {
 exports.invalidAmountMessage = invalidAmountMessage;
 
 var confirmationHealMessage = function confirmationHealMessage(userId, available) {
-  var result = new _discord.MessageEmbed().setColor(_settings["default"].bot.color).setTitle('Heal').setDescription("<@".concat(userId, ">, Healing costs 0.1 RUNES. \n\nAvailable Balance: **").concat(available / 1e8, " RUNES**\nTotal Cost: **0.1 RUNES**\n    \nAre you sure you want to heal?")).setTimestamp().setFooter({
+  var result = new _discord.EmbedBuilder().setColor(_settings["default"].bot.color).setTitle('Heal').setDescription("<@".concat(userId, ">, Healing costs 0.1 RUNES. \n\nAvailable Balance: **").concat(available / 1e8, " RUNES**\nTotal Cost: **0.1 RUNES**\n    \nAre you sure you want to heal?")).setTimestamp().setFooter({
     text: "".concat(_settings["default"].bot.name, " v").concat(_package["default"].version),
     iconURL: _settings["default"].bot.logo
   });
@@ -444,7 +553,7 @@ var confirmationHealMessage = function confirmationHealMessage(userId, available
 exports.confirmationHealMessage = confirmationHealMessage;
 
 var healCompleteMessage = function healCompleteMessage(userId) {
-  var result = new _discord.MessageEmbed().setColor(_settings["default"].bot.color).setTitle('Heal').setDescription("\uD83D\uDC8B Freyja has kissed <@".concat(userId, ">. \uD83D\uDC8B\n<@").concat(userId, "> is now Healed!")).setTimestamp().setFooter({
+  var result = new _discord.EmbedBuilder().setColor(_settings["default"].bot.color).setTitle('Heal').setDescription("\uD83D\uDC8B Freyja has kissed <@".concat(userId, ">. \uD83D\uDC8B\n<@").concat(userId, "> is now Healed!")).setTimestamp().setFooter({
     text: "".concat(_settings["default"].bot.name, " v").concat(_package["default"].version),
     iconURL: _settings["default"].bot.logo
   });
@@ -454,7 +563,7 @@ var healCompleteMessage = function healCompleteMessage(userId) {
 exports.healCompleteMessage = healCompleteMessage;
 
 var declineHealMessage = function declineHealMessage(userId) {
-  var result = new _discord.MessageEmbed().setColor(_settings["default"].bot.color).setTitle('Heal').setDescription("<@".concat(userId, ">, declined heal")).setTimestamp().setFooter({
+  var result = new _discord.EmbedBuilder().setColor(_settings["default"].bot.color).setTitle('Heal').setDescription("<@".concat(userId, ">, declined heal")).setTimestamp().setFooter({
     text: "".concat(_settings["default"].bot.name, " v").concat(_package["default"].version),
     iconURL: _settings["default"].bot.logo
   });
@@ -464,7 +573,7 @@ var declineHealMessage = function declineHealMessage(userId) {
 exports.declineHealMessage = declineHealMessage;
 
 var insufficientBalanceMessage = function insufficientBalanceMessage(userId, title) {
-  var result = new _discord.MessageEmbed().setColor(_settings["default"].bot.color).setTitle(title).setDescription("<@".concat(userId, ">, you have Insufficient balance")).setTimestamp().setFooter({
+  var result = new _discord.EmbedBuilder().setColor(_settings["default"].bot.color).setTitle(title).setDescription("<@".concat(userId, ">, you have Insufficient balance")).setTimestamp().setFooter({
     text: "".concat(_settings["default"].bot.name, " v").concat(_package["default"].version),
     iconURL: _settings["default"].bot.logo
   });
@@ -474,7 +583,7 @@ var insufficientBalanceMessage = function insufficientBalanceMessage(userId, tit
 exports.insufficientBalanceMessage = insufficientBalanceMessage;
 
 var resetSkillCompleteMessage = function resetSkillCompleteMessage(userId) {
-  var result = new _discord.MessageEmbed().setColor(_settings["default"].bot.color).setTitle('Reset Skills').setDescription("<@".concat(userId, ">, Your skills have been reset!")).setTimestamp().setFooter({
+  var result = new _discord.EmbedBuilder().setColor(_settings["default"].bot.color).setTitle('Reset Skills').setDescription("<@".concat(userId, ">, Your skills have been reset!")).setTimestamp().setFooter({
     text: "".concat(_settings["default"].bot.name, " v").concat(_package["default"].version),
     iconURL: _settings["default"].bot.logo
   });
@@ -484,7 +593,7 @@ var resetSkillCompleteMessage = function resetSkillCompleteMessage(userId) {
 exports.resetSkillCompleteMessage = resetSkillCompleteMessage;
 
 var skillConfirmationMessage = function skillConfirmationMessage(userId, available, totalSkillsCost) {
-  var result = new _discord.MessageEmbed().setColor(_settings["default"].bot.color).setTitle('Reset Skills').setDescription("<@".concat(userId, ">, Resetting your skills costs 1 RUNES for each skill point.\n\nAvailable Balance: **").concat(available / 1e8, " RUNES**\nTotal cost: **").concat(totalSkillsCost, " RUNES**\n    \nAre you sure you want to reset your skills?")).setTimestamp().setFooter({
+  var result = new _discord.EmbedBuilder().setColor(_settings["default"].bot.color).setTitle('Reset Skills').setDescription("<@".concat(userId, ">, Resetting your skills costs 1 RUNES for each skill point.\n\nAvailable Balance: **").concat(available / 1e8, " RUNES**\nTotal cost: **").concat(totalSkillsCost, " RUNES**\n    \nAre you sure you want to reset your skills?")).setTimestamp().setFooter({
     text: "".concat(_settings["default"].bot.name, " v").concat(_package["default"].version),
     iconURL: _settings["default"].bot.logo
   });
@@ -494,7 +603,7 @@ var skillConfirmationMessage = function skillConfirmationMessage(userId, availab
 exports.skillConfirmationMessage = skillConfirmationMessage;
 
 var declineResetSkillsMessage = function declineResetSkillsMessage(userId) {
-  var result = new _discord.MessageEmbed().setColor(_settings["default"].bot.color).setTitle('Reset Skills').setDescription("<@".concat(userId, ">, declined reset skills")).setTimestamp().setFooter({
+  var result = new _discord.EmbedBuilder().setColor(_settings["default"].bot.color).setTitle('Reset Skills').setDescription("<@".concat(userId, ">, declined reset skills")).setTimestamp().setFooter({
     text: "".concat(_settings["default"].bot.name, " v").concat(_package["default"].version),
     iconURL: _settings["default"].bot.logo
   });
@@ -504,7 +613,7 @@ var declineResetSkillsMessage = function declineResetSkillsMessage(userId) {
 exports.declineResetSkillsMessage = declineResetSkillsMessage;
 
 var resetStatsDeclinedMessage = function resetStatsDeclinedMessage(userId, title) {
-  var result = new _discord.MessageEmbed().setColor(_settings["default"].bot.color).setTitle('Reset Stats').setDescription("<@".concat(userId, ">, declined reset stats")).setTimestamp().setFooter({
+  var result = new _discord.EmbedBuilder().setColor(_settings["default"].bot.color).setTitle('Reset Stats').setDescription("<@".concat(userId, ">, declined reset stats")).setTimestamp().setFooter({
     text: "".concat(_settings["default"].bot.name, " v").concat(_package["default"].version),
     iconURL: _settings["default"].bot.logo
   });
@@ -514,7 +623,7 @@ var resetStatsDeclinedMessage = function resetStatsDeclinedMessage(userId, title
 exports.resetStatsDeclinedMessage = resetStatsDeclinedMessage;
 
 var resetStatsConfirmationMessage = function resetStatsConfirmationMessage(userId, available, totalStatsCost) {
-  var result = new _discord.MessageEmbed().setColor(_settings["default"].bot.color).setTitle('Reset Stats').setDescription("<@".concat(userId, ">, Resetting your stats costs 0.1 RUNES for each attribute.\n\nAvailable Balance: **").concat(available / 1e8, " RUNES**\nTotal cost: **").concat(totalStatsCost, " RUNES**\n    \nAre you sure you want to reset your stats?")).setTimestamp().setFooter({
+  var result = new _discord.EmbedBuilder().setColor(_settings["default"].bot.color).setTitle('Reset Stats').setDescription("<@".concat(userId, ">, Resetting your stats costs 0.1 RUNES for each attribute.\n\nAvailable Balance: **").concat(available / 1e8, " RUNES**\nTotal cost: **").concat(totalStatsCost, " RUNES**\n    \nAre you sure you want to reset your stats?")).setTimestamp().setFooter({
     text: "".concat(_settings["default"].bot.name, " v").concat(_package["default"].version),
     iconURL: _settings["default"].bot.logo
   });
@@ -524,7 +633,7 @@ var resetStatsConfirmationMessage = function resetStatsConfirmationMessage(userI
 exports.resetStatsConfirmationMessage = resetStatsConfirmationMessage;
 
 var minimumMessage = function minimumMessage(userId, setting, type) {
-  var result = new _discord.MessageEmbed().setColor(_settings["default"].bot.color).setTitle(type).setDescription("<@".concat(userId, ">, Minimum ").concat(type, " is ").concat(setting.min / 1e8, " ").concat(_settings["default"].coin.ticker)).setTimestamp().setFooter({
+  var result = new _discord.EmbedBuilder().setColor(_settings["default"].bot.color).setTitle(type).setDescription("<@".concat(userId, ">, Minimum ").concat(type, " is ").concat(setting.min / 1e8, " ").concat(_settings["default"].coin.ticker)).setTimestamp().setFooter({
     text: "".concat(_settings["default"].bot.name, " v").concat(_package["default"].version),
     iconURL: _settings["default"].bot.logo
   });
@@ -534,7 +643,7 @@ var minimumMessage = function minimumMessage(userId, setting, type) {
 exports.minimumMessage = minimumMessage;
 
 var invalidAddressMessage = function invalidAddressMessage(userId) {
-  var result = new _discord.MessageEmbed().setColor(_settings["default"].bot.color).setTitle('Withdraw').setDescription("<@".concat(userId, ">, Invalid ").concat(_settings["default"].coin.name, " Address")).setTimestamp().setFooter({
+  var result = new _discord.EmbedBuilder().setColor(_settings["default"].bot.color).setTitle('Withdraw').setDescription("<@".concat(userId, ">, Invalid ").concat(_settings["default"].coin.name, " Address")).setTimestamp().setFooter({
     text: "".concat(_settings["default"].bot.name, " v").concat(_package["default"].version),
     iconURL: _settings["default"].bot.logo
   });
@@ -544,7 +653,7 @@ var invalidAddressMessage = function invalidAddressMessage(userId) {
 exports.invalidAddressMessage = invalidAddressMessage;
 
 var unableToWithdrawToSelfMessage = function unableToWithdrawToSelfMessage(message) {
-  var result = new _discord.MessageEmbed().setColor(_settings["default"].bot.color).setTitle('Tip').setDescription("<@".concat(message.author.id, ">, unable to withdraw to your own deposit address")).setTimestamp().setFooter({
+  var result = new _discord.EmbedBuilder().setColor(_settings["default"].bot.color).setTitle('Tip').setDescription("<@".concat(message.author.id, ">, unable to withdraw to your own deposit address")).setTimestamp().setFooter({
     text: "".concat(_settings["default"].bot.name, " v").concat(_package["default"].version),
     iconURL: _settings["default"].bot.logo
   });
@@ -554,7 +663,7 @@ var unableToWithdrawToSelfMessage = function unableToWithdrawToSelfMessage(messa
 exports.unableToWithdrawToSelfMessage = unableToWithdrawToSelfMessage;
 
 var skillInfoMessage = function skillInfoMessage(name, description) {
-  var result = new _discord.MessageEmbed().setColor(_settings["default"].bot.color).setTitle(name || 'Skill not found').setDescription("".concat(description || 'No skill Info found')).setTimestamp().setFooter({
+  var result = new _discord.EmbedBuilder().setColor(_settings["default"].bot.color).setTitle(name || 'Skill not found').setDescription("".concat(description || 'No skill Info found')).setTimestamp().setFooter({
     text: "".concat(_settings["default"].bot.name, " v").concat(_package["default"].version),
     iconURL: _settings["default"].bot.logo
   });
@@ -564,7 +673,7 @@ var skillInfoMessage = function skillInfoMessage(name, description) {
 exports.skillInfoMessage = skillInfoMessage;
 
 var loadingSkillAddEmbed = function loadingSkillAddEmbed(username) {
-  var result = new _discord.MessageEmbed().setColor(_settings["default"].bot.color).setTitle('Adding Skill Point').setDescription("".concat(username, ", Adding skill..")).setTimestamp().setFooter({
+  var result = new _discord.EmbedBuilder().setColor(_settings["default"].bot.color).setTitle('Adding Skill Point').setDescription("".concat(username, ", Adding skill..")).setTimestamp().setFooter({
     text: "".concat(_settings["default"].bot.name, " v").concat(_package["default"].version),
     iconURL: _settings["default"].bot.logo
   });
@@ -574,7 +683,7 @@ var loadingSkillAddEmbed = function loadingSkillAddEmbed(username) {
 exports.loadingSkillAddEmbed = loadingSkillAddEmbed;
 
 var loadingSkillSelectEmbed = function loadingSkillSelectEmbed(username) {
-  var result = new _discord.MessageEmbed().setColor(_settings["default"].bot.color).setTitle('Selecting Skill').setDescription("".concat(username, ", Loading skill selection..")).setTimestamp().setFooter({
+  var result = new _discord.EmbedBuilder().setColor(_settings["default"].bot.color).setTitle('Selecting Skill').setDescription("".concat(username, ", Loading skill selection..")).setTimestamp().setFooter({
     text: "".concat(_settings["default"].bot.name, " v").concat(_package["default"].version),
     iconURL: _settings["default"].bot.logo
   });
@@ -584,7 +693,7 @@ var loadingSkillSelectEmbed = function loadingSkillSelectEmbed(username) {
 exports.loadingSkillSelectEmbed = loadingSkillSelectEmbed;
 
 var AccountInfoMessage = function AccountInfoMessage() {
-  var result = new _discord.MessageEmbed().setColor(_settings["default"].bot.color).setTitle('Account Information').setDescription("Shows discord account information").setThumbnail(_settings["default"].bot.logo).setTimestamp().setFooter({
+  var result = new _discord.EmbedBuilder().setColor(_settings["default"].bot.color).setTitle('Account Information').setDescription("Shows discord account information").setThumbnail(_settings["default"].bot.logo).setTimestamp().setFooter({
     text: "".concat(_settings["default"].bot.name, " v").concat(_package["default"].version),
     iconURL: _settings["default"].bot.logo
   });
@@ -594,7 +703,7 @@ var AccountInfoMessage = function AccountInfoMessage() {
 exports.AccountInfoMessage = AccountInfoMessage;
 
 var featureDisabledChannelMessage = function featureDisabledChannelMessage(name) {
-  var result = new _discord.MessageEmbed().setColor(_settings["default"].bot.color).setTitle(name).setDescription("This Feature has been disabled for this channel").setTimestamp().setFooter({
+  var result = new _discord.EmbedBuilder().setColor(_settings["default"].bot.color).setTitle(name).setDescription("This Feature has been disabled for this channel").setTimestamp().setFooter({
     text: "".concat(_settings["default"].bot.name, " v").concat(_package["default"].version),
     iconURL: _settings["default"].bot.logo
   });
@@ -604,7 +713,7 @@ var featureDisabledChannelMessage = function featureDisabledChannelMessage(name)
 exports.featureDisabledChannelMessage = featureDisabledChannelMessage;
 
 var featureDisabledServerMessage = function featureDisabledServerMessage(name) {
-  var result = new _discord.MessageEmbed().setColor(_settings["default"].bot.color).setTitle(name).setDescription("This Feature has been disabled for this server").setTimestamp().setFooter({
+  var result = new _discord.EmbedBuilder().setColor(_settings["default"].bot.color).setTitle(name).setDescription("This Feature has been disabled for this server").setTimestamp().setFooter({
     text: "".concat(_settings["default"].bot.name, " v").concat(_package["default"].version),
     iconURL: _settings["default"].bot.logo
   });
@@ -614,7 +723,7 @@ var featureDisabledServerMessage = function featureDisabledServerMessage(name) {
 exports.featureDisabledServerMessage = featureDisabledServerMessage;
 
 var featureDisabledGlobalMessage = function featureDisabledGlobalMessage(name) {
-  var result = new _discord.MessageEmbed().setColor(_settings["default"].bot.color).setTitle(name).setDescription("This Feature has been disabled").setTimestamp().setFooter({
+  var result = new _discord.EmbedBuilder().setColor(_settings["default"].bot.color).setTitle(name).setDescription("This Feature has been disabled").setTimestamp().setFooter({
     text: "".concat(_settings["default"].bot.name, " v").concat(_package["default"].version),
     iconURL: _settings["default"].bot.logo
   });
@@ -624,7 +733,7 @@ var featureDisabledGlobalMessage = function featureDisabledGlobalMessage(name) {
 exports.featureDisabledGlobalMessage = featureDisabledGlobalMessage;
 
 var resetStatsCompletemessage = function resetStatsCompletemessage(userId) {
-  var result = new _discord.MessageEmbed().setColor(_settings["default"].bot.color).setTitle('Reset Stats').setDescription("<@".concat(userId, ">, Your stats have been reset!")).setTimestamp().setFooter({
+  var result = new _discord.EmbedBuilder().setColor(_settings["default"].bot.color).setTitle('Reset Stats').setDescription("<@".concat(userId, ">, Your stats have been reset!")).setTimestamp().setFooter({
     text: "".concat(_settings["default"].bot.name, " v").concat(_package["default"].version),
     iconURL: _settings["default"].bot.logo
   });
@@ -634,7 +743,7 @@ var resetStatsCompletemessage = function resetStatsCompletemessage(userId) {
 exports.resetStatsCompletemessage = resetStatsCompletemessage;
 
 var alreadyInRealmEmbed = function alreadyInRealmEmbed(user) {
-  var result = new _discord.MessageEmbed().setColor(_settings["default"].bot.color).setTitle('Change Realm').setDescription("<@".concat(user.user_id, ">, You are already in this realm currently.")).setTimestamp().setFooter({
+  var result = new _discord.EmbedBuilder().setColor(_settings["default"].bot.color).setTitle('Change Realm').setDescription("<@".concat(user.user_id, ">, You are already in this realm currently.")).setTimestamp().setFooter({
     text: "".concat(_settings["default"].bot.name, " v").concat(_package["default"].version),
     iconURL: _settings["default"].bot.logo
   });
@@ -644,7 +753,7 @@ var alreadyInRealmEmbed = function alreadyInRealmEmbed(user) {
 exports.alreadyInRealmEmbed = alreadyInRealmEmbed;
 
 var realmNotFoundEmbed = function realmNotFoundEmbed(user) {
-  var result = new _discord.MessageEmbed().setColor(_settings["default"].bot.color).setTitle('Change Realm').setDescription("<@".concat(user.user_id, ">, We can't find the realm you are trying to join")).setTimestamp().setFooter({
+  var result = new _discord.EmbedBuilder().setColor(_settings["default"].bot.color).setTitle('Change Realm').setDescription("<@".concat(user.user_id, ">, We can't find the realm you are trying to join")).setTimestamp().setFooter({
     text: "".concat(_settings["default"].bot.name, " v").concat(_package["default"].version),
     iconURL: _settings["default"].bot.logo
   });
@@ -654,7 +763,7 @@ var realmNotFoundEmbed = function realmNotFoundEmbed(user) {
 exports.realmNotFoundEmbed = realmNotFoundEmbed;
 
 var addingAttributeEmbed = function addingAttributeEmbed(userCurrentCharacter) {
-  var result = new _discord.MessageEmbed().setColor(_settings["default"].bot.color).setTitle('Change Realm').setDescription("<@".concat(userCurrentCharacter.UserGroup.user.user_id, ">, Loading..")).setTimestamp().setFooter({
+  var result = new _discord.EmbedBuilder().setColor(_settings["default"].bot.color).setTitle('Change Realm').setDescription("<@".concat(userCurrentCharacter.UserGroup.user.user_id, ">, Loading..")).setTimestamp().setFooter({
     text: "".concat(_settings["default"].bot.name, " v").concat(_package["default"].version),
     iconURL: _settings["default"].bot.logo
   });
@@ -664,7 +773,7 @@ var addingAttributeEmbed = function addingAttributeEmbed(userCurrentCharacter) {
 exports.addingAttributeEmbed = addingAttributeEmbed;
 
 var helpMessage = function helpMessage(withdraw) {
-  var result = new _discord.MessageEmbed().setColor(_settings["default"].bot.color).setTitle("".concat("".concat(_settings["default"].bot.name, " v").concat(_package["default"].version), " Help")).setDescription("`".concat(_settings["default"].bot.command, "`\nDisplays this message\n\n`/help`\n`").concat(_settings["default"].bot.command, " help`\nDisplays this message\n\n`/pickclass`\n`").concat(_settings["default"].bot.command, " pickclass`\nSelect a new class\n\n`/stats`\n`").concat(_settings["default"].bot.command, " stats`\nSelect stats (attributes) for your class\n\n`/inventory`\n`").concat(_settings["default"].bot.command, " inventory`\nIventory management\n\n`/equipment`\n`").concat(_settings["default"].bot.command, " equipment`\nEquipment management\n\n`/skills`\n`").concat(_settings["default"].bot.command, " skills`\nSkill management\n\n`/heal`\n`").concat(_settings["default"].bot.command, " heal`\nHeal your character\n\n`/resetskills`\n`").concat(_settings["default"].bot.command, " resetskills`\nReset your skills trees\n\n`/resetstats`\n`").concat(_settings["default"].bot.command, " resetstats`\nreset your attributes/stats\n\n`/myrank`\n`").concat(_settings["default"].bot.command, " myrank`\nDisplays your account information\n\n`/ranks`\n`").concat(_settings["default"].bot.command, " ranks`\nDisplays all the ranks\n\n`/leaderboard`\n`").concat(_settings["default"].bot.command, " leaderboard`\nDisplays top 10 exped users \n\n`/mostactive`\n`").concat(_settings["default"].bot.command, " mostActive`\nDisplays top 10 most active chatters last month\n\n`/balance`\n`").concat(_settings["default"].bot.command, " balance`\nDisplays your balance\n\n`/deposit`\n`").concat(_settings["default"].bot.command, " deposit`\nDisplays your deposit address\n\n`/withdraw`\n`").concat(_settings["default"].bot.command, " withdraw`\nstarts withdrawal process")).setTimestamp().setFooter({
+  var result = new _discord.EmbedBuilder().setColor(_settings["default"].bot.color).setTitle("".concat("".concat(_settings["default"].bot.name, " v").concat(_package["default"].version), " Help")).setDescription("`".concat(_settings["default"].bot.command, "`\nDisplays this message\n\n`/help`\n`").concat(_settings["default"].bot.command, " help`\nDisplays this message\n\n`/pickclass`\n`").concat(_settings["default"].bot.command, " pickclass`\nSelect a new class\n\n`/stats`\n`").concat(_settings["default"].bot.command, " stats`\nSelect stats (attributes) for your class\n\n`/inventory`\n`").concat(_settings["default"].bot.command, " inventory`\nIventory management\n\n`/equipment`\n`").concat(_settings["default"].bot.command, " equipment`\nEquipment management\n\n`/skills`\n`").concat(_settings["default"].bot.command, " skills`\nSkill management\n\n`/heal`\n`").concat(_settings["default"].bot.command, " heal`\nHeal your character\n\n`/resetskills`\n`").concat(_settings["default"].bot.command, " resetskills`\nReset your skills trees\n\n`/resetstats`\n`").concat(_settings["default"].bot.command, " resetstats`\nreset your attributes/stats\n\n`/myrank`\n`").concat(_settings["default"].bot.command, " myrank`\nDisplays your account information\n\n`/ranks`\n`").concat(_settings["default"].bot.command, " ranks`\nDisplays all the ranks\n\n`/leaderboard`\n`").concat(_settings["default"].bot.command, " leaderboard`\nDisplays top 10 exped users \n\n`/mostactive`\n`").concat(_settings["default"].bot.command, " mostActive`\nDisplays top 10 most active chatters last month\n\n`/balance`\n`").concat(_settings["default"].bot.command, " balance`\nDisplays your balance\n\n`/deposit`\n`").concat(_settings["default"].bot.command, " deposit`\nDisplays your deposit address\n\n`/withdraw`\n`").concat(_settings["default"].bot.command, " withdraw`\nstarts withdrawal process")).setTimestamp().setFooter({
     text: "".concat(_settings["default"].bot.name, " v").concat(_package["default"].version),
     iconURL: _settings["default"].bot.logo
   });

@@ -80,7 +80,7 @@ var validateAmount = /*#__PURE__*/function () {
           case 10:
             activity = _context.sent;
             _context.next = 13;
-            return (0, _invalidAmountMessage.invalidAmountMessageHandler)(discordClient, message, capType);
+            return (0, _invalidAmountMessage.handleInvalidAmountMessage)(discordClient, message, capType);
 
           case 13:
             return _context.abrupt("return", [false, activity, amount]);
@@ -170,7 +170,7 @@ var validateAmount = /*#__PURE__*/function () {
           case 32:
             activity = _context.sent;
             _context.next = 35;
-            return (0, _invalidAmountMessage.invalidAmountMessageHandler)(discordClient, message, capType);
+            return (0, _invalidAmountMessage.handleInvalidAmountMessage)(discordClient, message, capType);
 
           case 35:
             return _context.abrupt("return", [false, activity, amount]);
@@ -193,7 +193,7 @@ var validateAmount = /*#__PURE__*/function () {
           case 39:
             activity = _context.sent;
             _context.next = 42;
-            return (0, _invalidAmountMessage.invalidAmountMessageHandler)(discordClient, message, capType);
+            return (0, _invalidAmountMessage.handleInvalidAmountMessage)(discordClient, message, capType);
 
           case 42:
             return _context.abrupt("return", [false, activity, amount]);

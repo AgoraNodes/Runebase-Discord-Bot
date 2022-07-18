@@ -27,7 +27,7 @@ var _logger = _interopRequireDefault(require("../helpers/logger"));
 
 var _item = require("../render/item");
 
-var _stats = require("../render/stats");
+var _stats = require("../render/stats/stats");
 
 var _equipment = require("../render/equipment/equipment");
 
@@ -143,68 +143,68 @@ var discordShowEquipment = /*#__PURE__*/function () {
             bootsId = 'boots';
             ringSlotOneId = 'ringSlotOne';
             ringSlotTwoId = 'ringSlotTwo';
-            ringSlotOneButton = new _discord.MessageButton({
-              style: 'SECONDARY',
+            ringSlotOneButton = new _discord.ButtonBuilder({
+              style: _discord.ButtonStyle.Secondary,
               label: 'Show Equiped RingSlot One',
               emoji: '💍',
               customId: ringSlotOneId
             });
-            ringSlotTwoButton = new _discord.MessageButton({
-              style: 'SECONDARY',
+            ringSlotTwoButton = new _discord.ButtonBuilder({
+              style: _discord.ButtonStyle.Secondary,
               label: 'Show Equiped RingSlot Two',
               emoji: '💍',
               customId: ringSlotTwoId
             });
-            bootsButton = new _discord.MessageButton({
-              style: 'SECONDARY',
+            bootsButton = new _discord.ButtonBuilder({
+              style: _discord.ButtonStyle.Secondary,
               label: 'Show Equiped Boots',
               emoji: '🥾',
               customId: bootsId
             });
-            helmButton = new _discord.MessageButton({
-              style: 'SECONDARY',
+            helmButton = new _discord.ButtonBuilder({
+              style: _discord.ButtonStyle.Secondary,
               label: 'Show Equiped Helm',
               emoji: '🪖',
               customId: helmId
             });
-            amuletutton = new _discord.MessageButton({
-              style: 'SECONDARY',
+            amuletutton = new _discord.ButtonBuilder({
+              style: _discord.ButtonStyle.Secondary,
               label: 'Show Equiped Amulet',
               emoji: '🧿',
               customId: amuletId
             });
-            weaponSlotOneButton = new _discord.MessageButton({
-              style: 'SECONDARY',
+            weaponSlotOneButton = new _discord.ButtonBuilder({
+              style: _discord.ButtonStyle.Secondary,
               label: 'Show Equiped Main Hand',
               emoji: '🗡️',
               customId: mainHandId
             });
-            weaponSlotTwoButton = new _discord.MessageButton({
-              style: 'SECONDARY',
+            weaponSlotTwoButton = new _discord.ButtonBuilder({
+              style: _discord.ButtonStyle.Secondary,
               label: 'Show Equiped Off Hand',
               emoji: '🛡️',
               customId: offHandId
             });
-            armorButton = new _discord.MessageButton({
-              style: 'SECONDARY',
+            armorButton = new _discord.ButtonBuilder({
+              style: _discord.ButtonStyle.Secondary,
               label: 'Show Equiped Armor',
               emoji: '🦺',
               customId: armorId
             });
-            glovesButton = new _discord.MessageButton({
-              style: 'SECONDARY',
+            glovesButton = new _discord.ButtonBuilder({
+              style: _discord.ButtonStyle.Secondary,
               label: 'Show Equiped Gloves',
               emoji: '🧤',
               customId: glovesId
             });
-            beltButton = new _discord.MessageButton({
-              style: 'SECONDARY',
+            beltButton = new _discord.ButtonBuilder({
+              style: _discord.ButtonStyle.Secondary,
               label: 'Show Equiped Belt',
               emoji: '〰️',
               customId: beltId
             });
-            backButton = new _discord.MessageButton({
-              style: 'SECONDARY',
+            backButton = new _discord.ButtonBuilder({
+              style: _discord.ButtonStyle.Secondary,
               label: 'Back to Equipment',
               emoji: '⬅️',
               customId: backId
@@ -216,8 +216,8 @@ var discordShowEquipment = /*#__PURE__*/function () {
                   while (1) {
                     switch (_context.prev = _context.next) {
                       case 0:
-                        return _context.abrupt("return", new _discord.MessageButton({
-                          style: 'SECONDARY',
+                        return _context.abrupt("return", new _discord.ButtonBuilder({
+                          style: _discord.ButtonStyle.Secondary,
                           label: "Cancel Equipment",
                           emoji: '❌',
                           customId: cancelEquipmentId
@@ -244,8 +244,8 @@ var discordShowEquipment = /*#__PURE__*/function () {
                     switch (_context2.prev = _context2.next) {
                       case 0:
                         unEquipItemId = "UnEquip:".concat(myItem.id);
-                        return _context2.abrupt("return", new _discord.MessageButton({
-                          style: 'SECONDARY',
+                        return _context2.abrupt("return", new _discord.ButtonBuilder({
+                          style: _discord.ButtonStyle.Secondary,
                           label: "UnEquip ".concat(myItem.name),
                           emoji: '⛏️',
                           customId: unEquipItemId
@@ -262,8 +262,7 @@ var discordShowEquipment = /*#__PURE__*/function () {
               return function generateUnEquipItemButton(_x7) {
                 return _ref3.apply(this, arguments);
               };
-            }(); // await registerFont(path.join(__dirname, '../assets/fonts/', 'Heart_warming.otf'), { family: 'HeartWarming' });
-
+            }();
 
             generateCurrentEquipmentImage = /*#__PURE__*/function () {
               var _ref4 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee3(userCurrentCharacter) {
@@ -307,7 +306,7 @@ var discordShowEquipment = /*#__PURE__*/function () {
 
                         ctx.strokeStyle = 'black';
                         ctx.lineWidth = 3;
-                        return _context3.abrupt("return", new _discord.MessageAttachment(canvas.toBuffer(), 'equipment.png'));
+                        return _context3.abrupt("return", canvas.toBuffer());
 
                       case 21:
                       case "end":
@@ -331,61 +330,65 @@ var discordShowEquipment = /*#__PURE__*/function () {
 
           case 64:
             _context8.t7 = _context8.sent;
-            _context8.t8 = [_context8.t7];
+            _context8.t8 = {
+              attachment: _context8.t7,
+              name: 'equipment.png'
+            };
+            _context8.t9 = [_context8.t8];
 
             if (!(isRowOneActive || isRowTwoActive)) {
-              _context8.next = 81;
+              _context8.next = 82;
               break;
             }
 
-            _context8.t10 = [];
-            _context8.t11 = (0, _toConsumableArray2["default"])(isRowOneActive ? [new _discord.MessageActionRow({
+            _context8.t11 = [];
+            _context8.t12 = (0, _toConsumableArray2["default"])(isRowOneActive ? [new _discord.ActionRowBuilder({
               components: [].concat((0, _toConsumableArray2["default"])(userCurrentCharacter.equipment.helm ? [helmButton] : []), (0, _toConsumableArray2["default"])(userCurrentCharacter.equipment.amulet ? [amuletutton] : []), (0, _toConsumableArray2["default"])(userCurrentCharacter.equipment.mainHand ? [weaponSlotOneButton] : []), (0, _toConsumableArray2["default"])(userCurrentCharacter.equipment.offHand ? [weaponSlotTwoButton] : []), (0, _toConsumableArray2["default"])(userCurrentCharacter.equipment.armor ? [armorButton] : []))
             })] : []);
-            _context8.t12 = (0, _toConsumableArray2["default"])(isRowTwoActive ? [new _discord.MessageActionRow({
+            _context8.t13 = (0, _toConsumableArray2["default"])(isRowTwoActive ? [new _discord.ActionRowBuilder({
               components: [].concat((0, _toConsumableArray2["default"])(userCurrentCharacter.equipment.gloves ? [glovesButton] : []), (0, _toConsumableArray2["default"])(userCurrentCharacter.equipment.ringSlotOne ? [ringSlotOneButton] : []), (0, _toConsumableArray2["default"])(userCurrentCharacter.equipment.ringSlotTwo ? [ringSlotTwoButton] : []), (0, _toConsumableArray2["default"])(userCurrentCharacter.equipment.belt ? [beltButton] : []), (0, _toConsumableArray2["default"])(userCurrentCharacter.equipment.boots ? [bootsButton] : []))
             })] : []);
-            _context8.t13 = _discord.MessageActionRow;
-            _context8.next = 73;
+            _context8.t14 = _discord.ActionRowBuilder;
+            _context8.next = 74;
             return generateCancelEquipmentButton();
 
-          case 73:
-            _context8.t14 = _context8.sent;
-            _context8.t15 = [_context8.t14];
-            _context8.t16 = {
-              components: _context8.t15
+          case 74:
+            _context8.t15 = _context8.sent;
+            _context8.t16 = [_context8.t15];
+            _context8.t17 = {
+              components: _context8.t16
             };
-            _context8.t17 = new _context8.t13(_context8.t16);
-            _context8.t18 = [_context8.t17];
-            _context8.t9 = _context8.t10.concat.call(_context8.t10, _context8.t11, _context8.t12, _context8.t18);
-            _context8.next = 89;
+            _context8.t18 = new _context8.t14(_context8.t17);
+            _context8.t19 = [_context8.t18];
+            _context8.t10 = _context8.t11.concat.call(_context8.t11, _context8.t12, _context8.t13, _context8.t19);
+            _context8.next = 90;
             break;
 
-          case 81:
-            _context8.t19 = _discord.MessageActionRow;
-            _context8.next = 84;
+          case 82:
+            _context8.t20 = _discord.ActionRowBuilder;
+            _context8.next = 85;
             return generateCancelEquipmentButton();
 
-          case 84:
-            _context8.t20 = _context8.sent;
-            _context8.t21 = [_context8.t20];
-            _context8.t22 = {
-              components: _context8.t21
+          case 85:
+            _context8.t21 = _context8.sent;
+            _context8.t22 = [_context8.t21];
+            _context8.t23 = {
+              components: _context8.t22
             };
-            _context8.t23 = new _context8.t19(_context8.t22);
-            _context8.t9 = [_context8.t23];
+            _context8.t24 = new _context8.t20(_context8.t23);
+            _context8.t10 = [_context8.t24];
 
-          case 89:
-            _context8.t24 = _context8.t9;
-            _context8.t25 = {
+          case 90:
+            _context8.t25 = _context8.t10;
+            _context8.t26 = {
               content: _context8.t6,
-              files: _context8.t8,
-              components: _context8.t24
+              files: _context8.t9,
+              components: _context8.t25
             };
-            _context8.next = 93;
-            return _context8.t5.send.call(_context8.t5, _context8.t25);
+            _context8.next = 94;
+            return _context8.t5.send.call(_context8.t5, _context8.t26);
 
-          case 93:
+          case 94:
             embedMessage = _context8.sent;
             collector = embedMessage.createMessageComponentCollector({
               filter: function filter(_ref5) {
@@ -569,8 +572,11 @@ var discordShowEquipment = /*#__PURE__*/function () {
                                             case 53:
                                               _context4.t0 = interaction;
                                               _context4.t1 = (0, _messages.playingOnRealmMessage)(userCurrentCharacter);
-                                              _context4.t2 = [itemImage];
-                                              _context4.t3 = _discord.MessageActionRow;
+                                              _context4.t2 = [{
+                                                attachment: itemImage,
+                                                name: 'itemImage.png'
+                                              }];
+                                              _context4.t3 = _discord.ActionRowBuilder;
                                               _context4.next = 59;
                                               return generateUnEquipItemButton(itemToUnEquip);
 
@@ -581,7 +587,7 @@ var discordShowEquipment = /*#__PURE__*/function () {
                                                 components: _context4.t5
                                               };
                                               _context4.t7 = new _context4.t3(_context4.t6);
-                                              _context4.t8 = new _discord.MessageActionRow({
+                                              _context4.t8 = new _discord.ActionRowBuilder({
                                                 components: [backButton]
                                               });
                                               _context4.t9 = [_context4.t7, _context4.t8];
@@ -690,42 +696,44 @@ var discordShowEquipment = /*#__PURE__*/function () {
 
                       case 7:
                         if (!(interaction.customId === cancelEquipmentId)) {
-                          _context7.next = 20;
+                          _context7.next = 19;
                           break;
                         }
 
                         _context7.t0 = interaction;
-                        _context7.t1 = _discord.MessageAttachment;
-                        _context7.next = 12;
+                        _context7.next = 11;
                         return (0, _cancelEquipment.renderCancelEquipmentImage)(userCurrentCharacter);
 
-                      case 12:
-                        _context7.t2 = _context7.sent;
-                        _context7.t3 = new _context7.t1(_context7.t2, 'equipment.png');
-                        _context7.t4 = [_context7.t3];
-                        _context7.t5 = [];
-                        _context7.t6 = {
-                          files: _context7.t4,
-                          components: _context7.t5
+                      case 11:
+                        _context7.t1 = _context7.sent;
+                        _context7.t2 = {
+                          attachment: _context7.t1,
+                          name: 'equipment.png'
                         };
-                        _context7.next = 19;
-                        return _context7.t0.editReply.call(_context7.t0, _context7.t6);
+                        _context7.t3 = [_context7.t2];
+                        _context7.t4 = [];
+                        _context7.t5 = {
+                          files: _context7.t3,
+                          components: _context7.t4
+                        };
+                        _context7.next = 18;
+                        return _context7.t0.editReply.call(_context7.t0, _context7.t5);
 
-                      case 19:
+                      case 18:
                         return _context7.abrupt("return");
 
-                      case 20:
+                      case 19:
                         if (!interaction.customId.startsWith('UnEquip:')) {
-                          _context7.next = 31;
+                          _context7.next = 30;
                           break;
                         }
 
                         console.log('detected unequip click');
                         itemId = Number(interaction.customId.replace("UnEquip:", ""));
-                        _context7.next = 25;
+                        _context7.next = 24;
                         return (0, _unEquipItem.unEquipItem)(userCurrentCharacter, itemId, discordChannel, io, queue);
 
-                      case 25:
+                      case 24:
                         _yield$unEquipItem = _context7.sent;
                         _yield$unEquipItem2 = (0, _slicedToArray2["default"])(_yield$unEquipItem, 4);
                         userCurrentCharacter = _yield$unEquipItem2[0];
@@ -733,18 +741,22 @@ var discordShowEquipment = /*#__PURE__*/function () {
                         cannotUnEquip = _yield$unEquipItem2[2];
                         cannotUnEquipReason = _yield$unEquipItem2[3];
 
-                      case 31:
+                      case 30:
                         isRowOneActive = userCurrentCharacter.equipment.helm || userCurrentCharacter.equipment.amulet || userCurrentCharacter.equipment.mainHand || userCurrentCharacter.equipment.offHand || userCurrentCharacter.equipment.armor;
                         isRowTwoActive = userCurrentCharacter.equipment.gloves || userCurrentCharacter.equipment.ringSlotOne || userCurrentCharacter.equipment.ringSlotTwo || userCurrentCharacter.equipment.belt || userCurrentCharacter.equipment.boots;
                         console.log('before edit reply'); // Load another character
 
-                        _context7.t7 = interaction;
-                        _context7.t8 = (0, _messages.playingOnRealmMessage)(userCurrentCharacter);
-                        _context7.next = 38;
+                        _context7.t6 = interaction;
+                        _context7.t7 = (0, _messages.playingOnRealmMessage)(userCurrentCharacter);
+                        _context7.next = 37;
                         return generateCurrentEquipmentImage(userCurrentCharacter);
 
-                      case 38:
-                        _context7.t9 = _context7.sent;
+                      case 37:
+                        _context7.t8 = _context7.sent;
+                        _context7.t9 = {
+                          attachment: _context7.t8,
+                          name: 'equipment.png'
+                        };
                         _context7.t10 = [_context7.t9];
 
                         if (!(isRowOneActive || isRowTwoActive)) {
@@ -753,13 +765,13 @@ var discordShowEquipment = /*#__PURE__*/function () {
                         }
 
                         _context7.t12 = [];
-                        _context7.t13 = (0, _toConsumableArray2["default"])(isRowOneActive ? [new _discord.MessageActionRow({
+                        _context7.t13 = (0, _toConsumableArray2["default"])(isRowOneActive ? [new _discord.ActionRowBuilder({
                           components: [].concat((0, _toConsumableArray2["default"])(userCurrentCharacter.equipment.helm ? [helmButton] : []), (0, _toConsumableArray2["default"])(userCurrentCharacter.equipment.amulet ? [amuletutton] : []), (0, _toConsumableArray2["default"])(userCurrentCharacter.equipment.mainHand ? [weaponSlotOneButton] : []), (0, _toConsumableArray2["default"])(userCurrentCharacter.equipment.offHand ? [weaponSlotTwoButton] : []), (0, _toConsumableArray2["default"])(userCurrentCharacter.equipment.armor ? [armorButton] : []))
                         })] : []);
-                        _context7.t14 = (0, _toConsumableArray2["default"])(isRowTwoActive ? [new _discord.MessageActionRow({
+                        _context7.t14 = (0, _toConsumableArray2["default"])(isRowTwoActive ? [new _discord.ActionRowBuilder({
                           components: [].concat((0, _toConsumableArray2["default"])(userCurrentCharacter.equipment.gloves ? [glovesButton] : []), (0, _toConsumableArray2["default"])(userCurrentCharacter.equipment.ringSlotOne ? [ringSlotOneButton] : []), (0, _toConsumableArray2["default"])(userCurrentCharacter.equipment.ringSlotTwo ? [ringSlotTwoButton] : []), (0, _toConsumableArray2["default"])(userCurrentCharacter.equipment.belt ? [beltButton] : []), (0, _toConsumableArray2["default"])(userCurrentCharacter.equipment.boots ? [bootsButton] : []))
                         })] : []);
-                        _context7.t15 = _discord.MessageActionRow;
+                        _context7.t15 = _discord.ActionRowBuilder;
                         _context7.next = 47;
                         return generateCancelEquipmentButton();
 
@@ -776,7 +788,7 @@ var discordShowEquipment = /*#__PURE__*/function () {
                         break;
 
                       case 55:
-                        _context7.t21 = _discord.MessageActionRow;
+                        _context7.t21 = _discord.ActionRowBuilder;
                         _context7.next = 58;
                         return generateCancelEquipmentButton();
 
@@ -792,12 +804,12 @@ var discordShowEquipment = /*#__PURE__*/function () {
                       case 63:
                         _context7.t26 = _context7.t11;
                         _context7.t27 = {
-                          content: _context7.t8,
+                          content: _context7.t7,
                           files: _context7.t10,
                           components: _context7.t26
                         };
                         _context7.next = 67;
-                        return _context7.t7.editReply.call(_context7.t7, _context7.t27);
+                        return _context7.t6.editReply.call(_context7.t6, _context7.t27);
 
                       case 67:
                       case "end":
@@ -812,7 +824,7 @@ var discordShowEquipment = /*#__PURE__*/function () {
               };
             }());
 
-          case 97:
+          case 98:
           case "end":
             return _context8.stop();
         }

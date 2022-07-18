@@ -11,6 +11,8 @@ var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"))
 
 var _asyncToGenerator2 = _interopRequireDefault(require("@babel/runtime/helpers/asyncToGenerator"));
 
+var _discord = require("discord.js");
+
 var _embeds = require("../../../embeds");
 
 var handleInvalidAmountMessage = /*#__PURE__*/function () {
@@ -20,7 +22,7 @@ var handleInvalidAmountMessage = /*#__PURE__*/function () {
       while (1) {
         switch (_context.prev = _context.next) {
           case 0:
-            if (!(message.type && message.type === 'APPLICATION_COMMAND')) {
+            if (!(message.type && message.type === _discord.InteractionType.ApplicationCommand)) {
               _context.next = 16;
               break;
             }
@@ -61,7 +63,7 @@ var handleInvalidAmountMessage = /*#__PURE__*/function () {
             break;
 
           case 16:
-            if (!(message.channel.type === 'DM')) {
+            if (!(message.channel.type === _discord.ChannelType.DM)) {
               _context.next = 19;
               break;
             }
@@ -72,7 +74,7 @@ var handleInvalidAmountMessage = /*#__PURE__*/function () {
             });
 
           case 19:
-            if (!(message.channel.type === 'GUILD_TEXT')) {
+            if (!(message.channel.type === _discord.ChannelType.GuildText)) {
               _context.next = 22;
               break;
             }

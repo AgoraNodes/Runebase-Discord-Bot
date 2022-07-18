@@ -19,10 +19,6 @@ var _sequelize = require("sequelize");
 
 var _canvas = require("canvas");
 
-var _discord = require("discord.js");
-
-var _path = _interopRequireDefault(require("path"));
-
 var _embeds = require("../embeds");
 
 var _models = _interopRequireDefault(require("../models"));
@@ -30,6 +26,8 @@ var _models = _interopRequireDefault(require("../models"));
 var _logger = _interopRequireDefault(require("../helpers/logger"));
 
 var _userWalletExist = require("../helpers/client/userWalletExist");
+
+var _fetchDiscordChannel = require("../helpers/client/fetchDiscordChannel");
 
 /* eslint-disable import/prefer-default-export */
 var discordMyRank = /*#__PURE__*/function () {
@@ -45,7 +43,7 @@ var discordMyRank = /*#__PURE__*/function () {
               isolationLevel: _sequelize.Transaction.ISOLATION_LEVELS.SERIALIZABLE
             }, /*#__PURE__*/function () {
               var _ref2 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(t) {
-                var _yield$userWalletExis, _yield$userWalletExis2, user, userActivity, totalChatActivity, monthlyChatActivity, setting, findGroupToPost, userWithUserGroup, currentRank, currentRankExp, nextRank, nextRankExp, currentExp, canvas, ctx, expBarWidth, avatar, reqExp, calculatedCurrentExp, percentage, attachment, discordUser, discordChannel, preActivity, finalActivity;
+                var _yield$userWalletExis, _yield$userWalletExis2, user, userActivity, discordChannel, totalChatActivity, monthlyChatActivity, setting, findGroupToPost, userWithUserGroup, currentRank, currentRankExp, nextRank, nextRankExp, currentExp, canvas, ctx, expBarWidth, avatar, reqExp, calculatedCurrentExp, percentage, finalImage, preActivity, finalActivity;
 
                 return _regenerator["default"].wrap(function _callee$(_context) {
                   while (1) {
@@ -73,6 +71,11 @@ var discordMyRank = /*#__PURE__*/function () {
 
                       case 9:
                         _context.next = 11;
+                        return (0, _fetchDiscordChannel.fetchDiscordChannel)(discordClient, message);
+
+                      case 11:
+                        discordChannel = _context.sent;
+                        _context.next = 14;
                         return _models["default"].activeTalker.findOne({
                           attributes: [[_sequelize.Sequelize.fn('sum', _sequelize.Sequelize.col('count')), 'count']],
                           raw: true,
@@ -81,9 +84,9 @@ var discordMyRank = /*#__PURE__*/function () {
                           }
                         });
 
-                      case 11:
+                      case 14:
                         totalChatActivity = _context.sent;
-                        _context.next = 14;
+                        _context.next = 17;
                         return _models["default"].activeTalker.findOne({
                           attributes: [[_sequelize.Sequelize.fn('sum', _sequelize.Sequelize.col('count')), 'count']],
                           raw: true,
@@ -93,23 +96,23 @@ var discordMyRank = /*#__PURE__*/function () {
                           }
                         });
 
-                      case 14:
+                      case 17:
                         monthlyChatActivity = _context.sent;
-                        _context.next = 17;
+                        _context.next = 20;
                         return _models["default"].setting.findOne();
 
-                      case 17:
+                      case 20:
                         setting = _context.sent;
-                        _context.next = 20;
+                        _context.next = 23;
                         return _models["default"].group.findOne({
                           where: {
                             groupId: setting.discordHomeServerGuildId
                           }
                         });
 
-                      case 20:
+                      case 23:
                         findGroupToPost = _context.sent;
-                        _context.next = 23;
+                        _context.next = 26;
                         return _models["default"].user.findOne({
                           include: [{
                             model: _models["default"].UserGroup,
@@ -125,9 +128,9 @@ var discordMyRank = /*#__PURE__*/function () {
                           transaction: t
                         });
 
-                      case 23:
+                      case 26:
                         userWithUserGroup = _context.sent;
-                        _context.next = 26;
+                        _context.next = 29;
                         return _models["default"].rank.findOne({
                           where: {
                             expNeeded: (0, _defineProperty2["default"])({}, _sequelize.Op.lte, userWithUserGroup.UserGroup.exp),
@@ -138,7 +141,7 @@ var discordMyRank = /*#__PURE__*/function () {
                           lock: t.LOCK.UPDATE
                         });
 
-                      case 26:
+                      case 29:
                         currentRank = _context.sent;
 
                         if (currentRank) {
@@ -147,7 +150,7 @@ var discordMyRank = /*#__PURE__*/function () {
                           currentRankExp = 0;
                         }
 
-                        _context.next = 30;
+                        _context.next = 33;
                         return _models["default"].rank.findOne({
                           where: {
                             expNeeded: (0, _defineProperty2["default"])({}, _sequelize.Op.gt, user.exp),
@@ -158,43 +161,35 @@ var discordMyRank = /*#__PURE__*/function () {
                           lock: t.LOCK.UPDATE
                         });
 
-                      case 30:
+                      case 33:
                         nextRank = _context.sent;
                         nextRankExp = nextRank && nextRank.expNeeded ? nextRank.expNeeded : currentRankExp;
                         currentExp = userWithUserGroup.UserGroup.exp;
-                        _context.next = 35;
-                        return (0, _canvas.registerFont)(_path["default"].join(__dirname, '../assets/fonts/', 'Heart_warming.otf'), {
-                          family: 'HeartWarming'
-                        });
-
-                      case 35:
                         canvas = (0, _canvas.createCanvas)(1000, 300);
                         ctx = canvas.getContext('2d');
-                        expBarWidth = 600; // const background = await loadImage(path.join(__dirname, '../assets/images/', 'myrank_background_two.png'));
+                        expBarWidth = 600;
 
                         if (!(message.type && message.type === 'APPLICATION_COMMAND')) {
-                          _context.next = 44;
+                          _context.next = 45;
                           break;
                         }
 
-                        _context.next = 41;
+                        _context.next = 42;
                         return (0, _canvas.loadImage)("https://cdn.discordapp.com/avatars/".concat(message.user.id, "/").concat(message.user.avatar, ".png?size=256"));
 
-                      case 41:
+                      case 42:
                         avatar = _context.sent;
-                        _context.next = 47;
+                        _context.next = 48;
                         break;
 
-                      case 44:
-                        _context.next = 46;
+                      case 45:
+                        _context.next = 47;
                         return (0, _canvas.loadImage)("https://cdn.discordapp.com/avatars/".concat(message.author.id, "/").concat(message.author.avatar, ".png?size=256"));
 
-                      case 46:
+                      case 47:
                         avatar = _context.sent;
 
-                      case 47:
-                        // background
-                        // ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
+                      case 48:
                         // circle for avatar
                         ctx.beginPath();
                         ctx.arc(120, 120, 110, 0, 2 * Math.PI);
@@ -278,73 +273,21 @@ var discordMyRank = /*#__PURE__*/function () {
                         ctx.clip(); // Add the avatar
 
                         ctx.drawImage(avatar, 10, 10, 220, 220);
-                        attachment = new _discord.MessageAttachment(canvas.toBuffer(), 'rank.png');
-                        console.log('before send');
+                        _context.next = 120;
+                        return canvas.toBuffer();
 
-                        if (!(message.type && message.type === 'APPLICATION_COMMAND')) {
-                          _context.next = 135;
-                          break;
-                        }
-
-                        _context.next = 122;
-                        return discordClient.users.cache.get(message.user.id);
-
-                      case 122:
-                        discordUser = _context.sent;
-
-                        if (!message.guildId) {
-                          _context.next = 131;
-                          break;
-                        }
-
-                        _context.next = 126;
-                        return discordClient.channels.cache.get(message.channelId);
-
-                      case 126:
-                        discordChannel = _context.sent;
-                        _context.next = 129;
+                      case 120:
+                        finalImage = _context.sent;
+                        _context.next = 123;
                         return discordChannel.send({
-                          files: [attachment]
+                          files: [{
+                            attachment: finalImage,
+                            name: 'myRank.png'
+                          }]
                         });
 
-                      case 129:
-                        _context.next = 133;
-                        break;
-
-                      case 131:
-                        _context.next = 133;
-                        return discordUser.send({
-                          files: [attachment]
-                        });
-
-                      case 133:
-                        _context.next = 141;
-                        break;
-
-                      case 135:
-                        if (!(message.channel.type === 'DM')) {
-                          _context.next = 138;
-                          break;
-                        }
-
-                        _context.next = 138;
-                        return message.author.send({
-                          files: [attachment]
-                        });
-
-                      case 138:
-                        if (!(message.channel.type === 'GUILD_TEXT')) {
-                          _context.next = 141;
-                          break;
-                        }
-
-                        _context.next = 141;
-                        return message.channel.send({
-                          files: [attachment]
-                        });
-
-                      case 141:
-                        _context.next = 143;
+                      case 123:
+                        _context.next = 125;
                         return _models["default"].activity.create({
                           type: 'myrank_s',
                           earnerId: user.id
@@ -353,9 +296,9 @@ var discordMyRank = /*#__PURE__*/function () {
                           transaction: t
                         });
 
-                      case 143:
+                      case 125:
                         preActivity = _context.sent;
-                        _context.next = 146;
+                        _context.next = 128;
                         return _models["default"].activity.findOne({
                           where: {
                             id: preActivity.id
@@ -368,11 +311,11 @@ var discordMyRank = /*#__PURE__*/function () {
                           transaction: t
                         });
 
-                      case 146:
+                      case 128:
                         finalActivity = _context.sent;
                         activity.unshift(finalActivity);
 
-                      case 148:
+                      case 130:
                       case "end":
                         return _context.stop();
                     }

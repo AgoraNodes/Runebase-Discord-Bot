@@ -15,6 +15,8 @@ var _asyncToGenerator2 = _interopRequireDefault(require("@babel/runtime/helpers/
 
 var _sequelize = require("sequelize");
 
+var _discord = require("discord.js");
+
 var _models = _interopRequireDefault(require("../models"));
 
 var _embeds = require("../embeds");
@@ -126,7 +128,7 @@ var discordWithdraw = /*#__PURE__*/function () {
                           break;
                         }
 
-                        if (!(message.channel.type !== 'DM')) {
+                        if (!(message.channel.type !== _discord.ChannelType.DM)) {
                           _context.next = 36;
                           break;
                         }
@@ -163,7 +165,7 @@ var discordWithdraw = /*#__PURE__*/function () {
                         });
 
                       case 45:
-                        if (!(message.channel.type !== 'DM')) {
+                        if (!(message.channel && message.channel.type !== _discord.ChannelType.DM)) {
                           _context.next = 48;
                           break;
                         }
@@ -227,7 +229,7 @@ var discordWithdraw = /*#__PURE__*/function () {
                         activityCreate = _context.sent;
                         activity.unshift(activityCreate);
 
-                        if (!(message.type && message.type === 'APPLICATION_COMMAND')) {
+                        if (!(message.type && message.type === _discord.InteractionType.ApplicationCommand)) {
                           _context.next = 80;
                           break;
                         }
@@ -268,7 +270,7 @@ var discordWithdraw = /*#__PURE__*/function () {
                         break;
 
                       case 80:
-                        if (!(message.channel.type === 'DM')) {
+                        if (!(message.channel.type === _discord.ChannelType.DM)) {
                           _context.next = 83;
                           break;
                         }
@@ -279,7 +281,7 @@ var discordWithdraw = /*#__PURE__*/function () {
                         });
 
                       case 83:
-                        if (!(message.channel.type === 'GUILD_TEXT')) {
+                        if (!(message.channel && message.channel.type === _discord.ChannelType.GuildText)) {
                           _context.next = 86;
                           break;
                         }

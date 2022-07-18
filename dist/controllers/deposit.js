@@ -27,6 +27,8 @@ var _logger = _interopRequireDefault(require("../helpers/logger"));
 
 var _userWalletExist = require("../helpers/client/userWalletExist");
 
+var _fetchDiscordChannel = require("../helpers/client/fetchDiscordChannel");
+
 var discordDeposit = /*#__PURE__*/function () {
   var _ref = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee3(discordClient, message, io) {
     var activity;
@@ -40,7 +42,7 @@ var discordDeposit = /*#__PURE__*/function () {
               isolationLevel: _sequelize.Transaction.ISOLATION_LEVELS.SERIALIZABLE
             }, /*#__PURE__*/function () {
               var _ref2 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(t) {
-                var _yield$userWalletExis, _yield$userWalletExis2, user, userActivity, depositQr, depositQrFixed, discordUser, discordChannel, preActivity, finalActivity;
+                var _yield$userWalletExis, _yield$userWalletExis2, user, userActivity, discordChannel, depositQr, depositQrFixed, preActivity, finalActivity;
 
                 return _regenerator["default"].wrap(function _callee$(_context) {
                   while (1) {
@@ -80,82 +82,45 @@ var discordDeposit = /*#__PURE__*/function () {
 
                       case 13:
                         _context.next = 15;
-                        return _qrcode["default"].toDataURL(user.wallet.address.address);
+                        return (0, _fetchDiscordChannel.fetchDiscordChannel)(discordClient, message);
 
                       case 15:
-                        depositQr = _context.sent;
-                        depositQrFixed = depositQr.replace('data:image/png;base64,', '');
+                        discordChannel = _context.sent;
 
-                        if (!(message.type && message.type === 'APPLICATION_COMMAND')) {
-                          _context.next = 34;
+                        if (discordChannel) {
+                          _context.next = 18;
                           break;
                         }
 
+                        return _context.abrupt("return");
+
+                      case 18:
                         _context.next = 20;
-                        return discordClient.users.cache.get(message.user.id);
+                        return _qrcode["default"].toDataURL(user.wallet.address.address);
 
                       case 20:
-                        discordUser = _context.sent;
-
-                        if (!message.guildId) {
-                          _context.next = 30;
-                          break;
-                        }
-
-                        console.log('deposit application command');
+                        depositQr = _context.sent;
+                        depositQrFixed = depositQr.replace('data:image/png;base64,', '');
+                        _context.t0 = discordChannel;
                         _context.next = 25;
-                        return discordClient.channels.cache.get(message.channelId);
+                        return (0, _embeds.depositAddressMessage)(user.user_id, user);
 
                       case 25:
-                        discordChannel = _context.sent;
-                        _context.next = 28;
-                        return discordChannel.send({
-                          embeds: [(0, _embeds.depositAddressMessage)(user.user_id, user)],
-                          files: [new _discord.MessageAttachment(Buffer.from(depositQrFixed, 'base64'), 'qr.png')],
-                          s: s
-                        });
+                        _context.t1 = _context.sent;
+                        _context.t2 = [_context.t1];
+                        _context.t3 = [{
+                          attachment: Buffer.from(depositQrFixed, 'base64'),
+                          name: 'qr.png'
+                        }];
+                        _context.t4 = {
+                          embeds: _context.t2,
+                          files: _context.t3
+                        };
+                        _context.next = 31;
+                        return _context.t0.send.call(_context.t0, _context.t4);
 
-                      case 28:
-                        _context.next = 32;
-                        break;
-
-                      case 30:
-                        _context.next = 32;
-                        return discordUser.send({
-                          embeds: [(0, _embeds.depositAddressMessage)(user.user_id, user)],
-                          files: [new _discord.MessageAttachment(Buffer.from(depositQrFixed, 'base64'), 'qr.png')]
-                        });
-
-                      case 32:
-                        _context.next = 40;
-                        break;
-
-                      case 34:
-                        if (!(message.channel.type === 'DM')) {
-                          _context.next = 37;
-                          break;
-                        }
-
-                        _context.next = 37;
-                        return message.author.send({
-                          embeds: [(0, _embeds.depositAddressMessage)(user.user_id, user)],
-                          files: [new _discord.MessageAttachment(Buffer.from(depositQrFixed, 'base64'), 'qr.png')]
-                        });
-
-                      case 37:
-                        if (!(message.channel.type === 'GUILD_TEXT')) {
-                          _context.next = 40;
-                          break;
-                        }
-
-                        _context.next = 40;
-                        return message.channel.send({
-                          embeds: [(0, _embeds.depositAddressMessage)(user.user_id, user)],
-                          files: [new _discord.MessageAttachment(Buffer.from(depositQrFixed, 'base64'), 'qr.png')]
-                        });
-
-                      case 40:
-                        _context.next = 42;
+                      case 31:
+                        _context.next = 33;
                         return _models["default"].activity.create({
                           type: 'deposit_s',
                           earnerId: user.id
@@ -164,9 +129,9 @@ var discordDeposit = /*#__PURE__*/function () {
                           transaction: t
                         });
 
-                      case 42:
+                      case 33:
                         preActivity = _context.sent;
-                        _context.next = 45;
+                        _context.next = 36;
                         return _models["default"].activity.findOne({
                           where: {
                             id: preActivity.id
@@ -179,13 +144,13 @@ var discordDeposit = /*#__PURE__*/function () {
                           transaction: t
                         });
 
-                      case 45:
+                      case 36:
                         finalActivity = _context.sent;
                         activity.unshift(finalActivity);
                         t.afterCommit(function () {// console.log(`Success Deposit Address Requested by: ${message.author.id}-${message.author.username}#${message.author.discriminator}`);
                         });
 
-                      case 48:
+                      case 39:
                       case "end":
                         return _context.stop();
                     }

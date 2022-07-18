@@ -56,7 +56,7 @@ function printAtWordWrap(context, text, x, y, lineHeight, fitWidth) {
 
 var renderPickClassImage = /*#__PURE__*/function () {
   var _ref = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(start, classes, user) {
-    var current, canvas, ctx, newClassImage;
+    var current, canvas, ctx, newClassImage, finalImage;
     return _regenerator["default"].wrap(function _callee$(_context) {
       while (1) {
         switch (_context.prev = _context.next) {
@@ -111,9 +111,14 @@ var renderPickClassImage = /*#__PURE__*/function () {
             ctx.font = 'bold 70px "HeartWarming"';
             ctx.strokeText("".concat(user.username, " is picking a class"), 700, 1000, 1400);
             ctx.fillText("".concat(user.username, " is picking a class"), 700, 1000, 1400);
-            return _context.abrupt("return", new _discord.MessageAttachment(canvas.toBuffer(), 'class.png'));
+            _context.next = 39;
+            return canvas.toBuffer();
 
-          case 38:
+          case 39:
+            finalImage = _context.sent;
+            return _context.abrupt("return", finalImage);
+
+          case 42:
           case "end":
             return _context.stop();
         }

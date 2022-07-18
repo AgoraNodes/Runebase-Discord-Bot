@@ -141,50 +141,54 @@ var discordPickClass = /*#__PURE__*/function () {
 
           case 28:
             _context5.t2 = _context5.sent;
-            _context5.t3 = [_context5.t2];
+            _context5.t3 = {
+              attachment: _context5.t2,
+              name: 'pickClass.png'
+            };
+            _context5.t4 = [_context5.t3];
 
             if (!canFitOnOnePage) {
-              _context5.next = 34;
+              _context5.next = 35;
               break;
             }
 
-            _context5.t4 = [];
-            _context5.next = 46;
+            _context5.t5 = [];
+            _context5.next = 47;
             break;
 
-          case 34:
-            _context5.t5 = _discord.MessageActionRow;
-            _context5.next = 37;
+          case 35:
+            _context5.t6 = _discord.ActionRowBuilder;
+            _context5.next = 38;
             return (0, _buttons.generatePickClassButton)(0, classes);
 
-          case 37:
-            _context5.t6 = _context5.sent;
-            _context5.next = 40;
+          case 38:
+            _context5.t7 = _context5.sent;
+            _context5.next = 41;
             return (0, _buttons.generateCancelPickClassButton)();
 
-          case 40:
-            _context5.t7 = _context5.sent;
-            _context5.t8 = [_context5.t6, _context5.t7];
-            _context5.t9 = {
-              components: _context5.t8
+          case 41:
+            _context5.t8 = _context5.sent;
+            _context5.t9 = [_context5.t7, _context5.t8];
+            _context5.t10 = {
+              components: _context5.t9
             };
-            _context5.t10 = new _context5.t5(_context5.t9);
-            _context5.t11 = new _discord.MessageActionRow({
+            _context5.t11 = new _context5.t6(_context5.t10);
+            _context5.t12 = new _discord.ActionRowBuilder({
               components: [(0, _buttons.generateForwardButton)()]
             });
-            _context5.t4 = [_context5.t10, _context5.t11];
+            _context5.t5 = [_context5.t11, _context5.t12];
 
-          case 46:
-            _context5.t12 = _context5.t4;
-            _context5.t13 = {
+          case 47:
+            _context5.t13 = _context5.t5;
+            _context5.t14 = {
               content: _context5.t1,
-              files: _context5.t3,
-              components: _context5.t12
+              files: _context5.t4,
+              components: _context5.t13
             };
-            _context5.next = 50;
-            return _context5.t0.send.call(_context5.t0, _context5.t13);
+            _context5.next = 51;
+            return _context5.t0.send.call(_context5.t0, _context5.t14);
 
-          case 50:
+          case 51:
             embedMessage = _context5.sent;
             collector = embedMessage.createMessageComponentCollector({
               filter: function filter(_ref2) {
@@ -493,17 +497,21 @@ var discordPickClass = /*#__PURE__*/function () {
 
                                             case 74:
                                               _context.t1 = _context.sent;
-                                              _context.t2 = [_context.t1];
-                                              _context.t3 = [];
-                                              _context.t4 = {
-                                                files: _context.t2,
-                                                components: _context.t3
+                                              _context.t2 = {
+                                                attachment: _context.t1,
+                                                name: 'classPicked.png'
                                               };
-                                              _context.next = 80;
-                                              return _context.t0.update.call(_context.t0, _context.t4);
+                                              _context.t3 = [_context.t2];
+                                              _context.t4 = [];
+                                              _context.t5 = {
+                                                files: _context.t3,
+                                                components: _context.t4
+                                              };
+                                              _context.next = 81;
+                                              return _context.t0.update.call(_context.t0, _context.t5);
 
-                                            case 80:
-                                              _context.next = 82;
+                                            case 81:
+                                              _context.next = 83;
                                               return _models["default"].activity.create({
                                                 type: 'pickClass_s',
                                                 earnerId: user.id
@@ -512,9 +520,9 @@ var discordPickClass = /*#__PURE__*/function () {
                                                 transaction: t
                                               });
 
-                                            case 82:
+                                            case 83:
                                               preActivity = _context.sent;
-                                              _context.next = 85;
+                                              _context.next = 86;
                                               return _models["default"].activity.findOne({
                                                 where: {
                                                   id: preActivity.id
@@ -527,11 +535,11 @@ var discordPickClass = /*#__PURE__*/function () {
                                                 transaction: t
                                               });
 
-                                            case 85:
+                                            case 86:
                                               finalActivity = _context.sent;
                                               activity.unshift(finalActivity);
 
-                                            case 87:
+                                            case 88:
                                             case "end":
                                               return _context.stop();
                                           }
@@ -670,7 +678,7 @@ var discordPickClass = /*#__PURE__*/function () {
 
                       case 5:
                         if (!(interaction.customId === 'cancelClass')) {
-                          _context4.next = 16;
+                          _context4.next = 17;
                           break;
                         }
 
@@ -680,57 +688,65 @@ var discordPickClass = /*#__PURE__*/function () {
 
                       case 9:
                         _context4.t1 = _context4.sent;
-                        _context4.t2 = [_context4.t1];
-                        _context4.t3 = [];
-                        _context4.t4 = {
-                          files: _context4.t2,
-                          components: _context4.t3
+                        _context4.t2 = {
+                          attachment: _context4.t1,
+                          name: 'cancelPickClass.png'
                         };
-                        _context4.next = 15;
-                        return _context4.t0.update.call(_context4.t0, _context4.t4);
-
-                      case 15:
-                        return _context4.abrupt("return");
+                        _context4.t3 = [_context4.t2];
+                        _context4.t4 = [];
+                        _context4.t5 = {
+                          files: _context4.t3,
+                          components: _context4.t4
+                        };
+                        _context4.next = 16;
+                        return _context4.t0.update.call(_context4.t0, _context4.t5);
 
                       case 16:
+                        return _context4.abrupt("return");
+
+                      case 17:
                         // Increase/decrease index
                         interaction.customId === 'back' ? currentIndex -= 1 : currentIndex += 1; // Load another character
 
-                        _context4.t5 = interaction;
-                        _context4.next = 20;
+                        _context4.t6 = interaction;
+                        _context4.next = 21;
                         return (0, _pickClass.renderPickClassImage)(currentIndex, classes, user);
 
-                      case 20:
-                        _context4.t6 = _context4.sent;
-                        _context4.t7 = [_context4.t6];
-                        _context4.t8 = _discord.MessageActionRow;
-                        _context4.next = 25;
+                      case 21:
+                        _context4.t7 = _context4.sent;
+                        _context4.t8 = {
+                          attachment: _context4.t7,
+                          name: 'pickClass.png'
+                        };
+                        _context4.t9 = [_context4.t8];
+                        _context4.t10 = _discord.ActionRowBuilder;
+                        _context4.next = 27;
                         return (0, _buttons.generatePickClassButton)(currentIndex, classes);
 
-                      case 25:
-                        _context4.t9 = _context4.sent;
-                        _context4.next = 28;
+                      case 27:
+                        _context4.t11 = _context4.sent;
+                        _context4.next = 30;
                         return (0, _buttons.generateCancelPickClassButton)();
 
-                      case 28:
-                        _context4.t10 = _context4.sent;
-                        _context4.t11 = [_context4.t9, _context4.t10];
-                        _context4.t12 = {
-                          components: _context4.t11
+                      case 30:
+                        _context4.t12 = _context4.sent;
+                        _context4.t13 = [_context4.t11, _context4.t12];
+                        _context4.t14 = {
+                          components: _context4.t13
                         };
-                        _context4.t13 = new _context4.t8(_context4.t12);
-                        _context4.t14 = new _discord.MessageActionRow({
+                        _context4.t15 = new _context4.t10(_context4.t14);
+                        _context4.t16 = new _discord.ActionRowBuilder({
                           components: [].concat((0, _toConsumableArray2["default"])(currentIndex ? [(0, _buttons.generateBackButton)()] : []), (0, _toConsumableArray2["default"])(currentIndex + 1 < classes.length ? [(0, _buttons.generateForwardButton)()] : []))
                         });
-                        _context4.t15 = [_context4.t13, _context4.t14];
-                        _context4.t16 = {
-                          files: _context4.t7,
-                          components: _context4.t15
+                        _context4.t17 = [_context4.t15, _context4.t16];
+                        _context4.t18 = {
+                          files: _context4.t9,
+                          components: _context4.t17
                         };
-                        _context4.next = 37;
-                        return _context4.t5.update.call(_context4.t5, _context4.t16);
+                        _context4.next = 39;
+                        return _context4.t6.update.call(_context4.t6, _context4.t18);
 
-                      case 37:
+                      case 39:
                       case "end":
                         return _context4.stop();
                     }
@@ -743,7 +759,7 @@ var discordPickClass = /*#__PURE__*/function () {
               };
             }());
 
-          case 54:
+          case 55:
           case "end":
             return _context5.stop();
         }

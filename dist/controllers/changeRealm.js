@@ -21,13 +21,12 @@ var _models = _interopRequireDefault(require("../models"));
 
 var _logger = _interopRequireDefault(require("../helpers/logger"));
 
-var _userWalletExist = require("../helpers/client/userWalletExist");
-
 var _fetchDiscordUserIdFromMessageOrInteraction = require("../helpers/client/fetchDiscordUserIdFromMessageOrInteraction");
 
 var _fetchDiscordChannel = require("../helpers/client/fetchDiscordChannel");
 
 /* eslint-disable import/prefer-default-export */
+// import { userWalletExist } from "../helpers/client/userWalletExist";
 var discordChangeRealm = /*#__PURE__*/function () {
   var _ref = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee4(discordClient, message, io, isDefered) {
     var activity, userId, discordChannel, user, realms, realmMap, embedMessage, collector;
@@ -107,9 +106,9 @@ var discordChangeRealm = /*#__PURE__*/function () {
             return discordChannel.send({
               content: "<@".concat(user.user_id, ">, please select your realm"),
               files: [],
-              components: [new _discord.MessageActionRow({
-                components: [new _discord.MessageSelectMenu({
-                  type: 'SELECT_MENU',
+              components: [new _discord.ActionRowBuilder({
+                components: [new _discord.SelectMenuBuilder({
+                  // type: 'SELECT_MENU',
                   customId: 'select-realm',
                   options: realmMap
                 })]
@@ -199,9 +198,8 @@ var discordChangeRealm = /*#__PURE__*/function () {
                                   case 10:
                                     _context.t2 = _context.sent;
                                     _context.t3 = [_context.t2];
-                                    _context.t4 = [new _discord.MessageActionRow({
-                                      components: [new _discord.MessageSelectMenu({
-                                        type: 'SELECT_MENU',
+                                    _context.t4 = [new _discord.ActionRowBuilder({
+                                      components: [new _discord.SelectMenuBuilder({
                                         customId: 'select-realm',
                                         options: realmMap
                                       })]
@@ -246,9 +244,8 @@ var discordChangeRealm = /*#__PURE__*/function () {
                                   case 27:
                                     _context.t8 = _context.sent;
                                     _context.t9 = [_context.t8];
-                                    _context.t10 = [new _discord.MessageActionRow({
-                                      components: [new _discord.MessageSelectMenu({
-                                        type: 'SELECT_MENU',
+                                    _context.t10 = [new _discord.ActionRowBuilder({
+                                      components: [new _discord.SelectMenuBuilder({
                                         customId: 'select-realm',
                                         options: realmMap
                                       })]
@@ -281,9 +278,8 @@ var discordChangeRealm = /*#__PURE__*/function () {
                                   case 41:
                                     _context.t14 = _context.sent;
                                     _context.t15 = [_context.t14];
-                                    _context.t16 = [new _discord.MessageActionRow({
-                                      components: [new _discord.MessageSelectMenu({
-                                        type: 'SELECT_MENU',
+                                    _context.t16 = [new _discord.ActionRowBuilder({
+                                      components: [new _discord.SelectMenuBuilder({
                                         customId: 'select-realm',
                                         options: realmMap
                                       })]
@@ -331,9 +327,7 @@ var discordChangeRealm = /*#__PURE__*/function () {
                                     UserGroup = _context.sent;
 
                                   case 55:
-                                    console.log('joining realm');
-                                    console.log(newSelectedId);
-                                    _context.next = 59;
+                                    _context.next = 57;
                                     return myUser.update({
                                       currentRealmId: newSelectedId,
                                       currentClassId: null
@@ -342,13 +336,13 @@ var discordChangeRealm = /*#__PURE__*/function () {
                                       lock: t.LOCK.UPDATE
                                     });
 
-                                  case 59:
+                                  case 57:
                                     _context.t18 = interaction;
                                     _context.t19 = "<@".concat(user.user_id, ">");
-                                    _context.next = 63;
+                                    _context.next = 61;
                                     return (0, _embeds.realmChangeSuccessEmbed)(realm);
 
-                                  case 63:
+                                  case 61:
                                     _context.t20 = _context.sent;
                                     _context.t21 = [_context.t20];
                                     _context.t22 = [];
@@ -357,10 +351,10 @@ var discordChangeRealm = /*#__PURE__*/function () {
                                       embeds: _context.t21,
                                       components: _context.t22
                                     };
-                                    _context.next = 69;
+                                    _context.next = 67;
                                     return _context.t18.editReply.call(_context.t18, _context.t23);
 
-                                  case 69:
+                                  case 67:
                                   case "end":
                                     return _context.stop();
                                 }

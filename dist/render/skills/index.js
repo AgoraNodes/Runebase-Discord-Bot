@@ -11,8 +11,6 @@ var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"))
 
 var _asyncToGenerator2 = _interopRequireDefault(require("@babel/runtime/helpers/asyncToGenerator"));
 
-var _discord = require("discord.js");
-
 var _canvas = require("canvas");
 
 var _skillTree = require("./skillTree");
@@ -22,7 +20,7 @@ var _skillDescription = require("./skillDescription");
 // import skills from './skills.json';
 var renderSkillScreen = /*#__PURE__*/function () {
   var _ref = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(userCharacter, skillTree, skillTreeIndex, selectedSkill, jsonSkillInfo, failReason) {
-    var skillTreeImageBuffer, userHasSkill, skillDescriptionImageBuffer, skillTreeImage, skillDescriptionImage, failReasonHeight, canvas, ctx;
+    var skillTreeImageBuffer, userHasSkill, skillDescriptionImageBuffer, skillTreeImage, skillDescriptionImage, failReasonHeight, canvas, ctx, finalImage;
     return _regenerator["default"].wrap(function _callee$(_context) {
       while (1) {
         switch (_context.prev = _context.next) {
@@ -71,9 +69,10 @@ var renderSkillScreen = /*#__PURE__*/function () {
             }
 
             console.log('5');
-            return _context.abrupt("return", new _discord.MessageAttachment(canvas.toBuffer(), 'skillTree.png'));
+            finalImage = canvas.toBuffer();
+            return _context.abrupt("return", finalImage);
 
-          case 22:
+          case 23:
           case "end":
             return _context.stop();
         }

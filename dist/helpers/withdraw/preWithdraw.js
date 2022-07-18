@@ -13,6 +13,8 @@ var _asyncToGenerator2 = _interopRequireDefault(require("@babel/runtime/helpers/
 
 var _sequelize = require("sequelize");
 
+var _discord = require("discord.js");
+
 var _rclient = require("../../services/rclient");
 
 var _logger = _interopRequireDefault(require("../logger"));
@@ -52,7 +54,7 @@ var preWithdraw = /*#__PURE__*/function () {
                   while (1) {
                     switch (_context17.prev = _context17.next) {
                       case 0:
-                        if (!(message.type && message.type === 'APPLICATION_COMMAND')) {
+                        if (!(message.type && message.type === _discord.InteractionType.ApplicationCommand)) {
                           _context17.next = 21;
                           break;
                         }
@@ -196,7 +198,7 @@ var preWithdraw = /*#__PURE__*/function () {
                         break;
 
                       case 21:
-                        if (!(message.channel.type === 'DM')) {
+                        if (!(message.channel && message.channel.type === _discord.ChannelType.DM)) {
                           _context17.next = 26;
                           break;
                         }
@@ -258,7 +260,7 @@ var preWithdraw = /*#__PURE__*/function () {
                         }());
 
                       case 26:
-                        if (!(message.channel.type === 'GUILD_TEXT')) {
+                        if (!(message.channel && message.channel.type === _discord.ChannelType.GuildText)) {
                           _context17.next = 31;
                           break;
                         }
@@ -354,7 +356,7 @@ var preWithdraw = /*#__PURE__*/function () {
                           break;
                         }
 
-                        if (!(message.type && message.type === 'APPLICATION_COMMAND')) {
+                        if (!(message.type && message.type === _discord.InteractionType.ApplicationCommand)) {
                           _context17.next = 63;
                           break;
                         }
@@ -395,7 +397,7 @@ var preWithdraw = /*#__PURE__*/function () {
                         break;
 
                       case 63:
-                        if (!(message.channel.type === 'DM')) {
+                        if (!(message.channel && message.channel.type === _discord.ChannelType.DM)) {
                           _context17.next = 66;
                           break;
                         }
@@ -406,7 +408,7 @@ var preWithdraw = /*#__PURE__*/function () {
                         });
 
                       case 66:
-                        if (!(message.channel.type === 'GUILD_TEXT')) {
+                        if (!(message.channel && message.channel.type === _discord.ChannelType.GuildText)) {
                           _context17.next = 69;
                           break;
                         }
@@ -420,7 +422,7 @@ var preWithdraw = /*#__PURE__*/function () {
                         return _context17.abrupt("return", [false, false]);
 
                       case 70:
-                        if (!(message.type && message.type === 'APPLICATION_COMMAND')) {
+                        if (!(message.type && message.type === _discord.InteractionType.ApplicationCommand)) {
                           _context17.next = 91;
                           break;
                         }
@@ -564,7 +566,7 @@ var preWithdraw = /*#__PURE__*/function () {
                         break;
 
                       case 91:
-                        if (!(message.channel.type === 'DM')) {
+                        if (!(message.channel && message.channel.type === _discord.ChannelType.DM)) {
                           _context17.next = 96;
                           break;
                         }
@@ -626,7 +628,7 @@ var preWithdraw = /*#__PURE__*/function () {
                         }());
 
                       case 96:
-                        if (!(message.channel.type === 'GUILD_TEXT')) {
+                        if (!(message.channel && message.channel.type === _discord.ChannelType.GuildText)) {
                           _context17.next = 101;
                           break;
                         }
@@ -751,7 +753,7 @@ var preWithdraw = /*#__PURE__*/function () {
                           break;
                         }
 
-                        if (!(message.type && message.type === 'APPLICATION_COMMAND')) {
+                        if (!(message.type && message.type === _discord.InteractionType.ApplicationCommand)) {
                           _context18.next = 18;
                           break;
                         }
@@ -785,7 +787,7 @@ var preWithdraw = /*#__PURE__*/function () {
                         break;
 
                       case 22:
-                        if (!(message.type && message.type === 'APPLICATION_COMMAND')) {
+                        if (!(message.type && message.type === _discord.InteractionType.ApplicationCommand)) {
                           _context18.next = 30;
                           break;
                         }

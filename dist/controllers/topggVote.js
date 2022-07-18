@@ -57,7 +57,6 @@ var discordTopggVote = /*#__PURE__*/function () {
                         userActivity = _yield$userWalletExis2[1];
 
                         if (userActivity) {
-                          console.log('user not found');
                           activity.unshift(userActivity);
                         }
 
@@ -69,8 +68,7 @@ var discordTopggVote = /*#__PURE__*/function () {
                         return _context.abrupt("return");
 
                       case 9:
-                        console.log(new Date(Date.now() - 12 * 60 * 60 * 1000));
-                        _context.next = 12;
+                        _context.next = 11;
                         return _models["default"].topggVote.findOne({
                           where: {
                             userId: user.id,
@@ -80,47 +78,44 @@ var discordTopggVote = /*#__PURE__*/function () {
                           transaction: t
                         });
 
-                      case 12:
+                      case 11:
                         topggVoteRecord = _context.sent;
-                        console.log('after topgg voteRecord');
-                        console.log(topggVoteRecord);
 
                         if (!topggVoteRecord) {
-                          _context.next = 29;
+                          _context.next = 25;
                           break;
                         }
 
-                        console.log('record found skip voting');
-                        _context.next = 19;
+                        _context.next = 15;
                         return _models["default"].setting.findOne();
 
-                      case 19:
+                      case 15:
                         setting = _context.sent;
-                        _context.next = 22;
+                        _context.next = 18;
                         return _models["default"].group.findOne({
                           where: {
                             groupId: setting.discordHomeServerGuildId
                           }
                         });
 
-                      case 22:
+                      case 18:
                         findGroupToPost = _context.sent;
-                        _context.next = 25;
+                        _context.next = 21;
                         return discordClient.channels.cache.get(findGroupToPost.expRewardChannelId);
 
-                      case 25:
+                      case 21:
                         discordChannel = _context.sent;
-                        _context.next = 28;
+                        _context.next = 24;
                         return discordChannel.send({
                           content: "<@".concat(user.user_id, ">"),
                           embeds: [(0, _embeds.alreadyVotedTopGG)(user.user_id)]
                         });
 
-                      case 28:
+                      case 24:
                         return _context.abrupt("return");
 
-                      case 29:
-                        _context.next = 31;
+                      case 25:
+                        _context.next = 27;
                         return _models["default"].topggVote.create({
                           userId: user.id
                         }, {
@@ -128,15 +123,14 @@ var discordTopggVote = /*#__PURE__*/function () {
                           transaction: t
                         });
 
-                      case 31:
+                      case 27:
                         newTopggRecord = _context.sent;
-                        console.log('after record create');
-                        _context.next = 35;
+                        _context.next = 30;
                         return (0, _experience.gainExp)(discordClient, message.user, 16, 'topggVote', t);
 
-                      case 35:
+                      case 30:
                         newExp = _context.sent;
-                        _context.next = 38;
+                        _context.next = 33;
                         return _models["default"].activity.create({
                           type: 'topggvote_s',
                           earnerId: user.id
@@ -145,9 +139,9 @@ var discordTopggVote = /*#__PURE__*/function () {
                           transaction: t
                         });
 
-                      case 38:
+                      case 33:
                         preActivity = _context.sent;
-                        _context.next = 41;
+                        _context.next = 36;
                         return _models["default"].activity.findOne({
                           where: {
                             id: preActivity.id
@@ -160,11 +154,11 @@ var discordTopggVote = /*#__PURE__*/function () {
                           transaction: t
                         });
 
-                      case 41:
+                      case 36:
                         finalActivity = _context.sent;
                         activity.unshift(finalActivity);
 
-                      case 43:
+                      case 38:
                       case "end":
                         return _context.stop();
                     }
@@ -177,8 +171,6 @@ var discordTopggVote = /*#__PURE__*/function () {
               };
             }())["catch"]( /*#__PURE__*/function () {
               var _ref3 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee2(err) {
-                var discordChannel, _discordChannel;
-
                 return _regenerator["default"].wrap(function _callee2$(_context2) {
                   while (1) {
                     switch (_context2.prev = _context2.next) {
@@ -201,77 +193,6 @@ var discordTopggVote = /*#__PURE__*/function () {
                         _logger["default"].error("Error Discord: ".concat(_context2.t0));
 
                       case 8:
-                        _logger["default"].error("Error Discord topggvote Requested by: ".concat(message.author.id, "-").concat(message.author.username, "#").concat(message.author.discriminator, " - ").concat(err));
-
-                        if (!(err.code && err.code === 50007)) {
-                          _context2.next = 22;
-                          break;
-                        }
-
-                        if (!(message.type && message.type === 'APPLICATION_COMMAND')) {
-                          _context2.next = 18;
-                          break;
-                        }
-
-                        _context2.next = 13;
-                        return discordClient.channels.cache.get(message.channelId);
-
-                      case 13:
-                        discordChannel = _context2.sent;
-                        _context2.next = 16;
-                        return discordChannel.send({
-                          embeds: [(0, _embeds.cannotSendMessageUser)("TopggVote", message)]
-                        })["catch"](function (e) {
-                          console.log(e);
-                        });
-
-                      case 16:
-                        _context2.next = 20;
-                        break;
-
-                      case 18:
-                        _context2.next = 20;
-                        return message.channel.send({
-                          embeds: [(0, _embeds.cannotSendMessageUser)("TopggVote", message)]
-                        })["catch"](function (e) {
-                          console.log(e);
-                        });
-
-                      case 20:
-                        _context2.next = 32;
-                        break;
-
-                      case 22:
-                        if (!(message.type && message.type === 'APPLICATION_COMMAND')) {
-                          _context2.next = 30;
-                          break;
-                        }
-
-                        _context2.next = 25;
-                        return discordClient.channels.cache.get(message.channelId);
-
-                      case 25:
-                        _discordChannel = _context2.sent;
-                        _context2.next = 28;
-                        return _discordChannel.send({
-                          embeds: [(0, _embeds.discordErrorMessage)("TopggVote")]
-                        })["catch"](function (e) {
-                          console.log(e);
-                        });
-
-                      case 28:
-                        _context2.next = 32;
-                        break;
-
-                      case 30:
-                        _context2.next = 32;
-                        return message.channel.send({
-                          embeds: [(0, _embeds.discordErrorMessage)("TopggVote")]
-                        })["catch"](function (e) {
-                          console.log(e);
-                        });
-
-                      case 32:
                       case "end":
                         return _context2.stop();
                     }

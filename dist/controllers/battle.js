@@ -82,124 +82,124 @@ function AsyncFromSyncIterator(s) { function AsyncFromSyncIteratorContinuation(r
 var currentSelectedMonster;
 
 var discordBattle = /*#__PURE__*/function () {
-  var _ref = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee13(discordClient, message, isDefered, queue) {
-    var allRoundBuffsInfoArray, allRoundDebuffsInfoArray, allRoundEffectsInfoArray, userId, discordChannel, userCurrentCharacter, _yield$testPlayerRead, _yield$testPlayerRead2, failed, usedDeferReply, userWallet, battle, newBattle, monster, randomAmountOfMobs, mobPromises, i, randomMonsterHp, newMobPromise, userCurrentSelectedSkills, mainSkillMap, secondarySkillMap, selectMonsterMap, _yield$calculateChara, hp, mp, myInitialUserState, _iterator4, _step4, userBuff, _iterator5, _step5, userDebuff, _iterator6, _step6, eachBattleMonster, _iterator7, _step7, monsterBuff, _iterator8, _step8, monsterDebuff, embedMessage, generateLootImagesArray, generateLootItemButtonArray, loadingBattleMoveEmbed, battleCompleteEmbed, collector, newLoot;
+  var _ref = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee12(discordClient, message, isDefered, queue) {
+    var allRoundBuffsInfoArray, allRoundDebuffsInfoArray, allRoundEffectsInfoArray, userId, discordChannel, userCurrentCharacter, _yield$testPlayerRead, _yield$testPlayerRead2, failed, usedDeferReply, userWallet, battle, newBattle, monster, randomAmountOfMobs, mobPromises, i, randomMonsterHp, newMobPromise, userCurrentSelectedSkills, mainSkillMap, secondarySkillMap, selectMonsterMap, _yield$calculateChara, hp, mp, myInitialUserState, _iterator3, _step3, userBuff, _iterator4, _step4, userDebuff, _iterator5, _step5, eachBattleMonster, _iterator6, _step6, monsterBuff, _iterator7, _step7, monsterDebuff, embedMessage, generateLootImagesArray, generateLootItemButtonArray, collector, newLoot;
 
-    return _regenerator["default"].wrap(function _callee13$(_context13) {
+    return _regenerator["default"].wrap(function _callee12$(_context12) {
       while (1) {
-        switch (_context13.prev = _context13.next) {
+        switch (_context12.prev = _context12.next) {
           case 0:
             // let usedDeferReply = false;
             allRoundBuffsInfoArray = [];
             allRoundDebuffsInfoArray = [];
             allRoundEffectsInfoArray = []; // const activity = [];
 
-            _context13.next = 5;
+            _context12.next = 5;
             return (0, _fetchDiscordUserIdFromMessageOrInteraction.fetchDiscordUserIdFromMessageOrInteraction)(message);
 
           case 5:
-            userId = _context13.sent;
-            _context13.next = 8;
+            userId = _context12.sent;
+            _context12.next = 8;
             return (0, _fetchDiscordChannel.fetchDiscordChannel)(discordClient, message);
 
           case 8:
-            discordChannel = _context13.sent;
-            _context13.next = 11;
+            discordChannel = _context12.sent;
+            _context12.next = 11;
             return (0, _character.fetchUserCurrentCharacter)(userId, // user discord id
             false // Need inventory?
             );
 
           case 11:
-            userCurrentCharacter = _context13.sent;
+            userCurrentCharacter = _context12.sent;
             console.log('battle1');
-            _context13.next = 15;
+            _context12.next = 15;
             return (0, _testPlayerReadyness["default"])(userCurrentCharacter, message, isDefered);
 
           case 15:
-            _yield$testPlayerRead = _context13.sent;
+            _yield$testPlayerRead = _context12.sent;
             _yield$testPlayerRead2 = (0, _slicedToArray2["default"])(_yield$testPlayerRead, 2);
             failed = _yield$testPlayerRead2[0];
             usedDeferReply = _yield$testPlayerRead2[1];
 
             if (!failed) {
-              _context13.next = 21;
+              _context12.next = 21;
               break;
             }
 
-            return _context13.abrupt("return", usedDeferReply);
+            return _context12.abrupt("return", usedDeferReply);
 
           case 21:
             console.log('battle2');
 
             if (!(userCurrentCharacter.condition.stamina < 20)) {
-              _context13.next = 34;
+              _context12.next = 34;
               break;
             }
 
-            _context13.t0 = discordChannel;
-            _context13.t1 = (0, _messages.playingOnRealmMessage)(userCurrentCharacter);
-            _context13.next = 27;
+            _context12.t0 = discordChannel;
+            _context12.t1 = (0, _messages.playingOnRealmMessage)(userCurrentCharacter);
+            _context12.next = 27;
             return (0, _outOfStamina.renderOutOfStamina)(userCurrentCharacter);
 
           case 27:
-            _context13.t2 = _context13.sent;
-            _context13.t3 = [_context13.t2];
-            _context13.t4 = [];
-            _context13.t5 = {
-              content: _context13.t1,
-              files: _context13.t3,
-              components: _context13.t4
+            _context12.t2 = _context12.sent;
+            _context12.t3 = [_context12.t2];
+            _context12.t4 = [];
+            _context12.t5 = {
+              content: _context12.t1,
+              files: _context12.t3,
+              components: _context12.t4
             };
-            _context13.next = 33;
-            return _context13.t0.send.call(_context13.t0, _context13.t5);
+            _context12.next = 33;
+            return _context12.t0.send.call(_context12.t0, _context12.t5);
 
           case 33:
-            return _context13.abrupt("return");
+            return _context12.abrupt("return");
 
           case 34:
             console.log('battle3');
 
             if (!(userCurrentCharacter.condition.life < 1)) {
-              _context13.next = 47;
+              _context12.next = 47;
               break;
             }
 
-            _context13.t6 = discordChannel;
-            _context13.t7 = (0, _messages.playingOnRealmMessage)(userCurrentCharacter);
-            _context13.next = 40;
+            _context12.t6 = discordChannel;
+            _context12.t7 = (0, _messages.playingOnRealmMessage)(userCurrentCharacter);
+            _context12.next = 40;
             return (0, _userDied.renderUserDied)(userCurrentCharacter);
 
           case 40:
-            _context13.t8 = _context13.sent;
-            _context13.t9 = [_context13.t8];
-            _context13.t10 = [];
-            _context13.t11 = {
-              content: _context13.t7,
-              files: _context13.t9,
-              components: _context13.t10
+            _context12.t8 = _context12.sent;
+            _context12.t9 = [_context12.t8];
+            _context12.t10 = [];
+            _context12.t11 = {
+              content: _context12.t7,
+              files: _context12.t9,
+              components: _context12.t10
             };
-            _context13.next = 46;
-            return _context13.t6.send.call(_context13.t6, _context13.t11);
+            _context12.next = 46;
+            return _context12.t6.send.call(_context12.t6, _context12.t11);
 
           case 46:
-            return _context13.abrupt("return");
+            return _context12.abrupt("return");
 
           case 47:
-            _context13.next = 49;
+            _context12.next = 49;
             return userCurrentCharacter.condition.update({
               stamina: userCurrentCharacter.condition.stamina - 20
             });
 
           case 49:
-            _context13.next = 51;
+            _context12.next = 51;
             return (0, _character.fetchUserCurrentCharacter)(userId, // user discord id
             false // Need inventory?
             );
 
           case 51:
-            userCurrentCharacter = _context13.sent;
+            userCurrentCharacter = _context12.sent;
             console.log('3');
-            _context13.next = 55;
+            _context12.next = 55;
             return _models["default"].wallet.findOne({
               where: {
                 userId: userCurrentCharacter.UserGroup.user.id
@@ -207,8 +207,8 @@ var discordBattle = /*#__PURE__*/function () {
             });
 
           case 55:
-            userWallet = _context13.sent;
-            _context13.next = 58;
+            userWallet = _context12.sent;
+            _context12.next = 58;
             return _models["default"].battle.findOne({
               where: {
                 complete: false,
@@ -244,23 +244,23 @@ var discordBattle = /*#__PURE__*/function () {
             });
 
           case 58:
-            battle = _context13.sent;
+            battle = _context12.sent;
             console.log('battle4');
 
             if (battle) {
-              _context13.next = 75;
+              _context12.next = 75;
               break;
             }
 
-            _context13.next = 63;
+            _context12.next = 63;
             return _models["default"].battle.create({
               complete: false,
               UserGroupClassId: userCurrentCharacter.id
             });
 
           case 63:
-            newBattle = _context13.sent;
-            _context13.next = 66;
+            newBattle = _context12.sent;
+            _context12.next = 66;
             return _models["default"].monster.findOne({
               where: {
                 name: 'Zombie'
@@ -268,7 +268,7 @@ var discordBattle = /*#__PURE__*/function () {
             });
 
           case 66:
-            monster = _context13.sent;
+            monster = _context12.sent;
             randomAmountOfMobs = (0, _utils.randomIntFromInterval)(3, 4);
             mobPromises = [];
 
@@ -283,11 +283,11 @@ var discordBattle = /*#__PURE__*/function () {
               mobPromises.push(newMobPromise);
             }
 
-            _context13.next = 72;
+            _context12.next = 72;
             return Promise.all(mobPromises);
 
           case 72:
-            _context13.next = 74;
+            _context12.next = 74;
             return _models["default"].battle.findOne({
               where: {
                 id: newBattle.id
@@ -322,14 +322,14 @@ var discordBattle = /*#__PURE__*/function () {
             });
 
           case 74:
-            battle = _context13.sent;
+            battle = _context12.sent;
 
           case 75:
-            _context13.next = 77;
+            _context12.next = 77;
             return (0, _selectedSkills.fetchUserCurrentSelectedSkills)(userId);
 
           case 77:
-            userCurrentSelectedSkills = _context13.sent;
+            userCurrentSelectedSkills = _context12.sent;
             console.log('battle5');
             mainSkillMap = userCurrentSelectedSkills.UserGroupClassSkills.reduce(function (filtered, mySkill) {
               if (!mySkill.skill.passive) {
@@ -393,11 +393,11 @@ var discordBattle = /*#__PURE__*/function () {
               return filtered;
             }, []);
             console.log('battle7');
-            _context13.next = 87;
+            _context12.next = 87;
             return (0, _calculateCharacterStats.calculateCharacterStats)(userCurrentCharacter);
 
           case 87:
-            _yield$calculateChara = _context13.sent;
+            _yield$calculateChara = _context12.sent;
             hp = _yield$calculateChara.hp;
             mp = _yield$calculateChara.mp;
             myInitialUserState = JSON.parse(JSON.stringify(userCurrentCharacter));
@@ -405,12 +405,27 @@ var discordBattle = /*#__PURE__*/function () {
             myInitialUserState.mp = mp;
 
             if (myInitialUserState.buffs.length > 0) {
-              _iterator4 = _createForOfIteratorHelper(myInitialUserState.buffs);
+              _iterator3 = _createForOfIteratorHelper(myInitialUserState.buffs);
+
+              try {
+                for (_iterator3.s(); !(_step3 = _iterator3.n()).done;) {
+                  userBuff = _step3.value;
+                  allRoundBuffsInfoArray.push(userBuff.name);
+                }
+              } catch (err) {
+                _iterator3.e(err);
+              } finally {
+                _iterator3.f();
+              }
+            }
+
+            if (myInitialUserState.debuffs.lenth > 0) {
+              _iterator4 = _createForOfIteratorHelper(myInitialUserState.debuffs);
 
               try {
                 for (_iterator4.s(); !(_step4 = _iterator4.n()).done;) {
-                  userBuff = _step4.value;
-                  allRoundBuffsInfoArray.push(userBuff.name);
+                  userDebuff = _step4.value;
+                  allRoundDebuffsInfoArray.push(userDebuff.name);
                 }
               } catch (err) {
                 _iterator4.e(err);
@@ -419,13 +434,42 @@ var discordBattle = /*#__PURE__*/function () {
               }
             }
 
-            if (myInitialUserState.debuffs.lenth > 0) {
-              _iterator5 = _createForOfIteratorHelper(myInitialUserState.debuffs);
+            if (battle.BattleMonsters.length > 0) {
+              _iterator5 = _createForOfIteratorHelper(battle.BattleMonsters);
 
               try {
                 for (_iterator5.s(); !(_step5 = _iterator5.n()).done;) {
-                  userDebuff = _step5.value;
-                  allRoundDebuffsInfoArray.push(userDebuff.name);
+                  eachBattleMonster = _step5.value;
+
+                  if (eachBattleMonster.buffs.length > 0) {
+                    _iterator6 = _createForOfIteratorHelper(eachBattleMonster.buffs);
+
+                    try {
+                      for (_iterator6.s(); !(_step6 = _iterator6.n()).done;) {
+                        monsterBuff = _step6.value;
+                        allRoundBuffsInfoArray.push(monsterBuff.name);
+                      }
+                    } catch (err) {
+                      _iterator6.e(err);
+                    } finally {
+                      _iterator6.f();
+                    }
+                  }
+
+                  if (eachBattleMonster.debuffs.length > 0) {
+                    _iterator7 = _createForOfIteratorHelper(eachBattleMonster.debuffs);
+
+                    try {
+                      for (_iterator7.s(); !(_step7 = _iterator7.n()).done;) {
+                        monsterDebuff = _step7.value;
+                        allRoundDebuffsInfoArray.push(monsterDebuff.name);
+                      }
+                    } catch (err) {
+                      _iterator7.e(err);
+                    } finally {
+                      _iterator7.f();
+                    }
+                  }
                 }
               } catch (err) {
                 _iterator5.e(err);
@@ -434,113 +478,68 @@ var discordBattle = /*#__PURE__*/function () {
               }
             }
 
-            if (battle.BattleMonsters.length > 0) {
-              _iterator6 = _createForOfIteratorHelper(battle.BattleMonsters);
-
-              try {
-                for (_iterator6.s(); !(_step6 = _iterator6.n()).done;) {
-                  eachBattleMonster = _step6.value;
-
-                  if (eachBattleMonster.buffs.length > 0) {
-                    _iterator7 = _createForOfIteratorHelper(eachBattleMonster.buffs);
-
-                    try {
-                      for (_iterator7.s(); !(_step7 = _iterator7.n()).done;) {
-                        monsterBuff = _step7.value;
-                        allRoundBuffsInfoArray.push(monsterBuff.name);
-                      }
-                    } catch (err) {
-                      _iterator7.e(err);
-                    } finally {
-                      _iterator7.f();
-                    }
-                  }
-
-                  if (eachBattleMonster.debuffs.length > 0) {
-                    _iterator8 = _createForOfIteratorHelper(eachBattleMonster.debuffs);
-
-                    try {
-                      for (_iterator8.s(); !(_step8 = _iterator8.n()).done;) {
-                        monsterDebuff = _step8.value;
-                        allRoundDebuffsInfoArray.push(monsterDebuff.name);
-                      }
-                    } catch (err) {
-                      _iterator8.e(err);
-                    } finally {
-                      _iterator8.f();
-                    }
-                  }
-                }
-              } catch (err) {
-                _iterator6.e(err);
-              } finally {
-                _iterator6.f();
-              }
-            }
-
             allRoundBuffsInfoArray = (0, _toConsumableArray2["default"])(new Set(allRoundBuffsInfoArray));
             allRoundDebuffsInfoArray = (0, _toConsumableArray2["default"])(new Set(allRoundDebuffsInfoArray));
             console.log('battle9');
-            _context13.t12 = discordChannel;
-            _context13.t13 = (0, _messages.playingOnRealmMessage)(userCurrentCharacter);
-            _context13.t14 = _discord.MessageAttachment;
-            _context13.next = 104;
+            _context12.t12 = discordChannel;
+            _context12.t13 = (0, _messages.playingOnRealmMessage)(userCurrentCharacter);
+            _context12.next = 103;
             return (0, _battle.renderBattleGif)(myInitialUserState, userCurrentSelectedSkills, battle, currentSelectedMonster, allRoundBuffsInfoArray, allRoundDebuffsInfoArray, allRoundEffectsInfoArray);
 
-          case 104:
-            _context13.t15 = _context13.sent;
-            _context13.t16 = new _context13.t14(_context13.t15, 'battle.gif');
-            _context13.t17 = [_context13.t16];
-            _context13.t18 = _discord.MessageActionRow;
-            _context13.next = 110;
+          case 103:
+            _context12.t14 = _context12.sent;
+            _context12.t15 = {
+              attachment: _context12.t14,
+              name: "battle.gif"
+            };
+            _context12.t16 = [_context12.t15];
+            _context12.t17 = _discord.ActionRowBuilder;
+            _context12.next = 109;
             return (0, _buttons.generateMainSkillButton)(userCurrentSelectedSkills.selectedMainSkill);
 
-          case 110:
-            _context13.t19 = _context13.sent;
-            _context13.next = 113;
+          case 109:
+            _context12.t18 = _context12.sent;
+            _context12.next = 112;
             return (0, _buttons.generateSecondarySkillButton)(userCurrentSelectedSkills.selectedSecondarySkill);
 
-          case 113:
-            _context13.t20 = _context13.sent;
-            _context13.next = 116;
+          case 112:
+            _context12.t19 = _context12.sent;
+            _context12.next = 115;
             return (0, _buttons.generateHealButton)();
 
-          case 116:
-            _context13.t21 = _context13.sent;
-            _context13.t22 = [_context13.t19, _context13.t20, _context13.t21];
-            _context13.t23 = {
-              components: _context13.t22
+          case 115:
+            _context12.t20 = _context12.sent;
+            _context12.t21 = [_context12.t18, _context12.t19, _context12.t20];
+            _context12.t22 = {
+              components: _context12.t21
             };
-            _context13.t24 = new _context13.t18(_context13.t23);
-            _context13.t25 = [_context13.t24].concat((0, _toConsumableArray2["default"])(selectMonsterMap && selectMonsterMap.length > 0 ? [new _discord.MessageActionRow({
-              components: [new _discord.MessageSelectMenu({
-                type: 'SELECT_MENU',
+            _context12.t23 = new _context12.t17(_context12.t22);
+            _context12.t24 = [_context12.t23].concat((0, _toConsumableArray2["default"])(selectMonsterMap && selectMonsterMap.length > 0 ? [new _discord.ActionRowBuilder({
+              components: [new _discord.SelectMenuBuilder({
                 customId: 'select-mob',
                 options: selectMonsterMap
               })]
-            })] : []), [new _discord.MessageActionRow({
-              components: [new _discord.MessageSelectMenu({
-                type: 'SELECT_MENU',
+            })] : []), [new _discord.ActionRowBuilder({
+              components: [new _discord.SelectMenuBuilder({
                 customId: 'select-mainSkill',
                 options: mainSkillMap
               })]
-            }), new _discord.MessageActionRow({
-              components: [new _discord.MessageSelectMenu({
-                type: 'SELECT_MENU',
+            }), new _discord.ActionRowBuilder({
+              components: [new _discord.SelectMenuBuilder({
                 customId: 'select-secondarySkill',
                 options: secondarySkillMap
               })]
             })]);
-            _context13.t26 = {
-              content: _context13.t13,
-              files: _context13.t17,
-              components: _context13.t25
+            _context12.t25 = {
+              content: _context12.t13,
+              files: _context12.t16,
+              components: _context12.t24
             };
-            _context13.next = 124;
-            return _context13.t12.send.call(_context13.t12, _context13.t26);
+            _context12.next = 123;
+            return _context12.t12.send.call(_context12.t12, _context12.t25);
 
-          case 124:
-            embedMessage = _context13.sent;
+          case 123:
+            embedMessage = _context12.sent;
 
             generateLootImagesArray = /*#__PURE__*/function () {
               var _ref2 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(theLoot) {
@@ -562,75 +561,77 @@ var discordBattle = /*#__PURE__*/function () {
 
                       case 7:
                         if (!(_iteratorAbruptCompletion = !(_step = _context.sent).done)) {
-                          _context.next = 20;
+                          _context.next = 19;
                           break;
                         }
 
                         looot = _step.value;
                         _context.t0 = lootArray;
-                        _context.t1 = _discord.MessageAttachment;
-                        _context.next = 13;
+                        _context.next = 12;
                         return (0, _item.renderItemImage)(looot);
 
-                      case 13:
-                        _context.t2 = _context.sent;
-                        _context.t3 = "".concat(looot.id, ".png");
-                        _context.t4 = new _context.t1(_context.t2, _context.t3);
+                      case 12:
+                        _context.t1 = _context.sent;
+                        _context.t2 = "".concat(looot.id, ".png");
+                        _context.t3 = {
+                          attachment: _context.t1,
+                          name: _context.t2
+                        };
 
-                        _context.t0.push.call(_context.t0, _context.t4);
+                        _context.t0.push.call(_context.t0, _context.t3);
 
-                      case 17:
+                      case 16:
                         _iteratorAbruptCompletion = false;
                         _context.next = 5;
                         break;
 
-                      case 20:
-                        _context.next = 26;
+                      case 19:
+                        _context.next = 25;
                         break;
 
-                      case 22:
-                        _context.prev = 22;
-                        _context.t5 = _context["catch"](3);
+                      case 21:
+                        _context.prev = 21;
+                        _context.t4 = _context["catch"](3);
                         _didIteratorError = true;
-                        _iteratorError = _context.t5;
+                        _iteratorError = _context.t4;
 
-                      case 26:
+                      case 25:
+                        _context.prev = 25;
                         _context.prev = 26;
-                        _context.prev = 27;
 
                         if (!(_iteratorAbruptCompletion && _iterator["return"] != null)) {
-                          _context.next = 31;
+                          _context.next = 30;
                           break;
                         }
 
-                        _context.next = 31;
+                        _context.next = 30;
                         return _iterator["return"]();
 
-                      case 31:
-                        _context.prev = 31;
+                      case 30:
+                        _context.prev = 30;
 
                         if (!_didIteratorError) {
-                          _context.next = 34;
+                          _context.next = 33;
                           break;
                         }
 
                         throw _iteratorError;
 
+                      case 33:
+                        return _context.finish(30);
+
                       case 34:
-                        return _context.finish(31);
+                        return _context.finish(25);
 
                       case 35:
-                        return _context.finish(26);
-
-                      case 36:
                         return _context.abrupt("return", lootArray);
 
-                      case 37:
+                      case 36:
                       case "end":
                         return _context.stop();
                     }
                   }
-                }, _callee, null, [[3, 22, 26, 36], [27,, 31, 35]]);
+                }, _callee, null, [[3, 21, 25, 35], [26,, 30, 34]]);
               }));
 
               return function generateLootImagesArray(_x5) {
@@ -640,7 +641,7 @@ var discordBattle = /*#__PURE__*/function () {
 
             generateLootItemButtonArray = /*#__PURE__*/function () {
               var _ref3 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee2(theLoot) {
-                var lootButtonArray, _iteratorAbruptCompletion2, _didIteratorError2, _iteratorError2, _iterator2, _step2, looot, addLootId;
+                var lootButtonArray, _iteratorAbruptCompletion2, _didIteratorError2, _iteratorError2, _iterator2, _step2, looot, newButton;
 
                 return _regenerator["default"].wrap(function _callee2$(_context2) {
                   while (1) {
@@ -658,72 +659,70 @@ var discordBattle = /*#__PURE__*/function () {
 
                       case 7:
                         if (!(_iteratorAbruptCompletion2 = !(_step2 = _context2.sent).done)) {
-                          _context2.next = 15;
+                          _context2.next = 16;
                           break;
                         }
 
                         looot = _step2.value;
-                        console.log(looot);
-                        addLootId = "lootItem:".concat(looot.id);
-                        lootButtonArray.push(new _discord.MessageButton({
-                          style: 'SECONDARY',
-                          label: "Loot ".concat(looot.name),
-                          emoji: '🤏',
-                          customId: addLootId
-                        }));
+                        _context2.next = 11;
+                        return (0, _buttons.generateAfterBattleLootButton)(looot);
 
-                      case 12:
+                      case 11:
+                        newButton = _context2.sent;
+                        lootButtonArray.push(newButton);
+
+                      case 13:
                         _iteratorAbruptCompletion2 = false;
                         _context2.next = 5;
                         break;
 
-                      case 15:
-                        _context2.next = 21;
+                      case 16:
+                        _context2.next = 22;
                         break;
 
-                      case 17:
-                        _context2.prev = 17;
+                      case 18:
+                        _context2.prev = 18;
                         _context2.t0 = _context2["catch"](3);
                         _didIteratorError2 = true;
                         _iteratorError2 = _context2.t0;
 
-                      case 21:
-                        _context2.prev = 21;
+                      case 22:
                         _context2.prev = 22;
+                        _context2.prev = 23;
 
                         if (!(_iteratorAbruptCompletion2 && _iterator2["return"] != null)) {
-                          _context2.next = 26;
+                          _context2.next = 27;
                           break;
                         }
 
-                        _context2.next = 26;
+                        _context2.next = 27;
                         return _iterator2["return"]();
 
-                      case 26:
-                        _context2.prev = 26;
+                      case 27:
+                        _context2.prev = 27;
 
                         if (!_didIteratorError2) {
-                          _context2.next = 29;
+                          _context2.next = 30;
                           break;
                         }
 
                         throw _iteratorError2;
 
-                      case 29:
-                        return _context2.finish(26);
-
                       case 30:
-                        return _context2.finish(21);
+                        return _context2.finish(27);
 
                       case 31:
-                        return _context2.abrupt("return", lootButtonArray);
+                        return _context2.finish(22);
 
                       case 32:
+                        return _context2.abrupt("return", lootButtonArray);
+
+                      case 33:
                       case "end":
                         return _context2.stop();
                     }
                   }
-                }, _callee2, null, [[3, 17, 21, 31], [22,, 26, 30]]);
+                }, _callee2, null, [[3, 18, 22, 32], [23,, 27, 31]]);
               }));
 
               return function generateLootItemButtonArray(_x6) {
@@ -731,333 +730,242 @@ var discordBattle = /*#__PURE__*/function () {
               };
             }();
 
-            loadingBattleMoveEmbed = new _discord.MessageEmbed().setTitle('Battle').setDescription("".concat(userCurrentCharacter.UserGroup.user.username, ", Your next move is calculating.."));
-
-            battleCompleteEmbed = /*#__PURE__*/function () {
-              var _ref4 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee3(userCurrentCharacter, expEarned, newLootC) {
-                var itemString, _iteratorAbruptCompletion3, _didIteratorError3, _iteratorError3, _iterator3, _step3, looot;
-
-                return _regenerator["default"].wrap(function _callee3$(_context3) {
-                  while (1) {
-                    switch (_context3.prev = _context3.next) {
-                      case 0:
-                        itemString = '';
-                        _iteratorAbruptCompletion3 = false;
-                        _didIteratorError3 = false;
-                        _context3.prev = 3;
-                        _iterator3 = _asyncIterator(newLootC);
-
-                      case 5:
-                        _context3.next = 7;
-                        return _iterator3.next();
-
-                      case 7:
-                        if (!(_iteratorAbruptCompletion3 = !(_step3 = _context3.sent).done)) {
-                          _context3.next = 13;
-                          break;
-                        }
-
-                        looot = _step3.value;
-                        itemString += "\n- **".concat(looot.name, "** [").concat(looot.itemQuality.name, "]");
-
-                      case 10:
-                        _iteratorAbruptCompletion3 = false;
-                        _context3.next = 5;
-                        break;
-
-                      case 13:
-                        _context3.next = 19;
-                        break;
-
-                      case 15:
-                        _context3.prev = 15;
-                        _context3.t0 = _context3["catch"](3);
-                        _didIteratorError3 = true;
-                        _iteratorError3 = _context3.t0;
-
-                      case 19:
-                        _context3.prev = 19;
-                        _context3.prev = 20;
-
-                        if (!(_iteratorAbruptCompletion3 && _iterator3["return"] != null)) {
-                          _context3.next = 24;
-                          break;
-                        }
-
-                        _context3.next = 24;
-                        return _iterator3["return"]();
-
-                      case 24:
-                        _context3.prev = 24;
-
-                        if (!_didIteratorError3) {
-                          _context3.next = 27;
-                          break;
-                        }
-
-                        throw _iteratorError3;
-
-                      case 27:
-                        return _context3.finish(24);
-
-                      case 28:
-                        return _context3.finish(19);
-
-                      case 29:
-                        return _context3.abrupt("return", new _discord.MessageEmbed().setTitle("".concat(userCurrentCharacter.UserGroup.user.username, " battle#").concat(battle.id, " results")).setDescription("Exp earned: **".concat(expEarned, "**\n\n").concat(newLootC.length > 0 ? "__found ".concat(newLootC.length, " ").concat(newLootC.length === 1 ? "item" : "items", "__") : "").concat(itemString)));
-
-                      case 30:
-                      case "end":
-                        return _context3.stop();
-                    }
-                  }
-                }, _callee3, null, [[3, 15, 19, 29], [20,, 24, 28]]);
-              }));
-
-              return function battleCompleteEmbed(_x7, _x8, _x9) {
-                return _ref4.apply(this, arguments);
-              };
-            }();
-
             console.log('battle 10');
             collector = embedMessage.createMessageComponentCollector({});
             newLoot = [];
             collector.on('collect', /*#__PURE__*/function () {
-              var _ref5 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee12(interaction) {
+              var _ref4 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee11(interaction) {
                 var newSelectedId;
-                return _regenerator["default"].wrap(function _callee12$(_context12) {
+                return _regenerator["default"].wrap(function _callee11$(_context11) {
                   while (1) {
-                    switch (_context12.prev = _context12.next) {
+                    switch (_context11.prev = _context11.next) {
                       case 0:
                         if (!interaction.isButton()) {
-                          _context12.next = 6;
+                          _context11.next = 6;
                           break;
                         }
 
                         if (!interaction.customId.startsWith('lootItem:')) {
-                          _context12.next = 6;
+                          _context11.next = 6;
                           break;
                         }
 
                         if (!(interaction.user.id !== userCurrentCharacter.UserGroup.user.user_id)) {
-                          _context12.next = 6;
+                          _context11.next = 6;
                           break;
                         }
 
-                        _context12.next = 5;
+                        _context11.next = 5;
                         return interaction.reply({
                           content: "<@".concat(interaction.user.id, ">, This loot isn't ment for you!"),
                           ephemeral: true
                         });
 
                       case 5:
-                        return _context12.abrupt("return");
+                        return _context11.abrupt("return");
 
                       case 6:
                         console.log('collector 1');
 
                         if (!(interaction.user.id !== userCurrentCharacter.UserGroup.user.user_id)) {
-                          _context12.next = 11;
+                          _context11.next = 11;
                           break;
                         }
 
-                        _context12.next = 10;
+                        _context11.next = 10;
                         return interaction.reply({
                           content: "<@".concat(interaction.user.id, ">, These buttons aren't for you!"),
                           ephemeral: true
                         });
 
                       case 10:
-                        return _context12.abrupt("return");
+                        return _context11.abrupt("return");
 
                       case 11:
                         console.log('collector 2');
 
                         if (!(battle.UserGroupClassId !== userCurrentCharacter.id)) {
-                          _context12.next = 16;
+                          _context11.next = 16;
                           break;
                         }
 
-                        _context12.next = 15;
+                        _context11.next = 15;
                         return interaction.reply({
                           content: "<@".concat(interaction.user.id, ">, This battle belongs to a different character!"),
                           ephemeral: true
                         });
 
                       case 15:
-                        return _context12.abrupt("return");
+                        return _context11.abrupt("return");
 
                       case 16:
                         if (!(interaction.isButton() && !interaction.customId.startsWith('lootItem:') && interaction.customId !== 'Heal')) {
-                          _context12.next = 21;
+                          _context11.next = 21;
                           break;
                         }
 
                         if (currentSelectedMonster) {
-                          _context12.next = 21;
+                          _context11.next = 21;
                           break;
                         }
 
-                        _context12.next = 20;
+                        _context11.next = 20;
                         return interaction.reply({
                           content: "<@".concat(interaction.user.id, ">, You need to select a monster to attack!"),
                           ephemeral: true
                         });
 
                       case 20:
-                        return _context12.abrupt("return");
+                        return _context11.abrupt("return");
 
                       case 21:
                         console.log('collector 3'); // Heal Handling
 
                         if (!(interaction.isButton() && interaction.customId === 'Heal')) {
-                          _context12.next = 47;
+                          _context11.next = 47;
                           break;
                         }
 
-                        _context12.next = 25;
+                        _context11.next = 25;
                         return interaction.deferUpdate();
 
                       case 25:
                         console.log(userWallet);
-                        _context12.t0 = interaction;
-                        _context12.t1 = (0, _messages.playingOnRealmMessage)(userCurrentCharacter);
-                        _context12.next = 30;
+                        _context11.t0 = interaction;
+                        _context11.t1 = (0, _messages.playingOnRealmMessage)(userCurrentCharacter);
+                        _context11.next = 30;
                         return (0, _embeds.confirmationHealMessage)(userCurrentCharacter.UserGroup.user.user_id, userWallet.available);
 
                       case 30:
-                        _context12.t2 = _context12.sent;
-                        _context12.t3 = [_context12.t2];
-                        _context12.t4 = _discord.MessageActionRow;
-                        _context12.next = 35;
+                        _context11.t2 = _context11.sent;
+                        _context11.t3 = [_context11.t2];
+                        _context11.t4 = _discord.ActionRowBuilder;
+                        _context11.next = 35;
                         return (0, _buttons.generateAcceptButton)();
 
                       case 35:
-                        _context12.t5 = _context12.sent;
-                        _context12.next = 38;
+                        _context11.t5 = _context11.sent;
+                        _context11.next = 38;
                         return (0, _buttons.generateDeclineButton)();
 
                       case 38:
-                        _context12.t6 = _context12.sent;
-                        _context12.t7 = [_context12.t5, _context12.t6];
-                        _context12.t8 = {
-                          components: _context12.t7
+                        _context11.t6 = _context11.sent;
+                        _context11.t7 = [_context11.t5, _context11.t6];
+                        _context11.t8 = {
+                          components: _context11.t7
                         };
-                        _context12.t9 = new _context12.t4(_context12.t8);
-                        _context12.t10 = [_context12.t9];
-                        _context12.t11 = {
-                          content: _context12.t1,
-                          embeds: _context12.t3,
-                          components: _context12.t10
+                        _context11.t9 = new _context11.t4(_context11.t8);
+                        _context11.t10 = [_context11.t9];
+                        _context11.t11 = {
+                          content: _context11.t1,
+                          embeds: _context11.t3,
+                          components: _context11.t10
                         };
-                        _context12.next = 46;
-                        return _context12.t0.editReply.call(_context12.t0, _context12.t11);
+                        _context11.next = 46;
+                        return _context11.t0.editReply.call(_context11.t0, _context11.t11);
 
                       case 46:
-                        return _context12.abrupt("return");
+                        return _context11.abrupt("return");
 
                       case 47:
                         console.log('collector 4');
 
                         if (!(interaction.isButton() && interaction.customId === 'decline')) {
-                          _context12.next = 72;
+                          _context11.next = 72;
                           break;
                         }
 
-                        _context12.next = 51;
+                        _context11.next = 51;
                         return interaction.deferUpdate();
 
                       case 51:
-                        _context12.t12 = interaction;
-                        _context12.t13 = (0, _messages.playingOnRealmMessage)(userCurrentCharacter);
-                        _context12.t14 = [];
-                        _context12.t15 = _discord.MessageActionRow;
-                        _context12.next = 57;
+                        _context11.t12 = interaction;
+                        _context11.t13 = (0, _messages.playingOnRealmMessage)(userCurrentCharacter);
+                        _context11.t14 = [];
+                        _context11.t15 = _discord.ActionRowBuilder;
+                        _context11.next = 57;
                         return (0, _buttons.generateMainSkillButton)(userCurrentSelectedSkills.selectedMainSkill);
 
                       case 57:
-                        _context12.t16 = _context12.sent;
-                        _context12.next = 60;
+                        _context11.t16 = _context11.sent;
+                        _context11.next = 60;
                         return (0, _buttons.generateSecondarySkillButton)(userCurrentSelectedSkills.selectedSecondarySkill);
 
                       case 60:
-                        _context12.t17 = _context12.sent;
-                        _context12.next = 63;
+                        _context11.t17 = _context11.sent;
+                        _context11.next = 63;
                         return (0, _buttons.generateHealButton)();
 
                       case 63:
-                        _context12.t18 = _context12.sent;
-                        _context12.t19 = [_context12.t16, _context12.t17, _context12.t18];
-                        _context12.t20 = {
-                          components: _context12.t19
+                        _context11.t18 = _context11.sent;
+                        _context11.t19 = [_context11.t16, _context11.t17, _context11.t18];
+                        _context11.t20 = {
+                          components: _context11.t19
                         };
-                        _context12.t21 = new _context12.t15(_context12.t20);
-                        _context12.t22 = [_context12.t21].concat((0, _toConsumableArray2["default"])(selectMonsterMap && selectMonsterMap.length > 0 ? [new _discord.MessageActionRow({
-                          components: [new _discord.MessageSelectMenu({
-                            type: 'SELECT_MENU',
+                        _context11.t21 = new _context11.t15(_context11.t20);
+                        _context11.t22 = [_context11.t21].concat((0, _toConsumableArray2["default"])(selectMonsterMap && selectMonsterMap.length > 0 ? [new _discord.ActionRowBuilder({
+                          components: [new _discord.SelectMenuBuilder({
                             customId: 'select-mob',
                             options: selectMonsterMap
                           })]
-                        })] : []), [new _discord.MessageActionRow({
-                          components: [new _discord.MessageSelectMenu({
-                            type: 'SELECT_MENU',
+                        })] : []), [new _discord.ActionRowBuilder({
+                          components: [new _discord.SelectMenuBuilder({
                             customId: 'select-mainSkill',
                             options: mainSkillMap
                           })]
-                        }), new _discord.MessageActionRow({
-                          components: [new _discord.MessageSelectMenu({
-                            type: 'SELECT_MENU',
+                        }), new _discord.ActionRowBuilder({
+                          components: [new _discord.SelectMenuBuilder({
                             customId: 'select-secondarySkill',
                             options: secondarySkillMap
                           })]
                         })]);
-                        _context12.t23 = {
-                          content: _context12.t13,
-                          embeds: _context12.t14,
-                          components: _context12.t22
+                        _context11.t23 = {
+                          content: _context11.t13,
+                          embeds: _context11.t14,
+                          components: _context11.t22
                         };
-                        _context12.next = 71;
-                        return _context12.t12.editReply.call(_context12.t12, _context12.t23);
+                        _context11.next = 71;
+                        return _context11.t12.editReply.call(_context11.t12, _context11.t23);
 
                       case 71:
-                        return _context12.abrupt("return");
+                        return _context11.abrupt("return");
 
                       case 72:
                         console.log('collector 5');
-                        _context12.next = 75;
+                        _context11.next = 75;
                         return (0, _fetchBattle["default"])(battle);
 
                       case 75:
-                        battle = _context12.sent;
+                        battle = _context11.sent;
                         console.log('collector 6');
 
                         if (!(interaction.isButton() && interaction.customId === 'accept')) {
-                          _context12.next = 83;
+                          _context11.next = 83;
                           break;
                         }
 
-                        _context12.next = 80;
+                        _context11.next = 80;
                         return interaction.deferUpdate();
 
                       case 80:
-                        _context12.next = 82;
-                        return queue.add( /*#__PURE__*/(0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee6() {
-                          return _regenerator["default"].wrap(function _callee6$(_context6) {
+                        _context11.next = 82;
+                        return queue.add( /*#__PURE__*/(0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee5() {
+                          return _regenerator["default"].wrap(function _callee5$(_context5) {
                             while (1) {
-                              switch (_context6.prev = _context6.next) {
+                              switch (_context5.prev = _context5.next) {
                                 case 0:
-                                  _context6.next = 2;
+                                  _context5.next = 2;
                                   return _models["default"].sequelize.transaction({
                                     isolationLevel: _sequelize.Transaction.ISOLATION_LEVELS.SERIALIZABLE
                                   }, /*#__PURE__*/function () {
-                                    var _ref7 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee4(t) {
+                                    var _ref6 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee3(t) {
                                       var findWallet, userToUpdate, _yield$calculateChara2, hp, mp;
 
-                                      return _regenerator["default"].wrap(function _callee4$(_context4) {
+                                      return _regenerator["default"].wrap(function _callee3$(_context3) {
                                         while (1) {
-                                          switch (_context4.prev = _context4.next) {
+                                          switch (_context3.prev = _context3.next) {
                                             case 0:
-                                              _context4.next = 2;
+                                              _context3.next = 2;
                                               return _models["default"].wallet.findOne({
                                                 where: {
                                                   userId: userCurrentCharacter.UserGroup.user.id
@@ -1067,74 +975,71 @@ var discordBattle = /*#__PURE__*/function () {
                                               });
 
                                             case 2:
-                                              findWallet = _context4.sent;
+                                              findWallet = _context3.sent;
 
                                               if (!(findWallet.available < 10000000)) {
-                                                _context4.next = 28;
+                                                _context3.next = 28;
                                                 break;
                                               }
 
-                                              _context4.t0 = interaction;
-                                              _context4.t1 = (0, _messages.playingOnRealmMessage)(userCurrentCharacter);
-                                              _context4.next = 8;
+                                              _context3.t0 = interaction;
+                                              _context3.t1 = (0, _messages.playingOnRealmMessage)(userCurrentCharacter);
+                                              _context3.next = 8;
                                               return (0, _embeds.insufficientBalanceMessage)(userCurrentCharacter.UserGroup.user.user_id, 'Heal');
 
                                             case 8:
-                                              _context4.t2 = _context4.sent;
-                                              _context4.t3 = [_context4.t2];
-                                              _context4.t4 = _discord.MessageActionRow;
-                                              _context4.next = 13;
+                                              _context3.t2 = _context3.sent;
+                                              _context3.t3 = [_context3.t2];
+                                              _context3.t4 = _discord.ActionRowBuilder;
+                                              _context3.next = 13;
                                               return (0, _buttons.generateMainSkillButton)(userCurrentSelectedSkills.selectedMainSkill);
 
                                             case 13:
-                                              _context4.t5 = _context4.sent;
-                                              _context4.next = 16;
+                                              _context3.t5 = _context3.sent;
+                                              _context3.next = 16;
                                               return (0, _buttons.generateSecondarySkillButton)(userCurrentSelectedSkills.selectedSecondarySkill);
 
                                             case 16:
-                                              _context4.t6 = _context4.sent;
-                                              _context4.next = 19;
+                                              _context3.t6 = _context3.sent;
+                                              _context3.next = 19;
                                               return (0, _buttons.generateHealButton)();
 
                                             case 19:
-                                              _context4.t7 = _context4.sent;
-                                              _context4.t8 = [_context4.t5, _context4.t6, _context4.t7];
-                                              _context4.t9 = {
-                                                components: _context4.t8
+                                              _context3.t7 = _context3.sent;
+                                              _context3.t8 = [_context3.t5, _context3.t6, _context3.t7];
+                                              _context3.t9 = {
+                                                components: _context3.t8
                                               };
-                                              _context4.t10 = new _context4.t4(_context4.t9);
-                                              _context4.t11 = [_context4.t10].concat((0, _toConsumableArray2["default"])(selectMonsterMap && selectMonsterMap.length > 0 ? [new _discord.MessageActionRow({
-                                                components: [new _discord.MessageSelectMenu({
-                                                  type: 'SELECT_MENU',
+                                              _context3.t10 = new _context3.t4(_context3.t9);
+                                              _context3.t11 = [_context3.t10].concat((0, _toConsumableArray2["default"])(selectMonsterMap && selectMonsterMap.length > 0 ? [new _discord.ActionRowBuilder({
+                                                components: [new _discord.SelectMenuBuilder({
                                                   customId: 'select-mob',
                                                   options: selectMonsterMap
                                                 })]
-                                              })] : []), [new _discord.MessageActionRow({
-                                                components: [new _discord.MessageSelectMenu({
-                                                  type: 'SELECT_MENU',
+                                              })] : []), [new _discord.ActionRowBuilder({
+                                                components: [new _discord.SelectMenuBuilder({
                                                   customId: 'select-mainSkill',
                                                   options: mainSkillMap
                                                 })]
-                                              }), new _discord.MessageActionRow({
-                                                components: [new _discord.MessageSelectMenu({
-                                                  type: 'SELECT_MENU',
+                                              }), new _discord.ActionRowBuilder({
+                                                components: [new _discord.SelectMenuBuilder({
                                                   customId: 'select-secondarySkill',
                                                   options: secondarySkillMap
                                                 })]
                                               })]);
-                                              _context4.t12 = {
-                                                content: _context4.t1,
-                                                embeds: _context4.t3,
-                                                components: _context4.t11
+                                              _context3.t12 = {
+                                                content: _context3.t1,
+                                                embeds: _context3.t3,
+                                                components: _context3.t11
                                               };
-                                              _context4.next = 27;
-                                              return _context4.t0.editReply.call(_context4.t0, _context4.t12);
+                                              _context3.next = 27;
+                                              return _context3.t0.editReply.call(_context3.t0, _context3.t12);
 
                                             case 27:
-                                              return _context4.abrupt("return");
+                                              return _context3.abrupt("return");
 
                                             case 28:
-                                              _context4.next = 30;
+                                              _context3.next = 30;
                                               return userWallet.update({
                                                 available: findWallet.available - 10000000
                                               }, {
@@ -1143,7 +1048,7 @@ var discordBattle = /*#__PURE__*/function () {
                                               });
 
                                             case 30:
-                                              _context4.next = 32;
+                                              _context3.next = 32;
                                               return _models["default"].UserGroupClass.findOne({
                                                 where: {
                                                   UserGroupId: userCurrentCharacter.UserGroup.id,
@@ -1164,15 +1069,15 @@ var discordBattle = /*#__PURE__*/function () {
                                               });
 
                                             case 32:
-                                              userToUpdate = _context4.sent;
-                                              _context4.next = 35;
+                                              userToUpdate = _context3.sent;
+                                              _context3.next = 35;
                                               return (0, _calculateCharacterStats.calculateCharacterStats)(userCurrentCharacter);
 
                                             case 35:
-                                              _yield$calculateChara2 = _context4.sent;
+                                              _yield$calculateChara2 = _context3.sent;
                                               hp = _yield$calculateChara2.hp;
                                               mp = _yield$calculateChara2.mp;
-                                              _context4.next = 40;
+                                              _context3.next = 40;
                                               return userCurrentCharacter.condition.update({
                                                 life: hp.max,
                                                 mana: mp.max
@@ -1193,145 +1098,144 @@ var discordBattle = /*#__PURE__*/function () {
                                                 max: mp.max,
                                                 totalManaBonus: mp.totalManaBonus
                                               };
-                                              _context4.next = 45;
+                                              _context3.next = 45;
                                               return (0, _character.fetchUserCurrentCharacter)(userId, // user discord id
                                               false, // Need inventory?
                                               t);
 
                                             case 45:
-                                              userCurrentCharacter = _context4.sent;
-                                              _context4.t13 = interaction;
-                                              _context4.t14 = _discord.MessageAttachment;
-                                              _context4.next = 50;
+                                              userCurrentCharacter = _context3.sent;
+                                              _context3.t13 = interaction;
+                                              _context3.next = 49;
                                               return (0, _battle.renderBattleGif)(myInitialUserState, userCurrentSelectedSkills, battle, currentSelectedMonster, allRoundBuffsInfoArray, allRoundDebuffsInfoArray, allRoundEffectsInfoArray);
 
-                                            case 50:
-                                              _context4.t15 = _context4.sent;
-                                              _context4.t16 = new _context4.t14(_context4.t15, 'battle.gif');
-                                              _context4.t17 = [_context4.t16];
-                                              _context4.t18 = _discord.MessageActionRow;
-                                              _context4.next = 56;
+                                            case 49:
+                                              _context3.t14 = _context3.sent;
+                                              _context3.t15 = {
+                                                attachment: _context3.t14,
+                                                name: "battle.gif"
+                                              };
+                                              _context3.t16 = [_context3.t15];
+                                              _context3.t17 = _discord.ActionRowBuilder;
+                                              _context3.next = 55;
                                               return (0, _buttons.generateMainSkillButton)(userCurrentSelectedSkills.selectedMainSkill);
 
-                                            case 56:
-                                              _context4.t19 = _context4.sent;
-                                              _context4.next = 59;
+                                            case 55:
+                                              _context3.t18 = _context3.sent;
+                                              _context3.next = 58;
                                               return (0, _buttons.generateSecondarySkillButton)(userCurrentSelectedSkills.selectedSecondarySkill);
 
-                                            case 59:
-                                              _context4.t20 = _context4.sent;
-                                              _context4.next = 62;
+                                            case 58:
+                                              _context3.t19 = _context3.sent;
+                                              _context3.next = 61;
                                               return (0, _buttons.generateHealButton)();
 
-                                            case 62:
-                                              _context4.t21 = _context4.sent;
-                                              _context4.t22 = [_context4.t19, _context4.t20, _context4.t21];
-                                              _context4.t23 = {
-                                                components: _context4.t22
+                                            case 61:
+                                              _context3.t20 = _context3.sent;
+                                              _context3.t21 = [_context3.t18, _context3.t19, _context3.t20];
+                                              _context3.t22 = {
+                                                components: _context3.t21
                                               };
-                                              _context4.t24 = new _context4.t18(_context4.t23);
-                                              _context4.t25 = [_context4.t24].concat((0, _toConsumableArray2["default"])(selectMonsterMap && selectMonsterMap.length > 0 ? [new _discord.MessageActionRow({
-                                                components: [new _discord.MessageSelectMenu({
-                                                  type: 'SELECT_MENU',
+                                              _context3.t23 = new _context3.t17(_context3.t22);
+                                              _context3.t24 = [_context3.t23].concat((0, _toConsumableArray2["default"])(selectMonsterMap && selectMonsterMap.length > 0 ? [new _discord.ActionRowBuilder({
+                                                components: [new _discord.SelectMenuBuilder({
                                                   customId: 'select-mob',
                                                   options: selectMonsterMap
                                                 })]
-                                              })] : []), [new _discord.MessageActionRow({
-                                                components: [new _discord.MessageSelectMenu({
-                                                  type: 'SELECT_MENU',
+                                              })] : []), [new _discord.ActionRowBuilder({
+                                                components: [new _discord.SelectMenuBuilder({
                                                   customId: 'select-mainSkill',
                                                   options: mainSkillMap
                                                 })]
-                                              }), new _discord.MessageActionRow({
-                                                components: [new _discord.MessageSelectMenu({
-                                                  type: 'SELECT_MENU',
+                                              }), new _discord.ActionRowBuilder({
+                                                components: [new _discord.SelectMenuBuilder({
                                                   customId: 'select-secondarySkill',
                                                   options: secondarySkillMap
                                                 })]
                                               })]);
-                                              _context4.t26 = [];
-                                              _context4.t27 = "<@".concat(userCurrentCharacter.UserGroup.user.user_id, ">, you are now healed!");
-                                              _context4.t28 = {
-                                                files: _context4.t17,
-                                                components: _context4.t25,
-                                                embeds: _context4.t26,
-                                                content: _context4.t27
+                                              _context3.t25 = [];
+                                              _context3.t26 = "<@".concat(userCurrentCharacter.UserGroup.user.user_id, ">, you are now healed!");
+                                              _context3.t27 = {
+                                                files: _context3.t16,
+                                                components: _context3.t24,
+                                                embeds: _context3.t25,
+                                                content: _context3.t26
                                               };
-                                              _context4.next = 72;
-                                              return _context4.t13.editReply.call(_context4.t13, _context4.t28);
+                                              _context3.next = 71;
+                                              return _context3.t13.editReply.call(_context3.t13, _context3.t27);
 
-                                            case 72:
+                                            case 71:
                                             case "end":
-                                              return _context4.stop();
+                                              return _context3.stop();
                                           }
                                         }
-                                      }, _callee4);
+                                      }, _callee3);
                                     }));
 
-                                    return function (_x11) {
-                                      return _ref7.apply(this, arguments);
+                                    return function (_x8) {
+                                      return _ref6.apply(this, arguments);
                                     };
                                   }())["catch"]( /*#__PURE__*/function () {
-                                    var _ref8 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee5(err) {
-                                      return _regenerator["default"].wrap(function _callee5$(_context5) {
+                                    var _ref7 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee4(err) {
+                                      return _regenerator["default"].wrap(function _callee4$(_context4) {
                                         while (1) {
-                                          switch (_context5.prev = _context5.next) {
+                                          switch (_context4.prev = _context4.next) {
                                             case 0:
                                               console.log(err);
-                                              _context5.prev = 1;
-                                              _context5.next = 4;
+                                              _context4.prev = 1;
+                                              _context4.next = 4;
                                               return _models["default"].error.create({
                                                 type: 'Heal',
                                                 error: "".concat(err)
                                               });
 
                                             case 4:
-                                              _context5.next = 9;
+                                              _context4.next = 9;
                                               break;
 
                                             case 6:
-                                              _context5.prev = 6;
-                                              _context5.t0 = _context5["catch"](1);
-                                              console.log(_context5.t0);
+                                              _context4.prev = 6;
+                                              _context4.t0 = _context4["catch"](1);
+                                              console.log(_context4.t0);
 
                                             case 9:
                                             case "end":
-                                              return _context5.stop();
+                                              return _context4.stop();
                                           }
                                         }
-                                      }, _callee5, null, [[1, 6]]);
+                                      }, _callee4, null, [[1, 6]]);
                                     }));
 
-                                    return function (_x12) {
-                                      return _ref8.apply(this, arguments);
+                                    return function (_x9) {
+                                      return _ref7.apply(this, arguments);
                                     };
                                   }());
 
                                 case 2:
                                 case "end":
-                                  return _context6.stop();
+                                  return _context5.stop();
                               }
                             }
-                          }, _callee6);
+                          }, _callee5);
                         })));
 
                       case 82:
-                        return _context12.abrupt("return");
+                        return _context11.abrupt("return");
 
                       case 83:
                         console.log('collector 7'); // End Heal handling
 
                         if (!interaction.isSelectMenu()) {
-                          _context12.next = 89;
+                          _context11.next = 89;
                           break;
                         }
 
                         if (!(interaction.customId === 'select-mob')) {
-                          _context12.next = 89;
+                          _context11.next = 89;
                           break;
                         }
 
-                        _context12.next = 88;
+                        _context11.next = 88;
                         return interaction.deferUpdate();
 
                       case 88:
@@ -1357,37 +1261,37 @@ var discordBattle = /*#__PURE__*/function () {
 
                       case 89:
                         console.log('collector 8');
-                        _context12.next = 92;
-                        return queue.add( /*#__PURE__*/(0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee10() {
-                          return _regenerator["default"].wrap(function _callee10$(_context10) {
+                        _context11.next = 92;
+                        return queue.add( /*#__PURE__*/(0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee9() {
+                          return _regenerator["default"].wrap(function _callee9$(_context9) {
                             while (1) {
-                              switch (_context10.prev = _context10.next) {
+                              switch (_context9.prev = _context9.next) {
                                 case 0:
-                                  _context10.next = 2;
+                                  _context9.next = 2;
                                   return _models["default"].sequelize.transaction({
                                     isolationLevel: _sequelize.Transaction.ISOLATION_LEVELS.SERIALIZABLE
                                   }, /*#__PURE__*/function () {
-                                    var _ref10 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee9(t) {
+                                    var _ref9 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee8(t) {
                                       var attackUsed, initialUserState, stageZeroInfoArray, stageOneInfoArray, stageTwoInfoArray, stageThreeInfoArray, stageFourInfoArray, stageFiveInfoArray, stageSixInfoArray, stageSevenInfoArray, sumExp, previousBattleState, itemId, findItemToLoot, findItemInDB, _yield$processBattleM, _yield$processBattleM2, newExp, highestLevelMob, foundLoot, foundLootTwo, checkCurrentSelected, skillId, _yield$calculateChara3, _hp, _mp;
 
-                                      return _regenerator["default"].wrap(function _callee9$(_context9) {
+                                      return _regenerator["default"].wrap(function _callee8$(_context8) {
                                         while (1) {
-                                          switch (_context9.prev = _context9.next) {
+                                          switch (_context8.prev = _context8.next) {
                                             case 0:
                                               sumExp = 0;
                                               previousBattleState = JSON.parse(JSON.stringify(battle)); // const previousUserState = JSON.parse(JSON.stringify(userCurrentCharacter));
 
                                               if (!interaction.isButton()) {
-                                                _context9.next = 163;
+                                                _context8.next = 171;
                                                 break;
                                               }
 
-                                              _context9.next = 5;
+                                              _context8.next = 5;
                                               return interaction.deferUpdate();
 
                                             case 5:
                                               if (!interaction.customId.startsWith('lootItem:')) {
-                                                _context9.next = 57;
+                                                _context8.next = 58;
                                                 break;
                                               }
 
@@ -1397,21 +1301,21 @@ var discordBattle = /*#__PURE__*/function () {
                                               });
 
                                               if (findItemToLoot) {
-                                                _context9.next = 12;
+                                                _context8.next = 12;
                                                 break;
                                               }
 
-                                              _context9.next = 11;
+                                              _context8.next = 11;
                                               return interaction.reply({
                                                 content: "<@".concat(interaction.user.id, ">, We didn't find this item for you to loot!"),
                                                 ephemeral: true
                                               });
 
                                             case 11:
-                                              return _context9.abrupt("return");
+                                              return _context8.abrupt("return");
 
                                             case 12:
-                                              _context9.next = 14;
+                                              _context8.next = 14;
                                               return _models["default"].item.findOne({
                                                 where: {
                                                   id: findItemToLoot.id
@@ -1421,24 +1325,24 @@ var discordBattle = /*#__PURE__*/function () {
                                               });
 
                                             case 14:
-                                              findItemInDB = _context9.sent;
+                                              findItemInDB = _context8.sent;
 
                                               if (!findItemInDB.inventoryId) {
-                                                _context9.next = 19;
+                                                _context8.next = 19;
                                                 break;
                                               }
 
-                                              _context9.next = 18;
+                                              _context8.next = 18;
                                               return interaction.followUp({
                                                 content: "<@".concat(interaction.user.id, ">, Item was already looted!"),
                                                 ephemeral: true
                                               });
 
                                             case 18:
-                                              return _context9.abrupt("return");
+                                              return _context8.abrupt("return");
 
                                             case 19:
-                                              _context9.next = 21;
+                                              _context8.next = 21;
                                               return findItemInDB.update({
                                                 inventoryId: userCurrentCharacter.inventoryId
                                               }, {
@@ -1450,116 +1354,134 @@ var discordBattle = /*#__PURE__*/function () {
                                               newLoot = newLoot.filter(function (data) {
                                                 return data.id !== itemId;
                                               });
-                                              _context9.t0 = interaction;
-                                              _context9.t1 = (0, _messages.playingOnRealmMessage)(userCurrentCharacter);
-                                              _context9.next = 26;
+                                              _context8.t0 = interaction;
+                                              _context8.t1 = (0, _messages.playingOnRealmMessage)(userCurrentCharacter);
+                                              _context8.next = 26;
                                               return (0, _battleComplete.renderBattleComplete)(userCurrentCharacter, battle);
 
                                             case 26:
-                                              _context9.t3 = _context9.sent;
-                                              _context9.t2 = [_context9.t3];
-                                              _context9.t4 = _toConsumableArray2["default"];
+                                              _context8.t3 = _context8.sent;
+                                              _context8.t4 = {
+                                                attachment: _context8.t3,
+                                                name: "battleComplete.png"
+                                              };
+                                              _context8.t2 = [_context8.t4];
+                                              _context8.t5 = _toConsumableArray2["default"];
 
                                               if (!(newLoot.length > 0)) {
-                                                _context9.next = 35;
+                                                _context8.next = 36;
                                                 break;
                                               }
 
-                                              _context9.next = 32;
+                                              _context8.next = 33;
                                               return generateLootImagesArray(newLoot);
 
-                                            case 32:
-                                              _context9.t5 = _context9.sent;
-                                              _context9.next = 36;
+                                            case 33:
+                                              _context8.t6 = _context8.sent;
+                                              _context8.next = 37;
                                               break;
 
-                                            case 35:
-                                              _context9.t5 = [];
-
                                             case 36:
-                                              _context9.t6 = _context9.t5;
-                                              _context9.t7 = (0, _context9.t4)(_context9.t6);
-                                              _context9.t8 = _context9.t2.concat.call(_context9.t2, _context9.t7);
-                                              _context9.t9 = _toConsumableArray2["default"];
+                                              _context8.t6 = [];
+
+                                            case 37:
+                                              _context8.t7 = _context8.t6;
+                                              _context8.t8 = (0, _context8.t5)(_context8.t7);
+                                              _context8.t9 = _context8.t2.concat.call(_context8.t2, _context8.t8);
+                                              _context8.t10 = _toConsumableArray2["default"];
 
                                               if (!(newLoot.length > 0)) {
-                                                _context9.next = 50;
+                                                _context8.next = 51;
                                                 break;
                                               }
 
-                                              _context9.t11 = _discord.MessageActionRow;
-                                              _context9.next = 44;
+                                              _context8.t12 = _discord.ActionRowBuilder;
+                                              _context8.next = 45;
                                               return generateLootItemButtonArray(newLoot);
 
-                                            case 44:
-                                              _context9.t12 = _context9.sent;
-                                              _context9.t13 = {
-                                                components: _context9.t12
+                                            case 45:
+                                              _context8.t13 = _context8.sent;
+                                              _context8.t14 = {
+                                                components: _context8.t13
                                               };
-                                              _context9.t14 = new _context9.t11(_context9.t13);
-                                              _context9.t10 = [_context9.t14];
-                                              _context9.next = 51;
+                                              _context8.t15 = new _context8.t12(_context8.t14);
+                                              _context8.t11 = [_context8.t15];
+                                              _context8.next = 52;
                                               break;
 
-                                            case 50:
-                                              _context9.t10 = [];
-
                                             case 51:
-                                              _context9.t15 = _context9.t10;
-                                              _context9.t16 = (0, _context9.t9)(_context9.t15);
-                                              _context9.t17 = {
-                                                content: _context9.t1,
-                                                files: _context9.t8,
-                                                components: _context9.t16
-                                              };
-                                              _context9.next = 56;
-                                              return _context9.t0.editReply.call(_context9.t0, _context9.t17);
+                                              _context8.t11 = [];
 
-                                            case 56:
-                                              return _context9.abrupt("return");
+                                            case 52:
+                                              _context8.t16 = _context8.t11;
+                                              _context8.t17 = (0, _context8.t10)(_context8.t16);
+                                              _context8.t18 = {
+                                                content: _context8.t1,
+                                                files: _context8.t9,
+                                                components: _context8.t17
+                                              };
+                                              _context8.next = 57;
+                                              return _context8.t0.editReply.call(_context8.t0, _context8.t18);
 
                                             case 57:
-                                              _context9.next = 59;
+                                              return _context8.abrupt("return");
+
+                                            case 58:
+                                              _context8.next = 60;
                                               return (0, _character.fetchUserCurrentCharacter)(userId, // user discord id
                                               false, // Need inventory?
                                               t);
 
-                                            case 59:
-                                              userCurrentCharacter = _context9.sent;
-                                              _context9.next = 62;
-                                              return interaction.editReply({
-                                                content: (0, _messages.playingOnRealmMessage)(userCurrentCharacter),
-                                                embeds: [loadingBattleMoveEmbed],
-                                                components: []
-                                              });
+                                            case 60:
+                                              userCurrentCharacter = _context8.sent;
+                                              _context8.t19 = interaction;
+                                              _context8.t20 = (0, _messages.playingOnRealmMessage)(userCurrentCharacter);
+                                              _context8.next = 65;
+                                              return (0, _embeds.loadingBattleMoveEmbed)(userCurrentCharacter);
 
-                                            case 62:
+                                            case 65:
+                                              _context8.t21 = _context8.sent;
+                                              _context8.t22 = [_context8.t21];
+                                              _context8.t23 = [];
+                                              _context8.t24 = {
+                                                content: _context8.t20,
+                                                embeds: _context8.t22,
+                                                components: _context8.t23
+                                              };
+                                              _context8.next = 71;
+                                              return _context8.t19.editReply.call(_context8.t19, _context8.t24);
+
+                                            case 71:
                                               if (!(userCurrentCharacter.condition.life < 1)) {
-                                                _context9.next = 74;
+                                                _context8.next = 84;
                                                 break;
                                               }
 
-                                              _context9.t18 = interaction;
-                                              _context9.t19 = [];
-                                              _context9.next = 67;
+                                              _context8.t25 = interaction;
+                                              _context8.t26 = [];
+                                              _context8.next = 76;
                                               return (0, _userDied.renderUserDied)(userCurrentCharacter);
 
-                                            case 67:
-                                              _context9.t20 = _context9.sent;
-                                              _context9.t21 = [_context9.t20];
-                                              _context9.t22 = [];
-                                              _context9.t23 = {
-                                                embeds: _context9.t19,
-                                                files: _context9.t21,
-                                                components: _context9.t22
+                                            case 76:
+                                              _context8.t27 = _context8.sent;
+                                              _context8.t28 = {
+                                                attachment: _context8.t27,
+                                                name: "userDied.png"
                                               };
-                                              _context9.next = 73;
-                                              return _context9.t18.editReply.call(_context9.t18, _context9.t23);
+                                              _context8.t29 = [_context8.t28];
+                                              _context8.t30 = [];
+                                              _context8.t31 = {
+                                                embeds: _context8.t26,
+                                                files: _context8.t29,
+                                                components: _context8.t30
+                                              };
+                                              _context8.next = 83;
+                                              return _context8.t25.editReply.call(_context8.t25, _context8.t31);
 
-                                            case 73:
-                                              return _context9.abrupt("return");
+                                            case 83:
+                                              return _context8.abrupt("return");
 
-                                            case 74:
+                                            case 84:
                                               if (interaction.customId.startsWith('attackMain:')) {
                                                 attackUsed = 'main';
                                               }
@@ -1569,15 +1491,15 @@ var discordBattle = /*#__PURE__*/function () {
                                               }
 
                                               if (battle.complete) {
-                                                _context9.next = 112;
+                                                _context8.next = 122;
                                                 break;
                                               }
 
-                                              _context9.next = 79;
+                                              _context8.next = 89;
                                               return (0, _processBattleMove.processBattleMove)(userCurrentCharacter, battle, currentSelectedMonster, attackUsed, t);
 
-                                            case 79:
-                                              _yield$processBattleM = _context9.sent;
+                                            case 89:
+                                              _yield$processBattleM = _context8.sent;
                                               _yield$processBattleM2 = (0, _slicedToArray2["default"])(_yield$processBattleM, 15);
                                               userCurrentCharacter = _yield$processBattleM2[0];
                                               initialUserState = _yield$processBattleM2[1];
@@ -1597,74 +1519,76 @@ var discordBattle = /*#__PURE__*/function () {
                                               console.log("Is Battle Complete: ".concat(battle.complete ? 'Yes' : 'No'));
 
                                               if (!battle.complete) {
-                                                _context9.next = 112;
+                                                _context8.next = 122;
                                                 break;
                                               }
 
                                               console.log('battle is complete 1');
                                               currentSelectedMonster = null;
-                                              _context9.next = 102;
+                                              _context8.next = 112;
                                               return (0, _experience.gainExp)(discordClient, userCurrentCharacter.UserGroup.user.user_id, sumExp, 'battle', t);
 
-                                            case 102:
-                                              newExp = _context9.sent;
+                                            case 112:
+                                              newExp = _context8.sent;
                                               highestLevelMob = Math.max.apply(Math, (0, _toConsumableArray2["default"])(battle.BattleMonsters.map(function (o) {
                                                 return o.monster.level;
                                               })));
-                                              _context9.next = 106;
+                                              _context8.next = 116;
                                               return (0, _generateLoot.generateLoot)(highestLevelMob);
 
-                                            case 106:
-                                              foundLoot = _context9.sent;
+                                            case 116:
+                                              foundLoot = _context8.sent;
 
                                               if (foundLoot) {
                                                 newLoot.push(foundLoot);
                                               }
 
-                                              _context9.next = 110;
+                                              _context8.next = 120;
                                               return (0, _generateLoot.generateLoot)(highestLevelMob);
 
-                                            case 110:
-                                              foundLootTwo = _context9.sent;
+                                            case 120:
+                                              foundLootTwo = _context8.sent;
 
                                               if (foundLootTwo) {
                                                 newLoot.push(foundLootTwo);
                                               }
 
-                                            case 112:
+                                            case 122:
                                               if (!battle.complete) {
-                                                _context9.next = 130;
+                                                _context8.next = 139;
                                                 break;
                                               }
 
                                               console.log(initialUserState);
                                               console.log('before final renderbattleGif complete');
-                                              _context9.t24 = interaction;
-                                              _context9.t25 = (0, _messages.playingOnRealmMessage)(userCurrentCharacter);
-                                              _context9.t26 = [];
-                                              _context9.t27 = _discord.MessageAttachment;
-                                              _context9.next = 121;
+                                              _context8.t32 = interaction;
+                                              _context8.t33 = (0, _messages.playingOnRealmMessage)(userCurrentCharacter);
+                                              _context8.t34 = [];
+                                              _context8.next = 130;
                                               return (0, _battle.renderBattleGif)(initialUserState, userCurrentSelectedSkills, previousBattleState, currentSelectedMonster, allRoundBuffsInfoArray, allRoundDebuffsInfoArray, allRoundEffectsInfoArray, stageZeroInfoArray, stageOneInfoArray, stageTwoInfoArray, stageThreeInfoArray, stageFourInfoArray, stageFiveInfoArray, stageSixInfoArray, stageSevenInfoArray);
 
-                                            case 121:
-                                              _context9.t28 = _context9.sent;
-                                              _context9.t29 = new _context9.t27(_context9.t28, 'battle.gif');
-                                              _context9.t30 = [_context9.t29];
-                                              _context9.t31 = [];
-                                              _context9.t32 = {
-                                                content: _context9.t25,
-                                                embeds: _context9.t26,
-                                                files: _context9.t30,
-                                                components: _context9.t31
+                                            case 130:
+                                              _context8.t35 = _context8.sent;
+                                              _context8.t36 = {
+                                                attachment: _context8.t35,
+                                                name: "battle.gif"
                                               };
-                                              _context9.next = 128;
-                                              return _context9.t24.editReply.call(_context9.t24, _context9.t32);
+                                              _context8.t37 = [_context8.t36];
+                                              _context8.t38 = [];
+                                              _context8.t39 = {
+                                                content: _context8.t33,
+                                                embeds: _context8.t34,
+                                                files: _context8.t37,
+                                                components: _context8.t38
+                                              };
+                                              _context8.next = 137;
+                                              return _context8.t32.editReply.call(_context8.t32, _context8.t39);
 
-                                            case 128:
-                                              _context9.next = 159;
+                                            case 137:
+                                              _context8.next = 167;
                                               break;
 
-                                            case 130:
+                                            case 139:
                                               checkCurrentSelected = battle.BattleMonsters.find(function (element) {
                                                 return element && element.id === currentSelectedMonster.id;
                                               });
@@ -1684,70 +1608,107 @@ var discordBattle = /*#__PURE__*/function () {
 
                                                 return filtered;
                                               }, []);
-                                              _context9.t33 = interaction;
-                                              _context9.t34 = (0, _messages.playingOnRealmMessage)(userCurrentCharacter);
-                                              _context9.t35 = [];
-                                              _context9.t36 = _discord.MessageAttachment;
-                                              _context9.next = 139;
+                                              _context8.t40 = interaction;
+                                              _context8.t41 = (0, _messages.playingOnRealmMessage)(userCurrentCharacter);
+                                              _context8.t42 = [];
+                                              _context8.next = 147;
                                               return (0, _battle.renderBattleGif)(initialUserState, userCurrentSelectedSkills, previousBattleState, currentSelectedMonster, allRoundBuffsInfoArray, allRoundDebuffsInfoArray, allRoundEffectsInfoArray, stageZeroInfoArray, stageOneInfoArray, stageTwoInfoArray, stageThreeInfoArray, stageFourInfoArray, stageFiveInfoArray, stageSixInfoArray, stageSevenInfoArray);
 
-                                            case 139:
-                                              _context9.t37 = _context9.sent;
-                                              _context9.t38 = new _context9.t36(_context9.t37, 'battle.gif');
-                                              _context9.t39 = [_context9.t38];
-                                              _context9.t40 = _discord.MessageActionRow;
-                                              _context9.next = 145;
+                                            case 147:
+                                              _context8.t43 = _context8.sent;
+                                              _context8.t44 = {
+                                                attachment: _context8.t43,
+                                                name: "battle.gif"
+                                              };
+                                              _context8.t45 = [_context8.t44];
+                                              _context8.t46 = _discord.ActionRowBuilder;
+                                              _context8.next = 153;
                                               return (0, _buttons.generateMainSkillButton)(userCurrentSelectedSkills.selectedMainSkill);
 
-                                            case 145:
-                                              _context9.t41 = _context9.sent;
-                                              _context9.next = 148;
+                                            case 153:
+                                              _context8.t47 = _context8.sent;
+                                              _context8.next = 156;
                                               return (0, _buttons.generateSecondarySkillButton)(userCurrentSelectedSkills.selectedSecondarySkill);
 
-                                            case 148:
-                                              _context9.t42 = _context9.sent;
-                                              _context9.next = 151;
+                                            case 156:
+                                              _context8.t48 = _context8.sent;
+                                              _context8.next = 159;
                                               return (0, _buttons.generateHealButton)();
 
-                                            case 151:
-                                              _context9.t43 = _context9.sent;
-                                              _context9.t44 = [_context9.t41, _context9.t42, _context9.t43];
-                                              _context9.t45 = {
-                                                components: _context9.t44
+                                            case 159:
+                                              _context8.t49 = _context8.sent;
+                                              _context8.t50 = [_context8.t47, _context8.t48, _context8.t49];
+                                              _context8.t51 = {
+                                                components: _context8.t50
                                               };
-                                              _context9.t46 = new _context9.t40(_context9.t45);
-                                              _context9.t47 = [_context9.t46].concat((0, _toConsumableArray2["default"])(selectMonsterMap && selectMonsterMap.length > 0 ? [new _discord.MessageActionRow({
-                                                components: [new _discord.MessageSelectMenu({
-                                                  type: 'SELECT_MENU',
+                                              _context8.t52 = new _context8.t46(_context8.t51);
+                                              _context8.t53 = [_context8.t52].concat((0, _toConsumableArray2["default"])(selectMonsterMap && selectMonsterMap.length > 0 ? [new _discord.ActionRowBuilder({
+                                                components: [new _discord.SelectMenuBuilder({
                                                   customId: 'select-mob',
                                                   options: selectMonsterMap
                                                 })]
-                                              })] : []), [new _discord.MessageActionRow({
-                                                components: [new _discord.MessageSelectMenu({
-                                                  type: 'SELECT_MENU',
+                                              })] : []), [new _discord.ActionRowBuilder({
+                                                components: [new _discord.SelectMenuBuilder({
                                                   customId: 'select-mainSkill',
                                                   options: mainSkillMap
                                                 })]
-                                              }), new _discord.MessageActionRow({
-                                                components: [new _discord.MessageSelectMenu({
-                                                  type: 'SELECT_MENU',
+                                              }), new _discord.ActionRowBuilder({
+                                                components: [new _discord.SelectMenuBuilder({
                                                   customId: 'select-secondarySkill',
                                                   options: secondarySkillMap
                                                 })]
                                               })]);
-                                              _context9.t48 = {
-                                                content: _context9.t34,
-                                                embeds: _context9.t35,
-                                                files: _context9.t39,
-                                                components: _context9.t47
+                                              _context8.t54 = {
+                                                content: _context8.t41,
+                                                embeds: _context8.t42,
+                                                files: _context8.t45,
+                                                components: _context8.t53
                                               };
-                                              _context9.next = 159;
-                                              return _context9.t33.editReply.call(_context9.t33, _context9.t48);
+                                              _context8.next = 167;
+                                              return _context8.t40.editReply.call(_context8.t40, _context8.t54);
 
-                                            case 159:
+                                            case 167:
                                               previousBattleState = JSON.parse(JSON.stringify(previousBattleState));
 
                                               if (userCurrentCharacter.condition.life < 1) {
+                                                setTimeout( /*#__PURE__*/(0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee6() {
+                                                  return _regenerator["default"].wrap(function _callee6$(_context6) {
+                                                    while (1) {
+                                                      switch (_context6.prev = _context6.next) {
+                                                        case 0:
+                                                          _context6.t0 = interaction;
+                                                          _context6.t1 = (0, _messages.playingOnRealmMessage)(userCurrentCharacter);
+                                                          _context6.t2 = [];
+                                                          _context6.next = 5;
+                                                          return (0, _userDied.renderUserDied)(userCurrentCharacter);
+
+                                                        case 5:
+                                                          _context6.t3 = _context6.sent;
+                                                          _context6.t4 = {
+                                                            attachment: _context6.t3,
+                                                            name: "userDied.png"
+                                                          };
+                                                          _context6.t5 = [_context6.t4];
+                                                          _context6.t6 = [];
+                                                          _context6.t7 = {
+                                                            content: _context6.t1,
+                                                            embeds: _context6.t2,
+                                                            files: _context6.t5,
+                                                            components: _context6.t6
+                                                          };
+                                                          _context6.next = 12;
+                                                          return _context6.t0.editReply.call(_context6.t0, _context6.t7);
+
+                                                        case 12:
+                                                        case "end":
+                                                          return _context6.stop();
+                                                      }
+                                                    }
+                                                  }, _callee6);
+                                                })), 5000);
+                                              }
+
+                                              if (battle.complete) {
                                                 setTimeout( /*#__PURE__*/(0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee7() {
                                                   return _regenerator["default"].wrap(function _callee7$(_context7) {
                                                     while (1) {
@@ -1755,24 +1716,81 @@ var discordBattle = /*#__PURE__*/function () {
                                                         case 0:
                                                           _context7.t0 = interaction;
                                                           _context7.t1 = (0, _messages.playingOnRealmMessage)(userCurrentCharacter);
-                                                          _context7.t2 = [];
-                                                          _context7.next = 5;
-                                                          return (0, _userDied.renderUserDied)(userCurrentCharacter);
+                                                          _context7.next = 4;
+                                                          return (0, _embeds.battleCompleteEmbed)(userCurrentCharacter, battle, sumExp, newLoot);
 
-                                                        case 5:
-                                                          _context7.t3 = _context7.sent;
-                                                          _context7.t4 = [_context7.t3];
-                                                          _context7.t5 = [];
+                                                        case 4:
+                                                          _context7.t2 = _context7.sent;
+                                                          _context7.t3 = [_context7.t2];
+                                                          _context7.next = 8;
+                                                          return (0, _battleComplete.renderBattleComplete)(userCurrentCharacter, battle);
+
+                                                        case 8:
+                                                          _context7.t5 = _context7.sent;
                                                           _context7.t6 = {
-                                                            content: _context7.t1,
-                                                            embeds: _context7.t2,
-                                                            files: _context7.t4,
-                                                            components: _context7.t5
+                                                            attachment: _context7.t5,
+                                                            name: "battleComplete.png"
                                                           };
-                                                          _context7.next = 11;
-                                                          return _context7.t0.editReply.call(_context7.t0, _context7.t6);
+                                                          _context7.t4 = [_context7.t6];
+                                                          _context7.t7 = _toConsumableArray2["default"];
 
-                                                        case 11:
+                                                          if (!(newLoot.length > 0)) {
+                                                            _context7.next = 18;
+                                                            break;
+                                                          }
+
+                                                          _context7.next = 15;
+                                                          return generateLootImagesArray(newLoot);
+
+                                                        case 15:
+                                                          _context7.t8 = _context7.sent;
+                                                          _context7.next = 19;
+                                                          break;
+
+                                                        case 18:
+                                                          _context7.t8 = [];
+
+                                                        case 19:
+                                                          _context7.t9 = _context7.t8;
+                                                          _context7.t10 = (0, _context7.t7)(_context7.t9);
+                                                          _context7.t11 = _context7.t4.concat.call(_context7.t4, _context7.t10);
+                                                          _context7.t12 = _toConsumableArray2["default"];
+
+                                                          if (!(newLoot.length > 0)) {
+                                                            _context7.next = 33;
+                                                            break;
+                                                          }
+
+                                                          _context7.t14 = _discord.ActionRowBuilder;
+                                                          _context7.next = 27;
+                                                          return generateLootItemButtonArray(newLoot);
+
+                                                        case 27:
+                                                          _context7.t15 = _context7.sent;
+                                                          _context7.t16 = {
+                                                            components: _context7.t15
+                                                          };
+                                                          _context7.t17 = new _context7.t14(_context7.t16);
+                                                          _context7.t13 = [_context7.t17];
+                                                          _context7.next = 34;
+                                                          break;
+
+                                                        case 33:
+                                                          _context7.t13 = [];
+
+                                                        case 34:
+                                                          _context7.t18 = _context7.t13;
+                                                          _context7.t19 = (0, _context7.t12)(_context7.t18);
+                                                          _context7.t20 = {
+                                                            content: _context7.t1,
+                                                            embeds: _context7.t3,
+                                                            files: _context7.t11,
+                                                            components: _context7.t19
+                                                          };
+                                                          _context7.next = 39;
+                                                          return _context7.t0.editReply.call(_context7.t0, _context7.t20);
+
+                                                        case 39:
                                                         case "end":
                                                           return _context7.stop();
                                                       }
@@ -1781,160 +1799,73 @@ var discordBattle = /*#__PURE__*/function () {
                                                 })), 5000);
                                               }
 
-                                              if (battle.complete) {
-                                                setTimeout( /*#__PURE__*/(0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee8() {
-                                                  return _regenerator["default"].wrap(function _callee8$(_context8) {
-                                                    while (1) {
-                                                      switch (_context8.prev = _context8.next) {
-                                                        case 0:
-                                                          _context8.t0 = interaction;
-                                                          _context8.t1 = (0, _messages.playingOnRealmMessage)(userCurrentCharacter);
-                                                          _context8.next = 4;
-                                                          return battleCompleteEmbed(userCurrentCharacter, sumExp, newLoot);
+                                              return _context8.abrupt("return");
 
-                                                        case 4:
-                                                          _context8.t2 = _context8.sent;
-                                                          _context8.t3 = [_context8.t2];
-                                                          _context8.next = 8;
-                                                          return (0, _battleComplete.renderBattleComplete)(userCurrentCharacter, battle);
-
-                                                        case 8:
-                                                          _context8.t5 = _context8.sent;
-                                                          _context8.t4 = [_context8.t5];
-                                                          _context8.t6 = _toConsumableArray2["default"];
-
-                                                          if (!(newLoot.length > 0)) {
-                                                            _context8.next = 17;
-                                                            break;
-                                                          }
-
-                                                          _context8.next = 14;
-                                                          return generateLootImagesArray(newLoot);
-
-                                                        case 14:
-                                                          _context8.t7 = _context8.sent;
-                                                          _context8.next = 18;
-                                                          break;
-
-                                                        case 17:
-                                                          _context8.t7 = [];
-
-                                                        case 18:
-                                                          _context8.t8 = _context8.t7;
-                                                          _context8.t9 = (0, _context8.t6)(_context8.t8);
-                                                          _context8.t10 = _context8.t4.concat.call(_context8.t4, _context8.t9);
-                                                          _context8.t11 = _toConsumableArray2["default"];
-
-                                                          if (!(newLoot.length > 0)) {
-                                                            _context8.next = 32;
-                                                            break;
-                                                          }
-
-                                                          _context8.t13 = _discord.MessageActionRow;
-                                                          _context8.next = 26;
-                                                          return generateLootItemButtonArray(newLoot);
-
-                                                        case 26:
-                                                          _context8.t14 = _context8.sent;
-                                                          _context8.t15 = {
-                                                            components: _context8.t14
-                                                          };
-                                                          _context8.t16 = new _context8.t13(_context8.t15);
-                                                          _context8.t12 = [_context8.t16];
-                                                          _context8.next = 33;
-                                                          break;
-
-                                                        case 32:
-                                                          _context8.t12 = [];
-
-                                                        case 33:
-                                                          _context8.t17 = _context8.t12;
-                                                          _context8.t18 = (0, _context8.t11)(_context8.t17);
-                                                          _context8.t19 = {
-                                                            content: _context8.t1,
-                                                            embeds: _context8.t3,
-                                                            files: _context8.t10,
-                                                            components: _context8.t18
-                                                          };
-                                                          _context8.next = 38;
-                                                          return _context8.t0.editReply.call(_context8.t0, _context8.t19);
-
-                                                        case 38:
-                                                        case "end":
-                                                          return _context8.stop();
-                                                      }
-                                                    }
-                                                  }, _callee8);
-                                                })), 5000);
-                                              }
-
-                                              return _context9.abrupt("return");
-
-                                            case 163:
+                                            case 171:
                                               console.log('selecting 1');
 
                                               if (!interaction.isSelectMenu()) {
-                                                _context9.next = 222;
+                                                _context8.next = 229;
                                                 break;
                                               }
 
                                               if (!(interaction.customId === 'select-mainSkill')) {
-                                                _context9.next = 174;
+                                                _context8.next = 182;
                                                 break;
                                               }
 
-                                              _context9.next = 168;
+                                              _context8.next = 176;
                                               return interaction.deferUpdate();
 
-                                            case 168:
+                                            case 176:
                                               if (!interaction.values[0].startsWith('mainSkill:')) {
-                                                _context9.next = 173;
+                                                _context8.next = 181;
                                                 break;
                                               }
 
                                               skillId = Number(interaction.values[0].replace('mainSkill:', ''));
-                                              _context9.next = 172;
+                                              _context8.next = 180;
                                               return (0, _updateSelectedSkills.updateUserCurrentSelectedSkills)(userId, // Discord User id
                                               skillId, // mainSkill
                                               false, // secondary skill
                                               t // t, transaction
                                               );
 
-                                            case 172:
-                                              userCurrentSelectedSkills = _context9.sent;
+                                            case 180:
+                                              userCurrentSelectedSkills = _context8.sent;
 
-                                            case 173:
+                                            case 181:
                                               console.log('selecting new main skill');
 
-                                            case 174:
+                                            case 182:
                                               console.log('selecting 2');
 
                                               if (!(interaction.customId === 'select-secondarySkill')) {
-                                                _context9.next = 183;
+                                                _context8.next = 191;
                                                 break;
                                               }
 
-                                              _context9.next = 178;
+                                              _context8.next = 186;
                                               return interaction.deferUpdate();
 
-                                            case 178:
+                                            case 186:
                                               if (!interaction.values[0].startsWith('secondarySkill:')) {
-                                                _context9.next = 183;
+                                                _context8.next = 191;
                                                 break;
                                               }
 
                                               skillId = Number(interaction.values[0].replace('secondarySkill:', ''));
-                                              _context9.next = 182;
+                                              _context8.next = 190;
                                               return (0, _updateSelectedSkills.updateUserCurrentSelectedSkills)(userId, // Discord User id
                                               false, // mainSkill
                                               skillId, // secondary skill
                                               t // t, transaction
                                               );
 
-                                            case 182:
-                                              userCurrentSelectedSkills = _context9.sent;
+                                            case 190:
+                                              userCurrentSelectedSkills = _context8.sent;
 
-                                            case 183:
+                                            case 191:
                                               console.log('selecting 3');
                                               mainSkillMap = userCurrentSelectedSkills.UserGroupClassSkills.reduce(function (filtered, mySkill) {
                                                 if (!mySkill.skill.passive) {
@@ -1977,137 +1908,136 @@ var discordBattle = /*#__PURE__*/function () {
 
                                                 return filtered;
                                               }, []);
-                                              _context9.next = 189;
+                                              _context8.next = 197;
                                               return (0, _calculateCharacterStats.calculateCharacterStats)(userCurrentCharacter);
 
-                                            case 189:
-                                              _yield$calculateChara3 = _context9.sent;
+                                            case 197:
+                                              _yield$calculateChara3 = _context8.sent;
                                               _hp = _yield$calculateChara3.hp;
                                               _mp = _yield$calculateChara3.mp;
                                               myInitialUserState = JSON.parse(JSON.stringify(userCurrentCharacter));
                                               myInitialUserState.hp = _hp;
                                               myInitialUserState.mp = _mp;
                                               console.log('selecting 5');
-                                              _context9.t49 = interaction;
-                                              _context9.t50 = (0, _messages.playingOnRealmMessage)(userCurrentCharacter);
-                                              _context9.t51 = [];
-                                              _context9.t52 = _discord.MessageAttachment;
-                                              _context9.next = 202;
+                                              _context8.t55 = interaction;
+                                              _context8.t56 = (0, _messages.playingOnRealmMessage)(userCurrentCharacter);
+                                              _context8.t57 = [];
+                                              _context8.next = 209;
                                               return (0, _battle.renderBattleGif)(myInitialUserState, userCurrentSelectedSkills, battle, currentSelectedMonster, allRoundBuffsInfoArray, allRoundDebuffsInfoArray, allRoundEffectsInfoArray);
 
-                                            case 202:
-                                              _context9.t53 = _context9.sent;
-                                              _context9.t54 = new _context9.t52(_context9.t53, 'battle.gif');
-                                              _context9.t55 = [_context9.t54];
-                                              _context9.t56 = _discord.MessageActionRow;
-                                              _context9.next = 208;
+                                            case 209:
+                                              _context8.t58 = _context8.sent;
+                                              _context8.t59 = {
+                                                attachment: _context8.t58,
+                                                name: "battle.gif"
+                                              };
+                                              _context8.t60 = [_context8.t59];
+                                              _context8.t61 = _discord.ActionRowBuilder;
+                                              _context8.next = 215;
                                               return (0, _buttons.generateMainSkillButton)(userCurrentSelectedSkills.selectedMainSkill);
 
-                                            case 208:
-                                              _context9.t57 = _context9.sent;
-                                              _context9.next = 211;
+                                            case 215:
+                                              _context8.t62 = _context8.sent;
+                                              _context8.next = 218;
                                               return (0, _buttons.generateSecondarySkillButton)(userCurrentSelectedSkills.selectedSecondarySkill);
 
-                                            case 211:
-                                              _context9.t58 = _context9.sent;
-                                              _context9.next = 214;
+                                            case 218:
+                                              _context8.t63 = _context8.sent;
+                                              _context8.next = 221;
                                               return (0, _buttons.generateHealButton)();
 
-                                            case 214:
-                                              _context9.t59 = _context9.sent;
-                                              _context9.t60 = [_context9.t57, _context9.t58, _context9.t59];
-                                              _context9.t61 = {
-                                                components: _context9.t60
+                                            case 221:
+                                              _context8.t64 = _context8.sent;
+                                              _context8.t65 = [_context8.t62, _context8.t63, _context8.t64];
+                                              _context8.t66 = {
+                                                components: _context8.t65
                                               };
-                                              _context9.t62 = new _context9.t56(_context9.t61);
-                                              _context9.t63 = [_context9.t62].concat((0, _toConsumableArray2["default"])(selectMonsterMap && selectMonsterMap.length > 0 ? [new _discord.MessageActionRow({
-                                                components: [new _discord.MessageSelectMenu({
-                                                  type: 'SELECT_MENU',
+                                              _context8.t67 = new _context8.t61(_context8.t66);
+                                              _context8.t68 = [_context8.t67].concat((0, _toConsumableArray2["default"])(selectMonsterMap && selectMonsterMap.length > 0 ? [new _discord.ActionRowBuilder({
+                                                components: [new _discord.SelectMenuBuilder({
                                                   customId: 'select-mob',
                                                   options: selectMonsterMap
                                                 })]
-                                              })] : []), [new _discord.MessageActionRow({
-                                                components: [new _discord.MessageSelectMenu({
-                                                  type: 'SELECT_MENU',
+                                              })] : []), [new _discord.ActionRowBuilder({
+                                                components: [new _discord.SelectMenuBuilder({
                                                   customId: 'select-mainSkill',
                                                   options: mainSkillMap
                                                 })]
-                                              }), new _discord.MessageActionRow({
-                                                components: [new _discord.MessageSelectMenu({
-                                                  type: 'SELECT_MENU',
+                                              }), new _discord.ActionRowBuilder({
+                                                components: [new _discord.SelectMenuBuilder({
                                                   customId: 'select-secondarySkill',
                                                   options: secondarySkillMap
                                                 })]
                                               })]);
-                                              _context9.t64 = {
-                                                content: _context9.t50,
-                                                embeds: _context9.t51,
-                                                files: _context9.t55,
-                                                components: _context9.t63
+                                              _context8.t69 = {
+                                                content: _context8.t56,
+                                                embeds: _context8.t57,
+                                                files: _context8.t60,
+                                                components: _context8.t68
                                               };
-                                              _context9.next = 222;
-                                              return _context9.t49.editReply.call(_context9.t49, _context9.t64);
+                                              _context8.next = 229;
+                                              return _context8.t55.editReply.call(_context8.t55, _context8.t69);
 
-                                            case 222:
+                                            case 229:
                                             case "end":
-                                              return _context9.stop();
+                                              return _context8.stop();
                                           }
                                         }
-                                      }, _callee9);
+                                      }, _callee8);
                                     }));
 
-                                    return function (_x13) {
-                                      return _ref10.apply(this, arguments);
+                                    return function (_x10) {
+                                      return _ref9.apply(this, arguments);
                                     };
                                   }());
 
                                 case 2:
                                 case "end":
-                                  return _context10.stop();
+                                  return _context9.stop();
                               }
                             }
-                          }, _callee10);
+                          }, _callee9);
                         })))["catch"]( /*#__PURE__*/function () {
-                          var _ref13 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee11(err) {
-                            return _regenerator["default"].wrap(function _callee11$(_context11) {
+                          var _ref12 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee10(err) {
+                            return _regenerator["default"].wrap(function _callee10$(_context10) {
                               while (1) {
-                                switch (_context11.prev = _context11.next) {
+                                switch (_context10.prev = _context10.next) {
                                   case 0:
                                     console.log('catch error');
                                     console.log(err);
 
                                   case 2:
                                   case "end":
-                                    return _context11.stop();
+                                    return _context10.stop();
                                 }
                               }
-                            }, _callee11);
+                            }, _callee10);
                           }));
 
-                          return function (_x14) {
-                            return _ref13.apply(this, arguments);
+                          return function (_x11) {
+                            return _ref12.apply(this, arguments);
                           };
                         }());
 
                       case 92:
                       case "end":
-                        return _context12.stop();
+                        return _context11.stop();
                     }
                   }
-                }, _callee12);
+                }, _callee11);
               }));
 
-              return function (_x10) {
-                return _ref5.apply(this, arguments);
+              return function (_x7) {
+                return _ref4.apply(this, arguments);
               };
             }());
 
-          case 133:
+          case 130:
           case "end":
-            return _context13.stop();
+            return _context12.stop();
         }
       }
-    }, _callee13);
+    }, _callee12);
   }));
 
   return function discordBattle(_x, _x2, _x3, _x4) {
