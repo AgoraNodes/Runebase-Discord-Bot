@@ -1,4 +1,5 @@
 import { MessageButton } from "discord.js";
+import { result } from "lodash";
 import skillEmoji from "../config/skillEmoji";
 
 export const generateAcceptButton = () => {
@@ -262,6 +263,22 @@ export const generateHealButton = () => {
     emoji: '<a:heal:994509319573876786>',
     customId: 'Heal',
   });
+
+  return result;
+};
+
+export const generateEquipmentCompareButton = async (
+  userCurrentCharacter,
+  start,
+) => {
+  const current = userCurrentCharacter.inventory.items.slice(start, start + 1);
+  const equipItemId = `Compare:${current[0].id}`;
+  const result = new MessageButton({
+    style: 'SECONDARY',
+    label: `Compare ${current[0].name}`,
+    emoji: '👀',
+    customId: equipItemId,
+  }).setDisabled(true);
 
   return result;
 };
