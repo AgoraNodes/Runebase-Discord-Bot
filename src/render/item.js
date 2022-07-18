@@ -311,13 +311,13 @@ export const renderItemImage = async (
 
   if (newItem.itemBase.itemFamily.itemType.name === "Assassin Katars") {
     ctx.strokeText(
-      `(Assasin Only)`,
+      `(Assassin Only)`,
       100,
       (itemImage.height) + 95 + shieldAndBootsDamageHeight + extraWeaponsHeight + extraShieldBlockHeight + extraThrowingJavelinHeight,
       200,
     );
     ctx.fillText(
-      `(Assasin Only)`,
+      `(Assassin Only)`,
       100,
       (itemImage.height) + 95 + shieldAndBootsDamageHeight + extraWeaponsHeight + extraShieldBlockHeight + extraThrowingJavelinHeight,
       200,

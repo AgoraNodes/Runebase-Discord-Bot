@@ -112,17 +112,17 @@ module.exports = {
       ]);
     }
 
-    const AssasinDescription = await queryInterface.rawSelect('classDescription', {
+    const AssassinDescription = await queryInterface.rawSelect('classDescription', {
       where: {
-        name: 'Assasin',
+        name: 'Assassin',
       },
     }, ['id']);
 
-    if (!AssasinDescription) {
+    if (!AssassinDescription) {
       await queryInterface.bulkInsert('classDescription', [
         {
-          name: 'Assasin',
-          description: 'Assasin Description',
+          name: 'Assassin',
+          description: 'Assassin Description',
           createdAt: new Date(),
           updatedAt: new Date(),
         },
@@ -250,20 +250,20 @@ module.exports = {
         },
       ]);
     }
-    const NewAssasinDescription = await queryInterface.rawSelect('classDescription', {
+    const NewAssassinDescription = await queryInterface.rawSelect('classDescription', {
       where: {
-        name: 'Assasin',
+        name: 'Assassin',
       },
     }, ['id']);
-    const Assasin = await queryInterface.rawSelect('class', {
+    const Assassin = await queryInterface.rawSelect('class', {
       where: {
-        name: 'Assasin',
+        name: 'Assassin',
       },
     }, ['id']);
-    if (!Assasin) {
+    if (!Assassin) {
       await queryInterface.bulkInsert('class', [
         {
-          name: 'Assasin',
+          name: 'Assassin',
           strength: 20,
           dexterity: 20,
           vitality: 20,
@@ -273,7 +273,7 @@ module.exports = {
           stamina: 95,
           attackRating: 50,
           defense: 50,
-          classDescriptionId: NewAssasinDescription,
+          classDescriptionId: NewAssassinDescription,
           createdAt: new Date(),
           updatedAt: new Date(),
         },

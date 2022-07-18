@@ -87,7 +87,7 @@ export const addVitality = async (
       let addLife = 0;
       let addStamina = 1;
 
-      if (user.currentClass.name === 'Assasin') {
+      if (user.currentClass.name === 'Assassin') {
         if (user.UserGroup.UserGroupClass.stats.vitality % 4 === 0) {
           addStamina = 2;
         }
@@ -98,7 +98,7 @@ export const addVitality = async (
         addLife = 4;
       } else if (
         user.currentClass.name === 'Amazon'
-        || user.currentClass.name === 'Assasin'
+        || user.currentClass.name === 'Assassin'
         || user.currentClass.name === 'Paladin'
       ) {
         addLife = 3;

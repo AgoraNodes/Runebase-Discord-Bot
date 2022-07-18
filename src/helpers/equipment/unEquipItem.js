@@ -229,7 +229,7 @@ export const unEquipItem = async (
         || findItemToUnEquip.itemBase.itemFamily.itemType.name === 'Swords'
         || findItemToUnEquip.itemBase.itemFamily.itemType.name === 'Throwing'
         || findItemToUnEquip.itemBase.itemFamily.itemType.name === 'Wands'
-        || findItemToUnEquip.itemBase.itemFamily.itemType.name === 'Assasin Katars'
+        || findItemToUnEquip.itemBase.itemFamily.itemType.name === 'Assassin Katars'
         || findItemToUnEquip.itemBase.itemFamily.itemType.name === 'Amazon Weapons'
       ) {
         await unEquipMainHand(

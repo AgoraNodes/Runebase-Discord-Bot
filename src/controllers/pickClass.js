@@ -17,6 +17,7 @@ import { fetchDiscordChannel } from '../helpers/client/fetchDiscordChannel';
 import { renderPickClassImage } from '../render/pickClass/pickClass';
 import { renderClassPicked } from '../render/pickClass/classPicked';
 import { renderCancelClassPicked } from '../render/pickClass/cancelClassPick';
+import { generateStartGear } from "../helpers/items/generateStartingGear";
 import {
   generateBackButton,
   generateForwardButton,
@@ -142,6 +143,7 @@ export const discordPickClass = async (
         await db.sequelize.transaction({
           isolationLevel: Transaction.ISOLATION_LEVELS.SERIALIZABLE,
         }, async (t) => {
+          // Find User Who is trying To Switch Class
           const findCurrentUser = await db.user.findOne({
             where: {
               id: user.id,
@@ -150,6 +152,7 @@ export const discordPickClass = async (
             lock: t.LOCK.UPDATE,
           });
           console.log('1');
+          // Find the Class The User is trying to pick
           const selectedClass = await db.class.findOne({
             where: {
               id: CurrentClassSelectionId,
@@ -158,6 +161,7 @@ export const discordPickClass = async (
             lock: t.LOCK.UPDATE,
           });
           console.log('2');
+          // Update What Class The user Currently has Selected
           await findCurrentUser.update({
             currentClassId: CurrentClassSelectionId,
           }, {
@@ -165,71 +169,40 @@ export const discordPickClass = async (
             lock: t.LOCK.UPDATE,
           });
           console.log('3');
+          // Find the UserGroup Record (Realm related, user's experience is stored in this record)
           const UserGroup = await db.UserGroup.findOne({
             where: {
               userId: findCurrentUser.id,
               groupId: findCurrentUser.currentRealmId,
             },
+            transaction: t,
+            lock: t.LOCK.UPDATE,
           });
           console.log('4');
+          // Find The userGroupClass (Does User already have class record for the realm he is trying to join?)
           let userGroupClass = await db.UserGroupClass.findOne({
             where: {
               UserGroupId: UserGroup.id,
               classId: CurrentClassSelectionId,
             },
+            transaction: t,
+            lock: t.LOCK.UPDATE,
           });
-          console.log(userGroupClass);
           console.log('5');
+          // If the user has no class record for this realm yet
           if (!userGroupClass) {
-            const newStats = await db.stats.create({
-            }, {
-              transaction: t,
-              lock: t.LOCK.UPDATE,
-            });
-            console.log('5-1');
-            const newCondition = await db.condition.create({
-              life: selectedClass.life,
-              mana: selectedClass.mana,
-              stamina: selectedClass.stamina,
-            }, {
-              transaction: t,
-              lock: t.LOCK.UPDATE,
-            });
-            console.log('5-2');
-            const newInventory = await db.inventory.create({
-            }, {
-              transaction: t,
-              lock: t.LOCK.UPDATE,
-            });
-            console.log('5-3');
-            const newEquipment = await db.equipment.create({
-            }, {
-              transaction: t,
-              lock: t.LOCK.UPDATE,
-            });
-            console.log('5-4');
+            // Create a UserGroupClass Record
             userGroupClass = await db.UserGroupClass.create({
               UserGroupId: UserGroup.id,
               classId: CurrentClassSelectionId,
-              statsId: newStats.id,
-              conditionId: newCondition.id,
-              inventoryId: newInventory.id,
-              equipmentId: newEquipment.id,
             }, {
               transaction: t,
               lock: t.LOCK.UPDATE,
             });
             console.log('5-5');
           }
-          // else {
-          //   userClass.update({
-          //     classId: CurrentClassSelectionId,
-          //   }, {
-          //     transaction: t,
-          //     lock: t.LOCK.UPDATE,
-          //   });
-          // }
-          console.log('7');
+
+          // If User has no Condition Record Yet;
           if (!userGroupClass.conditionId) {
             const newCondition = await db.condition.create({
               life: selectedClass.life,
@@ -246,7 +219,9 @@ export const discordPickClass = async (
               lock: t.LOCK.UPDATE,
             });
           }
+
           console.log('8');
+          // If User Has No Stats Record Yet;
           if (!userGroupClass.statsId) {
             const newStats = await db.stats.create({
             }, {
@@ -260,6 +235,8 @@ export const discordPickClass = async (
               lock: t.LOCK.UPDATE,
             });
           }
+
+          // If User Has No Inventory Record Yet;
           if (!userGroupClass.inventoryId) {
             const inventory = await db.inventory.create({
             }, {
@@ -273,8 +250,18 @@ export const discordPickClass = async (
               lock: t.LOCK.UPDATE,
             });
           }
+
+          // If User Has No Equipment Record Yet;
           if (!userGroupClass.equipmentId) {
+            const [
+              mainHand,
+              offHand,
+            ] = await generateStartGear(
+              selectedClass.name,
+            );
             const equipment = await db.equipment.create({
+              mainHandId: mainHand ? mainHand.id : null,
+              offHandId: offHand ? offHand.id : null,
             }, {
               transaction: t,
               lock: t.LOCK.UPDATE,
@@ -286,6 +273,8 @@ export const discordPickClass = async (
               lock: t.LOCK.UPDATE,
             });
           }
+
+          // Find The User Default Attack Skill
           const findAttackSkill = await db.skill.findOne({
             where: {
               name: 'Attack',
@@ -301,6 +290,8 @@ export const discordPickClass = async (
             transaction: t,
             lock: t.LOCK.UPDATE,
           });
+
+          // If User has No Default Attack Skill Yet
           if (!userAttackSkill) {
             console.log('before create UserGroupClassSkill');
             userAttackSkill = await db.UserGroupClassSkill.create({
@@ -313,6 +304,8 @@ export const discordPickClass = async (
             });
             console.log('after create UserGroupClassSkill');
           }
+
+          // If User Has No Main Attack Skill Yet
           if (!userGroupClass.selectedMainSkillId) {
             userGroupClass = await userGroupClass.update({
               selectedMainSkillId: userAttackSkill.id,
@@ -321,6 +314,8 @@ export const discordPickClass = async (
               lock: t.LOCK.UPDATE,
             });
           }
+
+          // If User has No Secondary Attack Skill Yet
           if (!userGroupClass.selectedSecondarySkillId) {
             userGroupClass = await userGroupClass.update({
               selectedSecondarySkillId: userAttackSkill.id,

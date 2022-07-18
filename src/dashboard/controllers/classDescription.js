@@ -12,9 +12,6 @@ export const updateClassDescription = async (
   if (!req.body.description) {
     throw new Error("description is required");
   }
-  if (!req.body.image) {
-    throw new Error("image is required");
-  }
   const classDescription = await db.classDescription.findOne({
     where: {
       id: req.body.id,
@@ -78,9 +75,6 @@ export const addClassDescription = async (
   }
   if (!req.body.description) {
     throw new Error("description is required");
-  }
-  if (!req.body.image) {
-    throw new Error("Image is required");
   }
 
   const classDescription = await db.classDescription.findOne({

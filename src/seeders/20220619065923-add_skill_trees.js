@@ -6,9 +6,9 @@ module.exports = {
         name: 'Barbarian',
       },
     }, ['id']);
-    const assasin = await queryInterface.rawSelect('class', {
+    const assassin = await queryInterface.rawSelect('class', {
       where: {
-        name: 'Assasin',
+        name: 'Assassin',
       },
     }, ['id']);
     const druid = await queryInterface.rawSelect('class', {
@@ -75,19 +75,19 @@ module.exports = {
       },
       {
         name: 'Martial Arts',
-        classId: assasin,
+        classId: assassin,
         createdAt: new Date(),
         updatedAt: new Date(),
       },
       {
         name: 'Shadow Disciplines',
-        classId: assasin,
+        classId: assassin,
         createdAt: new Date(),
         updatedAt: new Date(),
       },
       {
         name: 'Traps',
-        classId: assasin,
+        classId: assassin,
         createdAt: new Date(),
         updatedAt: new Date(),
       },

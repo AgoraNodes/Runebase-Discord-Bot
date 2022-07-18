@@ -250,8 +250,8 @@ export const equipItem = async (
           && userCurrentCharacter.UserGroup.user.currentClass.name !== 'Amazon'
         )
         || (
-          findItemToEquip.itemBase.itemFamily.itemType.name === 'Assasin Katars'
-          && userCurrentCharacter.UserGroup.user.currentClass.name !== 'Assasin'
+          findItemToEquip.itemBase.itemFamily.itemType.name === 'Assassin Katars'
+          && userCurrentCharacter.UserGroup.user.currentClass.name !== 'Assassin'
         )
         || (
           findItemToEquip.itemBase.itemFamily.itemType.name === 'Druid Pelts'
@@ -357,7 +357,7 @@ export const equipItem = async (
         || findItemToEquip.itemBase.itemFamily.itemType.name === 'Swords'
         || findItemToEquip.itemBase.itemFamily.itemType.name === 'Throwing'
         || findItemToEquip.itemBase.itemFamily.itemType.name === 'Wands'
-        || findItemToEquip.itemBase.itemFamily.itemType.name === 'Assasin Katars'
+        || findItemToEquip.itemBase.itemFamily.itemType.name === 'Assassin Katars'
         || findItemToEquip.itemBase.itemFamily.itemType.name === 'Amazon Weapons'
       ) {
         await equipMainHand(
