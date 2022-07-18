@@ -31,6 +31,7 @@ import {
   playingOnRealmMessage,
 } from '../messages';
 import testPlayerReadyness from '../helpers/testPlayerReadyness';
+import isUserInRealm from "../helpers/realm/isUserInRealm";
 import { addingAttributeEmbed } from '../embeds';
 
 export const discordStats = async (
@@ -41,6 +42,8 @@ export const discordStats = async (
   queue,
   isDefered,
 ) => {
+  let failed;
+  let usedDeferReply;
   const activity = [];
   const userId = await fetchDiscordUserIdFromMessageOrInteraction(
     message,
@@ -56,11 +59,22 @@ export const discordStats = async (
     false, // Need inventory?
   );
 
-  const [
+  [
     failed,
     usedDeferReply,
   ] = await testPlayerReadyness(
     userCurrentCharacter,
+    message,
+    isDefered,
+  );
+  if (failed) return usedDeferReply;
+
+  [
+    failed,
+    usedDeferReply,
+  ] = await isUserInRealm(
+    userCurrentCharacter,
+    discordClient,
     message,
     isDefered,
   );
@@ -110,9 +124,7 @@ export const discordStats = async (
     ],
   });
 
-  const collector = embedMessage.createMessageComponentCollector({
-    // filter: ({ user: discordUser }) => discordUser.id === userCurrentCharacter.user.user_id,
-  });
+  const collector = embedMessage.createMessageComponentCollector({});
 
   collector.on('collect', async (interaction) => {
     let updatedUser;

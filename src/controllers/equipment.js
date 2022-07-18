@@ -49,6 +49,8 @@ export const discordShowEquipment = async (
   isDefered,
 ) => {
   const activity = [];
+  let failed;
+  let usedDeferReply;
   const userId = await fetchDiscordUserIdFromMessageOrInteraction(
     message,
   );
@@ -62,29 +64,24 @@ export const discordShowEquipment = async (
     false, // Need inventory?
   );
 
-  const isInRealm = await isUserInRealm(
-    discordClient,
-    userCurrentCharacter,
-  );
+  console.log(userCurrentCharacter);
 
-  if (!isInRealm) {
-    await message.reply({
-      content: `<@${userCurrentCharacter.UserGroup.user.user_id}>, ${userCurrentCharacter.UserGroup.group.inviteLink}`,
-      embeds: [
-        await needToBeInDiscordRealmEmbed(
-          userCurrentCharacter.UserGroup.group,
-        ),
-      ],
-      ephemeral: true,
-    });
-    return;
-  }
-
-  const [
+  [
     failed,
     usedDeferReply,
   ] = await testPlayerReadyness(
     userCurrentCharacter,
+    message,
+    isDefered,
+  );
+  if (failed) return usedDeferReply;
+
+  [
+    failed,
+    usedDeferReply,
+  ] = await isUserInRealm(
+    userCurrentCharacter,
+    discordClient,
     message,
     isDefered,
   );

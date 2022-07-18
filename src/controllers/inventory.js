@@ -32,6 +32,7 @@ import { renderEmptyInventoryImage } from "../render/inventory/emptyInventory";
 import { renderInventoryImage } from '../render/inventory/inventory';
 import { renderDestroyIventoryItemImage } from "../render/inventory/destroyInventoryItem";
 import { renderItemCompareImage } from "../render/inventory/itemCompare";
+import isUserInRealm from "../helpers/realm/isUserInRealm";
 
 export const discordShowInventory = async (
   discordClient,
@@ -42,6 +43,8 @@ export const discordShowInventory = async (
   isDefered,
 ) => {
   const activity = [];
+  let failed;
+  let usedDeferReply;
   const userId = await fetchDiscordUserIdFromMessageOrInteraction(
     message,
   );
@@ -55,7 +58,7 @@ export const discordShowInventory = async (
     true, // Need inventory?
   );
 
-  const [
+  [
     failed,
     usedDeferReply,
   ] = await testPlayerReadyness(
@@ -65,20 +68,16 @@ export const discordShowInventory = async (
   );
   if (failed) return usedDeferReply;
 
-  // const row = new ActionRowBuilder();
-
-  // if (
-  //   userCurrentCharacter.inventory
-  //   && userCurrentCharacter.inventory.items
-  //   && userCurrentCharacter.inventory.items.length > 0
-  // ) {
-  //   row.addComponents(
-  //     await generateEquipmentCompareButton(
-  //       userCurrentCharacter,
-  //       0,
-  //     ),
-  //   );
-  // }
+  [
+    failed,
+    usedDeferReply,
+  ] = await isUserInRealm(
+    userCurrentCharacter,
+    discordClient,
+    message,
+    isDefered,
+  );
+  if (failed) return usedDeferReply;
 
   const canFitOnOnePage = userCurrentCharacter.inventory.items.length <= 1;
 

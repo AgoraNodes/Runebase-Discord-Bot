@@ -27,6 +27,7 @@ import {
   playingOnRealmMessage,
 } from '../messages';
 import testPlayerReadyness from '../helpers/testPlayerReadyness';
+import isUserInRealm from "../helpers/realm/isUserInRealm";
 
 export const discordHeal = async (
   discordClient,
@@ -35,6 +36,8 @@ export const discordHeal = async (
   queue,
   isDefered,
 ) => {
+  let failed;
+  let usedDeferReply;
   const activity = [];
   const userId = await fetchDiscordUserIdFromMessageOrInteraction(
     message,
@@ -50,11 +53,22 @@ export const discordHeal = async (
     false, // Need inventory?
   );
 
-  const [
+  [
     failed,
     usedDeferReply,
   ] = await testPlayerReadyness(
     userCurrentCharacter,
+    message,
+    isDefered,
+  );
+  if (failed) return usedDeferReply;
+
+  [
+    failed,
+    usedDeferReply,
+  ] = await isUserInRealm(
+    userCurrentCharacter,
+    discordClient,
     message,
     isDefered,
   );

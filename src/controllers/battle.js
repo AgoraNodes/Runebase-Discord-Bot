@@ -45,6 +45,7 @@ import {
 } from '../messages';
 import skillEmoji from "../config/skillEmoji";
 import testPlayerReadyness from '../helpers/testPlayerReadyness';
+import isUserInRealm from "../helpers/realm/isUserInRealm";
 
 let currentSelectedMonster;
 
@@ -54,6 +55,8 @@ export const discordBattle = async (
   isDefered,
   queue,
 ) => {
+  let failed;
+  let usedDeferReply;
   // let usedDeferReply = false;
   let allRoundBuffsInfoArray = [];
   let allRoundDebuffsInfoArray = [];
@@ -74,11 +77,22 @@ export const discordBattle = async (
   );
 
   console.log('battle1');
-  const [
+  [
     failed,
     usedDeferReply,
   ] = await testPlayerReadyness(
     userCurrentCharacter,
+    message,
+    isDefered,
+  );
+  if (failed) return usedDeferReply;
+
+  [
+    failed,
+    usedDeferReply,
+  ] = await isUserInRealm(
+    userCurrentCharacter,
+    discordClient,
     message,
     isDefered,
   );
@@ -457,7 +471,11 @@ export const discordBattle = async (
       });
       return;
     }
-    if (interaction.isButton() && !interaction.customId.startsWith('lootItem:') && interaction.customId !== 'Heal') {
+    if (
+      interaction.isButton()
+      && !interaction.customId.startsWith('lootItem:')
+      && interaction.customId !== 'Heal'
+    ) {
       if (!currentSelectedMonster) {
         await interaction.reply({
           content: `<@${interaction.user.id}>, You need to select a monster to attack!`,
@@ -466,6 +484,16 @@ export const discordBattle = async (
         return;
       }
     }
+    [
+      failed,
+      usedDeferReply,
+    ] = await isUserInRealm(
+      userCurrentCharacter,
+      discordClient,
+      interaction,
+      false, // Is interaction defered?
+    );
+    if (failed) return;
     console.log('collector 3');
     // Heal Handling
     if (interaction.isButton() && interaction.customId === 'Heal') {
