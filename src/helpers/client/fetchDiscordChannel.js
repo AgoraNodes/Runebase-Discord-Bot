@@ -1,20 +1,24 @@
+import {
+  InteractionType,
+  ChannelType,
+} from "discord.js";
+
 export const fetchDiscordChannel = async (
   discordClient,
   message,
 ) => {
-  console.log(message);
   let discordChannel;
-  if (message.type && message.type === 'APPLICATION_COMMAND') {
+  if (message.type && message.type === InteractionType.ApplicationCommand) {
     if (message.guildId) {
       discordChannel = await discordClient.channels.cache.get(message.channelId);
     } else {
       discordChannel = await discordClient.users.cache.get(message.user.id);
     }
   } else {
-    if (message.channel.type === 'DM') {
+    if (message.channel.type === ChannelType.DM) {
       discordChannel = await discordClient.channels.cache.get(message.channelId);
     }
-    if (message.channel.type === 'GUILD_TEXT') {
+    if (message.channel.type === ChannelType.GuildText) {
       discordChannel = await discordClient.channels.cache.get(message.channelId);
     }
   }

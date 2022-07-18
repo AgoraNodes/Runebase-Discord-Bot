@@ -3,7 +3,7 @@ import {
   Transaction,
 } from "sequelize";
 import {
-  MessageActionRow,
+  ActionRowBuilder,
   MessageAttachment,
 } from 'discord.js';
 import db from '../models';
@@ -66,7 +66,7 @@ export const discordShowInventory = async (
   );
   if (failed) return usedDeferReply;
 
-  const row = new MessageActionRow();
+  const row = new ActionRowBuilder();
 
   if (
     userCurrentCharacter.inventory
@@ -82,13 +82,15 @@ export const discordShowInventory = async (
   }
 
   const canFitOnOnePage = userCurrentCharacter.inventory.items.length <= 1;
+
+  console.log('before send message');
   const embedMessage = await discordChannel.send({
     content: playingOnRealmMessage(userCurrentCharacter),
     files: [
       ...(
         userCurrentCharacter.inventory.items.length > 0 ? [
-          new MessageAttachment(
-            await renderInventoryImage(
+          {
+            attachment: await renderInventoryImage(
               userCurrentCharacter,
               false,
               false,
@@ -96,13 +98,13 @@ export const discordShowInventory = async (
               false,
               0,
             ),
-            'inventory.png',
-          ),
+            name: 'inventory.png',
+          },
         ] : [
-          new MessageAttachment(
-            await renderEmptyInventoryImage(userCurrentCharacter),
-            'emptyInventory.png',
-          ),
+          {
+            attachment: await renderEmptyInventoryImage(userCurrentCharacter),
+            name: 'emptyInventory.png',
+          },
         ]
       ),
     ],
@@ -112,7 +114,7 @@ export const discordShowInventory = async (
           && userCurrentCharacter.inventory.items
           && userCurrentCharacter.inventory.items.length > 0
           ? [
-            new MessageActionRow({
+            new ActionRowBuilder({
               components: [
                 await generateEquipmentCompareButton(
                   userCurrentCharacter,
@@ -120,7 +122,7 @@ export const discordShowInventory = async (
                 ),
               ],
             }),
-            new MessageActionRow({
+            new ActionRowBuilder({
               components: [
                 await generateEquipItemButton(
                   0,
@@ -136,7 +138,7 @@ export const discordShowInventory = async (
       ),
       ...(
         !canFitOnOnePage ? [
-          new MessageActionRow({
+          new ActionRowBuilder({
             components: [
               generateForwardButton(),
             ],
@@ -145,7 +147,7 @@ export const discordShowInventory = async (
       ),
       ...(
         userCurrentCharacter.inventory.items.length > 0 ? [
-          new MessageActionRow({
+          new ActionRowBuilder({
             components: [
               await generateExitInventoryButton(),
             ],
@@ -238,7 +240,7 @@ export const discordShowInventory = async (
           ),
         ],
         components: [
-          new MessageActionRow({
+          new ActionRowBuilder({
             components: [
               await generateDestroyYesButton(
                 currentIndex,
@@ -246,7 +248,7 @@ export const discordShowInventory = async (
               ),
             ],
           }),
-          new MessageActionRow({
+          new ActionRowBuilder({
             components: [
               await generateDestroyNoButton(),
             ],
@@ -319,7 +321,7 @@ export const discordShowInventory = async (
       components: [
         ...(
           userCurrentCharacter.inventory.items.length > 0 ? [
-            new MessageActionRow({
+            new ActionRowBuilder({
               components: [
                 await generateEquipmentCompareButton(
                   userCurrentCharacter,
@@ -331,7 +333,7 @@ export const discordShowInventory = async (
         ),
         ...(
           userCurrentCharacter.inventory.items.length > 0 ? [
-            new MessageActionRow({
+            new ActionRowBuilder({
               components: [
                 await generateEquipItemButton(
                   currentIndex,
@@ -347,7 +349,7 @@ export const discordShowInventory = async (
         ),
         ...(
           userCurrentCharacter.inventory.items.length > 1 ? [
-            new MessageActionRow({
+            new ActionRowBuilder({
               components: [
                 ...(currentIndex
                   ? [
@@ -365,7 +367,7 @@ export const discordShowInventory = async (
             }),
           ] : []
         ),
-        new MessageActionRow({
+        new ActionRowBuilder({
           components: [
             await generateExitInventoryButton(),
           ],

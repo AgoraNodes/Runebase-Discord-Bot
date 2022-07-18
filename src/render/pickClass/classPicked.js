@@ -30,5 +30,6 @@ export const renderClassPicked = async (
   ctx.strokeText(`picked ${current[0].name}!`, 250, 920, 500);
   ctx.fillText(`picked ${current[0].name}!`, 250, 920, 500);
 
-  return new MessageAttachment(canvas.toBuffer(), 'picked.png');
+  const finalImage = await canvas.toBuffer();
+  return finalImage;
 };

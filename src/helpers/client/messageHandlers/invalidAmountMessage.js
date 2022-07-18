@@ -1,4 +1,8 @@
 import {
+  InteractionType,
+  ChannelType,
+} from 'discord.js';
+import {
   invalidAmountMessage,
 } from '../../../embeds';
 
@@ -7,7 +11,7 @@ export const handleInvalidAmountMessage = async (
   message,
   capType,
 ) => {
-  if (message.type && message.type === 'APPLICATION_COMMAND') {
+  if (message.type && message.type === InteractionType.ApplicationCommand) {
     const discordUser = await discordClient.users.cache.get(message.user.id);
     if (message.guildId) {
       const discordChannel = await discordClient.channels.cache.get(message.channelId);
@@ -30,7 +34,7 @@ export const handleInvalidAmountMessage = async (
       });
     }
   } else {
-    if (message.channel.type === 'DM') {
+    if (message.channel.type === ChannelType.DM) {
       await message.author.send({
         embeds: [
           invalidAmountMessage(
@@ -40,7 +44,7 @@ export const handleInvalidAmountMessage = async (
         ],
       });
     }
-    if (message.channel.type === 'GUILD_TEXT') {
+    if (message.channel.type === ChannelType.GuildText) {
       await message.channel.send({
         embeds: [
           invalidAmountMessage(

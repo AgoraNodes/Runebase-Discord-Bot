@@ -3,7 +3,7 @@ import {
   Transaction,
 } from "sequelize";
 import {
-  MessageActionRow,
+  ActionRowBuilder,
   // MessageButton,
   // MessageAttachment,
 } from 'discord.js';
@@ -105,16 +105,19 @@ export const discordPickClass = async (
   const embedMessage = await discordChannel.send({
     content: playingOnRealmMessage(user),
     files: [
-      await renderPickClassImage(
-        0,
-        classes,
-        user,
-      ),
+      {
+        attachment: await renderPickClassImage(
+          0,
+          classes,
+          user,
+        ),
+        name: 'pickClass.png',
+      },
     ],
     components: canFitOnOnePage
       ? []
       : [
-        new MessageActionRow({
+        new ActionRowBuilder({
           components: [
             await generatePickClassButton(
               0,
@@ -123,7 +126,7 @@ export const discordPickClass = async (
             await generateCancelPickClassButton(),
           ],
         }),
-        new MessageActionRow({
+        new ActionRowBuilder({
           components: [
             generateForwardButton(),
           ],
@@ -327,11 +330,14 @@ export const discordPickClass = async (
 
           await interaction.update({
             files: [
-              await renderClassPicked(
-                currentIndex,
-                classes,
-                user,
-              ),
+              {
+                attachment: await renderClassPicked(
+                  currentIndex,
+                  classes,
+                  user,
+                ),
+                name: 'classPicked.png',
+              },
             ],
             components: [],
           });
@@ -429,9 +435,12 @@ export const discordPickClass = async (
     if (interaction.customId === 'cancelClass') {
       await interaction.update({
         files: [
-          await renderCancelClassPicked(
-            user,
-          ),
+          {
+            attachment: await renderCancelClassPicked(
+              user,
+            ),
+            name: 'cancelPickClass.png',
+          },
         ],
         components: [],
       });
@@ -443,14 +452,17 @@ export const discordPickClass = async (
     // Load another character
     await interaction.update({
       files: [
-        await renderPickClassImage(
-          currentIndex,
-          classes,
-          user,
-        ),
+        {
+          attachment: await renderPickClassImage(
+            currentIndex,
+            classes,
+            user,
+          ),
+          name: 'pickClass.png',
+        },
       ],
       components: [
-        new MessageActionRow({
+        new ActionRowBuilder({
           components: [
             await generatePickClassButton(
               currentIndex,
@@ -459,7 +471,7 @@ export const discordPickClass = async (
             await generateCancelPickClassButton(),
           ],
         }),
-        new MessageActionRow({
+        new ActionRowBuilder({
           components: [
             // back button if it isn't the start
             ...(currentIndex ? [generateBackButton()] : []),

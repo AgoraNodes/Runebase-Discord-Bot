@@ -1,7 +1,7 @@
 import BigNumber from "bignumber.js";
 import db from '../../models';
 
-import { invalidAmountMessageHandler } from "./messageHandlers/invalidAmountMessage";
+import { handleInvalidAmountMessage } from "./messageHandlers/invalidAmountMessage";
 import { handleInsufficientBalanceMessage } from "./messageHandlers/insufficientBalanceMessageHandler";
 import { handleMinimumMessage } from './messageHandlers/minimumMessageHandler';
 
@@ -47,7 +47,7 @@ export const validateAmount = async (
       transaction: t,
     });
 
-    await invalidAmountMessageHandler(
+    await handleInvalidAmountMessage(
       discordClient,
       message,
       capType,
@@ -134,7 +134,7 @@ export const validateAmount = async (
       transaction: t,
     });
 
-    await invalidAmountMessageHandler(
+    await handleInvalidAmountMessage(
       discordClient,
       message,
       capType,
@@ -156,7 +156,7 @@ export const validateAmount = async (
       transaction: t,
     });
 
-    await invalidAmountMessageHandler(
+    await handleInvalidAmountMessage(
       discordClient,
       message,
       capType,

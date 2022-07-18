@@ -1,9 +1,8 @@
 import {
   createCanvas,
 } from 'canvas';
-import _ from 'lodash';
 
-export const renderCancelSkillPick = async (
+export const renderCancelStatsImage = async (
   userCurrentCharacter,
 ) => {
   const canvas = createCanvas(500, 100);
@@ -15,9 +14,8 @@ export const renderCancelSkillPick = async (
   ctx.lineWidth = 3;
   ctx.textAlign = "center";
 
-  ctx.strokeText(`${userCurrentCharacter.UserGroup.user.username} canceled skill selection`, 250, 60, 500);
-  ctx.fillText(`${userCurrentCharacter.UserGroup.user.username} canceled skill selection`, 250, 60, 500);
-
+  ctx.strokeText(`${userCurrentCharacter.UserGroup.user.username} canceled stats selection`, 250, 60, 500);
+  ctx.fillText(`${userCurrentCharacter.UserGroup.user.username} canceled stats selection`, 250, 60, 500);
   const finalImage = canvas.toBuffer();
   return finalImage;
 };

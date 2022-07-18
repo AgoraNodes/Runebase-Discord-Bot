@@ -5,13 +5,7 @@
 //   Op,
 // } from "sequelize";
 import {
-  createCanvas,
-} from 'canvas';
-import {
-  MessageActionRow,
-  // MessageButton,
-  MessageAttachment,
-  // MessageEmbed,
+  ActionRowBuilder,
 } from 'discord.js';
 
 // import db from '../models';
@@ -20,7 +14,8 @@ import { addStrength } from "../helpers/stats/addStrength";
 import { addDexterity } from "../helpers/stats/addDexterity";
 import { addVitality } from "../helpers/stats/addVitality";
 import { addEnergy } from "../helpers/stats/addEnergy";
-import { renderStatsImage } from '../render/stats';
+import { renderStatsImage } from '../render/stats/stats';
+import { renderCancelStatsImage } from '../render/stats/cancelStats';
 import { fetchUserCurrentCharacter } from "../helpers/character/character";
 import { fetchDiscordUserIdFromMessageOrInteraction } from '../helpers/client/fetchDiscordUserIdFromMessageOrInteraction';
 import { fetchDiscordChannel } from '../helpers/client/fetchDiscordChannel';
@@ -36,10 +31,7 @@ import {
   playingOnRealmMessage,
 } from '../messages';
 import testPlayerReadyness from '../helpers/testPlayerReadyness';
-
-import {
-  addingAttributeEmbed,
-} from '../embeds';
+import { addingAttributeEmbed } from '../embeds';
 
 export const discordStats = async (
   discordClient,
@@ -78,22 +70,6 @@ export const discordStats = async (
     unspendAttributes,
   } = await calculateCharacterStats(userCurrentCharacter);
 
-  const generateCancelClassPicked = async () => {
-    const canvas = createCanvas(500, 100);
-    const ctx = canvas.getContext('2d');
-
-    ctx.font = 'bold 30px "HeartWarming"';
-    ctx.fillStyle = "#ccc";
-    ctx.strokeStyle = 'black';
-    ctx.lineWidth = 3;
-    ctx.textAlign = "center";
-
-    ctx.strokeText(`${userCurrentCharacter.UserGroup.user.username} canceled stats selection`, 250, 60, 500);
-    ctx.fillText(`${userCurrentCharacter.UserGroup.user.username} canceled stats selection`, 250, 60, 500);
-
-    return new MessageAttachment(canvas.toBuffer(), 'cancelSelection.png');
-  };
-
   // const calc = (
   //   userCurrentCharacter.stats.strength
   //   + userCurrentCharacter.stats.dexterity
@@ -105,28 +81,28 @@ export const discordStats = async (
   const embedMessage = await discordChannel.send({
     content: playingOnRealmMessage(userCurrentCharacter),
     files: [
-      new MessageAttachment(
-        await renderStatsImage(
+      {
+        attachment: await renderStatsImage(
           userCurrentCharacter,
           false,
         ),
-        'class.png',
-      ),
+        name: 'stats.png',
+      },
     ],
     components: [
-      ...(calc ? [new MessageActionRow({
+      ...(calc ? [new ActionRowBuilder({
         components: [
           generateAddStrengthButton(),
           generateAddDexterityButton(),
         ],
       })] : []),
-      ...(calc ? [new MessageActionRow({
+      ...(calc ? [new ActionRowBuilder({
         components: [
           generateAddVitalityButton(),
           generateAddEnergyButton(),
         ],
       })] : []),
-      new MessageActionRow({
+      new ActionRowBuilder({
         components: [
           generateCancelStatsPickButton(),
         ],
@@ -212,28 +188,28 @@ export const discordStats = async (
         content: playingOnRealmMessage(userCurrentCharacter),
         embeds: [],
         files: [
-          new MessageAttachment(
-            await renderStatsImage(
+          {
+            attachment: await renderStatsImage(
               updatedUser,
               false,
             ),
-            'class.png',
-          ),
+            name: 'stats.png',
+          },
         ],
         components: [
-          ...(newCalc ? [new MessageActionRow({
+          ...(newCalc ? [new ActionRowBuilder({
             components: [
               generateAddStrengthButton(),
               generateAddDexterityButton(),
             ],
           })] : []),
-          ...(newCalc ? [new MessageActionRow({
+          ...(newCalc ? [new ActionRowBuilder({
             components: [
               generateAddVitalityButton(),
               generateAddEnergyButton(),
             ],
           })] : []),
-          new MessageActionRow({
+          new ActionRowBuilder({
             components: [
               generateCancelStatsPickButton(),
             ],
@@ -246,7 +222,12 @@ export const discordStats = async (
       await interaction.editReply({
         content: playingOnRealmMessage(userCurrentCharacter),
         files: [
-          await generateCancelClassPicked(),
+          {
+            attachment: await renderCancelStatsImage(
+              userCurrentCharacter,
+            ),
+            name: 'stats.png',
+          },
         ],
         components: [],
         embeds: [],

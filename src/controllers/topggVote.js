@@ -1,5 +1,8 @@
 /* eslint-disable import/prefer-default-export */
-import { Transaction, Op } from "sequelize";
+import {
+  Transaction,
+  Op,
+} from "sequelize";
 import {
   alreadyVotedTopGG,
   cannotSendMessageUser,
@@ -112,54 +115,6 @@ export const discordTopggVote = async (
       });
     } catch (e) {
       logger.error(`Error Discord: ${e}`);
-    }
-    logger.error(`Error Discord topggvote Requested by: ${message.author.id}-${message.author.username}#${message.author.discriminator} - ${err}`);
-    if (err.code && err.code === 50007) {
-      if (message.type && message.type === 'APPLICATION_COMMAND') {
-        const discordChannel = await discordClient.channels.cache.get(message.channelId);
-        await discordChannel.send({
-          embeds: [
-            cannotSendMessageUser(
-              "TopggVote",
-              message,
-            ),
-          ],
-        }).catch((e) => {
-          console.log(e);
-        });
-      } else {
-        await message.channel.send({
-          embeds: [
-            cannotSendMessageUser(
-              "TopggVote",
-              message,
-            ),
-          ],
-        }).catch((e) => {
-          console.log(e);
-        });
-      }
-    } else if (message.type && message.type === 'APPLICATION_COMMAND') {
-      const discordChannel = await discordClient.channels.cache.get(message.channelId);
-      await discordChannel.send({
-        embeds: [
-          discordErrorMessage(
-            "TopggVote",
-          ),
-        ],
-      }).catch((e) => {
-        console.log(e);
-      });
-    } else {
-      await message.channel.send({
-        embeds: [
-          discordErrorMessage(
-            "TopggVote",
-          ),
-        ],
-      }).catch((e) => {
-        console.log(e);
-      });
     }
   });
 

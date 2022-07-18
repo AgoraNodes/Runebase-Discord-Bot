@@ -19,5 +19,4 @@ export const renderCancelEquipmentImage = async (
 
   const finalImage = await canvas.toBuffer();
   return finalImage;
-  // return new MessageAttachment(canvas.toBuffer(), 'cancelEquipment.png');
 };

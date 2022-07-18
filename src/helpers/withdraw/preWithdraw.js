@@ -1,4 +1,8 @@
 import { Transaction } from "sequelize";
+import {
+  InteractionType,
+  ChannelType,
+} from 'discord.js';
 import { getInstance } from '../../services/rclient';
 import logger from "../logger";
 import db from '../../models';
@@ -34,7 +38,7 @@ export const preWithdraw = async (
   await db.sequelize.transaction({
     isolationLevel: Transaction.ISOLATION_LEVELS.SERIALIZABLE,
   }, async (t) => {
-    if (message.type && message.type === 'APPLICATION_COMMAND') {
+    if (message.type && message.type === InteractionType.ApplicationCommand) {
       const discordUser = await discordClient.users.cache.get(message.user.id);
       if (message.guildId) {
         const discordChannel = await discordClient.channels.cache.get(message.channelId);
@@ -82,7 +86,7 @@ export const preWithdraw = async (
         });
       }
     } else {
-      if (message.channel.type === 'DM') {
+      if (message.channel && message.channel.type === ChannelType.DM) {
         await message.author.send({
           embeds: [
             enterWithdrawalAddress(),
@@ -104,7 +108,7 @@ export const preWithdraw = async (
           });
         });
       }
-      if (message.channel.type === 'GUILD_TEXT') {
+      if (message.channel && message.channel.type === ChannelType.GuildText) {
         await message.channel.send({
           embeds: [
             enterWithdrawalAddress(),
@@ -144,7 +148,7 @@ export const preWithdraw = async (
     console.log('isValidAddress');
     console.log(isValidAddress);
     if (!isValidAddress || !isValidAddress.isvalid) {
-      if (message.type && message.type === 'APPLICATION_COMMAND') {
+      if (message.type && message.type === InteractionType.ApplicationCommand) {
         const discordUser = await discordClient.users.cache.get(message.user.id);
         if (message.guildId) {
           const discordChannel = await discordClient.channels.cache.get(message.channelId);
@@ -161,14 +165,14 @@ export const preWithdraw = async (
           });
         }
       } else {
-        if (message.channel.type === 'DM') {
+        if (message.channel && message.channel.type === ChannelType.DM) {
           await message.author.send({
             embeds: [
               invalidAddressMessage(userId),
             ],
           });
         }
-        if (message.channel.type === 'GUILD_TEXT') {
+        if (message.channel && message.channel.type === ChannelType.GuildText) {
           await message.channel.send({
             embeds: [
               invalidAddressMessage(
@@ -186,7 +190,7 @@ export const preWithdraw = async (
 
     ///
 
-    if (message.type && message.type === 'APPLICATION_COMMAND') {
+    if (message.type && message.type === InteractionType.ApplicationCommand) {
       const discordUser = await discordClient.users.cache.get(message.user.id);
       if (message.guildId) {
         const discordChannel = await discordClient.channels.cache.get(message.channelId);
@@ -234,7 +238,7 @@ export const preWithdraw = async (
         });
       }
     } else {
-      if (message.channel.type === 'DM') {
+      if (message.channel && message.channel.type === ChannelType.DM) {
         await message.author.send({
           embeds: [
             enterWithdrawalAmount(),
@@ -256,7 +260,7 @@ export const preWithdraw = async (
           });
         });
       }
-      if (message.channel.type === 'GUILD_TEXT') {
+      if (message.channel && message.channel.type === ChannelType.GuildText) {
         await message.channel.send({
           embeds: [
             enterWithdrawalAmount(),
@@ -306,7 +310,7 @@ export const preWithdraw = async (
     }
     logger.error(`Error Discord Withdraw Requested by: ${message.author.id}-${message.author.username}#${message.author.discriminator} - ${err}`);
     if (err.code && err.code === 50007) {
-      if (message.type && message.type === 'APPLICATION_COMMAND') {
+      if (message.type && message.type === InteractionType.ApplicationCommand) {
         const discordChannel = await discordClient.channels.cache.get(message.channelId);
         await discordChannel.send({
           embeds: [
@@ -330,7 +334,7 @@ export const preWithdraw = async (
           console.log(e);
         });
       }
-    } else if (message.type && message.type === 'APPLICATION_COMMAND') {
+    } else if (message.type && message.type === InteractionType.ApplicationCommand) {
       const discordChannel = await discordClient.channels.cache.get(message.channelId);
       await discordChannel.send({
         embeds: [

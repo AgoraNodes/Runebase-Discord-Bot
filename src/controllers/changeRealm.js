@@ -1,14 +1,11 @@
 /* eslint-disable import/prefer-default-export */
 import {
   Transaction,
-  Op,
+  // Op,
 } from "sequelize";
 import {
-  MessageActionRow,
-  MessageButton,
-  MessageAttachment,
-  MessageSelectMenu,
-  MessageEmbed,
+  ActionRowBuilder,
+  SelectMenuBuilder,
 } from 'discord.js';
 import {
   realmChangeSuccessEmbed,
@@ -18,7 +15,7 @@ import {
 } from '../embeds';
 import db from '../models';
 import logger from "../helpers/logger";
-import { userWalletExist } from "../helpers/client/userWalletExist";
+// import { userWalletExist } from "../helpers/client/userWalletExist";
 import { fetchDiscordUserIdFromMessageOrInteraction } from "../helpers/client/fetchDiscordUserIdFromMessageOrInteraction";
 import { fetchDiscordChannel } from "../helpers/client/fetchDiscordChannel";
 
@@ -72,10 +69,10 @@ export const discordChangeRealm = async (
     files: [
     ],
     components: [
-      new MessageActionRow({
+      new ActionRowBuilder({
         components: [
-          new MessageSelectMenu({
-            type: 'SELECT_MENU',
+          new SelectMenuBuilder({
+            // type: 'SELECT_MENU',
             customId: 'select-realm',
             options: realmMap,
           }),
@@ -92,6 +89,7 @@ export const discordChangeRealm = async (
       });
       return;
     }
+
     if (interaction.isSelectMenu()) {
       if (interaction.customId === 'select-realm') {
         await interaction.deferUpdate();
@@ -117,10 +115,9 @@ export const discordChangeRealm = async (
                   await alreadyInRealmEmbed(user),
                 ],
                 components: [
-                  new MessageActionRow({
+                  new ActionRowBuilder({
                     components: [
-                      new MessageSelectMenu({
-                        type: 'SELECT_MENU',
+                      new SelectMenuBuilder({
                         customId: 'select-realm',
                         options: realmMap,
                       }),
@@ -147,10 +144,9 @@ export const discordChangeRealm = async (
                   await realmNotFoundEmbed(user),
                 ],
                 components: [
-                  new MessageActionRow({
+                  new ActionRowBuilder({
                     components: [
-                      new MessageSelectMenu({
-                        type: 'SELECT_MENU',
+                      new SelectMenuBuilder({
                         customId: 'select-realm',
                         options: realmMap,
                       }),
@@ -172,10 +168,9 @@ export const discordChangeRealm = async (
                   ),
                 ],
                 components: [
-                  new MessageActionRow({
+                  new ActionRowBuilder({
                     components: [
-                      new MessageSelectMenu({
-                        type: 'SELECT_MENU',
+                      new SelectMenuBuilder({
                         customId: 'select-realm',
                         options: realmMap,
                       }),
@@ -203,8 +198,8 @@ export const discordChangeRealm = async (
               });
             }
 
-            console.log('joining realm');
-            console.log(newSelectedId);
+            // console.log('joining realm');
+            // console.log(newSelectedId);
             await myUser.update({
               currentRealmId: newSelectedId,
               currentClassId: null,

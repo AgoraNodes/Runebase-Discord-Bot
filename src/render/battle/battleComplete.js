@@ -2,9 +2,6 @@ import {
   createCanvas,
 } from 'canvas';
 import _ from 'lodash';
-import {
-  MessageAttachment,
-} from 'discord.js';
 
 export const renderBattleComplete = async (
   currentCharacter,
@@ -21,5 +18,6 @@ export const renderBattleComplete = async (
   ctx.strokeText(`${currentCharacter.UserGroup.user.username} won battle#${battle.id}`, 700, 150, 1400);
   ctx.fillText(`${currentCharacter.UserGroup.user.username} won battle#${battle.id}`, 700, 150, 1400);
 
-  return new MessageAttachment(canvas.toBuffer(), 'class.png');
+  const finalImage = canvas.toBuffer();
+  return finalImage;
 };

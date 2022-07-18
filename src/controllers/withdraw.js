@@ -1,5 +1,9 @@
 /* eslint-disable import/prefer-default-export */
 import { Transaction } from "sequelize";
+import {
+  ChannelType,
+  InteractionType,
+} from 'discord.js';
 import db from '../models';
 import {
   invalidAddressMessage,
@@ -83,7 +87,7 @@ export const discordWithdraw = async (
     }
 
     if (isInvalidAddress || isNodeOffline) {
-      if (message.channel.type !== 'DM') {
+      if (message.channel.type !== ChannelType.DM) {
         await message.channel.send({
           embeds: [
             warnDirectMessage(
@@ -114,7 +118,7 @@ export const discordWithdraw = async (
           ),
         ],
       });
-      if (message.channel.type !== 'DM') {
+      if (message.channel && message.channel.type !== ChannelType.DM) {
         await message.channel.send({
           embeds: [
             warnDirectMessage(
@@ -170,7 +174,7 @@ export const discordWithdraw = async (
     );
     activity.unshift(activityCreate);
 
-    if (message.type && message.type === 'APPLICATION_COMMAND') {
+    if (message.type && message.type === InteractionType.ApplicationCommand) {
       const discordUser = await discordClient.users.cache.get(message.user.id);
       if (message.guildId) {
         const discordChannel = await discordClient.channels.cache.get(message.channelId);
@@ -193,7 +197,7 @@ export const discordWithdraw = async (
         });
       }
     } else {
-      if (message.channel.type === 'DM') {
+      if (message.channel.type === ChannelType.DM) {
         await message.author.send({
           embeds: [
             reviewMessage(
@@ -203,7 +207,7 @@ export const discordWithdraw = async (
           ],
         });
       }
-      if (message.channel.type === 'GUILD_TEXT') {
+      if (message.channel && message.channel.type === ChannelType.GuildText) {
         await message.channel.send({
           embeds: [
             reviewMessage(

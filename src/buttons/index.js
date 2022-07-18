@@ -1,10 +1,12 @@
-import { MessageButton } from "discord.js";
-import { result } from "lodash";
+import {
+  ButtonBuilder,
+  ButtonStyle,
+} from "discord.js";
 import skillEmoji from "../config/skillEmoji";
 
 export const generateAcceptButton = () => {
-  const result = new MessageButton({
-    style: 'SECONDARY',
+  const result = new ButtonBuilder({
+    style: ButtonStyle.Secondary,
     label: `Accept`,
     emoji: '<a:checkmark:993469790343671848>',
     customId: 'accept',
@@ -14,8 +16,8 @@ export const generateAcceptButton = () => {
 };
 
 export const generateDeclineButton = () => {
-  const result = new MessageButton({
-    style: 'SECONDARY',
+  const result = new ButtonBuilder({
+    style: ButtonStyle.Secondary,
     label: `Decline`,
     emoji: '<a:rejected:993469997596815393>',
     customId: 'decline',
@@ -25,8 +27,8 @@ export const generateDeclineButton = () => {
 };
 
 export const generateBackButton = () => {
-  const result = new MessageButton({
-    style: 'SECONDARY',
+  const result = new ButtonBuilder({
+    style: ButtonStyle.Secondary,
     label: 'Back',
     emoji: '<a:backArrow:993514069795557488>',
     customId: 'back',
@@ -36,8 +38,8 @@ export const generateBackButton = () => {
 };
 
 export const generateForwardButton = () => {
-  const result = new MessageButton({
-    style: 'SECONDARY',
+  const result = new ButtonBuilder({
+    style: ButtonStyle.Secondary,
     label: 'Forward',
     emoji: '<a:forwardArrow:993514566585683988>',
     customId: 'forward',
@@ -47,8 +49,8 @@ export const generateForwardButton = () => {
 };
 
 export const generateCancelPickClassButton = () => {
-  const result = new MessageButton({
-    style: 'SECONDARY',
+  const result = new ButtonBuilder({
+    style: ButtonStyle.Secondary,
     label: `Cancel class selection`,
     emoji: '<a:rejected:993469997596815393>',
     customId: 'cancelClass',
@@ -62,8 +64,8 @@ export const generatePickClassButton = (
   classes,
 ) => {
   const current = classes.slice(start, start + 1);
-  const result = new MessageButton({
-    style: 'SECONDARY',
+  const result = new ButtonBuilder({
+    style: ButtonStyle.Secondary,
     label: `Pick ${current[0].name}`,
     emoji: '⛏️',
     customId: `pickClass:${current[0].id}`,
@@ -73,8 +75,8 @@ export const generatePickClassButton = (
 };
 
 export const generateCancelSkillButton = () => {
-  const result = new MessageButton({
-    style: 'SECONDARY',
+  const result = new ButtonBuilder({
+    style: ButtonStyle.Secondary,
     label: `Cancel skill selection`,
     emoji: '<a:rejected:993469997596815393>',
     customId: 'cancelSkillPick',
@@ -85,8 +87,8 @@ export const generateCancelSkillButton = () => {
 
 export const generateAddSkillButton = (mySelectedSkill) => {
   const addSkillId = `addSkill:${mySelectedSkill.id}`;
-  const result = new MessageButton({
-    style: 'SECONDARY',
+  const result = new ButtonBuilder({
+    style: ButtonStyle.Secondary,
     label: `Add Skillpoint to ${mySelectedSkill.name}`,
     emoji: '➕',
     customId: addSkillId,
@@ -96,8 +98,8 @@ export const generateAddSkillButton = (mySelectedSkill) => {
 };
 
 export const generateAddStrengthButton = () => {
-  const result = new MessageButton({
-    style: 'SECONDARY',
+  const result = new ButtonBuilder({
+    style: ButtonStyle.Secondary,
     label: 'Strength ➕',
     emoji: '💪',
     customId: 'strength',
@@ -107,8 +109,8 @@ export const generateAddStrengthButton = () => {
 };
 
 export const generateAddDexterityButton = () => {
-  const result = new MessageButton({
-    style: 'SECONDARY',
+  const result = new ButtonBuilder({
+    style: ButtonStyle.Secondary,
     label: 'Dexterity ➕',
     emoji: '🏃‍♂️',
     customId: 'dexterity',
@@ -118,8 +120,8 @@ export const generateAddDexterityButton = () => {
 };
 
 export const generateAddVitalityButton = () => {
-  const result = new MessageButton({
-    style: 'SECONDARY',
+  const result = new ButtonBuilder({
+    style: ButtonStyle.Secondary,
     label: 'Vitality ➕',
     emoji: '❤️',
     customId: 'vitality',
@@ -129,8 +131,8 @@ export const generateAddVitalityButton = () => {
 };
 
 export const generateAddEnergyButton = () => {
-  const result = new MessageButton({
-    style: 'SECONDARY',
+  const result = new ButtonBuilder({
+    style: ButtonStyle.Secondary,
     label: 'Energy ➕',
     emoji: '🧙',
     customId: 'energy',
@@ -140,8 +142,8 @@ export const generateAddEnergyButton = () => {
 };
 
 export const generateCancelStatsPickButton = () => {
-  const result = new MessageButton({
-    style: 'SECONDARY',
+  const result = new ButtonBuilder({
+    style: ButtonStyle.Secondary,
     label: 'Cancel Stats Selection',
     emoji: '<a:rejected:993469997596815393>',
     customId: 'cancelStatsPick',
@@ -151,8 +153,8 @@ export const generateCancelStatsPickButton = () => {
 };
 
 export const generateExitInventoryButton = () => {
-  const result = new MessageButton({
-    style: 'SECONDARY',
+  const result = new ButtonBuilder({
+    style: ButtonStyle.Secondary,
     label: `Exit Inventory`,
     emoji: '<a:rejected:993469997596815393>',
     customId: 'exitInventory',
@@ -167,8 +169,8 @@ export const generateDestroyItemButton = (
 ) => {
   const current = userCurrentCharacter.inventory.items.slice(start, start + 1);
   const destroyItemId = `Destroy:${current[0].id}`;
-  const result = new MessageButton({
-    style: 'SECONDARY',
+  const result = new ButtonBuilder({
+    style: ButtonStyle.Secondary,
     label: `Destroy ${current[0].name}`,
     emoji: '<a:rejected:993469997596815393>',
     customId: destroyItemId,
@@ -178,8 +180,8 @@ export const generateDestroyItemButton = (
 };
 
 export const generateDestroyNoButton = () => {
-  const result = new MessageButton({
-    style: 'SECONDARY',
+  const result = new ButtonBuilder({
+    style: ButtonStyle.Secondary,
     label: `No, go back`,
     emoji: '<a:backArrow:993514069795557488>',
     customId: 'cancelDestroy',
@@ -194,8 +196,8 @@ export const generateEquipItemButton = (
 ) => {
   const current = userCurrentCharacter.inventory.items.slice(start, start + 1);
   const equipItemId = `Equip:${current[0].id}`;
-  const result = new MessageButton({
-    style: 'SECONDARY',
+  const result = new ButtonBuilder({
+    style: ButtonStyle.Secondary,
     label: `Equip ${current[0].name}`,
     emoji: '⛏️',
     customId: equipItemId,
@@ -210,8 +212,8 @@ export const generateDestroyYesButton = (
 ) => {
   const current = userCurrentCharacter.inventory.items.slice(start, start + 1);
   const destroyYesButtonId = `ConfirmDestroy:${current[0].id}`;
-  const result = new MessageButton({
-    style: 'SECONDARY',
+  const result = new ButtonBuilder({
+    style: ButtonStyle.Secondary,
     label: `Yes, destroy ${current[0].name}`,
     emoji: '🚮',
     customId: destroyYesButtonId,
@@ -224,10 +226,8 @@ export const generateMainSkillButton = (
   mySelectedSkill,
 ) => {
   const emoji = skillEmoji.find((a) => a.name === mySelectedSkill.skill.name);
-  console.log(emoji);
-  console.log('emoji');
-  const result = new MessageButton({
-    style: 'SECONDARY',
+  const result = new ButtonBuilder({
+    style: ButtonStyle.Secondary,
     label: `${mySelectedSkill.skill.name}`,
     // emoji: emoji ? emoji.emoji : '',
     customId: `attackMain:${mySelectedSkill.id}`,
@@ -243,8 +243,8 @@ export const generateSecondarySkillButton = (
   mySelectedSkill,
 ) => {
   const emoji = skillEmoji.find((a) => a.name === mySelectedSkill.skill.name);
-  const result = new MessageButton({
-    style: 'SECONDARY',
+  const result = new ButtonBuilder({
+    style: ButtonStyle.Secondary,
     label: `${mySelectedSkill.skill.name}`,
     // emoji: '➕',
     customId: `attackSecondary:${mySelectedSkill.id}`,
@@ -257,8 +257,8 @@ export const generateSecondarySkillButton = (
 };
 
 export const generateHealButton = () => {
-  const result = new MessageButton({
-    style: 'SECONDARY',
+  const result = new ButtonBuilder({
+    style: ButtonStyle.Secondary,
     label: `Heal`,
     emoji: '<a:heal:994509319573876786>',
     customId: 'Heal',
@@ -273,12 +273,47 @@ export const generateEquipmentCompareButton = async (
 ) => {
   const current = userCurrentCharacter.inventory.items.slice(start, start + 1);
   const equipItemId = `Compare:${current[0].id}`;
-  const result = new MessageButton({
-    style: 'SECONDARY',
+  const result = new ButtonBuilder({
+    style: ButtonStyle.Secondary,
     label: `Compare ${current[0].name}`,
     emoji: '👀',
     customId: equipItemId,
   }).setDisabled(true);
+
+  return result;
+};
+
+export const generateRollDiceButton = () => {
+  const result = new ButtonBuilder({
+    style: ButtonStyle.Primary,
+    label: `Roll Dice`,
+    emoji: '<a:diceroll:998536293443186708>',
+    customId: 'roll',
+  });
+
+  return result;
+};
+
+export const generateLootButton = () => {
+  const result = new ButtonBuilder({
+    style: ButtonStyle.Secondary,
+    label: `Loot Item`,
+    emoji: '🤏',
+    customId: 'lootItem',
+  });
+
+  return result;
+};
+
+export const generateAfterBattleLootButton = (
+  loot,
+) => {
+  const result = new ButtonBuilder({
+    style: ButtonStyle.Secondary,
+    label: `Loot ${loot.name}`,
+    emoji: '🤏',
+    customId: `lootItem:${loot.id}`,
+  });
 
   return result;
 };

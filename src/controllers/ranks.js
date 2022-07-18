@@ -2,10 +2,7 @@
 import { Transaction } from "sequelize";
 import {
   createCanvas,
-  registerFont,
 } from 'canvas';
-import { MessageAttachment } from "discord.js";
-import path from 'path';
 import {
   cannotSendMessageUser,
   discordErrorMessage,
@@ -13,6 +10,7 @@ import {
 import db from '../models';
 import logger from "../helpers/logger";
 import { userWalletExist } from "../helpers/client/userWalletExist";
+import { fetchDiscordChannel } from "../helpers/client/fetchDiscordChannel";
 
 export const discordRanks = async (
   discordClient,
@@ -36,6 +34,11 @@ export const discordRanks = async (
     }
     if (!user) return;
 
+    const discordChannel = await fetchDiscordChannel(
+      discordClient,
+      message,
+    );
+
     const setting = await db.setting.findOne();
     const findGroupToPost = await db.group.findOne({
       where: {
@@ -52,8 +55,8 @@ export const discordRanks = async (
         transaction: t,
       },
     );
+
     const canvasAddedRanksHeight = (allRanks.length * 40) + 36.5;
-    await registerFont(path.join(__dirname, '../assets/fonts/', 'Heart_warming.otf'), { family: 'HeartWarming' });
     const canvas = createCanvas(600, canvasAddedRanksHeight);
     const ctx = canvas.getContext('2d');
     ctx.font = 'bold 20px "HeartWarming"';
@@ -128,24 +131,16 @@ export const discordRanks = async (
     ctx.lineTo(598.5, canvasAddedRanksHeight);
     ctx.stroke();
 
-    const attachment = new MessageAttachment(canvas.toBuffer(), 'ranks.png');
+    const finalImage = canvas.toBuffer();
 
-    if (message.type && message.type === 'APPLICATION_COMMAND') {
-      if (message.guildId) {
-        const discordChannel = await discordClient.channels.cache.get(message.channelId);
-        await discordChannel.send({
-          files: [
-            attachment,
-          ],
-        });
-      }
-    } else {
-      await message.channel.send({
-        files: [
-          attachment,
-        ],
-      });
-    }
+    await discordChannel.send({
+      files: [
+        {
+          attachment: finalImage,
+          name: 'ranks.png',
+        },
+      ],
+    });
 
     const preActivity = await db.activity.create({
       type: 'ranks_s',

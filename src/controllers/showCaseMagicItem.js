@@ -1,26 +1,18 @@
 /* eslint-disable import/prefer-default-export */
 import {
-  // Sequelize,
   Transaction,
-  // Op,
 } from "sequelize";
-
 import {
-  MessageAttachment,
-  MessageActionRow,
-  MessageButton,
+  ActionRowBuilder,
 } from "discord.js";
 import {
   createCanvas,
   loadImage,
-  registerFont,
 } from 'canvas';
-
-import path from 'path';
 import db from '../models';
 import logger from "../helpers/logger";
 // import { userWalletExist } from "../helpers/client/userWalletExist";
-import { generateLoot } from "../helpers/items/generateLoot";
+// import { generateLoot } from "../helpers/items/generateLoot";
 // import { generateRandomStartDagger } from '../helpers/items/generateStartingDagger';
 import { generateRandomMagicItem } from "../helpers/items/generateRandomMagicItem";
 // import { generateRandomNormalItem } from "../helpers/items/generateRandomNormalItem";
@@ -28,10 +20,10 @@ import { generateRandomMagicItem } from "../helpers/items/generateRandomMagicIte
 // import { generateRandomSuperiorItem } from "../helpers/items/generateRandomSuperiorItem";
 // import { generateModifierStringArray } from "../helpers/items/generateModifierStringArray";
 import { renderItemImage } from "../render/item";
-
 import { fetchUserCurrentCharacter } from "../helpers/character/character";
 import { fetchDiscordUserIdFromMessageOrInteraction } from '../helpers/client/fetchDiscordUserIdFromMessageOrInteraction';
 import { fetchDiscordChannel } from '../helpers/client/fetchDiscordChannel';
+import { generateLootButton } from "../buttons";
 
 const generateLootImage = async (
   lootItem,
@@ -174,12 +166,18 @@ const listenLoot = async (
                   as: 'inventory',
                   include: [
                     {
-                      model: db.UserClass,
-                      as: 'UserClass',
+                      model: db.UserGroupClass,
+                      as: 'UserGroupClass',
                       include: [
                         {
-                          model: db.user,
-                          as: 'user',
+                          model: db.UserGroup,
+                          as: 'UserGroup',
+                          include: [
+                            {
+                              model: db.user,
+                              as: 'user',
+                            },
+                          ],
                         },
                       ],
                     },
@@ -217,10 +215,13 @@ const listenLoot = async (
               distance,
               true,
             );
-            const newAttachmentFinal = new MessageAttachment(updatedLootImage, 'lootItem.png');
+
             await messageDropLoot.edit({
               files: [
-                newAttachmentFinal,
+                {
+                  attachment: updatedLootImage,
+                  name: 'lootItem.png',
+                },
               ],
               components: [],
             });
@@ -264,12 +265,18 @@ const listenLoot = async (
               as: 'inventory',
               include: [
                 {
-                  model: db.UserClass,
-                  as: 'UserClass',
+                  model: db.UserGroupClass,
+                  as: 'UserGroupClass',
                   include: [
                     {
-                      model: db.user,
-                      as: 'user',
+                      model: db.UserGroup,
+                      as: 'UserGroup',
+                      include: [
+                        {
+                          model: db.user,
+                          as: 'user',
+                        },
+                      ],
                     },
                   ],
                 },
@@ -306,10 +313,13 @@ const listenLoot = async (
           itemLootedFinal,
           distance,
         );
-        const newAttachmentFinal = new MessageAttachment(updatedLootImage, 'lootItem.png');
+
         await messageDropLoot.edit({
           files: [
-            newAttachmentFinal,
+            {
+              attachment: updatedLootImage,
+              name: 'lootItem.png',
+            },
           ],
           components: [],
         });
@@ -366,15 +376,12 @@ export const discordShowCaseMagicItem = async (
       return;
     }
 
-    const newItem = await generateRandomMagicItem(level);
+    const newItem = await generateRandomMagicItem(
+      level,
+      t,
+    );
     // const itemImage = await renderItemImage(newItem);
 
-    const generateLootButton = async () => new MessageButton({
-      style: 'SECONDARY',
-      label: `Loot Item`,
-      emoji: '🤏',
-      customId: 'lootItem',
-    });
     const countDownDate = await new Date(await new Date().getTime() + 120000);
     let now = await new Date().getTime();
     let distance = countDownDate - now;
@@ -384,14 +391,15 @@ export const discordShowCaseMagicItem = async (
       distance,
     );
 
-    const attachment = new MessageAttachment(lootImage, 'lootItem.png');
-
     const messageDropLoot = await discordChannel.send({
       files: [
-        attachment,
+        {
+          attachment: lootImage,
+          name: 'lootItem.png',
+        },
       ],
       components: [
-        new MessageActionRow({
+        new ActionRowBuilder({
           components: [
             await generateLootButton(),
           ],
@@ -412,12 +420,18 @@ export const discordShowCaseMagicItem = async (
             as: 'inventory',
             include: [
               {
-                model: db.UserClass,
-                as: 'UserClass',
+                model: db.UserGroupClass,
+                as: 'UserGroupClass',
                 include: [
                   {
-                    model: db.user,
-                    as: 'user',
+                    model: db.UserGroup,
+                    as: 'UserGroup',
+                    include: [
+                      {
+                        model: db.user,
+                        as: 'user',
+                      },
+                    ],
                   },
                 ],
               },
@@ -449,18 +463,22 @@ export const discordShowCaseMagicItem = async (
           },
         ],
       });
+
       const updatedLootImage = await generateLootImage(
         findItem,
         distance,
       );
-      const newAttachment = new MessageAttachment(updatedLootImage, 'lootItem.png');
+
       if (!findItem.inventoryId) {
         await messageDropLoot.edit({
           files: [
-            newAttachment,
+            {
+              attachment: updatedLootImage,
+              name: 'lootItem.png',
+            },
           ],
           components: [
-            new MessageActionRow({
+            new ActionRowBuilder({
               components: [
                 await generateLootButton(),
               ],
@@ -472,7 +490,10 @@ export const discordShowCaseMagicItem = async (
       if (findItem.inventoryId) {
         await messageDropLoot.edit({
           files: [
-            newAttachment,
+            {
+              attachment: updatedLootImage,
+              name: 'lootItem.png',
+            },
           ],
           components: [],
         });
@@ -514,7 +535,7 @@ export const discordShowCaseMagicItem = async (
       transaction: t,
     });
     activity.unshift(finalActivity);
-    const item = await generateLoot(1);
+    // const item = await generateLoot(1);
   }).catch(async (err) => {
     console.log(err);
     try {

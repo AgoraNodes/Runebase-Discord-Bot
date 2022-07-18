@@ -1,6 +1,6 @@
 import { Transaction } from "sequelize";
 import {
-  warnDirectMessage,
+  // warnDirectMessage,
   balanceMessage,
   discordErrorMessage,
   cannotSendMessageUser,
@@ -8,6 +8,7 @@ import {
 import db from '../models';
 import logger from "../helpers/logger";
 import { userWalletExist } from "../helpers/client/userWalletExist";
+import { fetchDiscordChannel } from "../helpers/client/fetchDiscordChannel";
 
 export const discordBalance = async (
   discordClient,
@@ -31,6 +32,12 @@ export const discordBalance = async (
     }
     if (!user) return;
 
+    const discordChannel = await fetchDiscordChannel(
+      discordClient,
+      message,
+    );
+    if (!discordChannel) return;
+
     const priceInfo = await db.currency.findOne({
       where: {
         iso: 'USD',
@@ -39,54 +46,15 @@ export const discordBalance = async (
       transaction: t,
     });
 
-    if (message.type && message.type === 'APPLICATION_COMMAND') {
-      const discordUser = await discordClient.users.cache.get(message.user.id);
-      if (message.guildId) {
-        const discordChannel = await discordClient.channels.cache.get(message.channelId);
-        await discordChannel.send({
-          embeds: [
-            balanceMessage(
-              user.user_id,
-              user,
-              priceInfo,
-            ),
-          ],
-        });
-      } else {
-        await discordUser.send({
-          embeds: [
-            balanceMessage(
-              user.user_id,
-              user,
-              priceInfo,
-            ),
-          ],
-        });
-      }
-    } else {
-      if (message.channel.type === 'DM') {
-        await message.author.send({
-          embeds: [
-            balanceMessage(
-              user.user_id,
-              user,
-              priceInfo,
-            ),
-          ],
-        });
-      }
-      if (message.channel.type === 'GUILD_TEXT') {
-        await message.channel.send({
-          embeds: [
-            balanceMessage(
-              user.user_id,
-              user,
-              priceInfo,
-            ),
-          ],
-        });
-      }
-    }
+    await discordChannel.send({
+      embeds: [
+        balanceMessage(
+          user.user_id,
+          user,
+          priceInfo,
+        ),
+      ],
+    });
 
     const createActivity = await db.activity.create({
       type: 'balance_s',

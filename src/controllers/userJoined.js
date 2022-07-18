@@ -1,5 +1,5 @@
 /* eslint-disable import/prefer-default-export */
-import { Transaction, Op } from "sequelize";
+import { Transaction } from "sequelize";
 import {
   cannotSendMessageUser,
   discordErrorMessage,

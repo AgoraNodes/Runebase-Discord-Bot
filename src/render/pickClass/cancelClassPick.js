@@ -21,5 +21,6 @@ export const renderCancelClassPicked = async (
   ctx.strokeText(`${user.username} canceled class selection`, 250, 60, 500);
   ctx.fillText(`${user.username} canceled class selection`, 250, 60, 500);
 
-  return new MessageAttachment(canvas.toBuffer(), 'cancelSelection.png');
+  const finalImage = await canvas.toBuffer();
+  return finalImage;
 };

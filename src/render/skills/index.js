@@ -1,7 +1,4 @@
 import {
-  MessageAttachment,
-} from 'discord.js';
-import {
   createCanvas,
   loadImage,
 } from 'canvas';
@@ -80,5 +77,6 @@ export const renderSkillScreen = async (
     );
   }
   console.log('5');
-  return new MessageAttachment(canvas.toBuffer(), 'skillTree.png');
+  const finalImage = canvas.toBuffer();
+  return finalImage;
 };

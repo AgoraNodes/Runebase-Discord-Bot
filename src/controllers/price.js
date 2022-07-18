@@ -7,6 +7,7 @@ import {
 import db from '../models';
 import logger from "../helpers/logger";
 import { userWalletExist } from "../helpers/client/userWalletExist";
+import { fetchDiscordChannel } from "../helpers/client/fetchDiscordChannel";
 
 export const discordPrice = async (
   discordClient,
@@ -30,50 +31,23 @@ export const discordPrice = async (
     }
     if (!user) return;
 
+    const discordChannel = await fetchDiscordChannel(
+      discordClient,
+      message,
+    );
+    if (!discordChannel) return;
+
     const priceRecord = await db.currency.findAll({});
     let replyString = ``;
     replyString += priceRecord.map((a) => `${a.iso}: ${a.price}`).join('\n');
 
-    if (message.type && message.type === 'APPLICATION_COMMAND') {
-      const discordUser = await discordClient.users.cache.get(message.user.id);
-      if (message.guildId) {
-        const discordChannel = await discordClient.channels.cache.get(message.channelId);
-        await discordChannel.send({
-          embeds: [
-            priceMessage(
-              replyString,
-            ),
-          ],
-        });
-      } else {
-        await discordUser.send({
-          embeds: [
-            priceMessage(
-              replyString,
-            ),
-          ],
-        });
-      }
-    } else {
-      if (message.channel.type === 'DM') {
-        await message.author.send({
-          embeds: [
-            priceMessage(
-              replyString,
-            ),
-          ],
-        });
-      }
-      if (message.channel.type === 'GUILD_TEXT') {
-        await message.channel.send({
-          embeds: [
-            priceMessage(
-              replyString,
-            ),
-          ],
-        });
-      }
-    }
+    await discordChannel.send({
+      embeds: [
+        priceMessage(
+          replyString,
+        ),
+      ],
+    });
 
     const createActivity = await db.activity.create({
       type: 'price_s',

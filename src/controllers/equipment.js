@@ -7,15 +7,15 @@ import {
   loadImage,
 } from 'canvas';
 import {
-  MessageActionRow,
-  MessageButton,
-  MessageAttachment,
+  ActionRowBuilder,
+  ButtonBuilder,
+  ButtonStyle,
 } from 'discord.js';
 
 import db from '../models';
 import logger from "../helpers/logger";
 import { renderItemImage } from "../render/item";
-import { renderStatsImage } from "../render/stats";
+import { renderStatsImage } from "../render/stats/stats";
 import { renderEquipmentImage } from '../render/equipment/equipment';
 import { fetchUserCurrentCharacter } from "../helpers/character/character";
 import { fetchDiscordUserIdFromMessageOrInteraction } from '../helpers/client/fetchDiscordUserIdFromMessageOrInteraction';
@@ -103,81 +103,81 @@ export const discordShowEquipment = async (
   const ringSlotOneId = 'ringSlotOne';
   const ringSlotTwoId = 'ringSlotTwo';
 
-  const ringSlotOneButton = new MessageButton({
-    style: 'SECONDARY',
+  const ringSlotOneButton = new ButtonBuilder({
+    style: ButtonStyle.Secondary,
     label: 'Show Equiped RingSlot One',
     emoji: '💍',
     customId: ringSlotOneId,
   });
 
-  const ringSlotTwoButton = new MessageButton({
-    style: 'SECONDARY',
+  const ringSlotTwoButton = new ButtonBuilder({
+    style: ButtonStyle.Secondary,
     label: 'Show Equiped RingSlot Two',
     emoji: '💍',
     customId: ringSlotTwoId,
   });
 
-  const bootsButton = new MessageButton({
-    style: 'SECONDARY',
+  const bootsButton = new ButtonBuilder({
+    style: ButtonStyle.Secondary,
     label: 'Show Equiped Boots',
     emoji: '🥾',
     customId: bootsId,
   });
 
-  const helmButton = new MessageButton({
-    style: 'SECONDARY',
+  const helmButton = new ButtonBuilder({
+    style: ButtonStyle.Secondary,
     label: 'Show Equiped Helm',
     emoji: '🪖',
     customId: helmId,
   });
-  const amuletutton = new MessageButton({
-    style: 'SECONDARY',
+  const amuletutton = new ButtonBuilder({
+    style: ButtonStyle.Secondary,
     label: 'Show Equiped Amulet',
     emoji: '🧿',
     customId: amuletId,
   });
-  const weaponSlotOneButton = new MessageButton({
-    style: 'SECONDARY',
+  const weaponSlotOneButton = new ButtonBuilder({
+    style: ButtonStyle.Secondary,
     label: 'Show Equiped Main Hand',
     emoji: '🗡️',
     customId: mainHandId,
   });
 
-  const weaponSlotTwoButton = new MessageButton({
-    style: 'SECONDARY',
+  const weaponSlotTwoButton = new ButtonBuilder({
+    style: ButtonStyle.Secondary,
     label: 'Show Equiped Off Hand',
     emoji: '🛡️',
     customId: offHandId,
   });
 
-  const armorButton = new MessageButton({
-    style: 'SECONDARY',
+  const armorButton = new ButtonBuilder({
+    style: ButtonStyle.Secondary,
     label: 'Show Equiped Armor',
     emoji: '🦺',
     customId: armorId,
   });
-  const glovesButton = new MessageButton({
-    style: 'SECONDARY',
+  const glovesButton = new ButtonBuilder({
+    style: ButtonStyle.Secondary,
     label: 'Show Equiped Gloves',
     emoji: '🧤',
     customId: glovesId,
   });
-  const beltButton = new MessageButton({
-    style: 'SECONDARY',
+  const beltButton = new ButtonBuilder({
+    style: ButtonStyle.Secondary,
     label: 'Show Equiped Belt',
     emoji: '〰️',
     customId: beltId,
   });
 
-  const backButton = new MessageButton({
-    style: 'SECONDARY',
+  const backButton = new ButtonBuilder({
+    style: ButtonStyle.Secondary,
     label: 'Back to Equipment',
     emoji: '⬅️',
     customId: backId,
   });
 
-  const generateCancelEquipmentButton = async () => new MessageButton({
-    style: 'SECONDARY',
+  const generateCancelEquipmentButton = async () => new ButtonBuilder({
+    style: ButtonStyle.Secondary,
     label: `Cancel Equipment`,
     emoji: '❌',
     customId: cancelEquipmentId,
@@ -187,15 +187,13 @@ export const discordShowEquipment = async (
     myItem,
   ) => {
     const unEquipItemId = `UnEquip:${myItem.id}`;
-    return new MessageButton({
-      style: 'SECONDARY',
+    return new ButtonBuilder({
+      style: ButtonStyle.Secondary,
       label: `UnEquip ${myItem.name}`,
       emoji: '⛏️',
       customId: unEquipItemId,
     });
   };
-
-  // await registerFont(path.join(__dirname, '../assets/fonts/', 'Heart_warming.otf'), { family: 'HeartWarming' });
 
   const generateCurrentEquipmentImage = async (
     userCurrentCharacter,
@@ -238,7 +236,7 @@ export const discordShowEquipment = async (
     ctx.strokeStyle = 'black';
     ctx.lineWidth = 3;
 
-    return new MessageAttachment(canvas.toBuffer(), 'equipment.png');
+    return canvas.toBuffer();
   };
 
   let isRowOneActive = (
@@ -258,13 +256,16 @@ export const discordShowEquipment = async (
   const embedMessage = await discordChannel.send({
     content: playingOnRealmMessage(userCurrentCharacter),
     files: [
-      await generateCurrentEquipmentImage(userCurrentCharacter),
+      {
+        attachment: await generateCurrentEquipmentImage(userCurrentCharacter),
+        name: 'equipment.png',
+      },
     ],
     components: isRowOneActive || isRowTwoActive ? [
       ...(
         isRowOneActive
           ? [
-            new MessageActionRow({
+            new ActionRowBuilder({
               components: [
                 ...(userCurrentCharacter.equipment.helm
                   ? [helmButton] : []
@@ -289,7 +290,7 @@ export const discordShowEquipment = async (
       ...(
         isRowTwoActive
           ? [
-            new MessageActionRow({
+            new ActionRowBuilder({
               components: [
                 ...(userCurrentCharacter.equipment.gloves
                   ? [glovesButton] : []
@@ -311,13 +312,13 @@ export const discordShowEquipment = async (
           ]
           : []
       ),
-      new MessageActionRow({
+      new ActionRowBuilder({
         components: [
           await generateCancelEquipmentButton(),
         ],
       }),
     ] : [
-      new MessageActionRow({
+      new ActionRowBuilder({
         components: [
           await generateCancelEquipmentButton(),
         ],
@@ -421,15 +422,18 @@ export const discordShowEquipment = async (
           await interaction.editReply({
             content: playingOnRealmMessage(userCurrentCharacter),
             files: [
-              itemImage,
+              {
+                attachment: itemImage,
+                name: 'itemImage.png',
+              },
             ],
             components: [
-              new MessageActionRow({
+              new ActionRowBuilder({
                 components: [
                   await generateUnEquipItemButton(itemToUnEquip),
                 ],
               }),
-              new MessageActionRow({
+              new ActionRowBuilder({
                 components: [
                   backButton,
                 ],
@@ -481,10 +485,10 @@ export const discordShowEquipment = async (
     if (interaction.customId === cancelEquipmentId) {
       await interaction.editReply({
         files: [
-          new MessageAttachment(
-            await renderCancelEquipmentImage(userCurrentCharacter),
-            'equipment.png',
-          ),
+          {
+            attachment: await renderCancelEquipmentImage(userCurrentCharacter),
+            name: 'equipment.png',
+          },
         ],
         components: [],
       });
@@ -528,13 +532,16 @@ export const discordShowEquipment = async (
     await interaction.editReply({
       content: playingOnRealmMessage(userCurrentCharacter),
       files: [
-        await generateCurrentEquipmentImage(userCurrentCharacter),
+        {
+          attachment: await generateCurrentEquipmentImage(userCurrentCharacter),
+          name: 'equipment.png',
+        },
       ],
       components: isRowOneActive || isRowTwoActive ? [
         ...(
           isRowOneActive
             ? [
-              new MessageActionRow({
+              new ActionRowBuilder({
                 components: [
                   ...(userCurrentCharacter.equipment.helm
                     ? [helmButton] : []
@@ -559,7 +566,7 @@ export const discordShowEquipment = async (
         ...(
           isRowTwoActive
             ? [
-              new MessageActionRow({
+              new ActionRowBuilder({
                 components: [
                   ...(userCurrentCharacter.equipment.gloves
                     ? [glovesButton] : []
@@ -581,13 +588,13 @@ export const discordShowEquipment = async (
             ]
             : []
         ),
-        new MessageActionRow({
+        new ActionRowBuilder({
           components: [
             await generateCancelEquipmentButton(),
           ],
         }),
       ] : [
-        new MessageActionRow({
+        new ActionRowBuilder({
           components: [
             await generateCancelEquipmentButton(),
           ],

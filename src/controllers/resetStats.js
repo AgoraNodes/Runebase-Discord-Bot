@@ -4,9 +4,7 @@ import {
 } from "sequelize";
 import BigNumber from "bignumber.js";
 import {
-  MessageActionRow,
-  MessageButton,
-  MessageEmbed,
+  ActionRowBuilder,
 } from 'discord.js';
 import db from '../models';
 import { fetchUserCurrentCharacter } from "../helpers/character/character";
@@ -87,7 +85,7 @@ export const discordResetStats = async (
       ),
     ],
     components: [
-      new MessageActionRow({
+      new ActionRowBuilder({
         components: [
           await generateAcceptButton(),
           await generateDeclineButton(),

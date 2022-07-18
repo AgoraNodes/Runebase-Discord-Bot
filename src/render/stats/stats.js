@@ -3,7 +3,7 @@ import {
   loadImage,
 } from 'canvas';
 import path from 'path';
-import { calculateCharacterStats } from '../helpers/stats/calculateCharacterStats';
+import { calculateCharacterStats } from '../../helpers/stats/calculateCharacterStats';
 
 export const renderStatsImage = async (
   currentUser,
@@ -35,8 +35,8 @@ export const renderStatsImage = async (
 
   const canvas = createCanvas(960, 1400);
   const ctx = canvas.getContext('2d');
-  const BackgroundImageStats = await loadImage(path.join(__dirname, '../assets/images', `stats_background.png`));
-  const unspendAttributesBoxImage = await loadImage(path.join(__dirname, '../assets/images', `unspendAttributesBox.png`));
+  const BackgroundImageStats = await loadImage(path.join(__dirname, '../../assets/images', `stats_background.png`));
+  const unspendAttributesBoxImage = await loadImage(path.join(__dirname, '../../assets/images', `unspendAttributesBox.png`));
   ctx.drawImage(BackgroundImageStats, 0, 0, 960, 1300);
 
   if (unspendAttributes > 0) {

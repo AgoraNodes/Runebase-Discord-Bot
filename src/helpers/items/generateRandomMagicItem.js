@@ -4,10 +4,12 @@ import {
   Op,
 } from "sequelize";
 import db from '../../models';
-
 import { randomIntFromInterval } from './utils';
 
-export const generateRandomMagicItem = async (level) => {
+export const generateRandomMagicItem = async (
+  level,
+  t = false,
+) => {
   const randomBaseItem = await db.itemBase.findOne({
     order: [
       [Sequelize.literal('RAND()')],
@@ -36,6 +38,12 @@ export const generateRandomMagicItem = async (level) => {
         ],
       },
     ],
+    ...(t && [
+      {
+        lock: t.LOCK.UPDATE,
+        transaction: t,
+      }]
+    ),
   });
   // console.log('after random Base item');
   // console.log(randomBaseItem);
@@ -44,6 +52,12 @@ export const generateRandomMagicItem = async (level) => {
     where: {
       name: 'Magic',
     },
+    ...(t && [
+      {
+        lock: t.LOCK.UPDATE,
+        transaction: t,
+      }]
+    ),
   });
 
   // console.log(randomBaseItem);
@@ -83,6 +97,12 @@ export const generateRandomMagicItem = async (level) => {
         },
       },
     ],
+    ...(t && [
+      {
+        lock: t.LOCK.UPDATE,
+        transaction: t,
+      }]
+    ),
   });
 
   // console.log(randomItemModifiers);
@@ -310,6 +330,13 @@ export const generateRandomMagicItem = async (level) => {
         energy: addEnergy,
       }
     ),
+  }, {
+    ...(t && [
+      {
+        lock: t.LOCK.UPDATE,
+        transaction: t,
+      }]
+    ),
   });
 
   const newItem = await db.item.findOne({
@@ -342,6 +369,12 @@ export const generateRandomMagicItem = async (level) => {
         ],
       },
     ],
+    ...(t && [
+      {
+        lock: t.LOCK.UPDATE,
+        transaction: t,
+      }]
+    ),
   });
 
   return newItem;

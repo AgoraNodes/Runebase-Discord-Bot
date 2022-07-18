@@ -4,15 +4,11 @@ import {
   Transaction,
 } from "sequelize";
 import {
-  MessageActionRow,
-  MessageButton,
-  MessageAttachment,
-  MessageSelectMenu,
-  MessageEmbed,
+  ActionRowBuilder,
+  SelectMenuBuilder,
 } from 'discord.js';
 import db from '../models';
 import { renderBattleGif } from '../render/battle/battle';
-// import { renderInitBattleGif } from '../render/battle/initBattle';
 import { renderUserDied } from '../render/battle/userDied';
 import { renderOutOfStamina } from '../render/battle/outOfStamina';
 import { fetchUserCurrentCharacter } from "../helpers/character/character";
@@ -35,11 +31,14 @@ import {
   generateHealButton,
   generateAcceptButton,
   generateDeclineButton,
+  generateAfterBattleLootButton,
 } from '../buttons';
 import {
   confirmationHealMessage,
   insufficientBalanceMessage,
-  healCompleteMessage,
+  loadingBattleMoveEmbed,
+  battleCompleteEmbed,
+  // healCompleteMessage,
 } from '../embeds';
 import {
   playingOnRealmMessage,
@@ -348,8 +347,8 @@ export const discordBattle = async (
   const embedMessage = await discordChannel.send({
     content: playingOnRealmMessage(userCurrentCharacter),
     files: [
-      new MessageAttachment(
-        await renderBattleGif(
+      {
+        attachment: await renderBattleGif(
           myInitialUserState,
           userCurrentSelectedSkills,
           battle,
@@ -358,11 +357,11 @@ export const discordBattle = async (
           allRoundDebuffsInfoArray,
           allRoundEffectsInfoArray,
         ),
-        'battle.gif',
-      ),
+        name: `battle.gif`,
+      },
     ],
     components: [
-      new MessageActionRow({
+      new ActionRowBuilder({
         components: [
           await generateMainSkillButton(
             userCurrentSelectedSkills.selectedMainSkill,
@@ -374,29 +373,26 @@ export const discordBattle = async (
         ],
       }),
       ...(selectMonsterMap && selectMonsterMap.length > 0 ? [
-        new MessageActionRow({
+        new ActionRowBuilder({
           components: [
-            new MessageSelectMenu({
-              type: 'SELECT_MENU',
+            new SelectMenuBuilder({
               customId: 'select-mob',
               options: selectMonsterMap,
             }),
           ],
         }),
       ] : []),
-      new MessageActionRow({
+      new ActionRowBuilder({
         components: [
-          new MessageSelectMenu({
-            type: 'SELECT_MENU',
+          new SelectMenuBuilder({
             customId: 'select-mainSkill',
             options: mainSkillMap,
           }),
         ],
       }),
-      new MessageActionRow({
+      new ActionRowBuilder({
         components: [
-          new MessageSelectMenu({
-            type: 'SELECT_MENU',
+          new SelectMenuBuilder({
             customId: 'select-secondarySkill',
             options: secondarySkillMap,
           }),
@@ -409,10 +405,10 @@ export const discordBattle = async (
     const lootArray = [];
     for await (const looot of theLoot) {
       lootArray.push(
-        new MessageAttachment(
-          await renderItemImage(looot),
-          `${looot.id}.png`,
-        ),
+        {
+          attachment: await renderItemImage(looot),
+          name: `${looot.id}.png`,
+        },
       );
     }
     return lootArray;
@@ -421,39 +417,14 @@ export const discordBattle = async (
   const generateLootItemButtonArray = async (theLoot) => {
     const lootButtonArray = [];
     for await (const looot of theLoot) {
-      console.log(looot);
-      const addLootId = `lootItem:${looot.id}`;
-      lootButtonArray.push(
-        new MessageButton({
-          style: 'SECONDARY',
-          label: `Loot ${looot.name}`,
-          emoji: '🤏',
-          customId: addLootId,
-        }),
+      const newButton = await generateAfterBattleLootButton(
+        looot,
       );
+      lootButtonArray.push(newButton);
     }
     return lootButtonArray;
   };
 
-  const loadingBattleMoveEmbed = new MessageEmbed()
-    .setTitle('Battle')
-    .setDescription(`${userCurrentCharacter.UserGroup.user.username}, Your next move is calculating..`);
-
-  const battleCompleteEmbed = async (
-    userCurrentCharacter,
-    expEarned,
-    newLootC,
-  ) => {
-    let itemString = '';
-    for await (const looot of newLootC) {
-      itemString += `\n- **${looot.name}** [${looot.itemQuality.name}]`;
-    }
-    return new MessageEmbed()
-      .setTitle(`${userCurrentCharacter.UserGroup.user.username} battle#${battle.id} results`)
-      .setDescription(`Exp earned: **${expEarned}**
-
-${newLootC.length > 0 ? `__found ${newLootC.length} ${newLootC.length === 1 ? `item` : `items`}__` : ``}${itemString}`);
-  };
   console.log('battle 10');
   const collector = embedMessage.createMessageComponentCollector({});
   let newLoot = [];
@@ -509,7 +480,7 @@ ${newLootC.length > 0 ? `__found ${newLootC.length} ${newLootC.length === 1 ? `i
           ),
         ],
         components: [
-          new MessageActionRow({
+          new ActionRowBuilder({
             components: [
               await generateAcceptButton(),
               await generateDeclineButton(),
@@ -526,7 +497,7 @@ ${newLootC.length > 0 ? `__found ${newLootC.length} ${newLootC.length === 1 ? `i
         content: playingOnRealmMessage(userCurrentCharacter),
         embeds: [],
         components: [
-          new MessageActionRow({
+          new ActionRowBuilder({
             components: [
               await generateMainSkillButton(
                 userCurrentSelectedSkills.selectedMainSkill,
@@ -538,29 +509,26 @@ ${newLootC.length > 0 ? `__found ${newLootC.length} ${newLootC.length === 1 ? `i
             ],
           }),
           ...(selectMonsterMap && selectMonsterMap.length > 0 ? [
-            new MessageActionRow({
+            new ActionRowBuilder({
               components: [
-                new MessageSelectMenu({
-                  type: 'SELECT_MENU',
+                new SelectMenuBuilder({
                   customId: 'select-mob',
                   options: selectMonsterMap,
                 }),
               ],
             }),
           ] : []),
-          new MessageActionRow({
+          new ActionRowBuilder({
             components: [
-              new MessageSelectMenu({
-                type: 'SELECT_MENU',
+              new SelectMenuBuilder({
                 customId: 'select-mainSkill',
                 options: mainSkillMap,
               }),
             ],
           }),
-          new MessageActionRow({
+          new ActionRowBuilder({
             components: [
-              new MessageSelectMenu({
-                type: 'SELECT_MENU',
+              new SelectMenuBuilder({
                 customId: 'select-secondarySkill',
                 options: secondarySkillMap,
               }),
@@ -598,7 +566,7 @@ ${newLootC.length > 0 ? `__found ${newLootC.length} ${newLootC.length === 1 ? `i
                 ),
               ],
               components: [
-                new MessageActionRow({
+                new ActionRowBuilder({
                   components: [
                     await generateMainSkillButton(
                       userCurrentSelectedSkills.selectedMainSkill,
@@ -610,29 +578,26 @@ ${newLootC.length > 0 ? `__found ${newLootC.length} ${newLootC.length === 1 ? `i
                   ],
                 }),
                 ...(selectMonsterMap && selectMonsterMap.length > 0 ? [
-                  new MessageActionRow({
+                  new ActionRowBuilder({
                     components: [
-                      new MessageSelectMenu({
-                        type: 'SELECT_MENU',
+                      new SelectMenuBuilder({
                         customId: 'select-mob',
                         options: selectMonsterMap,
                       }),
                     ],
                   }),
                 ] : []),
-                new MessageActionRow({
+                new ActionRowBuilder({
                   components: [
-                    new MessageSelectMenu({
-                      type: 'SELECT_MENU',
+                    new SelectMenuBuilder({
                       customId: 'select-mainSkill',
                       options: mainSkillMap,
                     }),
                   ],
                 }),
-                new MessageActionRow({
+                new ActionRowBuilder({
                   components: [
-                    new MessageSelectMenu({
-                      type: 'SELECT_MENU',
+                    new SelectMenuBuilder({
                       customId: 'select-secondarySkill',
                       options: secondarySkillMap,
                     }),
@@ -704,8 +669,8 @@ ${newLootC.length > 0 ? `__found ${newLootC.length} ${newLootC.length === 1 ? `i
 
           await interaction.editReply({
             files: [
-              new MessageAttachment(
-                await renderBattleGif(
+              {
+                attachment: await renderBattleGif(
                   myInitialUserState,
                   userCurrentSelectedSkills,
                   battle,
@@ -714,11 +679,11 @@ ${newLootC.length > 0 ? `__found ${newLootC.length} ${newLootC.length === 1 ? `i
                   allRoundDebuffsInfoArray,
                   allRoundEffectsInfoArray,
                 ),
-                'battle.gif',
-              ),
+                name: `battle.gif`,
+              },
             ],
             components: [
-              new MessageActionRow({
+              new ActionRowBuilder({
                 components: [
                   await generateMainSkillButton(
                     userCurrentSelectedSkills.selectedMainSkill,
@@ -730,29 +695,26 @@ ${newLootC.length > 0 ? `__found ${newLootC.length} ${newLootC.length === 1 ? `i
                 ],
               }),
               ...(selectMonsterMap && selectMonsterMap.length > 0 ? [
-                new MessageActionRow({
+                new ActionRowBuilder({
                   components: [
-                    new MessageSelectMenu({
-                      type: 'SELECT_MENU',
+                    new SelectMenuBuilder({
                       customId: 'select-mob',
                       options: selectMonsterMap,
                     }),
                   ],
                 }),
               ] : []),
-              new MessageActionRow({
+              new ActionRowBuilder({
                 components: [
-                  new MessageSelectMenu({
-                    type: 'SELECT_MENU',
+                  new SelectMenuBuilder({
                     customId: 'select-mainSkill',
                     options: mainSkillMap,
                   }),
                 ],
               }),
-              new MessageActionRow({
+              new ActionRowBuilder({
                 components: [
-                  new MessageSelectMenu({
-                    type: 'SELECT_MENU',
+                  new SelectMenuBuilder({
                     customId: 'select-secondarySkill',
                     options: secondarySkillMap,
                   }),
@@ -857,16 +819,19 @@ ${newLootC.length > 0 ? `__found ${newLootC.length} ${newLootC.length === 1 ? `i
             await interaction.editReply({
               content: playingOnRealmMessage(userCurrentCharacter),
               files: [
-                await renderBattleComplete(
-                  userCurrentCharacter,
-                  battle,
-                ),
+                {
+                  attachment: await renderBattleComplete(
+                    userCurrentCharacter,
+                    battle,
+                  ),
+                  name: `battleComplete.png`,
+                },
                 ...(newLoot.length > 0 ? await generateLootImagesArray(newLoot) : []),
               ],
               components: [
                 ...(newLoot.length > 0
                   ? [
-                    new MessageActionRow({
+                    new ActionRowBuilder({
                       components: await generateLootItemButtonArray(newLoot),
                     }),
                   ]
@@ -884,7 +849,7 @@ ${newLootC.length > 0 ? `__found ${newLootC.length} ${newLootC.length === 1 ? `i
           await interaction.editReply({
             content: playingOnRealmMessage(userCurrentCharacter),
             embeds: [
-              loadingBattleMoveEmbed,
+              await loadingBattleMoveEmbed(userCurrentCharacter),
             ],
             components: [],
           });
@@ -892,9 +857,12 @@ ${newLootC.length > 0 ? `__found ${newLootC.length} ${newLootC.length === 1 ? `i
             await interaction.editReply({
               embeds: [],
               files: [
-                await renderUserDied(
-                  userCurrentCharacter,
-                ),
+                {
+                  attachment: await renderUserDied(
+                    userCurrentCharacter,
+                  ),
+                  name: `userDied.png`,
+                },
               ],
               components: [],
             });
@@ -964,8 +932,8 @@ ${newLootC.length > 0 ? `__found ${newLootC.length} ${newLootC.length === 1 ? `i
               content: playingOnRealmMessage(userCurrentCharacter),
               embeds: [],
               files: [
-                new MessageAttachment(
-                  await renderBattleGif(
+                {
+                  attachment: await renderBattleGif(
                     initialUserState,
                     userCurrentSelectedSkills,
                     previousBattleState,
@@ -982,8 +950,8 @@ ${newLootC.length > 0 ? `__found ${newLootC.length} ${newLootC.length === 1 ? `i
                     stageSixInfoArray,
                     stageSevenInfoArray,
                   ),
-                  'battle.gif',
-                ),
+                  name: `battle.gif`,
+                },
               ],
               components: [],
             });
@@ -1007,8 +975,8 @@ ${newLootC.length > 0 ? `__found ${newLootC.length} ${newLootC.length === 1 ? `i
               content: playingOnRealmMessage(userCurrentCharacter),
               embeds: [],
               files: [
-                new MessageAttachment(
-                  await renderBattleGif(
+                {
+                  attachment: await renderBattleGif(
                     initialUserState,
                     userCurrentSelectedSkills,
                     previousBattleState,
@@ -1025,11 +993,11 @@ ${newLootC.length > 0 ? `__found ${newLootC.length} ${newLootC.length === 1 ? `i
                     stageSixInfoArray,
                     stageSevenInfoArray,
                   ),
-                  'battle.gif',
-                ),
+                  name: `battle.gif`,
+                },
               ],
               components: [
-                new MessageActionRow({
+                new ActionRowBuilder({
                   components: [
                     await generateMainSkillButton(
                       userCurrentSelectedSkills.selectedMainSkill,
@@ -1041,29 +1009,26 @@ ${newLootC.length > 0 ? `__found ${newLootC.length} ${newLootC.length === 1 ? `i
                   ],
                 }),
                 ...(selectMonsterMap && selectMonsterMap.length > 0 ? [
-                  new MessageActionRow({
+                  new ActionRowBuilder({
                     components: [
-                      new MessageSelectMenu({
-                        type: 'SELECT_MENU',
+                      new SelectMenuBuilder({
                         customId: 'select-mob',
                         options: selectMonsterMap,
                       }),
                     ],
                   }),
                 ] : []),
-                new MessageActionRow({
+                new ActionRowBuilder({
                   components: [
-                    new MessageSelectMenu({
-                      type: 'SELECT_MENU',
+                    new SelectMenuBuilder({
                       customId: 'select-mainSkill',
                       options: mainSkillMap,
                     }),
                   ],
                 }),
-                new MessageActionRow({
+                new ActionRowBuilder({
                   components: [
-                    new MessageSelectMenu({
-                      type: 'SELECT_MENU',
+                    new SelectMenuBuilder({
                       customId: 'select-secondarySkill',
                       options: secondarySkillMap,
                     }),
@@ -1080,9 +1045,12 @@ ${newLootC.length > 0 ? `__found ${newLootC.length} ${newLootC.length === 1 ? `i
                 content: playingOnRealmMessage(userCurrentCharacter),
                 embeds: [],
                 files: [
-                  await renderUserDied(
-                    userCurrentCharacter,
-                  ),
+                  {
+                    attachment: await renderUserDied(
+                      userCurrentCharacter,
+                    ),
+                    name: `userDied.png`,
+                  },
                 ],
                 components: [],
               });
@@ -1095,21 +1063,25 @@ ${newLootC.length > 0 ? `__found ${newLootC.length} ${newLootC.length === 1 ? `i
                 embeds: [
                   await battleCompleteEmbed(
                     userCurrentCharacter,
+                    battle,
                     sumExp,
                     newLoot,
                   ),
                 ],
                 files: [
-                  await renderBattleComplete(
-                    userCurrentCharacter,
-                    battle,
-                  ),
+                  {
+                    attachment: await renderBattleComplete(
+                      userCurrentCharacter,
+                      battle,
+                    ),
+                    name: `battleComplete.png`,
+                  },
                   ...(newLoot.length > 0 ? await generateLootImagesArray(newLoot) : []),
                 ],
                 components: [
                   ...(newLoot.length > 0
                     ? [
-                      new MessageActionRow({
+                      new ActionRowBuilder({
                         components: await generateLootItemButtonArray(newLoot),
                       }),
                     ]
@@ -1200,8 +1172,8 @@ ${newLootC.length > 0 ? `__found ${newLootC.length} ${newLootC.length === 1 ? `i
             content: playingOnRealmMessage(userCurrentCharacter),
             embeds: [],
             files: [
-              new MessageAttachment(
-                await renderBattleGif(
+              {
+                attachment: await renderBattleGif(
                   myInitialUserState,
                   userCurrentSelectedSkills,
                   battle,
@@ -1210,11 +1182,11 @@ ${newLootC.length > 0 ? `__found ${newLootC.length} ${newLootC.length === 1 ? `i
                   allRoundDebuffsInfoArray,
                   allRoundEffectsInfoArray,
                 ),
-                'battle.gif',
-              ),
+                name: `battle.gif`,
+              },
             ],
             components: [
-              new MessageActionRow({
+              new ActionRowBuilder({
                 components: [
                   await generateMainSkillButton(
                     userCurrentSelectedSkills.selectedMainSkill,
@@ -1226,29 +1198,26 @@ ${newLootC.length > 0 ? `__found ${newLootC.length} ${newLootC.length === 1 ? `i
                 ],
               }),
               ...(selectMonsterMap && selectMonsterMap.length > 0 ? [
-                new MessageActionRow({
+                new ActionRowBuilder({
                   components: [
-                    new MessageSelectMenu({
-                      type: 'SELECT_MENU',
+                    new SelectMenuBuilder({
                       customId: 'select-mob',
                       options: selectMonsterMap,
                     }),
                   ],
                 }),
               ] : []),
-              new MessageActionRow({
+              new ActionRowBuilder({
                 components: [
-                  new MessageSelectMenu({
-                    type: 'SELECT_MENU',
+                  new SelectMenuBuilder({
                     customId: 'select-mainSkill',
                     options: mainSkillMap,
                   }),
                 ],
               }),
-              new MessageActionRow({
+              new ActionRowBuilder({
                 components: [
-                  new MessageSelectMenu({
-                    type: 'SELECT_MENU',
+                  new SelectMenuBuilder({
                     customId: 'select-secondarySkill',
                     options: secondarySkillMap,
                   }),

@@ -106,5 +106,7 @@ export const renderPickClassImage = async (
   ctx.strokeText(`${user.username} is picking a class`, 700, 1000, 1400);
   ctx.fillText(`${user.username} is picking a class`, 700, 1000, 1400);
 
+  const finalImage = await canvas.toBuffer();
+  return finalImage;
   return new MessageAttachment(canvas.toBuffer(), 'class.png');
 };

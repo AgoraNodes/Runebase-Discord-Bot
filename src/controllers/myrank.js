@@ -7,10 +7,7 @@ import {
 import {
   createCanvas,
   loadImage,
-  registerFont,
 } from 'canvas';
-import { MessageAttachment } from "discord.js";
-import path from 'path';
 import {
   cannotSendMessageUser,
   discordErrorMessage,
@@ -18,6 +15,7 @@ import {
 import db from '../models';
 import logger from "../helpers/logger";
 import { userWalletExist } from "../helpers/client/userWalletExist";
+import { fetchDiscordChannel } from "../helpers/client/fetchDiscordChannel";
 
 export const discordMyRank = async (
   discordClient,
@@ -40,6 +38,11 @@ export const discordMyRank = async (
       activity.unshift(userActivity);
     }
     if (!user) return;
+
+    const discordChannel = await fetchDiscordChannel(
+      discordClient,
+      message,
+    );
 
     const totalChatActivity = await db.activeTalker.findOne({
       attributes: [[Sequelize.fn('sum', Sequelize.col('count')), 'count']],
@@ -121,12 +124,10 @@ export const discordMyRank = async (
 
     const nextRankExp = nextRank && nextRank.expNeeded ? nextRank.expNeeded : currentRankExp;
     const currentExp = userWithUserGroup.UserGroup.exp;
-    await registerFont(path.join(__dirname, '../assets/fonts/', 'Heart_warming.otf'), { family: 'HeartWarming' });
+
     const canvas = createCanvas(1000, 300);
     const ctx = canvas.getContext('2d');
     const expBarWidth = 600;
-
-    // const background = await loadImage(path.join(__dirname, '../assets/images/', 'myrank_background_two.png'));
 
     let avatar;
     if (message.type && message.type === 'APPLICATION_COMMAND') {
@@ -134,8 +135,6 @@ export const discordMyRank = async (
     } else {
       avatar = await loadImage(`https://cdn.discordapp.com/avatars/${message.author.id}/${message.author.avatar}.png?size=256`);
     }
-    // background
-    // ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
 
     // circle for avatar
     ctx.beginPath();
@@ -259,42 +258,16 @@ export const discordMyRank = async (
     // Add the avatar
     ctx.drawImage(avatar, 10, 10, 220, 220);
 
-    const attachment = new MessageAttachment(canvas.toBuffer(), 'rank.png');
+    const finalImage = await canvas.toBuffer();
 
-    console.log('before send');
-
-    if (message.type && message.type === 'APPLICATION_COMMAND') {
-      const discordUser = await discordClient.users.cache.get(message.user.id);
-      if (message.guildId) {
-        const discordChannel = await discordClient.channels.cache.get(message.channelId);
-        await discordChannel.send({
-          files: [
-            attachment,
-          ],
-        });
-      } else {
-        await discordUser.send({
-          files: [
-            attachment,
-          ],
-        });
-      }
-    } else {
-      if (message.channel.type === 'DM') {
-        await message.author.send({
-          files: [
-            attachment,
-          ],
-        });
-      }
-      if (message.channel.type === 'GUILD_TEXT') {
-        await message.channel.send({
-          files: [
-            attachment,
-          ],
-        });
-      }
-    }
+    await discordChannel.send({
+      files: [
+        {
+          attachment: finalImage,
+          name: 'myRank.png',
+        },
+      ],
+    });
 
     const preActivity = await db.activity.create({
       type: 'myrank_s',

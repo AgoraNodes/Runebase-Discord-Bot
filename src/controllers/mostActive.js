@@ -7,10 +7,7 @@ import {
 import {
   createCanvas,
   loadImage,
-  registerFont,
 } from 'canvas';
-import { MessageAttachment } from "discord.js";
-import path from 'path';
 import {
   cannotSendMessageUser,
   discordErrorMessage,
@@ -18,6 +15,7 @@ import {
 import db from '../models';
 import logger from "../helpers/logger";
 import { userWalletExist } from "../helpers/client/userWalletExist";
+import { fetchDiscordChannel } from "../helpers/client/fetchDiscordChannel";
 
 export const discordMostActive = async (
   discordClient,
@@ -41,6 +39,11 @@ export const discordMostActive = async (
       activity.unshift(userActivity);
     }
     if (!user) return;
+
+    const discordChannel = await fetchDiscordChannel(
+      discordClient,
+      message,
+    );
 
     const allRanks = await db.rank.findAll(
       {
@@ -182,7 +185,6 @@ export const discordMostActive = async (
     console.log(newTopUsers);
 
     const canvasAddedRanksHeight = (newTopUsers.length * 300) + 36.5;
-    await registerFont(path.join(__dirname, '../assets/fonts/', 'Heart_warming.otf'), { family: 'HeartWarming' });
 
     const canvas = createCanvas(1040, canvasAddedRanksHeight);
     const ctx = canvas.getContext('2d');
@@ -541,24 +543,16 @@ export const discordMostActive = async (
     ctx.lineTo(1038.5, canvasAddedRanksHeight);
     ctx.stroke();
 
-    const attachment = new MessageAttachment(canvas.toBuffer(), 'mostActive.png');
+    const finalImage = canvas.toBuffer();
 
-    if (message.type && message.type === 'APPLICATION_COMMAND') {
-      if (message.guildId) {
-        const discordChannel = await discordClient.channels.cache.get(message.channelId);
-        await discordChannel.send({
-          files: [
-            attachment,
-          ],
-        });
-      }
-    } else {
-      await message.channel.send({
-        files: [
-          attachment,
-        ],
-      });
-    }
+    await discordChannel.send({
+      files: [
+        {
+          attachment: finalImage,
+          name: 'mostActive.png',
+        },
+      ],
+    });
 
     const preActivity = await db.activity.create({
       type: 'mostActive_s',

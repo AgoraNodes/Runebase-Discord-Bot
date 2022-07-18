@@ -1,7 +1,7 @@
 /* eslint-disable import/prefer-default-export */
 import {
-  MessageActionRow,
-  MessageSelectMenu,
+  ActionRowBuilder,
+  SelectMenuBuilder,
   // MessageEmbed,
 } from 'discord.js';
 import { fetchUserCurrentCharacter } from "../helpers/character/character";
@@ -63,7 +63,6 @@ export const discordSkills = async (
 
   const skillTreeMap = userCurrentCharacter.class.skillTrees.map((skilltree, index) => {
     console.log(index);
-    console.log('index');
     return {
       label: skilltree.name,
       value: `skilltree-${index}`,
@@ -89,37 +88,38 @@ export const discordSkills = async (
   const embedMessage = await discordChannel.send({
     content: playingOnRealmMessage(userCurrentCharacter),
     files: [
-      await renderSkillScreen(
-        userCurrentCharacter,
-        userCurrentCharacter.class.skillTrees[0],
-        0, // skillTreeIndex
-        false, // selected skill
-        false, // Skill Info Json
-        false, // add skill failReason String
-      ),
+      {
+        attachment: await renderSkillScreen(
+          userCurrentCharacter,
+          userCurrentCharacter.class.skillTrees[0],
+          0, // skillTreeIndex
+          false, // selected skill
+          false, // Skill Info Json
+          false, // add skill failReason String
+        ),
+        name: 'skillScreen.png',
+      },
     ],
     components:
       [
-        new MessageActionRow({
+        new ActionRowBuilder({
           components: [
-            new MessageSelectMenu({
-              type: 'SELECT_MENU',
+            new SelectMenuBuilder({
               customId: 'select-skilltree',
               options: skillTreeMap,
             }),
           ],
         }),
-        new MessageActionRow({
+        new ActionRowBuilder({
           components: [
-            new MessageSelectMenu({
-              type: 'SELECT_MENU',
+            new SelectMenuBuilder({
               customId: 'select-skill',
               options: skillMap,
             }),
           ],
         }),
 
-        new MessageActionRow({
+        new ActionRowBuilder({
           components: [
             await generateCancelSkillButton(),
           ],
@@ -127,7 +127,6 @@ export const discordSkills = async (
       ],
   });
 
-  console.log('after init embed message');
   const collector = embedMessage.createMessageComponentCollector({});
 
   let skillTreeIndex = 0;
@@ -169,7 +168,10 @@ export const discordSkills = async (
           content: playingOnRealmMessage(userCurrentCharacter),
           embeds: [],
           files: [
-            await renderCancelSkillPick(userCurrentCharacter),
+            {
+              attachment: await renderCancelSkillPick(userCurrentCharacter),
+              name: 'cancelSkillScreen.png',
+            },
           ],
           components: [],
         });
@@ -242,19 +244,22 @@ export const discordSkills = async (
         ),
       ],
       files: [
-        await renderSkillScreen(
-          userCurrentCharacter,
-          userCurrentCharacter.class.skillTrees[skillTreeIndex],
-          skillTreeIndex,
-          selectedSkill,
-          jsonSkillInfo,
-          failAddSkillReason,
-        ),
+        {
+          attachment: await renderSkillScreen(
+            userCurrentCharacter,
+            userCurrentCharacter.class.skillTrees[skillTreeIndex],
+            skillTreeIndex,
+            selectedSkill,
+            jsonSkillInfo,
+            failAddSkillReason,
+          ),
+          name: 'skillScreen.png',
+        },
       ],
       components: [
         ...(selectedSkill
           ? [
-            new MessageActionRow({
+            new ActionRowBuilder({
               components: [
                 await generateAddSkillButton(
                   selectedSkill,
@@ -264,25 +269,23 @@ export const discordSkills = async (
           ]
           : []
         ),
-        new MessageActionRow({
+        new ActionRowBuilder({
           components: [
-            new MessageSelectMenu({
-              type: 'SELECT_MENU',
+            new SelectMenuBuilder({
               customId: 'select-skilltree',
               options: skillTreeMapEdit,
             }),
           ],
         }),
-        new MessageActionRow({
+        new ActionRowBuilder({
           components: [
-            new MessageSelectMenu({
-              type: 'SELECT_MENU',
+            new SelectMenuBuilder({
               customId: 'select-skill',
               options: skillMapEdit,
             }),
           ],
         }),
-        new MessageActionRow({
+        new ActionRowBuilder({
           components: [
             await generateCancelSkillButton(),
           ],

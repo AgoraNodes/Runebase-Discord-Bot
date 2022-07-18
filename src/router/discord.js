@@ -1,4 +1,5 @@
 import { config } from "dotenv";
+import { InteractionType } from 'discord.js';
 import { updateDiscordChannel } from '../controllers/channel';
 import { updateDiscordGroup } from '../controllers/group';
 import { discordFeatureSettings } from '../controllers/featureSetting';
@@ -138,7 +139,10 @@ export const discordRouter = async (
   });
 
   discordClient.on('interactionCreate', async (interaction) => {
-    if (!interaction.isCommand() && !interaction.isButton()) return;
+    if (
+      interaction.type !== InteractionType.ApplicationCommand
+      && !interaction.isButton()
+    ) return;
     let groupTask;
     let groupTaskId;
     let channelTask;
@@ -166,7 +170,7 @@ export const discordRouter = async (
         groupTaskId = groupTask && groupTask.id;
         channelTaskId = channelTask && channelTask.id;
       });
-      if (interaction.isCommand()) {
+      if (interaction.type === InteractionType.ApplicationCommand) {
         const { commandName } = interaction;
         if (commandName === 'help') {
           await interaction.deferReply().catch((e) => {
@@ -849,6 +853,8 @@ export const discordRouter = async (
       });
     }
     console.log('1-2');
+    console.log('message');
+    console.log(message);
     if (!message.content.startsWith(settings.bot.command) || message.author.bot) return;
     const maintenance = await isMaintenanceOrDisabled(message, 'discord');
     if (maintenance.maintenance || !maintenance.enabled) return;
@@ -942,12 +948,14 @@ export const discordRouter = async (
     }
 
     if (filteredMessageDiscord[1] && filteredMessageDiscord[1].toLowerCase() === 'myrank') {
+      console.log('myRank found');
       const limited = await myRateLimiter(
         discordClient,
         message,
         'Myrank',
       );
       if (limited) return;
+      console.log('before executing myRank');
       await queue.add(async () => {
         const task = await discordMyRank(
           discordClient,

@@ -10,6 +10,7 @@ import {
 } from '../embeds';
 import logger from "../helpers/logger";
 import { userWalletExist } from "../helpers/client/userWalletExist";
+import { fetchDiscordChannel } from "../helpers/client/fetchDiscordChannel";
 
 export const discordDeposit = async (
   discordClient,
@@ -38,91 +39,32 @@ export const discordDeposit = async (
       return;
     }
 
+    const discordChannel = await fetchDiscordChannel(
+      discordClient,
+      message,
+    );
+    if (!discordChannel) return;
+
     const depositQr = await QRCode.toDataURL(user.wallet.address.address);
     const depositQrFixed = depositQr.replace('data:image/png;base64,', '');
 
-    if (message.type && message.type === 'APPLICATION_COMMAND') {
-      const discordUser = await discordClient.users.cache.get(message.user.id);
-      if (message.guildId) {
-        console.log('deposit application command');
-        const discordChannel = await discordClient.channels.cache.get(message.channelId);
-        await discordChannel.send({
-          embeds: [
-            depositAddressMessage(
-              user.user_id,
-              user,
-            ),
-          ],
-          files: [
-            new MessageAttachment(
-              Buffer.from(
-                depositQrFixed,
-                'base64',
-              ),
-              'qr.png',
-            ),
-          ],
-          s,
-        });
-      } else {
-        await discordUser.send({
-          embeds: [
-            depositAddressMessage(
-              user.user_id,
-              user,
-            ),
-          ],
-          files: [
-            new MessageAttachment(
-              Buffer.from(
-                depositQrFixed,
-                'base64',
-              ),
-              'qr.png',
-            ),
-          ],
-        });
-      }
-    } else {
-      if (message.channel.type === 'DM') {
-        await message.author.send({
-          embeds: [
-            depositAddressMessage(
-              user.user_id,
-              user,
-            ),
-          ],
-          files: [
-            new MessageAttachment(
-              Buffer.from(
-                depositQrFixed,
-                'base64',
-              ),
-              'qr.png',
-            ),
-          ],
-        });
-      }
-      if (message.channel.type === 'GUILD_TEXT') {
-        await message.channel.send({
-          embeds: [
-            depositAddressMessage(
-              user.user_id,
-              user,
-            ),
-          ],
-          files: [
-            new MessageAttachment(
-              Buffer.from(
-                depositQrFixed,
-                'base64',
-              ),
-              'qr.png',
-            ),
-          ],
-        });
-      }
-    }
+    await discordChannel.send({
+      embeds: [
+        await depositAddressMessage(
+          user.user_id,
+          user,
+        ),
+      ],
+      files: [
+        {
+          attachment: Buffer.from(
+            depositQrFixed,
+            'base64',
+          ),
+          name: 'qr.png',
+        },
+      ],
+    });
 
     const preActivity = await db.activity.create({
       type: 'deposit_s',

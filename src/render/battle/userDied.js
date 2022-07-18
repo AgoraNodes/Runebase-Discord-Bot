@@ -21,5 +21,6 @@ export const renderUserDied = async (
   ctx.strokeText(`${currentCharacter.UserGroup.user.username} you have died, please go heal first`, 700, 150, 1400);
   ctx.fillText(`${currentCharacter.UserGroup.user.username} you have died, please go heal first`, 700, 150, 1400);
 
-  return new MessageAttachment(canvas.toBuffer(), 'userDied.png');
+  const finalImage = canvas.toBuffer();
+  return finalImage;
 };

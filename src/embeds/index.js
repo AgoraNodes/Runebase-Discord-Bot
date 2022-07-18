@@ -1,4 +1,5 @@
-import { MessageEmbed } from "discord.js";
+/* eslint-disable no-restricted-syntax */
+import { EmbedBuilder } from "discord.js";
 // import moment from 'moment';
 import settings from '../config/settings';
 import pjson from "../../package.json";
@@ -7,7 +8,7 @@ import { capitalize } from "../helpers/utils";
 export const discordUserBannedMessage = (
   user,
 ) => {
-  const result = new MessageEmbed()
+  const result = new EmbedBuilder()
     .setColor("#C70039")
     .setTitle(`🚫     User: ${user.username} Banned     🚫`)
     .setDescription(`Reason:
@@ -24,7 +25,7 @@ ${user.banMessage}`)
 export const discordServerBannedMessage = (
   server,
 ) => {
-  const result = new MessageEmbed()
+  const result = new EmbedBuilder()
     .setColor(`#C70039`)
     .setTitle('🚫     Server Banned     🚫')
     .setDescription(`Reason:
@@ -39,7 +40,7 @@ ${server.banMessage}`)
 };
 
 export const priceMessage = (replyString) => {
-  const result = new MessageEmbed()
+  const result = new EmbedBuilder()
     .setColor(settings.bot.color)
     .setTitle('Price')
     .setThumbnail(settings.bot.logo)
@@ -54,7 +55,7 @@ export const priceMessage = (replyString) => {
 };
 
 export const discordChannelBannedMessage = (channel) => {
-  const result = new MessageEmbed()
+  const result = new EmbedBuilder()
     .setColor('#FF7900')
     .setTitle('❗     Channel Restricted     ❗')
     .setDescription(`Reason:
@@ -73,7 +74,7 @@ export const coinInfoMessage = (
   priceInfo,
   walletVersion,
 ) => {
-  const result = new MessageEmbed()
+  const result = new EmbedBuilder()
     .setColor(settings.bot.color)
     .setTitle('Tipbot')
     .addField("Coin Info", settings.coin.description)
@@ -105,7 +106,7 @@ export const coinInfoMessage = (
 };
 
 export const discordLimitSpamMessage = (userId, myFunctionName) => {
-  const result = new MessageEmbed()
+  const result = new EmbedBuilder()
     .setColor(settings.bot.color)
     .setTitle(myFunctionName)
     .setDescription(`🚫 Slow down! 🚫
@@ -120,7 +121,7 @@ export const discordLimitSpamMessage = (userId, myFunctionName) => {
 };
 
 export const cannotSendMessageUser = (title, message) => {
-  const result = new MessageEmbed()
+  const result = new EmbedBuilder()
     .setColor(settings.bot.color)
     .setTitle(title)
     .setDescription(`<@${message.author.id}>, ${settings.bot.name} was unable to send you a direct message.\nPlease check your discord privacy settings.`)
@@ -134,7 +135,7 @@ export const cannotSendMessageUser = (title, message) => {
 };
 
 export const discordErrorMessage = (title) => {
-  const result = new MessageEmbed()
+  const result = new EmbedBuilder()
     .setColor(settings.bot.color)
     .setTitle(title)
     .setDescription(`Something went wrong.`)
@@ -151,7 +152,7 @@ export const discordDepositConfirmedMessage = (
   amount,
   trans,
 ) => {
-  const result = new MessageEmbed()
+  const result = new EmbedBuilder()
     .setColor(settings.bot.color)
     .setTitle(`Deposit #${trans.id}`)
     .setDescription(`Deposit Confirmed
@@ -166,7 +167,7 @@ ${trans.amount / 1e8} ${settings.coin.ticker} has been credited to your wallet`)
 };
 
 export const discordIncomingDepositMessage = (detail) => {
-  const result = new MessageEmbed()
+  const result = new EmbedBuilder()
     .setColor(settings.bot.color)
     .setTitle(`Deposit #${detail.transaction[0].id}`)
     .setDescription(`incoming deposit detected for ${detail.amount} ${settings.coin.ticker}
@@ -182,7 +183,7 @@ ${settings.coin.explorer}/tx/${detail.transaction[0].txid}`)
 };
 
 export const discordUserWithdrawalRejectMessage = (title) => {
-  const result = new MessageEmbed()
+  const result = new EmbedBuilder()
     .setColor(settings.bot.color)
     .setTitle('Withdraw')
     .setDescription(`Your withdrawal has been rejected`)
@@ -195,6 +196,46 @@ export const discordUserWithdrawalRejectMessage = (title) => {
   return result;
 };
 
+export const loadingBattleMoveEmbed = (
+  userCurrentCharacter,
+) => {
+  const result = new EmbedBuilder()
+    .setColor(settings.bot.color)
+    .setTitle('Battle')
+    .setDescription(`${userCurrentCharacter.UserGroup.user.username}, Your next move is calculating..`)
+    .setTimestamp()
+    .setFooter({
+      text: `${settings.bot.name} v${pjson.version}`,
+      iconURL: settings.bot.logo,
+    });
+
+  return result;
+};
+
+export const battleCompleteEmbed = async (
+  userCurrentCharacter,
+  battle,
+  expEarned,
+  newLootC,
+) => {
+  let itemString = '';
+  for await (const looot of newLootC) {
+    itemString += `\n- **${looot.name}** [${looot.itemQuality.name}]`;
+  }
+  const result = new EmbedBuilder()
+    .setColor(settings.bot.color)
+    .setTitle(`${userCurrentCharacter.UserGroup.user.username} battle#${battle.id} results`)
+    .setDescription(`Exp earned: **${expEarned}**
+
+    ${newLootC.length > 0 ? `__found ${newLootC.length} ${newLootC.length === 1 ? `item` : `items`}__` : ``}${itemString}`)
+    .setTimestamp()
+    .setFooter({
+      text: `${settings.bot.name} v${pjson.version}`,
+      iconURL: settings.bot.logo,
+    });
+
+  return result;
+};
 export const reviewMessage = (
   userId,
   transaction,
@@ -202,7 +243,7 @@ export const reviewMessage = (
   const amount = ((transaction.amount / 1e8).toFixed(8)).replace(/(\.0+|0+)$/, '');
   const fee = ((transaction.feeAmount / 1e8).toFixed(8)).replace(/(\.0+|0+)$/, '');
   const total = (((transaction.amount - transaction.feeAmount) / 1e8).toFixed(8)).replace(/(\.0+|0+)$/, '');
-  const result = new MessageEmbed()
+  const result = new EmbedBuilder()
     .setColor(settings.bot.color)
     .setTitle(`Withdraw #${transaction.id}`)
     .setDescription(`<@${userId}>, Your withdrawal is being reviewed
@@ -225,7 +266,7 @@ export const discordWithdrawalAcceptedMessage = (
   const amount = ((updatedTrans.amount / 1e8).toFixed(8)).replace(/(\.0+|0+)$/, '');
   const fee = ((updatedTrans.feeAmount / 1e8).toFixed(8)).replace(/(\.0+|0+)$/, '');
   const total = (((updatedTrans.amount - updatedTrans.feeAmount) / 1e8).toFixed(8)).replace(/(\.0+|0+)$/, '');
-  const result = new MessageEmbed()
+  const result = new EmbedBuilder()
     .setColor(settings.bot.color)
     .setTitle(`Withdraw #${updatedTrans.id}`)
     .setDescription(`Your withdrawal has been accepted
@@ -245,7 +286,7 @@ ${settings.coin.explorer}/tx/${updatedTrans.txid}`)
 };
 
 export const discordWithdrawalConfirmedMessage = (userId, trans) => {
-  const result = new MessageEmbed()
+  const result = new EmbedBuilder()
     .setColor(settings.bot.color)
     .setTitle(`Withdraw #${trans.id}`)
     .setDescription(`<@${userId}>, Your withdrawal has been complete`)
@@ -259,7 +300,7 @@ export const discordWithdrawalConfirmedMessage = (userId, trans) => {
 };
 
 export const balanceMessage = (userId, user, priceInfo) => {
-  const result = new MessageEmbed()
+  const result = new EmbedBuilder()
     .setColor(settings.bot.color)
     .setTitle('Balance')
     .setDescription(`<@${userId}>'s current available balance: ${user.wallet.available / 1e8} ${settings.coin.ticker}
@@ -279,7 +320,7 @@ export const depositAddressMessage = (
   userId,
   user,
 ) => {
-  const result = new MessageEmbed()
+  const result = new EmbedBuilder()
     .setColor(settings.bot.color)
     .setTitle('Deposit')
     .setDescription(`<@${userId}>'s deposit address:
@@ -295,7 +336,7 @@ export const depositAddressMessage = (
 };
 
 export const walletNotFoundMessage = (message, title) => {
-  const result = new MessageEmbed()
+  const result = new EmbedBuilder()
     .setColor(settings.bot.color)
     .setTitle(title)
     .setDescription(`<@${message.author.id}>, Wallet not found`)
@@ -312,7 +353,7 @@ export const userNotFoundMessage = (
   message,
   title,
 ) => {
-  const result = new MessageEmbed()
+  const result = new EmbedBuilder()
     .setColor(settings.bot.color)
     .setTitle(title)
     .setDescription(`<@${message.author.id}>, User not found`)
@@ -326,7 +367,7 @@ export const userNotFoundMessage = (
 };
 
 export const NotInDirectMessage = (message, title) => {
-  const result = new MessageEmbed()
+  const result = new EmbedBuilder()
     .setColor(settings.bot.color)
     .setTitle(title)
     .setDescription(`<@${message.author.id}>, Can't use this command in a direct message`)
@@ -343,7 +384,7 @@ export const NotInDirectMessage = (message, title) => {
 export const discordWelcomeMessage = (
   userInfo,
 ) => {
-  const result = new MessageEmbed()
+  const result = new EmbedBuilder()
     .setColor(settings.bot.color)
     .setTitle(`Bot`)
     .setDescription(`Welcome <@${userInfo.id}>, Welcome to Runebase.
@@ -359,7 +400,7 @@ Type "${settings.bot.command} help" for bot usage info`)
 };
 
 export const discordBotMaintenanceMessage = () => {
-  const result = new MessageEmbed()
+  const result = new EmbedBuilder()
     .setColor(settings.bot.color)
     .setTitle(`Bot`)
     .setDescription(`Discord tipbot maintenance`)
@@ -377,7 +418,7 @@ export const gainTestExpMessage = (
   userId,
   amount,
 ) => {
-  const result = new MessageEmbed()
+  const result = new EmbedBuilder()
     .setColor(settings.bot.color)
     .setTitle('Gain Exp')
     .setDescription(`<@${userId}>, you have been rewarded ${amount} test experience`)
@@ -398,7 +439,7 @@ export const rolledDiceMessage = (
   rewardAmount,
 ) => {
   const isSnakeEyes = !!((randomNumberOne === 1 && randomNumberTwo === 1));
-  const result = new MessageEmbed()
+  const result = new EmbedBuilder()
     .setColor(settings.bot.color)
     .setTitle('Roll Dice')
     .setDescription(`<@${userId}>, You rolled the dice!
@@ -422,7 +463,7 @@ export const rollDiceTooFastMessage = (
   const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
   const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
   const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-  const result = new MessageEmbed()
+  const result = new EmbedBuilder()
     .setColor(settings.bot.color)
     .setTitle('Roll Dice')
     .setDescription(`<@${userId}>, you have to wait ${hours === 1 ? `${hours} hour` : ''}${hours > 1 ? `${hours} hours,` : ''} ${minutes === 1 ? `${minutes} minute` : ''}${minutes > 1 ? `${minutes} minutes and` : ''} ${seconds === 1 ? `${seconds} second` : ''}${seconds > 1 ? `${seconds} seconds` : ''} before you can roll the dice again (you can roll the dice every 3 hours).`)
@@ -440,7 +481,7 @@ export const grantRoleExpMessage = (
   role,
   amount,
 ) => {
-  const result = new MessageEmbed()
+  const result = new EmbedBuilder()
     .setColor(settings.bot.color)
     .setTitle('Grant Exp to role')
     .setDescription(`Congratulations!
@@ -458,7 +499,7 @@ export const gainBattleExpExpMessage = (
   userId,
   amount,
 ) => {
-  const result = new MessageEmbed()
+  const result = new EmbedBuilder()
     .setColor(settings.bot.color)
     .setTitle('Gain Exp')
     .setDescription(`<@${userId}>, Congratulations!
@@ -476,7 +517,7 @@ export const gainActiveTalkerExpMessage = (
   userId,
   amount,
 ) => {
-  const result = new MessageEmbed()
+  const result = new EmbedBuilder()
     .setColor(settings.bot.color)
     .setTitle('Gain Exp')
     .setDescription(`<@${userId}>, Thank you for being so talkative in our community today!
@@ -493,7 +534,7 @@ you have been rewarded ${amount} experience`)
 export const alreadyVotedTopGG = (
   userId,
 ) => {
-  const result = new MessageEmbed()
+  const result = new EmbedBuilder()
     .setColor(settings.bot.color)
     .setTitle('Gain Exp')
     .setDescription(`<@${userId}>, Thank you for your enthousiasme.
@@ -512,7 +553,7 @@ export const invitedNewUserRewardMessage = (
   joinedUserId,
   amount,
 ) => {
-  const result = new MessageEmbed()
+  const result = new EmbedBuilder()
     .setColor(settings.bot.color)
     .setTitle('Gain Exp')
     .setDescription(`<@${userId}>, Thank you for inviting <@${joinedUserId}> to the Runebase server.
@@ -529,7 +570,7 @@ you have been rewarded ${amount} experience`)
 export const realmChangeSuccessEmbed = (
   server,
 ) => {
-  const result = new MessageEmbed()
+  const result = new EmbedBuilder()
     .setColor(settings.bot.color)
     .setTitle('Change Realm Success')
     .setDescription(`You are now on realm:
@@ -546,7 +587,7 @@ ${server.groupName}`)
 export const needToBeInDiscordRealmEmbed = (
   server,
 ) => {
-  const result = new MessageEmbed()
+  const result = new EmbedBuilder()
     .setColor(settings.bot.color)
     .setTitle('Change Realm Failed')
     .setDescription(`You need to join the realm's discord server to be able to participate on this realm
@@ -571,7 +612,7 @@ export const gainVoteTopggExpMessage = (
   userId,
   amount,
 ) => {
-  const result = new MessageEmbed()
+  const result = new EmbedBuilder()
     .setColor(settings.bot.color)
     .setTitle('Gain Exp')
     .setDescription(`<@${userId}>, Thank you for voting for Runebase on TopGG.
@@ -590,7 +631,7 @@ export const levelUpMessage = (
   rank,
 ) => {
   console.log('sending level up message');
-  const result = new MessageEmbed()
+  const result = new EmbedBuilder()
     .setColor(settings.bot.color)
     .setTitle('Gain Exp')
     .setDescription(`Congratulations <@${userId}>
@@ -606,7 +647,7 @@ You are now a ${rank.name} (lvl ${rank.level})`)
 };
 
 export const discordBotDisabledMessage = () => {
-  const result = new MessageEmbed()
+  const result = new EmbedBuilder()
     .setColor(settings.bot.color)
     .setTitle(`Bot`)
     .setDescription(`Discord tipbot disabled`)
@@ -621,7 +662,7 @@ export const discordBotDisabledMessage = () => {
 };
 
 export const warnDirectMessage = (userId, title) => {
-  const result = new MessageEmbed()
+  const result = new EmbedBuilder()
     .setColor(settings.bot.color)
     .setTitle(title)
     .setDescription(`<@${userId}>, I've sent you a direct message.`)
@@ -636,7 +677,7 @@ export const warnDirectMessage = (userId, title) => {
 };
 
 export const timeOutMessage = () => {
-  const result = new MessageEmbed()
+  const result = new EmbedBuilder()
     .setColor(settings.bot.color)
     .setTitle('Time out')
     .setDescription(`Operation canceled`)
@@ -651,7 +692,7 @@ export const timeOutMessage = () => {
 };
 
 export const enterWithdrawalAddress = () => {
-  const result = new MessageEmbed()
+  const result = new EmbedBuilder()
     .setColor(settings.bot.color)
     .setTitle('Withdraw')
     .setDescription(`Please enter a Runebase withdrawal address:`)
@@ -665,7 +706,7 @@ export const enterWithdrawalAddress = () => {
 };
 
 export const enterWithdrawalAmount = () => {
-  const result = new MessageEmbed()
+  const result = new EmbedBuilder()
     .setColor(settings.bot.color)
     .setTitle('Withdraw')
     .setDescription(`Please enter the amount of runes you want to withdraw:`)
@@ -682,7 +723,7 @@ export const invalidAmountMessage = (
   userId,
   title,
 ) => {
-  const result = new MessageEmbed()
+  const result = new EmbedBuilder()
     .setColor(settings.bot.color)
     .setTitle(title)
     .setDescription(`<@${userId}>, Invalid Amount`)
@@ -699,7 +740,7 @@ export const confirmationHealMessage = (
   userId,
   available,
 ) => {
-  const result = new MessageEmbed()
+  const result = new EmbedBuilder()
     .setColor(settings.bot.color)
     .setTitle('Heal')
     .setDescription(`<@${userId}>, Healing costs 0.1 RUNES. 
@@ -720,7 +761,7 @@ Are you sure you want to heal?`)
 export const healCompleteMessage = (
   userId,
 ) => {
-  const result = new MessageEmbed()
+  const result = new EmbedBuilder()
     .setColor(settings.bot.color)
     .setTitle('Heal')
     .setDescription(`💋 Freyja has kissed <@${userId}>. 💋
@@ -737,7 +778,7 @@ export const healCompleteMessage = (
 export const declineHealMessage = (
   userId,
 ) => {
-  const result = new MessageEmbed()
+  const result = new EmbedBuilder()
     .setColor(settings.bot.color)
     .setTitle('Heal')
     .setDescription(`<@${userId}>, declined heal`)
@@ -754,7 +795,7 @@ export const insufficientBalanceMessage = (
   userId,
   title,
 ) => {
-  const result = new MessageEmbed()
+  const result = new EmbedBuilder()
     .setColor(settings.bot.color)
     .setTitle(title)
     .setDescription(`<@${userId}>, you have Insufficient balance`)
@@ -770,7 +811,7 @@ export const insufficientBalanceMessage = (
 export const resetSkillCompleteMessage = (
   userId,
 ) => {
-  const result = new MessageEmbed()
+  const result = new EmbedBuilder()
     .setColor(settings.bot.color)
     .setTitle('Reset Skills')
     .setDescription(`<@${userId}>, Your skills have been reset!`)
@@ -788,7 +829,7 @@ export const skillConfirmationMessage = (
   available,
   totalSkillsCost,
 ) => {
-  const result = new MessageEmbed()
+  const result = new EmbedBuilder()
     .setColor(settings.bot.color)
     .setTitle('Reset Skills')
     .setDescription(`<@${userId}>, Resetting your skills costs 1 RUNES for each skill point.
@@ -809,7 +850,7 @@ Are you sure you want to reset your skills?`)
 export const declineResetSkillsMessage = (
   userId,
 ) => {
-  const result = new MessageEmbed()
+  const result = new EmbedBuilder()
     .setColor(settings.bot.color)
     .setTitle('Reset Skills')
     .setDescription(`<@${userId}>, declined reset skills`)
@@ -826,7 +867,7 @@ export const resetStatsDeclinedMessage = (
   userId,
   title,
 ) => {
-  const result = new MessageEmbed()
+  const result = new EmbedBuilder()
     .setColor(settings.bot.color)
     .setTitle('Reset Stats')
     .setDescription(`<@${userId}>, declined reset stats`)
@@ -844,7 +885,7 @@ export const resetStatsConfirmationMessage = (
   available,
   totalStatsCost,
 ) => {
-  const result = new MessageEmbed()
+  const result = new EmbedBuilder()
     .setColor(settings.bot.color)
     .setTitle('Reset Stats')
     .setDescription(`<@${userId}>, Resetting your stats costs 0.1 RUNES for each attribute.
@@ -867,7 +908,7 @@ export const minimumMessage = (
   setting,
   type,
 ) => {
-  const result = new MessageEmbed()
+  const result = new EmbedBuilder()
     .setColor(settings.bot.color)
     .setTitle(type)
     .setDescription(`<@${userId}>, Minimum ${type} is ${setting.min / 1e8} ${settings.coin.ticker}`)
@@ -883,7 +924,7 @@ export const minimumMessage = (
 export const invalidAddressMessage = (
   userId,
 ) => {
-  const result = new MessageEmbed()
+  const result = new EmbedBuilder()
     .setColor(settings.bot.color)
     .setTitle('Withdraw')
     .setDescription(`<@${userId}>, Invalid ${settings.coin.name} Address`)
@@ -897,7 +938,7 @@ export const invalidAddressMessage = (
 };
 
 export const unableToWithdrawToSelfMessage = (message) => {
-  const result = new MessageEmbed()
+  const result = new EmbedBuilder()
     .setColor(settings.bot.color)
     .setTitle('Tip')
     .setDescription(`<@${message.author.id}>, unable to withdraw to your own deposit address`)
@@ -914,7 +955,7 @@ export const skillInfoMessage = (
   name,
   description,
 ) => {
-  const result = new MessageEmbed()
+  const result = new EmbedBuilder()
     .setColor(settings.bot.color)
     .setTitle(name || 'Skill not found')
     .setDescription(`${description || 'No skill Info found'}`)
@@ -929,7 +970,7 @@ export const skillInfoMessage = (
 export const loadingSkillAddEmbed = (
   username,
 ) => {
-  const result = new MessageEmbed()
+  const result = new EmbedBuilder()
     .setColor(settings.bot.color)
     .setTitle('Adding Skill Point')
     .setDescription(`${username}, Adding skill..`)
@@ -944,7 +985,7 @@ export const loadingSkillAddEmbed = (
 export const loadingSkillSelectEmbed = (
   username,
 ) => {
-  const result = new MessageEmbed()
+  const result = new EmbedBuilder()
     .setColor(settings.bot.color)
     .setTitle('Selecting Skill')
     .setDescription(`${username}, Loading skill selection..`)
@@ -958,7 +999,7 @@ export const loadingSkillSelectEmbed = (
 };
 
 export const AccountInfoMessage = () => {
-  const result = new MessageEmbed()
+  const result = new EmbedBuilder()
     .setColor(settings.bot.color)
     .setTitle('Account Information')
     .setDescription(`Shows discord account information`)
@@ -973,7 +1014,7 @@ export const AccountInfoMessage = () => {
 };
 
 export const featureDisabledChannelMessage = (name) => {
-  const result = new MessageEmbed()
+  const result = new EmbedBuilder()
     .setColor(settings.bot.color)
     .setTitle(name)
     .setDescription(`This Feature has been disabled for this channel`)
@@ -987,7 +1028,7 @@ export const featureDisabledChannelMessage = (name) => {
 };
 
 export const featureDisabledServerMessage = (name) => {
-  const result = new MessageEmbed()
+  const result = new EmbedBuilder()
     .setColor(settings.bot.color)
     .setTitle(name)
     .setDescription(`This Feature has been disabled for this server`)
@@ -1001,7 +1042,7 @@ export const featureDisabledServerMessage = (name) => {
 };
 
 export const featureDisabledGlobalMessage = (name) => {
-  const result = new MessageEmbed()
+  const result = new EmbedBuilder()
     .setColor(settings.bot.color)
     .setTitle(name)
     .setDescription(`This Feature has been disabled`)
@@ -1017,7 +1058,7 @@ export const featureDisabledGlobalMessage = (name) => {
 export const resetStatsCompletemessage = (
   userId,
 ) => {
-  const result = new MessageEmbed()
+  const result = new EmbedBuilder()
     .setColor(settings.bot.color)
     .setTitle('Reset Stats')
     .setDescription(`<@${userId}>, Your stats have been reset!`)
@@ -1033,7 +1074,7 @@ export const resetStatsCompletemessage = (
 export const alreadyInRealmEmbed = (
   user,
 ) => {
-  const result = new MessageEmbed()
+  const result = new EmbedBuilder()
     .setColor(settings.bot.color)
     .setTitle('Change Realm')
     .setDescription(`<@${user.user_id}>, You are already in this realm currently.`)
@@ -1049,7 +1090,7 @@ export const alreadyInRealmEmbed = (
 export const realmNotFoundEmbed = (
   user,
 ) => {
-  const result = new MessageEmbed()
+  const result = new EmbedBuilder()
     .setColor(settings.bot.color)
     .setTitle('Change Realm')
     .setDescription(`<@${user.user_id}>, We can't find the realm you are trying to join`)
@@ -1065,7 +1106,7 @@ export const realmNotFoundEmbed = (
 export const addingAttributeEmbed = (
   userCurrentCharacter,
 ) => {
-  const result = new MessageEmbed()
+  const result = new EmbedBuilder()
     .setColor(settings.bot.color)
     .setTitle('Change Realm')
     .setDescription(`<@${userCurrentCharacter.UserGroup.user.user_id}>, Loading..`)
@@ -1079,7 +1120,7 @@ export const addingAttributeEmbed = (
 };
 
 export const helpMessage = (withdraw) => {
-  const result = new MessageEmbed()
+  const result = new EmbedBuilder()
     .setColor(settings.bot.color)
     .setTitle(`${`${settings.bot.name} v${pjson.version}`} Help`)
     .setDescription(`\`${settings.bot.command}\`

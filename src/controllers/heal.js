@@ -3,7 +3,7 @@ import {
   Transaction,
 } from "sequelize";
 import {
-  MessageActionRow,
+  ActionRowBuilder,
   // MessageButton,
   // MessageEmbed,
 } from 'discord.js';
@@ -75,7 +75,7 @@ export const discordHeal = async (
       ),
     ],
     components: [
-      new MessageActionRow({
+      new ActionRowBuilder({
         components: [
           await generateAcceptButton(),
           await generateDeclineButton(),

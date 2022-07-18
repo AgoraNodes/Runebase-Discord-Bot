@@ -21,5 +21,6 @@ export const renderOutOfStamina = async (
   ctx.strokeText(`${currentCharacter.UserGroup.user.username} you are out of stamina, come back tomorrow`, 700, 150, 1400);
   ctx.fillText(`${currentCharacter.UserGroup.user.username} you are out of stamina, come back tomorrow`, 700, 150, 1400);
 
-  return new MessageAttachment(canvas.toBuffer(), 'outOfStamina.png');
+  const finalImage = canvas.toBuffer();
+  return finalImage;
 };
