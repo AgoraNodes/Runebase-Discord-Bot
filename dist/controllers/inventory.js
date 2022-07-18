@@ -47,10 +47,12 @@ var _destroyInventoryItem = require("../render/inventory/destroyInventoryItem");
 
 var _itemCompare = require("../render/inventory/itemCompare");
 
+var _isUserInRealm = _interopRequireDefault(require("../helpers/realm/isUserInRealm"));
+
 /* eslint-disable import/prefer-default-export */
 var discordShowInventory = /*#__PURE__*/function () {
   var _ref = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee5(discordClient, message, setting, io, queue, isDefered) {
-    var activity, userId, discordChannel, userCurrentCharacter, _yield$testPlayerRead, _yield$testPlayerRead2, failed, usedDeferReply, canFitOnOnePage, embedMessage, collector, currentIndex;
+    var activity, failed, usedDeferReply, userId, discordChannel, userCurrentCharacter, _yield$testPlayerRead, _yield$testPlayerRead2, _yield$isUserInRealm, _yield$isUserInRealm2, canFitOnOnePage, embedMessage, collector, currentIndex;
 
     return _regenerator["default"].wrap(function _callee5$(_context5) {
       while (1) {
@@ -91,19 +93,23 @@ var discordShowInventory = /*#__PURE__*/function () {
             return _context5.abrupt("return", usedDeferReply);
 
           case 18:
-            // const row = new ActionRowBuilder();
-            // if (
-            //   userCurrentCharacter.inventory
-            //   && userCurrentCharacter.inventory.items
-            //   && userCurrentCharacter.inventory.items.length > 0
-            // ) {
-            //   row.addComponents(
-            //     await generateEquipmentCompareButton(
-            //       userCurrentCharacter,
-            //       0,
-            //     ),
-            //   );
-            // }
+            _context5.next = 20;
+            return (0, _isUserInRealm["default"])(userCurrentCharacter, discordClient, message, isDefered);
+
+          case 20:
+            _yield$isUserInRealm = _context5.sent;
+            _yield$isUserInRealm2 = (0, _slicedToArray2["default"])(_yield$isUserInRealm, 2);
+            failed = _yield$isUserInRealm2[0];
+            usedDeferReply = _yield$isUserInRealm2[1];
+
+            if (!failed) {
+              _context5.next = 26;
+              break;
+            }
+
+            return _context5.abrupt("return", usedDeferReply);
+
+          case 26:
             canFitOnOnePage = userCurrentCharacter.inventory.items.length <= 1;
             console.log('before send message');
             _context5.t0 = discordChannel;
@@ -111,28 +117,28 @@ var discordShowInventory = /*#__PURE__*/function () {
             _context5.t2 = _toConsumableArray2["default"];
 
             if (!(userCurrentCharacter.inventory.items.length > 0)) {
-              _context5.next = 31;
+              _context5.next = 39;
               break;
             }
 
-            _context5.next = 26;
+            _context5.next = 34;
             return (0, _inventory.renderInventoryImage)(userCurrentCharacter, false, false, false, false, 0);
 
-          case 26:
+          case 34:
             _context5.t4 = _context5.sent;
             _context5.t5 = {
               attachment: _context5.t4,
               name: 'inventory.png'
             };
             _context5.t3 = [_context5.t5];
-            _context5.next = 36;
+            _context5.next = 44;
             break;
 
-          case 31:
-            _context5.next = 33;
+          case 39:
+            _context5.next = 41;
             return (0, _emptyInventory.renderEmptyInventoryImage)(userCurrentCharacter);
 
-          case 33:
+          case 41:
             _context5.t6 = _context5.sent;
             _context5.t7 = {
               attachment: _context5.t6,
@@ -140,22 +146,22 @@ var discordShowInventory = /*#__PURE__*/function () {
             };
             _context5.t3 = [_context5.t7];
 
-          case 36:
+          case 44:
             _context5.t8 = _context5.t3;
             _context5.t9 = (0, _context5.t2)(_context5.t8);
             _context5.t10 = [];
             _context5.t11 = _toConsumableArray2["default"];
 
             if (!(userCurrentCharacter.inventory && userCurrentCharacter.inventory.items && userCurrentCharacter.inventory.items.length > 0)) {
-              _context5.next = 61;
+              _context5.next = 69;
               break;
             }
 
             _context5.t13 = _discord.ActionRowBuilder;
-            _context5.next = 44;
+            _context5.next = 52;
             return (0, _buttons.generateEquipmentCompareButton)(userCurrentCharacter, 0);
 
-          case 44:
+          case 52:
             _context5.t14 = _context5.sent;
             _context5.t15 = [_context5.t14];
             _context5.t16 = {
@@ -163,15 +169,15 @@ var discordShowInventory = /*#__PURE__*/function () {
             };
             _context5.t17 = new _context5.t13(_context5.t16);
             _context5.t18 = _discord.ActionRowBuilder;
-            _context5.next = 51;
+            _context5.next = 59;
             return (0, _buttons.generateEquipItemButton)(0, userCurrentCharacter);
 
-          case 51:
+          case 59:
             _context5.t19 = _context5.sent;
-            _context5.next = 54;
+            _context5.next = 62;
             return (0, _buttons.generateDestroyItemButton)(0, userCurrentCharacter);
 
-          case 54:
+          case 62:
             _context5.t20 = _context5.sent;
             _context5.t21 = [_context5.t19, _context5.t20];
             _context5.t22 = {
@@ -179,13 +185,13 @@ var discordShowInventory = /*#__PURE__*/function () {
             };
             _context5.t23 = new _context5.t18(_context5.t22);
             _context5.t12 = [_context5.t17, _context5.t23];
-            _context5.next = 62;
+            _context5.next = 70;
             break;
 
-          case 61:
+          case 69:
             _context5.t12 = [];
 
-          case 62:
+          case 70:
             _context5.t24 = _context5.t12;
             _context5.t25 = (0, _context5.t11)(_context5.t24);
             _context5.t26 = (0, _toConsumableArray2["default"])(!canFitOnOnePage ? [new _discord.ActionRowBuilder({
@@ -194,15 +200,15 @@ var discordShowInventory = /*#__PURE__*/function () {
             _context5.t27 = _toConsumableArray2["default"];
 
             if (!(userCurrentCharacter.inventory.items.length > 0)) {
-              _context5.next = 77;
+              _context5.next = 85;
               break;
             }
 
             _context5.t29 = _discord.ActionRowBuilder;
-            _context5.next = 70;
+            _context5.next = 78;
             return (0, _buttons.generateExitInventoryButton)();
 
-          case 70:
+          case 78:
             _context5.t30 = _context5.sent;
             _context5.t31 = [_context5.t30];
             _context5.t32 = {
@@ -210,13 +216,13 @@ var discordShowInventory = /*#__PURE__*/function () {
             };
             _context5.t33 = new _context5.t29(_context5.t32);
             _context5.t28 = [_context5.t33];
-            _context5.next = 78;
+            _context5.next = 86;
             break;
 
-          case 77:
+          case 85:
             _context5.t28 = [];
 
-          case 78:
+          case 86:
             _context5.t34 = _context5.t28;
             _context5.t35 = (0, _context5.t27)(_context5.t34);
             _context5.t36 = _context5.t10.concat.call(_context5.t10, _context5.t25, _context5.t26, _context5.t35);
@@ -225,10 +231,10 @@ var discordShowInventory = /*#__PURE__*/function () {
               files: _context5.t9,
               components: _context5.t36
             };
-            _context5.next = 84;
+            _context5.next = 92;
             return _context5.t0.send.call(_context5.t0, _context5.t37);
 
-          case 84:
+          case 92:
             embedMessage = _context5.sent;
             collector = embedMessage.createMessageComponentCollector({
               filter: function filter(_ref2) {
@@ -641,7 +647,7 @@ var discordShowInventory = /*#__PURE__*/function () {
               };
             }());
 
-          case 88:
+          case 96:
           case "end":
             return _context5.stop();
         }

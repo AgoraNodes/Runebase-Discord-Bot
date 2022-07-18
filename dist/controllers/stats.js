@@ -43,6 +43,8 @@ var _messages = require("../messages");
 
 var _testPlayerReadyness = _interopRequireDefault(require("../helpers/testPlayerReadyness"));
 
+var _isUserInRealm = _interopRequireDefault(require("../helpers/realm/isUserInRealm"));
+
 var _embeds = require("../embeds");
 
 /* eslint-disable import/prefer-default-export */
@@ -55,7 +57,7 @@ var _embeds = require("../embeds");
 // import logger from "../helpers/logger";
 var discordStats = /*#__PURE__*/function () {
   var _ref = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee2(discordClient, message, setting, io, queue, isDefered) {
-    var activity, userId, discordChannel, userCurrentCharacter, _yield$testPlayerRead, _yield$testPlayerRead2, failed, usedDeferReply, _yield$calculateChara, unspendAttributes, calc, embedMessage, collector;
+    var failed, usedDeferReply, activity, userId, discordChannel, userCurrentCharacter, _yield$testPlayerRead, _yield$testPlayerRead2, _yield$isUserInRealm, _yield$isUserInRealm2, _yield$calculateChara, unspendAttributes, calc, embedMessage, collector;
 
     return _regenerator["default"].wrap(function _callee2$(_context2) {
       while (1) {
@@ -97,9 +99,26 @@ var discordStats = /*#__PURE__*/function () {
 
           case 18:
             _context2.next = 20;
-            return (0, _calculateCharacterStats.calculateCharacterStats)(userCurrentCharacter);
+            return (0, _isUserInRealm["default"])(userCurrentCharacter, discordClient, message, isDefered);
 
           case 20:
+            _yield$isUserInRealm = _context2.sent;
+            _yield$isUserInRealm2 = (0, _slicedToArray2["default"])(_yield$isUserInRealm, 2);
+            failed = _yield$isUserInRealm2[0];
+            usedDeferReply = _yield$isUserInRealm2[1];
+
+            if (!failed) {
+              _context2.next = 26;
+              break;
+            }
+
+            return _context2.abrupt("return", usedDeferReply);
+
+          case 26:
+            _context2.next = 28;
+            return (0, _calculateCharacterStats.calculateCharacterStats)(userCurrentCharacter);
+
+          case 28:
             _yield$calculateChara = _context2.sent;
             unspendAttributes = _yield$calculateChara.unspendAttributes;
             // const calc = (
@@ -111,10 +130,10 @@ var discordStats = /*#__PURE__*/function () {
             calc = unspendAttributes > 0;
             _context2.t0 = discordChannel;
             _context2.t1 = (0, _messages.playingOnRealmMessage)(userCurrentCharacter);
-            _context2.next = 27;
+            _context2.next = 35;
             return (0, _stats.renderStatsImage)(userCurrentCharacter, false);
 
-          case 27:
+          case 35:
             _context2.t2 = _context2.sent;
             _context2.t3 = {
               attachment: _context2.t2,
@@ -133,13 +152,12 @@ var discordStats = /*#__PURE__*/function () {
               files: _context2.t4,
               components: _context2.t5
             };
-            _context2.next = 34;
+            _context2.next = 42;
             return _context2.t0.send.call(_context2.t0, _context2.t6);
 
-          case 34:
+          case 42:
             embedMessage = _context2.sent;
-            collector = embedMessage.createMessageComponentCollector({// filter: ({ user: discordUser }) => discordUser.id === userCurrentCharacter.user.user_id,
-            });
+            collector = embedMessage.createMessageComponentCollector({});
             collector.on('collect', /*#__PURE__*/function () {
               var _ref2 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(interaction) {
                 var updatedUser, cannotSpend, _yield$addStrength, _yield$addStrength2, _yield$addDexterity, _yield$addDexterity2, _yield$addVitality, _yield$addVitality2, _yield$addEnergy, _yield$addEnergy2, newCalc;
@@ -320,7 +338,7 @@ var discordStats = /*#__PURE__*/function () {
               };
             }());
 
-          case 37:
+          case 45:
           case "end":
             return _context2.stop();
         }

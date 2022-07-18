@@ -65,6 +65,8 @@ var _skillEmoji = _interopRequireDefault(require("../config/skillEmoji"));
 
 var _testPlayerReadyness = _interopRequireDefault(require("../helpers/testPlayerReadyness"));
 
+var _isUserInRealm = _interopRequireDefault(require("../helpers/realm/isUserInRealm"));
+
 function _createForOfIteratorHelper(o, allowArrayLike) { var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"]; if (!it) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = it.call(o); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it["return"] != null) it["return"](); } finally { if (didErr) throw err; } } }; }
 
 function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
@@ -83,7 +85,7 @@ var currentSelectedMonster;
 
 var discordBattle = /*#__PURE__*/function () {
   var _ref = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee12(discordClient, message, isDefered, queue) {
-    var allRoundBuffsInfoArray, allRoundDebuffsInfoArray, allRoundEffectsInfoArray, userId, discordChannel, userCurrentCharacter, _yield$testPlayerRead, _yield$testPlayerRead2, failed, usedDeferReply, userWallet, battle, newBattle, monster, randomAmountOfMobs, mobPromises, i, randomMonsterHp, newMobPromise, userCurrentSelectedSkills, mainSkillMap, secondarySkillMap, selectMonsterMap, _yield$calculateChara, hp, mp, myInitialUserState, _iterator3, _step3, userBuff, _iterator4, _step4, userDebuff, _iterator5, _step5, eachBattleMonster, _iterator6, _step6, monsterBuff, _iterator7, _step7, monsterDebuff, embedMessage, generateLootImagesArray, generateLootItemButtonArray, collector, newLoot;
+    var failed, usedDeferReply, allRoundBuffsInfoArray, allRoundDebuffsInfoArray, allRoundEffectsInfoArray, userId, discordChannel, userCurrentCharacter, _yield$testPlayerRead, _yield$testPlayerRead2, _yield$isUserInRealm, _yield$isUserInRealm2, userWallet, battle, newBattle, monster, randomAmountOfMobs, mobPromises, i, randomMonsterHp, newMobPromise, userCurrentSelectedSkills, mainSkillMap, secondarySkillMap, selectMonsterMap, _yield$calculateChara, hp, mp, myInitialUserState, _iterator3, _step3, userBuff, _iterator4, _step4, userDebuff, _iterator5, _step5, eachBattleMonster, _iterator6, _step6, monsterBuff, _iterator7, _step7, monsterDebuff, embedMessage, generateLootImagesArray, generateLootItemButtonArray, collector, newLoot;
 
     return _regenerator["default"].wrap(function _callee12$(_context12) {
       while (1) {
@@ -129,19 +131,36 @@ var discordBattle = /*#__PURE__*/function () {
             return _context12.abrupt("return", usedDeferReply);
 
           case 21:
+            _context12.next = 23;
+            return (0, _isUserInRealm["default"])(userCurrentCharacter, discordClient, message, isDefered);
+
+          case 23:
+            _yield$isUserInRealm = _context12.sent;
+            _yield$isUserInRealm2 = (0, _slicedToArray2["default"])(_yield$isUserInRealm, 2);
+            failed = _yield$isUserInRealm2[0];
+            usedDeferReply = _yield$isUserInRealm2[1];
+
+            if (!failed) {
+              _context12.next = 29;
+              break;
+            }
+
+            return _context12.abrupt("return", usedDeferReply);
+
+          case 29:
             console.log('battle2');
 
             if (!(userCurrentCharacter.condition.stamina < 20)) {
-              _context12.next = 34;
+              _context12.next = 42;
               break;
             }
 
             _context12.t0 = discordChannel;
             _context12.t1 = (0, _messages.playingOnRealmMessage)(userCurrentCharacter);
-            _context12.next = 27;
+            _context12.next = 35;
             return (0, _outOfStamina.renderOutOfStamina)(userCurrentCharacter);
 
-          case 27:
+          case 35:
             _context12.t2 = _context12.sent;
             _context12.t3 = [_context12.t2];
             _context12.t4 = [];
@@ -150,26 +169,26 @@ var discordBattle = /*#__PURE__*/function () {
               files: _context12.t3,
               components: _context12.t4
             };
-            _context12.next = 33;
+            _context12.next = 41;
             return _context12.t0.send.call(_context12.t0, _context12.t5);
 
-          case 33:
+          case 41:
             return _context12.abrupt("return");
 
-          case 34:
+          case 42:
             console.log('battle3');
 
             if (!(userCurrentCharacter.condition.life < 1)) {
-              _context12.next = 47;
+              _context12.next = 55;
               break;
             }
 
             _context12.t6 = discordChannel;
             _context12.t7 = (0, _messages.playingOnRealmMessage)(userCurrentCharacter);
-            _context12.next = 40;
+            _context12.next = 48;
             return (0, _userDied.renderUserDied)(userCurrentCharacter);
 
-          case 40:
+          case 48:
             _context12.t8 = _context12.sent;
             _context12.t9 = [_context12.t8];
             _context12.t10 = [];
@@ -178,37 +197,37 @@ var discordBattle = /*#__PURE__*/function () {
               files: _context12.t9,
               components: _context12.t10
             };
-            _context12.next = 46;
+            _context12.next = 54;
             return _context12.t6.send.call(_context12.t6, _context12.t11);
 
-          case 46:
+          case 54:
             return _context12.abrupt("return");
 
-          case 47:
-            _context12.next = 49;
+          case 55:
+            _context12.next = 57;
             return userCurrentCharacter.condition.update({
               stamina: userCurrentCharacter.condition.stamina - 20
             });
 
-          case 49:
-            _context12.next = 51;
+          case 57:
+            _context12.next = 59;
             return (0, _character.fetchUserCurrentCharacter)(userId, // user discord id
             false // Need inventory?
             );
 
-          case 51:
+          case 59:
             userCurrentCharacter = _context12.sent;
             console.log('3');
-            _context12.next = 55;
+            _context12.next = 63;
             return _models["default"].wallet.findOne({
               where: {
                 userId: userCurrentCharacter.UserGroup.user.id
               }
             });
 
-          case 55:
+          case 63:
             userWallet = _context12.sent;
-            _context12.next = 58;
+            _context12.next = 66;
             return _models["default"].battle.findOne({
               where: {
                 complete: false,
@@ -243,31 +262,31 @@ var discordBattle = /*#__PURE__*/function () {
               }]
             });
 
-          case 58:
+          case 66:
             battle = _context12.sent;
             console.log('battle4');
 
             if (battle) {
-              _context12.next = 75;
+              _context12.next = 83;
               break;
             }
 
-            _context12.next = 63;
+            _context12.next = 71;
             return _models["default"].battle.create({
               complete: false,
               UserGroupClassId: userCurrentCharacter.id
             });
 
-          case 63:
+          case 71:
             newBattle = _context12.sent;
-            _context12.next = 66;
+            _context12.next = 74;
             return _models["default"].monster.findOne({
               where: {
                 name: 'Zombie'
               }
             });
 
-          case 66:
+          case 74:
             monster = _context12.sent;
             randomAmountOfMobs = (0, _utils.randomIntFromInterval)(3, 4);
             mobPromises = [];
@@ -283,11 +302,11 @@ var discordBattle = /*#__PURE__*/function () {
               mobPromises.push(newMobPromise);
             }
 
-            _context12.next = 72;
+            _context12.next = 80;
             return Promise.all(mobPromises);
 
-          case 72:
-            _context12.next = 74;
+          case 80:
+            _context12.next = 82;
             return _models["default"].battle.findOne({
               where: {
                 id: newBattle.id
@@ -321,14 +340,14 @@ var discordBattle = /*#__PURE__*/function () {
               }]
             });
 
-          case 74:
+          case 82:
             battle = _context12.sent;
 
-          case 75:
-            _context12.next = 77;
+          case 83:
+            _context12.next = 85;
             return (0, _selectedSkills.fetchUserCurrentSelectedSkills)(userId);
 
-          case 77:
+          case 85:
             userCurrentSelectedSkills = _context12.sent;
             console.log('battle5');
             mainSkillMap = userCurrentSelectedSkills.UserGroupClassSkills.reduce(function (filtered, mySkill) {
@@ -393,10 +412,10 @@ var discordBattle = /*#__PURE__*/function () {
               return filtered;
             }, []);
             console.log('battle7');
-            _context12.next = 87;
+            _context12.next = 95;
             return (0, _calculateCharacterStats.calculateCharacterStats)(userCurrentCharacter);
 
-          case 87:
+          case 95:
             _yield$calculateChara = _context12.sent;
             hp = _yield$calculateChara.hp;
             mp = _yield$calculateChara.mp;
@@ -483,10 +502,10 @@ var discordBattle = /*#__PURE__*/function () {
             console.log('battle9');
             _context12.t12 = discordChannel;
             _context12.t13 = (0, _messages.playingOnRealmMessage)(userCurrentCharacter);
-            _context12.next = 103;
+            _context12.next = 111;
             return (0, _battle.renderBattleGif)(myInitialUserState, userCurrentSelectedSkills, battle, currentSelectedMonster, allRoundBuffsInfoArray, allRoundDebuffsInfoArray, allRoundEffectsInfoArray);
 
-          case 103:
+          case 111:
             _context12.t14 = _context12.sent;
             _context12.t15 = {
               attachment: _context12.t14,
@@ -494,20 +513,20 @@ var discordBattle = /*#__PURE__*/function () {
             };
             _context12.t16 = [_context12.t15];
             _context12.t17 = _discord.ActionRowBuilder;
-            _context12.next = 109;
+            _context12.next = 117;
             return (0, _buttons.generateMainSkillButton)(userCurrentSelectedSkills.selectedMainSkill);
 
-          case 109:
+          case 117:
             _context12.t18 = _context12.sent;
-            _context12.next = 112;
+            _context12.next = 120;
             return (0, _buttons.generateSecondarySkillButton)(userCurrentSelectedSkills.selectedSecondarySkill);
 
-          case 112:
+          case 120:
             _context12.t19 = _context12.sent;
-            _context12.next = 115;
+            _context12.next = 123;
             return (0, _buttons.generateHealButton)();
 
-          case 115:
+          case 123:
             _context12.t20 = _context12.sent;
             _context12.t21 = [_context12.t18, _context12.t19, _context12.t20];
             _context12.t22 = {
@@ -535,10 +554,10 @@ var discordBattle = /*#__PURE__*/function () {
               files: _context12.t16,
               components: _context12.t24
             };
-            _context12.next = 123;
+            _context12.next = 131;
             return _context12.t12.send.call(_context12.t12, _context12.t25);
 
-          case 123:
+          case 131:
             embedMessage = _context12.sent;
 
             generateLootImagesArray = /*#__PURE__*/function () {
@@ -735,7 +754,8 @@ var discordBattle = /*#__PURE__*/function () {
             newLoot = [];
             collector.on('collect', /*#__PURE__*/function () {
               var _ref4 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee11(interaction) {
-                var newSelectedId;
+                var _yield$isUserInRealm3, _yield$isUserInRealm4, newSelectedId;
+
                 return _regenerator["default"].wrap(function _callee11$(_context11) {
                   while (1) {
                     switch (_context11.prev = _context11.next) {
@@ -819,36 +839,54 @@ var discordBattle = /*#__PURE__*/function () {
                         return _context11.abrupt("return");
 
                       case 21:
-                        console.log('collector 3'); // Heal Handling
+                        _context11.next = 23;
+                        return (0, _isUserInRealm["default"])(userCurrentCharacter, discordClient, interaction, false // Is interaction defered?
+                        );
 
-                        if (!(interaction.isButton() && interaction.customId === 'Heal')) {
-                          _context11.next = 47;
+                      case 23:
+                        _yield$isUserInRealm3 = _context11.sent;
+                        _yield$isUserInRealm4 = (0, _slicedToArray2["default"])(_yield$isUserInRealm3, 2);
+                        failed = _yield$isUserInRealm4[0];
+                        usedDeferReply = _yield$isUserInRealm4[1];
+
+                        if (!failed) {
+                          _context11.next = 29;
                           break;
                         }
 
-                        _context11.next = 25;
+                        return _context11.abrupt("return");
+
+                      case 29:
+                        console.log('collector 3'); // Heal Handling
+
+                        if (!(interaction.isButton() && interaction.customId === 'Heal')) {
+                          _context11.next = 55;
+                          break;
+                        }
+
+                        _context11.next = 33;
                         return interaction.deferUpdate();
 
-                      case 25:
+                      case 33:
                         console.log(userWallet);
                         _context11.t0 = interaction;
                         _context11.t1 = (0, _messages.playingOnRealmMessage)(userCurrentCharacter);
-                        _context11.next = 30;
+                        _context11.next = 38;
                         return (0, _embeds.confirmationHealMessage)(userCurrentCharacter.UserGroup.user.user_id, userWallet.available);
 
-                      case 30:
+                      case 38:
                         _context11.t2 = _context11.sent;
                         _context11.t3 = [_context11.t2];
                         _context11.t4 = _discord.ActionRowBuilder;
-                        _context11.next = 35;
+                        _context11.next = 43;
                         return (0, _buttons.generateAcceptButton)();
 
-                      case 35:
+                      case 43:
                         _context11.t5 = _context11.sent;
-                        _context11.next = 38;
+                        _context11.next = 46;
                         return (0, _buttons.generateDeclineButton)();
 
-                      case 38:
+                      case 46:
                         _context11.t6 = _context11.sent;
                         _context11.t7 = [_context11.t5, _context11.t6];
                         _context11.t8 = {
@@ -861,42 +899,42 @@ var discordBattle = /*#__PURE__*/function () {
                           embeds: _context11.t3,
                           components: _context11.t10
                         };
-                        _context11.next = 46;
+                        _context11.next = 54;
                         return _context11.t0.editReply.call(_context11.t0, _context11.t11);
 
-                      case 46:
+                      case 54:
                         return _context11.abrupt("return");
 
-                      case 47:
+                      case 55:
                         console.log('collector 4');
 
                         if (!(interaction.isButton() && interaction.customId === 'decline')) {
-                          _context11.next = 72;
+                          _context11.next = 80;
                           break;
                         }
 
-                        _context11.next = 51;
+                        _context11.next = 59;
                         return interaction.deferUpdate();
 
-                      case 51:
+                      case 59:
                         _context11.t12 = interaction;
                         _context11.t13 = (0, _messages.playingOnRealmMessage)(userCurrentCharacter);
                         _context11.t14 = [];
                         _context11.t15 = _discord.ActionRowBuilder;
-                        _context11.next = 57;
+                        _context11.next = 65;
                         return (0, _buttons.generateMainSkillButton)(userCurrentSelectedSkills.selectedMainSkill);
 
-                      case 57:
+                      case 65:
                         _context11.t16 = _context11.sent;
-                        _context11.next = 60;
+                        _context11.next = 68;
                         return (0, _buttons.generateSecondarySkillButton)(userCurrentSelectedSkills.selectedSecondarySkill);
 
-                      case 60:
+                      case 68:
                         _context11.t17 = _context11.sent;
-                        _context11.next = 63;
+                        _context11.next = 71;
                         return (0, _buttons.generateHealButton)();
 
-                      case 63:
+                      case 71:
                         _context11.t18 = _context11.sent;
                         _context11.t19 = [_context11.t16, _context11.t17, _context11.t18];
                         _context11.t20 = {
@@ -924,31 +962,31 @@ var discordBattle = /*#__PURE__*/function () {
                           embeds: _context11.t14,
                           components: _context11.t22
                         };
-                        _context11.next = 71;
+                        _context11.next = 79;
                         return _context11.t12.editReply.call(_context11.t12, _context11.t23);
 
-                      case 71:
+                      case 79:
                         return _context11.abrupt("return");
 
-                      case 72:
+                      case 80:
                         console.log('collector 5');
-                        _context11.next = 75;
+                        _context11.next = 83;
                         return (0, _fetchBattle["default"])(battle);
 
-                      case 75:
+                      case 83:
                         battle = _context11.sent;
                         console.log('collector 6');
 
                         if (!(interaction.isButton() && interaction.customId === 'accept')) {
-                          _context11.next = 83;
+                          _context11.next = 91;
                           break;
                         }
 
-                        _context11.next = 80;
+                        _context11.next = 88;
                         return interaction.deferUpdate();
 
-                      case 80:
-                        _context11.next = 82;
+                      case 88:
+                        _context11.next = 90;
                         return queue.add( /*#__PURE__*/(0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee5() {
                           return _regenerator["default"].wrap(function _callee5$(_context5) {
                             while (1) {
@@ -1219,26 +1257,26 @@ var discordBattle = /*#__PURE__*/function () {
                           }, _callee5);
                         })));
 
-                      case 82:
+                      case 90:
                         return _context11.abrupt("return");
 
-                      case 83:
+                      case 91:
                         console.log('collector 7'); // End Heal handling
 
                         if (!interaction.isSelectMenu()) {
-                          _context11.next = 89;
+                          _context11.next = 97;
                           break;
                         }
 
                         if (!(interaction.customId === 'select-mob')) {
-                          _context11.next = 89;
+                          _context11.next = 97;
                           break;
                         }
 
-                        _context11.next = 88;
+                        _context11.next = 96;
                         return interaction.deferUpdate();
 
-                      case 88:
+                      case 96:
                         if (interaction.values[0].startsWith('selectMonster:')) {
                           newSelectedId = Number(interaction.values[0].replace('selectMonster:', ''));
                           selectMonsterMap = battle.BattleMonsters.reduce(function (filtered, battleMonster, index) {
@@ -1259,9 +1297,9 @@ var discordBattle = /*#__PURE__*/function () {
                           });
                         }
 
-                      case 89:
+                      case 97:
                         console.log('collector 8');
-                        _context11.next = 92;
+                        _context11.next = 100;
                         return queue.add( /*#__PURE__*/(0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee9() {
                           return _regenerator["default"].wrap(function _callee9$(_context9) {
                             while (1) {
@@ -2019,7 +2057,7 @@ var discordBattle = /*#__PURE__*/function () {
                           };
                         }());
 
-                      case 92:
+                      case 100:
                       case "end":
                         return _context11.stop();
                     }
@@ -2032,7 +2070,7 @@ var discordBattle = /*#__PURE__*/function () {
               };
             }());
 
-          case 130:
+          case 138:
           case "end":
             return _context12.stop();
         }

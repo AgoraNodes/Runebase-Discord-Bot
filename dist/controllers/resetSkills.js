@@ -35,6 +35,8 @@ var _messages = require("../messages");
 
 var _testPlayerReadyness = _interopRequireDefault(require("../helpers/testPlayerReadyness"));
 
+var _isUserInRealm = _interopRequireDefault(require("../helpers/realm/isUserInRealm"));
+
 function _createForOfIteratorHelper(o, allowArrayLike) { var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"]; if (!it) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = it.call(o); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it["return"] != null) it["return"](); } finally { if (didErr) throw err; } } }; }
 
 function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
@@ -43,7 +45,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 
 var discordResetSkills = /*#__PURE__*/function () {
   var _ref = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee5(discordClient, message, io, queue, isDefered) {
-    var activity, userId, discordChannel, userCurrentCharacter, _yield$testPlayerRead, _yield$testPlayerRead2, failed, usedDeferReply, userWallet, userSkills, sumSkillPoints, totalSkillsCost, embedMessage, collector;
+    var activity, failed, usedDeferReply, userId, discordChannel, userCurrentCharacter, _yield$testPlayerRead, _yield$testPlayerRead2, _yield$isUserInRealm, _yield$isUserInRealm2, userWallet, userSkills, sumSkillPoints, totalSkillsCost, embedMessage, collector;
 
     return _regenerator["default"].wrap(function _callee5$(_context5) {
       while (1) {
@@ -85,15 +87,32 @@ var discordResetSkills = /*#__PURE__*/function () {
 
           case 18:
             _context5.next = 20;
+            return (0, _isUserInRealm["default"])(userCurrentCharacter, discordClient, message, isDefered);
+
+          case 20:
+            _yield$isUserInRealm = _context5.sent;
+            _yield$isUserInRealm2 = (0, _slicedToArray2["default"])(_yield$isUserInRealm, 2);
+            failed = _yield$isUserInRealm2[0];
+            usedDeferReply = _yield$isUserInRealm2[1];
+
+            if (!failed) {
+              _context5.next = 26;
+              break;
+            }
+
+            return _context5.abrupt("return", usedDeferReply);
+
+          case 26:
+            _context5.next = 28;
             return _models["default"].wallet.findOne({
               where: {
                 userId: userCurrentCharacter.UserGroup.user.id
               }
             });
 
-          case 20:
+          case 28:
             userWallet = _context5.sent;
-            _context5.next = 23;
+            _context5.next = 31;
             return _models["default"].UserGroupClassSkill.findAll({
               where: {
                 UserGroupClassId: userCurrentCharacter.id
@@ -107,7 +126,7 @@ var discordResetSkills = /*#__PURE__*/function () {
               }]
             });
 
-          case 23:
+          case 31:
             userSkills = _context5.sent;
             sumSkillPoints = userSkills.reduce(function (accumulator, object) {
               return accumulator + object.points;
@@ -115,22 +134,22 @@ var discordResetSkills = /*#__PURE__*/function () {
             totalSkillsCost = sumSkillPoints * 1;
             _context5.t0 = discordChannel;
             _context5.t1 = (0, _messages.playingOnRealmMessage)(userCurrentCharacter);
-            _context5.next = 30;
+            _context5.next = 38;
             return (0, _embeds.skillConfirmationMessage)(userId, userWallet.available, totalSkillsCost);
 
-          case 30:
+          case 38:
             _context5.t2 = _context5.sent;
             _context5.t3 = [_context5.t2];
             _context5.t4 = _discord.ActionRowBuilder;
-            _context5.next = 35;
+            _context5.next = 43;
             return (0, _buttons.generateAcceptButton)();
 
-          case 35:
+          case 43:
             _context5.t5 = _context5.sent;
-            _context5.next = 38;
+            _context5.next = 46;
             return (0, _buttons.generateDeclineButton)();
 
-          case 38:
+          case 46:
             _context5.t6 = _context5.sent;
             _context5.t7 = [_context5.t5, _context5.t6];
             _context5.t8 = {
@@ -143,10 +162,10 @@ var discordResetSkills = /*#__PURE__*/function () {
               embeds: _context5.t3,
               components: _context5.t10
             };
-            _context5.next = 46;
+            _context5.next = 54;
             return _context5.t0.send.call(_context5.t0, _context5.t11);
 
-          case 46:
+          case 54:
             embedMessage = _context5.sent;
             collector = embedMessage.createMessageComponentCollector({// filter: ({ user: discordUser }) => discordUser.id === userCurrentCharacter.user.user_id,
             });
@@ -464,7 +483,7 @@ var discordResetSkills = /*#__PURE__*/function () {
               };
             }());
 
-          case 49:
+          case 57:
           case "end":
             return _context5.stop();
         }

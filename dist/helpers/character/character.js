@@ -353,11 +353,12 @@ var fetchUserCurrentCharacter = /*#__PURE__*/function () {
 
           case 9:
             userCurrentCharacter = _context.sent;
-            console.log(userCurrentCharacter); // console.log(userCurrentCharacter.UserGroup);
+            console.log(userCurrentCharacter);
+            console.log('userCurrentCharacter'); // console.log(userCurrentCharacter.UserGroup);
 
             return _context.abrupt("return", userCurrentCharacter);
 
-          case 12:
+          case 13:
           case "end":
             return _context.stop();
         }

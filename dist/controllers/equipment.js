@@ -59,7 +59,7 @@ var _cancelEquipment = require("../render/equipment/cancelEquipment");
 // };
 var discordShowEquipment = /*#__PURE__*/function () {
   var _ref = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee8(discordClient, message, setting, io, queue, isDefered) {
-    var activity, userId, discordChannel, userCurrentCharacter, isInRealm, _yield$testPlayerRead, _yield$testPlayerRead2, failed, usedDeferReply, cancelEquipmentId, backId, helmId, amuletId, mainHandId, offHandId, armorId, glovesId, beltId, bootsId, ringSlotOneId, ringSlotTwoId, ringSlotOneButton, ringSlotTwoButton, bootsButton, helmButton, amuletutton, weaponSlotOneButton, weaponSlotTwoButton, armorButton, glovesButton, beltButton, backButton, generateCancelEquipmentButton, generateUnEquipItemButton, generateCurrentEquipmentImage, isRowOneActive, isRowTwoActive, embedMessage, collector, currentIndex;
+    var activity, failed, usedDeferReply, userId, discordChannel, userCurrentCharacter, _yield$testPlayerRead, _yield$testPlayerRead2, _yield$isUserInRealm, _yield$isUserInRealm2, cancelEquipmentId, backId, helmId, amuletId, mainHandId, offHandId, armorId, glovesId, beltId, bootsId, ringSlotOneId, ringSlotTwoId, ringSlotOneButton, ringSlotTwoButton, bootsButton, helmButton, amuletutton, weaponSlotOneButton, weaponSlotTwoButton, armorButton, glovesButton, beltButton, backButton, generateCancelEquipmentButton, generateUnEquipItemButton, generateCurrentEquipmentImage, isRowOneActive, isRowTwoActive, embedMessage, collector, currentIndex;
 
     return _regenerator["default"].wrap(function _callee8$(_context8) {
       while (1) {
@@ -83,54 +83,41 @@ var discordShowEquipment = /*#__PURE__*/function () {
 
           case 9:
             userCurrentCharacter = _context8.sent;
-            _context8.next = 12;
-            return (0, _isUserInRealm["default"])(discordClient, userCurrentCharacter);
-
-          case 12:
-            isInRealm = _context8.sent;
-
-            if (isInRealm) {
-              _context8.next = 24;
-              break;
-            }
-
-            _context8.t0 = message;
-            _context8.t1 = "<@".concat(userCurrentCharacter.UserGroup.user.user_id, ">, ").concat(userCurrentCharacter.UserGroup.group.inviteLink);
-            _context8.next = 18;
-            return (0, _embeds.needToBeInDiscordRealmEmbed)(userCurrentCharacter.UserGroup.group);
-
-          case 18:
-            _context8.t2 = _context8.sent;
-            _context8.t3 = [_context8.t2];
-            _context8.t4 = {
-              content: _context8.t1,
-              embeds: _context8.t3,
-              ephemeral: true
-            };
-            _context8.next = 23;
-            return _context8.t0.reply.call(_context8.t0, _context8.t4);
-
-          case 23:
-            return _context8.abrupt("return");
-
-          case 24:
-            _context8.next = 26;
+            console.log(userCurrentCharacter);
+            _context8.next = 13;
             return (0, _testPlayerReadyness["default"])(userCurrentCharacter, message, isDefered);
 
-          case 26:
+          case 13:
             _yield$testPlayerRead = _context8.sent;
             _yield$testPlayerRead2 = (0, _slicedToArray2["default"])(_yield$testPlayerRead, 2);
             failed = _yield$testPlayerRead2[0];
             usedDeferReply = _yield$testPlayerRead2[1];
 
             if (!failed) {
-              _context8.next = 32;
+              _context8.next = 19;
               break;
             }
 
             return _context8.abrupt("return", usedDeferReply);
 
-          case 32:
+          case 19:
+            _context8.next = 21;
+            return (0, _isUserInRealm["default"])(userCurrentCharacter, discordClient, message, isDefered);
+
+          case 21:
+            _yield$isUserInRealm = _context8.sent;
+            _yield$isUserInRealm2 = (0, _slicedToArray2["default"])(_yield$isUserInRealm, 2);
+            failed = _yield$isUserInRealm2[0];
+            usedDeferReply = _yield$isUserInRealm2[1];
+
+            if (!failed) {
+              _context8.next = 27;
+              break;
+            }
+
+            return _context8.abrupt("return", usedDeferReply);
+
+          case 27:
             cancelEquipmentId = 'cancelEquipment';
             backId = 'back';
             helmId = 'helm';
@@ -323,72 +310,72 @@ var discordShowEquipment = /*#__PURE__*/function () {
 
             isRowOneActive = userCurrentCharacter.equipment.helm || userCurrentCharacter.equipment.amulet || userCurrentCharacter.equipment.mainHand || userCurrentCharacter.equipment.offHand || userCurrentCharacter.equipment.armor;
             isRowTwoActive = userCurrentCharacter.equipment.gloves || userCurrentCharacter.equipment.ringSlotOne || userCurrentCharacter.equipment.ringSlotTwo || userCurrentCharacter.equipment.belt || userCurrentCharacter.equipment.boots;
-            _context8.t5 = discordChannel;
-            _context8.t6 = (0, _messages.playingOnRealmMessage)(userCurrentCharacter);
-            _context8.next = 64;
+            _context8.t0 = discordChannel;
+            _context8.t1 = (0, _messages.playingOnRealmMessage)(userCurrentCharacter);
+            _context8.next = 59;
             return generateCurrentEquipmentImage(userCurrentCharacter);
 
-          case 64:
-            _context8.t7 = _context8.sent;
-            _context8.t8 = {
-              attachment: _context8.t7,
+          case 59:
+            _context8.t2 = _context8.sent;
+            _context8.t3 = {
+              attachment: _context8.t2,
               name: 'equipment.png'
             };
-            _context8.t9 = [_context8.t8];
+            _context8.t4 = [_context8.t3];
 
             if (!(isRowOneActive || isRowTwoActive)) {
-              _context8.next = 82;
+              _context8.next = 77;
               break;
             }
 
-            _context8.t11 = [];
-            _context8.t12 = (0, _toConsumableArray2["default"])(isRowOneActive ? [new _discord.ActionRowBuilder({
+            _context8.t6 = [];
+            _context8.t7 = (0, _toConsumableArray2["default"])(isRowOneActive ? [new _discord.ActionRowBuilder({
               components: [].concat((0, _toConsumableArray2["default"])(userCurrentCharacter.equipment.helm ? [helmButton] : []), (0, _toConsumableArray2["default"])(userCurrentCharacter.equipment.amulet ? [amuletutton] : []), (0, _toConsumableArray2["default"])(userCurrentCharacter.equipment.mainHand ? [weaponSlotOneButton] : []), (0, _toConsumableArray2["default"])(userCurrentCharacter.equipment.offHand ? [weaponSlotTwoButton] : []), (0, _toConsumableArray2["default"])(userCurrentCharacter.equipment.armor ? [armorButton] : []))
             })] : []);
-            _context8.t13 = (0, _toConsumableArray2["default"])(isRowTwoActive ? [new _discord.ActionRowBuilder({
+            _context8.t8 = (0, _toConsumableArray2["default"])(isRowTwoActive ? [new _discord.ActionRowBuilder({
               components: [].concat((0, _toConsumableArray2["default"])(userCurrentCharacter.equipment.gloves ? [glovesButton] : []), (0, _toConsumableArray2["default"])(userCurrentCharacter.equipment.ringSlotOne ? [ringSlotOneButton] : []), (0, _toConsumableArray2["default"])(userCurrentCharacter.equipment.ringSlotTwo ? [ringSlotTwoButton] : []), (0, _toConsumableArray2["default"])(userCurrentCharacter.equipment.belt ? [beltButton] : []), (0, _toConsumableArray2["default"])(userCurrentCharacter.equipment.boots ? [bootsButton] : []))
             })] : []);
-            _context8.t14 = _discord.ActionRowBuilder;
-            _context8.next = 74;
+            _context8.t9 = _discord.ActionRowBuilder;
+            _context8.next = 69;
             return generateCancelEquipmentButton();
 
-          case 74:
-            _context8.t15 = _context8.sent;
-            _context8.t16 = [_context8.t15];
-            _context8.t17 = {
-              components: _context8.t16
+          case 69:
+            _context8.t10 = _context8.sent;
+            _context8.t11 = [_context8.t10];
+            _context8.t12 = {
+              components: _context8.t11
             };
-            _context8.t18 = new _context8.t14(_context8.t17);
-            _context8.t19 = [_context8.t18];
-            _context8.t10 = _context8.t11.concat.call(_context8.t11, _context8.t12, _context8.t13, _context8.t19);
-            _context8.next = 90;
+            _context8.t13 = new _context8.t9(_context8.t12);
+            _context8.t14 = [_context8.t13];
+            _context8.t5 = _context8.t6.concat.call(_context8.t6, _context8.t7, _context8.t8, _context8.t14);
+            _context8.next = 85;
             break;
 
-          case 82:
-            _context8.t20 = _discord.ActionRowBuilder;
-            _context8.next = 85;
+          case 77:
+            _context8.t15 = _discord.ActionRowBuilder;
+            _context8.next = 80;
             return generateCancelEquipmentButton();
 
+          case 80:
+            _context8.t16 = _context8.sent;
+            _context8.t17 = [_context8.t16];
+            _context8.t18 = {
+              components: _context8.t17
+            };
+            _context8.t19 = new _context8.t15(_context8.t18);
+            _context8.t5 = [_context8.t19];
+
           case 85:
-            _context8.t21 = _context8.sent;
-            _context8.t22 = [_context8.t21];
-            _context8.t23 = {
-              components: _context8.t22
+            _context8.t20 = _context8.t5;
+            _context8.t21 = {
+              content: _context8.t1,
+              files: _context8.t4,
+              components: _context8.t20
             };
-            _context8.t24 = new _context8.t20(_context8.t23);
-            _context8.t10 = [_context8.t24];
+            _context8.next = 89;
+            return _context8.t0.send.call(_context8.t0, _context8.t21);
 
-          case 90:
-            _context8.t25 = _context8.t10;
-            _context8.t26 = {
-              content: _context8.t6,
-              files: _context8.t9,
-              components: _context8.t25
-            };
-            _context8.next = 94;
-            return _context8.t5.send.call(_context8.t5, _context8.t26);
-
-          case 94:
+          case 89:
             embedMessage = _context8.sent;
             collector = embedMessage.createMessageComponentCollector({
               filter: function filter(_ref5) {
@@ -824,7 +811,7 @@ var discordShowEquipment = /*#__PURE__*/function () {
               };
             }());
 
-          case 98:
+          case 93:
           case "end":
             return _context8.stop();
         }

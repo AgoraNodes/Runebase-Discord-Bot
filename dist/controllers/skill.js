@@ -43,13 +43,15 @@ var _messages = require("../messages");
 
 var _testPlayerReadyness = _interopRequireDefault(require("../helpers/testPlayerReadyness"));
 
+var _isUserInRealm = _interopRequireDefault(require("../helpers/realm/isUserInRealm"));
+
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
 
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { (0, _defineProperty2["default"])(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
 
 var discordSkills = /*#__PURE__*/function () {
   var _ref = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee2(discordClient, message, setting, io, queue, isDefered) {
-    var userId, discordChannel, userCurrentCharacter, _yield$testPlayerRead, _yield$testPlayerRead2, failed, usedDeferReply, skillTreeMap, skillMap, embedMessage, collector, skillTreeIndex, skillIndex, selectedSkill;
+    var failed, usedDeferReply, userId, discordChannel, userCurrentCharacter, _yield$testPlayerRead, _yield$testPlayerRead2, _yield$isUserInRealm, _yield$isUserInRealm2, skillTreeMap, skillMap, embedMessage, collector, skillTreeIndex, skillIndex, selectedSkill;
 
     return _regenerator["default"].wrap(function _callee2$(_context2) {
       while (1) {
@@ -89,6 +91,23 @@ var discordSkills = /*#__PURE__*/function () {
             return _context2.abrupt("return", usedDeferReply);
 
           case 17:
+            _context2.next = 19;
+            return (0, _isUserInRealm["default"])(userCurrentCharacter, discordClient, message, isDefered);
+
+          case 19:
+            _yield$isUserInRealm = _context2.sent;
+            _yield$isUserInRealm2 = (0, _slicedToArray2["default"])(_yield$isUserInRealm, 2);
+            failed = _yield$isUserInRealm2[0];
+            usedDeferReply = _yield$isUserInRealm2[1];
+
+            if (!failed) {
+              _context2.next = 25;
+              break;
+            }
+
+            return _context2.abrupt("return", usedDeferReply);
+
+          case 25:
             skillTreeMap = userCurrentCharacter["class"].skillTrees.map(function (skilltree, index) {
               console.log(index);
               return {
@@ -112,14 +131,14 @@ var discordSkills = /*#__PURE__*/function () {
             });
             _context2.t0 = discordChannel;
             _context2.t1 = (0, _messages.playingOnRealmMessage)(userCurrentCharacter);
-            _context2.next = 23;
+            _context2.next = 31;
             return (0, _skills.renderSkillScreen)(userCurrentCharacter, userCurrentCharacter["class"].skillTrees[0], 0, // skillTreeIndex
             false, // selected skill
             false, // Skill Info Json
             false // add skill failReason String
             );
 
-          case 23:
+          case 31:
             _context2.t2 = _context2.sent;
             _context2.t3 = {
               attachment: _context2.t2,
@@ -139,10 +158,10 @@ var discordSkills = /*#__PURE__*/function () {
               })]
             });
             _context2.t7 = _discord.ActionRowBuilder;
-            _context2.next = 31;
+            _context2.next = 39;
             return (0, _buttons.generateCancelSkillButton)();
 
-          case 31:
+          case 39:
             _context2.t8 = _context2.sent;
             _context2.t9 = [_context2.t8];
             _context2.t10 = {
@@ -155,10 +174,10 @@ var discordSkills = /*#__PURE__*/function () {
               files: _context2.t4,
               components: _context2.t12
             };
-            _context2.next = 39;
+            _context2.next = 47;
             return _context2.t0.send.call(_context2.t0, _context2.t13);
 
-          case 39:
+          case 47:
             embedMessage = _context2.sent;
             collector = embedMessage.createMessageComponentCollector({});
             skillTreeIndex = 0;
@@ -410,7 +429,7 @@ var discordSkills = /*#__PURE__*/function () {
               };
             }());
 
-          case 43:
+          case 51:
           case "end":
             return _context2.stop();
         }

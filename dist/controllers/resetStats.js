@@ -35,10 +35,12 @@ var _messages = require("../messages");
 
 var _testPlayerReadyness = _interopRequireDefault(require("../helpers/testPlayerReadyness"));
 
+var _isUserInRealm = _interopRequireDefault(require("../helpers/realm/isUserInRealm"));
+
 /* eslint-disable import/prefer-default-export */
 var discordResetStats = /*#__PURE__*/function () {
   var _ref = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee5(discordClient, message, io, queue, isDefered) {
-    var activity, userId, discordChannel, userCurrentCharacter, _yield$testPlayerRead, _yield$testPlayerRead2, failed, usedDeferReply, userWallet, totalStatsCost, embedMessage, collector;
+    var activity, failed, usedDeferReply, userId, discordChannel, userCurrentCharacter, _yield$testPlayerRead, _yield$testPlayerRead2, _yield$isUserInRealm, _yield$isUserInRealm2, userWallet, totalStatsCost, embedMessage, collector;
 
     return _regenerator["default"].wrap(function _callee5$(_context5) {
       while (1) {
@@ -80,33 +82,50 @@ var discordResetStats = /*#__PURE__*/function () {
 
           case 18:
             _context5.next = 20;
+            return (0, _isUserInRealm["default"])(userCurrentCharacter, discordClient, message, isDefered);
+
+          case 20:
+            _yield$isUserInRealm = _context5.sent;
+            _yield$isUserInRealm2 = (0, _slicedToArray2["default"])(_yield$isUserInRealm, 2);
+            failed = _yield$isUserInRealm2[0];
+            usedDeferReply = _yield$isUserInRealm2[1];
+
+            if (!failed) {
+              _context5.next = 26;
+              break;
+            }
+
+            return _context5.abrupt("return", usedDeferReply);
+
+          case 26:
+            _context5.next = 28;
             return _models["default"].wallet.findOne({
               where: {
                 userId: userCurrentCharacter.UserGroup.user.id
               }
             });
 
-          case 20:
+          case 28:
             userWallet = _context5.sent;
             totalStatsCost = new _bignumber["default"](userCurrentCharacter.stats.strength).plus(userCurrentCharacter.stats.dexterity).plus(userCurrentCharacter.stats.vitality).plus(userCurrentCharacter.stats.energy).multipliedBy(0.1);
             _context5.t0 = discordChannel;
             _context5.t1 = (0, _messages.playingOnRealmMessage)(userCurrentCharacter);
-            _context5.next = 26;
+            _context5.next = 34;
             return (0, _embeds.resetStatsConfirmationMessage)(userCurrentCharacter.UserGroup.user.user_id, userWallet.available, totalStatsCost);
 
-          case 26:
+          case 34:
             _context5.t2 = _context5.sent;
             _context5.t3 = [_context5.t2];
             _context5.t4 = _discord.ActionRowBuilder;
-            _context5.next = 31;
+            _context5.next = 39;
             return (0, _buttons.generateAcceptButton)();
 
-          case 31:
+          case 39:
             _context5.t5 = _context5.sent;
-            _context5.next = 34;
+            _context5.next = 42;
             return (0, _buttons.generateDeclineButton)();
 
-          case 34:
+          case 42:
             _context5.t6 = _context5.sent;
             _context5.t7 = [_context5.t5, _context5.t6];
             _context5.t8 = {
@@ -119,10 +138,10 @@ var discordResetStats = /*#__PURE__*/function () {
               embeds: _context5.t3,
               components: _context5.t10
             };
-            _context5.next = 42;
+            _context5.next = 50;
             return _context5.t0.send.call(_context5.t0, _context5.t11);
 
-          case 42:
+          case 50:
             embedMessage = _context5.sent;
             collector = embedMessage.createMessageComponentCollector({// filter: ({ user: discordUser }) => discordUser.id === userCurrentCharacter.user.user_id,
             });
@@ -396,7 +415,7 @@ var discordResetStats = /*#__PURE__*/function () {
               };
             }());
 
-          case 45:
+          case 53:
           case "end":
             return _context5.stop();
         }
