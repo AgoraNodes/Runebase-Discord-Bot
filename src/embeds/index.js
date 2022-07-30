@@ -691,6 +691,23 @@ export const timeOutMessage = () => {
   return result;
 };
 
+export const cancelMyRankEmbed = (
+  userId,
+) => {
+  const result = new EmbedBuilder()
+    .setColor(settings.bot.color)
+    .setTitle('MyRank')
+    .setDescription(`<@${userId}> has canceled myRank`)
+    .setThumbnail(settings.bot.logo)
+    .setTimestamp()
+    .setFooter({
+      text: `${settings.bot.name} v${pjson.version}`,
+      iconURL: settings.bot.logo,
+    });
+
+  return result;
+};
+
 export const enterWithdrawalAddress = () => {
   const result = new EmbedBuilder()
     .setColor(settings.bot.color)

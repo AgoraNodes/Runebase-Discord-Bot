@@ -52,7 +52,6 @@ export const discordChangeRealm = async (
   });
 
   const realmMap = realms.reduce((filtered, realm) => {
-    // if (true) {
     const mapped = {
       placeholder: 'pick a skill',
       label: `${realm.groupName}`,
@@ -60,7 +59,6 @@ export const discordChangeRealm = async (
       default: realm.id === user.currentRealmId,
     };
     filtered.push(mapped);
-    // }
     return filtered;
   }, []);
 
@@ -72,7 +70,6 @@ export const discordChangeRealm = async (
       new ActionRowBuilder({
         components: [
           new SelectMenuBuilder({
-            // type: 'SELECT_MENU',
             customId: 'select-realm',
             options: realmMap,
           }),

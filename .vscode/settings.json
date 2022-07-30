@@ -6,6 +6,7 @@
     "javascript"
   ],
   "conventionalCommits.scopes": [
-    "package.json"
+    "package.json",
+    "myRank"
   ]
 }

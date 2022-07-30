@@ -4,6 +4,28 @@ import {
 } from "discord.js";
 import skillEmoji from "../config/skillEmoji";
 
+export const generateCancelButton = () => {
+  const result = new ButtonBuilder({
+    style: ButtonStyle.Secondary,
+    label: `Cancel`,
+    emoji: '<a:rejected:993469997596815393>',
+    customId: 'cancel',
+  });
+
+  return result;
+};
+
+export const generateConfirmButton = () => {
+  const result = new ButtonBuilder({
+    style: ButtonStyle.Secondary,
+    label: `Confirm`,
+    emoji: '<a:checkmark:993469790343671848>',
+    customId: 'confirm',
+  });
+
+  return result;
+};
+
 export const generateAcceptButton = () => {
   const result = new ButtonBuilder({
     style: ButtonStyle.Secondary,
