@@ -57,15 +57,16 @@ export const discordMyRank = async (
     },
   });
 
-  let realmPickId = user.currentRealmId;
+  let realmPickId;
 
   if (
-    discordChannel.type === ChannelType.DM
+    message.channel.type === ChannelType.DM
     && user.currentRealmId
   ) {
     realmPickId = user.currentRealmId;
   } else {
-    const currentRealm = realms.find((realm) => realm.groupId === discordChannel.guild.id);
+    const currentGuildId = discordChannel.guild && discordChannel.guild.id;
+    const currentRealm = realms.find((realm) => realm.groupId === currentGuildId);
     if (currentRealm) {
       realmPickId = currentRealm.id;
     } else {
