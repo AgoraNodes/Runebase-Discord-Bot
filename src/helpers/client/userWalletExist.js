@@ -2,8 +2,7 @@ import db from '../../models';
 import {
   userNotFoundMessage,
 } from '../../embeds';
-
-const capitalize = (s) => s && s[0].toUpperCase() + s.slice(1);
+import { capitalize } from '../utils';
 
 export const userWalletExist = async (
   message,

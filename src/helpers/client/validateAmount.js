@@ -4,8 +4,7 @@ import db from '../../models';
 import { handleInvalidAmountMessage } from "./messageHandlers/invalidAmountMessage";
 import { handleInsufficientBalanceMessage } from "./messageHandlers/insufficientBalanceMessageHandler";
 import { handleMinimumMessage } from './messageHandlers/minimumMessageHandler';
-
-const capitalize = (s) => s && s[0].toUpperCase() + s.slice(1);
+import { capitalize } from "../utils";
 
 export const validateAmount = async (
   discordClient,
