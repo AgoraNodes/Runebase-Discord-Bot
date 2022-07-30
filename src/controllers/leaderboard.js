@@ -33,8 +33,8 @@ export const discordLeaderboard = async (
       userActivity,
     ] = await userWalletExist(
       message,
-      t,
       'leaderboard',
+      t,
     );
     if (userActivity) {
       activity.unshift(userActivity);

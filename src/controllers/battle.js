@@ -187,7 +187,7 @@ export const discordBattle = async (
       },
     ],
   });
-  console.log('battle4');
+
   if (!battle) {
     const newBattle = await db.battle.create({
       complete: false,
@@ -297,7 +297,7 @@ export const discordBattle = async (
     }
     return filtered;
   }, []);
-  console.log('battle6');
+
   if (
     !currentSelectedMonster
     || (currentSelectedMonster && currentSelectedMonster.currentHp < 1)

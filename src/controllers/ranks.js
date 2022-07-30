@@ -26,8 +26,8 @@ export const discordRanks = async (
       userActivity,
     ] = await userWalletExist(
       message,
-      t,
       'ranks',
+      t,
     );
     if (userActivity) {
       activity.unshift(userActivity);

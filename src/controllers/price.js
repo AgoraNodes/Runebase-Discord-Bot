@@ -23,8 +23,8 @@ export const discordPrice = async (
       userActivity,
     ] = await userWalletExist(
       message,
-      t,
       'price',
+      t,
     );
     if (userActivity) {
       activity.unshift(userActivity);

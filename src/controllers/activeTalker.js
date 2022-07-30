@@ -24,8 +24,8 @@ export const discordActiveTalker = async (
       userActivity,
     ] = await userWalletExist(
       message,
-      t,
       'activeTalker',
+      t,
     );
     if (userActivity) {
       activity.unshift(userActivity);

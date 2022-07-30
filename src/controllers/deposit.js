@@ -26,8 +26,8 @@ export const discordDeposit = async (
       userActivity,
     ] = await userWalletExist(
       message,
-      t,
       'deposit',
+      t,
     );
     if (userActivity) {
       activity.unshift(userActivity);

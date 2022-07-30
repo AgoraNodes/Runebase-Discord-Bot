@@ -40,8 +40,8 @@ export const discordRollDice = async (
       userActivity,
     ] = await userWalletExist(
       message,
-      t,
       'rollDice',
+      t,
     );
     if (userActivity) {
       activity.unshift(userActivity);

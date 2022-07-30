@@ -7,8 +7,8 @@ const capitalize = (s) => s && s[0].toUpperCase() + s.slice(1);
 
 export const userWalletExist = async (
   message,
-  t,
   functionName,
+  t = false,
 ) => {
   let activity;
   let userId;
@@ -38,15 +38,23 @@ export const userWalletExist = async (
         ],
       },
     ],
-    lock: t.LOCK.UPDATE,
-    transaction: t,
+    ...(t && [
+      {
+        lock: t.LOCK.UPDATE,
+        transaction: t,
+      }]
+    ),
   });
   if (!user) {
     activity = await db.activity.create({
       type: `${functionName}_f`,
     }, {
-      lock: t.LOCK.UPDATE,
-      transaction: t,
+      ...(t && [
+        {
+          lock: t.LOCK.UPDATE,
+          transaction: t,
+        }]
+      ),
     });
     if (
       (message.user && message.user.id)

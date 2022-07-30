@@ -5,8 +5,6 @@ import {
 } from "sequelize";
 import {
   alreadyVotedTopGG,
-  cannotSendMessageUser,
-  discordErrorMessage,
 } from '../embeds';
 import db from '../models';
 import logger from "../helpers/logger";
@@ -27,8 +25,8 @@ export const discordTopggVote = async (
       userActivity,
     ] = await userWalletExist(
       message,
-      t,
       'topggvote',
+      t,
     );
     if (userActivity) {
       activity.unshift(userActivity);

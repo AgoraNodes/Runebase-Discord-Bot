@@ -36,8 +36,8 @@ export const discordWithdraw = async (
       userActivity,
     ] = await userWalletExist(
       message,
-      t,
       'withdraw',
+      t,
     );
     if (userActivity) {
       activity.unshift(userActivity);
