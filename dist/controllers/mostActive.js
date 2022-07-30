@@ -50,7 +50,7 @@ var discordMostActive = /*#__PURE__*/function () {
                     switch (_context3.prev = _context3.next) {
                       case 0:
                         _context3.next = 2;
-                        return (0, _userWalletExist.userWalletExist)(message, t, 'mostActive');
+                        return (0, _userWalletExist.userWalletExist)(message, 'mostActive', t);
 
                       case 2:
                         _yield$userWalletExis = _context3.sent;

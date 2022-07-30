@@ -47,7 +47,7 @@ var discordHelp = /*#__PURE__*/function () {
                     switch (_context.prev = _context.next) {
                       case 0:
                         _context.next = 2;
-                        return (0, _userWalletExist.userWalletExist)(message, t, 'help');
+                        return (0, _userWalletExist.userWalletExist)(message, 'help', t);
 
                       case 2:
                         _yield$userWalletExis = _context.sent;

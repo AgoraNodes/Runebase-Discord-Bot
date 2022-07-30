@@ -57,7 +57,7 @@ var discordRollDice = /*#__PURE__*/function () {
                     switch (_context.prev = _context.next) {
                       case 0:
                         _context.next = 2;
-                        return (0, _userWalletExist.userWalletExist)(message, t, 'rollDice');
+                        return (0, _userWalletExist.userWalletExist)(message, 'rollDice', t);
 
                       case 2:
                         _yield$userWalletExis = _context.sent;

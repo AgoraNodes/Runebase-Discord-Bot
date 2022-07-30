@@ -51,7 +51,7 @@ var discordLeaderboard = /*#__PURE__*/function () {
                     switch (_context3.prev = _context3.next) {
                       case 0:
                         _context3.next = 2;
-                        return (0, _userWalletExist.userWalletExist)(message, t, 'leaderboard');
+                        return (0, _userWalletExist.userWalletExist)(message, 'leaderboard', t);
 
                       case 2:
                         _yield$userWalletExis = _context3.sent;

@@ -49,7 +49,7 @@ var discordDeposit = /*#__PURE__*/function () {
                     switch (_context.prev = _context.next) {
                       case 0:
                         _context.next = 2;
-                        return (0, _userWalletExist.userWalletExist)(message, t, 'deposit');
+                        return (0, _userWalletExist.userWalletExist)(message, 'deposit', t);
 
                       case 2:
                         _yield$userWalletExis = _context.sent;

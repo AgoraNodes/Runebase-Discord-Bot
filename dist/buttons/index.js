@@ -5,7 +5,7 @@ var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefau
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.generateSecondarySkillButton = exports.generateRollDiceButton = exports.generatePickClassButton = exports.generateMainSkillButton = exports.generateLootButton = exports.generateHealButton = exports.generateForwardButton = exports.generateExitInventoryButton = exports.generateEquipmentCompareButton = exports.generateEquipItemButton = exports.generateDestroyYesButton = exports.generateDestroyNoButton = exports.generateDestroyItemButton = exports.generateDeclineButton = exports.generateCancelStatsPickButton = exports.generateCancelSkillButton = exports.generateCancelPickClassButton = exports.generateBackButton = exports.generateAfterBattleLootButton = exports.generateAddVitalityButton = exports.generateAddStrengthButton = exports.generateAddSkillButton = exports.generateAddEnergyButton = exports.generateAddDexterityButton = exports.generateAcceptButton = void 0;
+exports.generateSecondarySkillButton = exports.generateRollDiceButton = exports.generatePickClassButton = exports.generateMainSkillButton = exports.generateLootButton = exports.generateHealButton = exports.generateForwardButton = exports.generateExitInventoryButton = exports.generateEquipmentCompareButton = exports.generateEquipItemButton = exports.generateDestroyYesButton = exports.generateDestroyNoButton = exports.generateDestroyItemButton = exports.generateDeclineButton = exports.generateConfirmButton = exports.generateCancelStatsPickButton = exports.generateCancelSkillButton = exports.generateCancelPickClassButton = exports.generateCancelButton = exports.generateBackButton = exports.generateAfterBattleLootButton = exports.generateAddVitalityButton = exports.generateAddStrengthButton = exports.generateAddSkillButton = exports.generateAddEnergyButton = exports.generateAddDexterityButton = exports.generateAcceptButton = void 0;
 
 var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
 
@@ -20,6 +20,30 @@ var _skillEmoji = _interopRequireDefault(require("../config/skillEmoji"));
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
 
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { (0, _defineProperty2["default"])(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
+
+var generateCancelButton = function generateCancelButton() {
+  var result = new _discord.ButtonBuilder({
+    style: _discord.ButtonStyle.Secondary,
+    label: "Cancel",
+    emoji: '<a:rejected:993469997596815393>',
+    customId: 'cancel'
+  });
+  return result;
+};
+
+exports.generateCancelButton = generateCancelButton;
+
+var generateConfirmButton = function generateConfirmButton() {
+  var result = new _discord.ButtonBuilder({
+    style: _discord.ButtonStyle.Secondary,
+    label: "Confirm",
+    emoji: '<a:checkmark:993469790343671848>',
+    customId: 'confirm'
+  });
+  return result;
+};
+
+exports.generateConfirmButton = generateConfirmButton;
 
 var generateAcceptButton = function generateAcceptButton() {
   var result = new _discord.ButtonBuilder({

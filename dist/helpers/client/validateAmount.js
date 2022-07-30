@@ -21,9 +21,7 @@ var _insufficientBalanceMessageHandler = require("./messageHandlers/insufficient
 
 var _minimumMessageHandler = require("./messageHandlers/minimumMessageHandler");
 
-var capitalize = function capitalize(s) {
-  return s && s[0].toUpperCase() + s.slice(1);
-};
+var _utils = require("../utils");
 
 var validateAmount = /*#__PURE__*/function () {
   var _ref = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(discordClient, message, t, preAmount, user, setting, type) {
@@ -43,7 +41,7 @@ var validateAmount = /*#__PURE__*/function () {
           case 0:
             tipType = _args.length > 7 && _args[7] !== undefined ? _args[7] : null;
             usersToTip = _args.length > 8 && _args[8] !== undefined ? _args[8] : null;
-            capType = capitalize(type);
+            capType = (0, _utils.capitalize)(type);
             amount = 0;
 
             if (preAmount) {

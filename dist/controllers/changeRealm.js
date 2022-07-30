@@ -91,15 +91,13 @@ var discordChangeRealm = /*#__PURE__*/function () {
           case 18:
             realms = _context4.sent;
             realmMap = realms.reduce(function (filtered, realm) {
-              // if (true) {
               var mapped = {
                 placeholder: 'pick a skill',
                 label: "".concat(realm.groupName),
                 value: "realm:".concat(realm.id),
                 "default": realm.id === user.currentRealmId
               };
-              filtered.push(mapped); // }
-
+              filtered.push(mapped);
               return filtered;
             }, []);
             _context4.next = 22;
@@ -108,7 +106,6 @@ var discordChangeRealm = /*#__PURE__*/function () {
               files: [],
               components: [new _discord.ActionRowBuilder({
                 components: [new _discord.SelectMenuBuilder({
-                  // type: 'SELECT_MENU',
                   customId: 'select-realm',
                   options: realmMap
                 })]

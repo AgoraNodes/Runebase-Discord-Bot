@@ -264,29 +264,28 @@ var discordBattle = /*#__PURE__*/function () {
 
           case 66:
             battle = _context12.sent;
-            console.log('battle4');
 
             if (battle) {
-              _context12.next = 83;
+              _context12.next = 82;
               break;
             }
 
-            _context12.next = 71;
+            _context12.next = 70;
             return _models["default"].battle.create({
               complete: false,
               UserGroupClassId: userCurrentCharacter.id
             });
 
-          case 71:
+          case 70:
             newBattle = _context12.sent;
-            _context12.next = 74;
+            _context12.next = 73;
             return _models["default"].monster.findOne({
               where: {
                 name: 'Zombie'
               }
             });
 
-          case 74:
+          case 73:
             monster = _context12.sent;
             randomAmountOfMobs = (0, _utils.randomIntFromInterval)(3, 4);
             mobPromises = [];
@@ -302,11 +301,11 @@ var discordBattle = /*#__PURE__*/function () {
               mobPromises.push(newMobPromise);
             }
 
-            _context12.next = 80;
+            _context12.next = 79;
             return Promise.all(mobPromises);
 
-          case 80:
-            _context12.next = 82;
+          case 79:
+            _context12.next = 81;
             return _models["default"].battle.findOne({
               where: {
                 id: newBattle.id
@@ -340,14 +339,14 @@ var discordBattle = /*#__PURE__*/function () {
               }]
             });
 
-          case 82:
+          case 81:
             battle = _context12.sent;
 
-          case 83:
-            _context12.next = 85;
+          case 82:
+            _context12.next = 84;
             return (0, _selectedSkills.fetchUserCurrentSelectedSkills)(userId);
 
-          case 85:
+          case 84:
             userCurrentSelectedSkills = _context12.sent;
             console.log('battle5');
             mainSkillMap = userCurrentSelectedSkills.UserGroupClassSkills.reduce(function (filtered, mySkill) {
@@ -390,7 +389,6 @@ var discordBattle = /*#__PURE__*/function () {
 
               return filtered;
             }, []);
-            console.log('battle6');
 
             if (!currentSelectedMonster || currentSelectedMonster && currentSelectedMonster.currentHp < 1 || battle.id !== currentSelectedMonster.battleId) {
               currentSelectedMonster = battle.BattleMonsters.find(function (element) {
@@ -412,10 +410,10 @@ var discordBattle = /*#__PURE__*/function () {
               return filtered;
             }, []);
             console.log('battle7');
-            _context12.next = 95;
+            _context12.next = 93;
             return (0, _calculateCharacterStats.calculateCharacterStats)(userCurrentCharacter);
 
-          case 95:
+          case 93:
             _yield$calculateChara = _context12.sent;
             hp = _yield$calculateChara.hp;
             mp = _yield$calculateChara.mp;
@@ -502,10 +500,10 @@ var discordBattle = /*#__PURE__*/function () {
             console.log('battle9');
             _context12.t12 = discordChannel;
             _context12.t13 = (0, _messages.playingOnRealmMessage)(userCurrentCharacter);
-            _context12.next = 111;
+            _context12.next = 109;
             return (0, _battle.renderBattleGif)(myInitialUserState, userCurrentSelectedSkills, battle, currentSelectedMonster, allRoundBuffsInfoArray, allRoundDebuffsInfoArray, allRoundEffectsInfoArray);
 
-          case 111:
+          case 109:
             _context12.t14 = _context12.sent;
             _context12.t15 = {
               attachment: _context12.t14,
@@ -513,20 +511,20 @@ var discordBattle = /*#__PURE__*/function () {
             };
             _context12.t16 = [_context12.t15];
             _context12.t17 = _discord.ActionRowBuilder;
-            _context12.next = 117;
+            _context12.next = 115;
             return (0, _buttons.generateMainSkillButton)(userCurrentSelectedSkills.selectedMainSkill);
 
-          case 117:
+          case 115:
             _context12.t18 = _context12.sent;
-            _context12.next = 120;
+            _context12.next = 118;
             return (0, _buttons.generateSecondarySkillButton)(userCurrentSelectedSkills.selectedSecondarySkill);
 
-          case 120:
+          case 118:
             _context12.t19 = _context12.sent;
-            _context12.next = 123;
+            _context12.next = 121;
             return (0, _buttons.generateHealButton)();
 
-          case 123:
+          case 121:
             _context12.t20 = _context12.sent;
             _context12.t21 = [_context12.t18, _context12.t19, _context12.t20];
             _context12.t22 = {
@@ -554,10 +552,10 @@ var discordBattle = /*#__PURE__*/function () {
               files: _context12.t16,
               components: _context12.t24
             };
-            _context12.next = 131;
+            _context12.next = 129;
             return _context12.t12.send.call(_context12.t12, _context12.t25);
 
-          case 131:
+          case 129:
             embedMessage = _context12.sent;
 
             generateLootImagesArray = /*#__PURE__*/function () {
@@ -2070,7 +2068,7 @@ var discordBattle = /*#__PURE__*/function () {
               };
             }());
 
-          case 138:
+          case 136:
           case "end":
             return _context12.stop();
         }
