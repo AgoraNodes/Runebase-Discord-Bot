@@ -6,7 +6,13 @@
     "dev": "nodemon --exec babel-node --max-old-space-size=8192 src/index.js",
     "build": "rm -rf dist && babel src --out-dir dist --copy-files && git add .",
     "standard-version": "standard-version --commit-all",
+    "pre-release:minor": "standard-version --commit-all --release-as minor",
+    "pre-release:patch": "standard-version --commit-all --release-as patch",
+    "pre-release:major": "standard-version --commit-all --release-as major",
     "release": "npm-run-all build standard-version",
+    "release:minor": "npm-run-all build pre-release:minor",
+    "release:patch": "npm-run-all build pre-release:patch",
+    "release:major": "npm-run-all build pre-release:major",
     "start": "NODE_ENV=production node dist/index.js",
     "lint": "eslint src",
     "db:makemigrations": "./node_modules/sequelize-auto-migrations/bin/makemigration.js"
