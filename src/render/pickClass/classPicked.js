@@ -4,9 +4,6 @@ import {
 } from 'canvas';
 import path from 'path';
 import _ from 'lodash';
-import {
-  MessageAttachment,
-} from 'discord.js';
 
 export const renderClassPicked = async (
   start,

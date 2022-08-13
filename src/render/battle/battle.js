@@ -283,7 +283,7 @@ export const renderBattleGif = async (
 
   for (const [i, battleMonster] of BattleMonsters.entries()) {
     if (battleMonster.currentHp > 0) {
-      enemyPosition[i] = drawEnemy(
+      enemyPosition[Number(i)] = drawEnemy(
         ctx, // CTX
         BattleMonsters.find((element) => element.id === battleMonster.id), // MonsterState
         currentSelectedMonster && currentSelectedMonster.id === battleMonster.id, // is current Monster selected?
@@ -345,7 +345,7 @@ export const renderBattleGif = async (
           for (const [i, battleMonster] of BattleMonsters.entries()) {
             if (battleMonster.currentHp > 0) {
               // const findUpdatedMonsterState = monsterInfo.find((element) => element.monsterId === battleMonster.id);
-              enemyPosition[i] = drawEnemy(
+              enemyPosition[Number(i)] = drawEnemy(
                 ctx, // CTX
                 BattleMonsters.find((element) => element.id === battleMonster.id), // MonsterState
                 currentSelectedMonster && currentSelectedMonster.id === battleMonster.id, // is current Monster selected?
@@ -423,7 +423,7 @@ export const renderBattleGif = async (
 
           for (const [i, battleMonster] of BattleMonsters.entries()) {
             if (battleMonster.currentHp > 0) {
-              enemyPosition[i] = drawEnemy(
+              enemyPosition[Number(i)] = drawEnemy(
                 ctx, // CTX
                 BattleMonsters.find((element) => element.id === battleMonster.id), // MonsterState
                 currentSelectedMonster && currentSelectedMonster.id === battleMonster.id, // is current Monster selected?
@@ -516,7 +516,7 @@ export const renderBattleGif = async (
       for (const [i, battleMonster] of BattleMonsters.entries()) {
         if (battleMonster.currentHp > 0) {
           // const findUpdatedMonsterState = monsterInfo.find((element) => element.monsterId === battleMonster.id);
-          enemyPosition[i] = drawEnemy(
+          enemyPosition[Number(i)] = drawEnemy(
             ctx, // CTX
             BattleMonsters.find((element) => element.id === battleMonster.id), // MonsterState
             currentSelectedMonster && currentSelectedMonster.id === battleMonster.id, // is current Monster selected?
@@ -593,7 +593,7 @@ export const renderBattleGif = async (
 
       for (const [i, battleMonster] of BattleMonsters.entries()) {
         if (battleMonster.currentHp > 0) {
-          enemyPosition[i] = drawEnemy(
+          enemyPosition[Number(i)] = drawEnemy(
             ctx, // CTX
             BattleMonsters.find((element) => element.id === battleMonster.id), // MonsterState
             currentSelectedMonster && currentSelectedMonster.id === battleMonster.id, // is current Monster selected?
@@ -687,7 +687,7 @@ export const renderBattleGif = async (
 
       for (const [i, battleMonster] of BattleMonsters.entries()) {
         if (battleMonster.currentHp > 0) {
-          enemyPosition[i] = drawEnemy(
+          enemyPosition[Number(i)] = drawEnemy(
             ctx, // CTX
             BattleMonsters.find((element) => element.id === battleMonster.id), // MonsterState
             currentSelectedMonster && currentSelectedMonster.id === battleMonster.id, // is current Monster selected?
@@ -783,7 +783,7 @@ export const renderBattleGif = async (
 
       for (const [i, battleMonster] of BattleMonsters.entries()) {
         if (battleMonster.currentHp > 0) {
-          enemyPosition[i] = drawEnemy(
+          enemyPosition[Number(i)] = drawEnemy(
             ctx, // CTX
             BattleMonsters.find((element) => element.id === battleMonster.id), // MonsterState
             currentSelectedMonster && currentSelectedMonster.id === battleMonster.id, // is current Monster selected?
@@ -847,7 +847,7 @@ export const renderBattleGif = async (
       console.log('|7');
       for (const [i, battleMonster] of BattleMonsters.entries()) {
         if (battleMonster.currentHp > 0) {
-          enemyPosition[i] = drawEnemy(
+          enemyPosition[Number(i)] = drawEnemy(
             ctx, // CTX
             BattleMonsters.find((element) => element.id === battleMonster.id), // MonsterState
             currentSelectedMonster && currentSelectedMonster.id === battleMonster.id, // is current Monster selected?
@@ -938,7 +938,7 @@ export const renderBattleGif = async (
       );
       for (const [i, battleMonster] of BattleMonsters.entries()) {
         if (battleMonster.currentHp > 0) {
-          enemyPosition[i] = drawEnemy(
+          enemyPosition[Number(i)] = drawEnemy(
             ctx, // CTX
             BattleMonsters.find((element) => element.id === battleMonster.id), // MonsterState
             currentSelectedMonster && currentSelectedMonster.id === battleMonster.id, // is current Monster selected?
@@ -1020,7 +1020,7 @@ export const renderBattleGif = async (
       );
       for (const [i, battleMonster] of BattleMonsters.entries()) {
         if (battleMonster.currentHp > 0) {
-          enemyPosition[i] = drawEnemy(
+          enemyPosition[Number(i)] = drawEnemy(
             ctx, // CTX
             BattleMonsters.find((element) => element.id === battleMonster.id), // MonsterState
             currentSelectedMonster && currentSelectedMonster.id === battleMonster.id, // is current Monster selected?
@@ -1102,7 +1102,7 @@ export const renderBattleGif = async (
       );
       for (const [i, battleMonster] of BattleMonsters.entries()) {
         if (battleMonster.currentHp > 0) {
-          enemyPosition[i] = drawEnemy(
+          enemyPosition[Number(i)] = drawEnemy(
             ctx, // CTX
             BattleMonsters.find((element) => element.id === battleMonster.id), // MonsterState
             currentSelectedMonster && currentSelectedMonster.id === battleMonster.id, // is current Monster selected?
@@ -1168,7 +1168,7 @@ export const renderBattleGif = async (
       );
       for (const [i, battleMonster] of BattleMonsters.entries()) {
         if (battleMonster.currentHp > 0) {
-          enemyPosition[i] = drawEnemy(
+          enemyPosition[Number(i)] = drawEnemy(
             ctx, // CTX
             BattleMonsters.find((element) => element.id === battleMonster.id), // MonsterState
             currentSelectedMonster && currentSelectedMonster.id === battleMonster.id, // is current Monster selected?
@@ -1218,7 +1218,7 @@ export const renderBattleGif = async (
       for (const [i, battleMonster] of BattleMonsters.entries()) {
         if (battleMonster.currentHp > 0) {
           // const findUpdatedMonsterState = monsterInfo.find((element) => element.monsterId === battleMonster.id);
-          enemyPosition[i] = drawEnemy(
+          enemyPosition[Number(i)] = drawEnemy(
             ctx, // CTX
             BattleMonsters.find((element) => element.id === battleMonster.id), // MonsterState
             currentSelectedMonster && currentSelectedMonster.id === battleMonster.id, // is current Monster selected?
@@ -1300,7 +1300,7 @@ export const renderBattleGif = async (
 
       for (const [i, battleMonster] of BattleMonsters.entries()) {
         if (battleMonster.currentHp > 0) {
-          enemyPosition[i] = drawEnemy(
+          enemyPosition[Number(i)] = drawEnemy(
             ctx, // CTX
             BattleMonsters.find((element) => element.id === battleMonster.id), // MonsterState
             currentSelectedMonster && currentSelectedMonster.id === battleMonster.id, // is current Monster selected?
@@ -1388,7 +1388,7 @@ export const renderBattleGif = async (
 
       for (const [i, battleMonster] of BattleMonsters.entries()) {
         if (battleMonster.currentHp > 0) {
-          enemyPosition[i] = drawEnemy(
+          enemyPosition[Number(i)] = drawEnemy(
             ctx, // CTX
             BattleMonsters.find((element) => element.id === battleMonster.id), // MonsterState
             currentSelectedMonster && currentSelectedMonster.id === battleMonster.id, // is current Monster selected?
@@ -1462,7 +1462,7 @@ export const renderBattleGif = async (
 
       for (const [i, battleMonster] of BattleMonsters.entries()) {
         if (battleMonster.currentHp > 0) {
-          enemyPosition[i] = drawEnemy(
+          enemyPosition[Number(i)] = drawEnemy(
             ctx, // CTX
             BattleMonsters.find((element) => element.id === battleMonster.id), // MonsterState
             currentSelectedMonster && currentSelectedMonster.id === battleMonster.id, // is current Monster selected?
@@ -1542,7 +1542,7 @@ export const renderBattleGif = async (
       );
       for (const [i, battleMonster] of BattleMonsters.entries()) {
         if (battleMonster.currentHp > 0) {
-          enemyPosition[i] = drawEnemy(
+          enemyPosition[Number(i)] = drawEnemy(
             ctx, // CTX
             BattleMonsters.find((element) => element.id === battleMonster.id), // MonsterState
             currentSelectedMonster && currentSelectedMonster.id === battleMonster.id, // is current Monster selected?
@@ -1592,7 +1592,7 @@ export const renderBattleGif = async (
       for (const [i, battleMonster] of BattleMonsters.entries()) {
         if (battleMonster.currentHp > 0) {
           // const findUpdatedMonsterState = monsterInfo.find((element) => element.monsterId === battleMonster.id);
-          enemyPosition[i] = drawEnemy(
+          enemyPosition[Number(i)] = drawEnemy(
             ctx, // CTX
             BattleMonsters.find((element) => element.id === battleMonster.id), // MonsterState
             currentSelectedMonster && currentSelectedMonster.id === battleMonster.id, // is current Monster selected?
@@ -1672,7 +1672,7 @@ export const renderBattleGif = async (
 
       for (const [i, battleMonster] of BattleMonsters.entries()) {
         if (battleMonster.currentHp > 0) {
-          enemyPosition[i] = drawEnemy(
+          enemyPosition[Number(i)] = drawEnemy(
             ctx, // CTX
             BattleMonsters.find((element) => element.id === battleMonster.id), // MonsterState
             currentSelectedMonster && currentSelectedMonster.id === battleMonster.id, // is current Monster selected?
@@ -1760,7 +1760,7 @@ export const renderBattleGif = async (
 
       for (const [i, battleMonster] of BattleMonsters.entries()) {
         if (battleMonster.currentHp > 0) {
-          enemyPosition[i] = drawEnemy(
+          enemyPosition[Number(i)] = drawEnemy(
             ctx, // CTX
             BattleMonsters.find((element) => element.id === battleMonster.id), // MonsterState
             currentSelectedMonster && currentSelectedMonster.id === battleMonster.id, // is current Monster selected?
@@ -1834,7 +1834,7 @@ export const renderBattleGif = async (
 
       for (const [i, battleMonster] of BattleMonsters.entries()) {
         if (battleMonster.currentHp > 0) {
-          enemyPosition[i] = drawEnemy(
+          enemyPosition[Number(i)] = drawEnemy(
             ctx, // CTX
             BattleMonsters.find((element) => element.id === battleMonster.id), // MonsterState
             currentSelectedMonster && currentSelectedMonster.id === battleMonster.id, // is current Monster selected?
@@ -1900,7 +1900,7 @@ export const renderBattleGif = async (
       );
       for (const [i, battleMonster] of BattleMonsters.entries()) {
         if (battleMonster.currentHp > 0) {
-          enemyPosition[i] = drawEnemy(
+          enemyPosition[Number(i)] = drawEnemy(
             ctx, // CTX
             BattleMonsters.find((element) => element.id === battleMonster.id), // MonsterState
             currentSelectedMonster && currentSelectedMonster.id === battleMonster.id, // is current Monster selected?
@@ -1950,7 +1950,7 @@ export const renderBattleGif = async (
       for (const [i, battleMonster] of BattleMonsters.entries()) {
         if (battleMonster.currentHp > 0) {
           // const findUpdatedMonsterState = monsterInfo.find((element) => element.monsterId === battleMonster.id);
-          enemyPosition[i] = drawEnemy(
+          enemyPosition[Number(i)] = drawEnemy(
             ctx, // CTX
             BattleMonsters.find((element) => element.id === battleMonster.id), // MonsterState
             currentSelectedMonster && currentSelectedMonster.id === battleMonster.id, // is current Monster selected?
@@ -2017,7 +2017,7 @@ export const renderBattleGif = async (
 
       for (const [i, battleMonster] of BattleMonsters.entries()) {
         if (battleMonster.currentHp > 0) {
-          enemyPosition[i] = drawEnemy(
+          enemyPosition[Number(i)] = drawEnemy(
             ctx, // CTX
             BattleMonsters.find((element) => element.id === battleMonster.id), // MonsterState
             currentSelectedMonster && currentSelectedMonster.id === battleMonster.id, // is current Monster selected?
@@ -2093,7 +2093,7 @@ export const renderBattleGif = async (
 
       for (const [i, battleMonster] of BattleMonsters.entries()) {
         if (battleMonster.currentHp > 0) {
-          enemyPosition[i] = drawEnemy(
+          enemyPosition[Number(i)] = drawEnemy(
             ctx, // CTX
             BattleMonsters.find((element) => element.id === battleMonster.id), // MonsterState
             currentSelectedMonster && currentSelectedMonster.id === battleMonster.id, // is current Monster selected?
@@ -2155,7 +2155,7 @@ export const renderBattleGif = async (
 
       for (const [i, battleMonster] of BattleMonsters.entries()) {
         if (battleMonster.currentHp > 0) {
-          enemyPosition[i] = drawEnemy(
+          enemyPosition[Number(i)] = drawEnemy(
             ctx, // CTX
             BattleMonsters.find((element) => element.id === battleMonster.id), // MonsterState
             currentSelectedMonster && currentSelectedMonster.id === battleMonster.id, // is current Monster selected?
@@ -2221,7 +2221,7 @@ export const renderBattleGif = async (
       );
       for (const [i, battleMonster] of BattleMonsters.entries()) {
         if (battleMonster.currentHp > 0) {
-          enemyPosition[i] = drawEnemy(
+          enemyPosition[Number(i)] = drawEnemy(
             ctx, // CTX
             BattleMonsters.find((element) => element.id === battleMonster.id), // MonsterState
             currentSelectedMonster && currentSelectedMonster.id === battleMonster.id, // is current Monster selected?
@@ -2271,7 +2271,7 @@ export const renderBattleGif = async (
       for (const [i, battleMonster] of BattleMonsters.entries()) {
         if (battleMonster.currentHp > 0) {
           // const findUpdatedMonsterState = monsterInfo.find((element) => element.monsterId === battleMonster.id);
-          enemyPosition[i] = drawEnemy(
+          enemyPosition[Number(i)] = drawEnemy(
             ctx, // CTX
             BattleMonsters.find((element) => element.id === battleMonster.id), // MonsterState
             currentSelectedMonster && currentSelectedMonster.id === battleMonster.id, // is current Monster selected?
@@ -2342,7 +2342,7 @@ export const renderBattleGif = async (
 
       for (const [i, battleMonster] of BattleMonsters.entries()) {
         if (battleMonster.currentHp > 0) {
-          enemyPosition[i] = drawEnemy(
+          enemyPosition[Number(i)] = drawEnemy(
             ctx, // CTX
             BattleMonsters.find((element) => element.id === battleMonster.id), // MonsterState
             currentSelectedMonster && currentSelectedMonster.id === battleMonster.id, // is current Monster selected?
@@ -2429,7 +2429,7 @@ export const renderBattleGif = async (
       );
       for (const [i, battleMonster] of BattleMonsters.entries()) {
         if (battleMonster.currentHp > 0) {
-          enemyPosition[i] = drawEnemy(
+          enemyPosition[Number(i)] = drawEnemy(
             ctx, // CTX
             BattleMonsters.find((element) => element.id === battleMonster.id), // MonsterState
             currentSelectedMonster && currentSelectedMonster.id === battleMonster.id, // is current Monster selected?
@@ -2479,7 +2479,7 @@ export const renderBattleGif = async (
       for (const [i, battleMonster] of BattleMonsters.entries()) {
         if (battleMonster.currentHp > 0) {
           // const findUpdatedMonsterState = monsterInfo.find((element) => element.monsterId === battleMonster.id);
-          enemyPosition[i] = drawEnemy(
+          enemyPosition[Number(i)] = drawEnemy(
             ctx, // CTX
             BattleMonsters.find((element) => element.id === battleMonster.id), // MonsterState
             currentSelectedMonster && currentSelectedMonster.id === battleMonster.id, // is current Monster selected?

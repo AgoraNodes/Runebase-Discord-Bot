@@ -15,11 +15,11 @@ export const renderGrayScaleIcon = async (
   ctx.clearRect(0, 0, icon.width, icon.height);
   const { data } = id;
   for (let i = 0; i < data.length; i += 4) {
-    const r = data[i];
+    const r = data[Number(i)];
     const g = data[i + 1];
     const b = data[i + 2];
     const y = 0.299 * r + 0.587 * g + 0.114 * b;
-    data[i] = y;
+    data[Number(i)] = y;
     data[i + 1] = y;
     data[i + 2] = y;
   }

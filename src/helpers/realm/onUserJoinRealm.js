@@ -4,13 +4,6 @@ import {
   Op,
 } from "sequelize";
 import {
-  MessageActionRow,
-  MessageButton,
-  MessageAttachment,
-  MessageSelectMenu,
-  MessageEmbed,
-} from 'discord.js';
-import {
   levelUpMessage,
 } from '../../embeds';
 import db from '../../models';

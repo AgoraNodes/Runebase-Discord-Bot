@@ -4,12 +4,11 @@
 //   Transaction,
 //   Op,
 // } from "sequelize";
+// import db from '../models';
+// import logger from "../helpers/logger";
 import {
   ActionRowBuilder,
 } from 'discord.js';
-
-// import db from '../models';
-// import logger from "../helpers/logger";
 import { addStrength } from "../helpers/stats/addStrength";
 import { addDexterity } from "../helpers/stats/addDexterity";
 import { addVitality } from "../helpers/stats/addVitality";

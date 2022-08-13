@@ -407,15 +407,15 @@ export const renderItemImage = async (
   ctx.fillStyle = newItem.itemQuality.color;
   ctx.strokeStyle = "#164179";
 
-  for (let i = 0; i < modifierStringArray.length; i++) {
+  for (let i = 0; i < modifierStringArray.length; i += 1) {
     ctx.strokeText(
-      modifierStringArray[i],
+      modifierStringArray[parseInt(i, 10)],
       100,
       (itemImage.height) + 95 + (i * 25) + totalExtraHeight,
       200,
     );
     ctx.fillText(
-      modifierStringArray[i],
+      modifierStringArray[parseInt(i, 10)],
       100,
       (itemImage.height) + 95 + (i * 25) + totalExtraHeight,
       200,

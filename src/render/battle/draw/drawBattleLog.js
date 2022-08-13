@@ -24,9 +24,9 @@ export const drawBattleLog = (
   );
   ctx.font = 'normal 15px serif';
   ctx.fillStyle = 'black';
-  for (let i = 0; i < battleLogs.length; i++) {
+  for (let i = 0; i < battleLogs.length; i += 1) {
     ctx.fillText(
-      battleLogs[i].log,
+      battleLogs[Number(i)].log,
       430,
       17 + ((i + 1) * 20),
       210,

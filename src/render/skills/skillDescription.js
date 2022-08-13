@@ -167,9 +167,9 @@ export const renderSkillDescriptionImage = async (
             key === 'rounds'
             || key === 'heal %'
           ) {
-            skillValue = Math.round(value + (jsonSkillInfo.next[key] * ((x / 18) - 1)));
+            skillValue = Math.round(value + (jsonSkillInfo.next[String(key)] * ((x / 18) - 1)));
           } else {
-            skillValue = value + (jsonSkillInfo.next[key] * ((x / 18) - 1));
+            skillValue = value + (jsonSkillInfo.next[String(key)] * ((x / 18) - 1));
           }
 
           ctx.strokeText(

@@ -5,10 +5,6 @@ import {
   Op,
 } from "sequelize";
 import {
-  createCanvas,
-  loadImage,
-} from 'canvas';
-import {
   ActionRowBuilder,
   SelectMenuBuilder,
   InteractionType,

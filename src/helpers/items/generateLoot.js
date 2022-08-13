@@ -29,8 +29,8 @@ export const generateLoot = async (
   console.log(roll);
   let pickedQuality = null;
   let item = false;
-  for (let i = 0, len = lootQualityTable.length; i < len; ++i) {
-    const loot = lootQualityTable[i];
+  for (let i = 0, len = lootQualityTable.length; i < len; i += 1) {
+    const loot = lootQualityTable[Number(i)];
     const { chance } = loot;
     if (roll < chance) {
       pickedQuality = loot;

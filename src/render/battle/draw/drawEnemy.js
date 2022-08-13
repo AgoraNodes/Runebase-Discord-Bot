@@ -103,11 +103,11 @@ export const drawEnemy = (
 
   // Enemy Image
   ctx.drawImage(
-    enemyFrame[number],
+    enemyFrame[Number(number)],
     x, // x position
     y, // y position
-    enemyFrame[number].width / 1.5,
-    enemyFrame[number].height / 1.5,
+    enemyFrame[Number(number)].width / 1.5,
+    enemyFrame[Number(number)].height / 1.5,
   );
 
   // console.log(monster);

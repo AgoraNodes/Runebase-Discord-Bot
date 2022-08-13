@@ -1,3 +1,4 @@
+/* eslint-disable no-await-in-loop */
 import {
   Sequelize,
   Transaction,
@@ -243,7 +244,7 @@ export const renderSkillTreeImage = async (
   ctx.lineWidth = "3";
   ctx.strokeStyle = "black";
   console.log('before render skill tree 2');
-  for (let i = 0; i < skillTree.skills.length; i++) {
+  for (let i = 0; i < skillTree.skills.length; i += 1) {
     const skillIcon = await loadImage(path.join(__dirname, `../../assets/images/skills/${userCharacter.UserGroup.user.currentClass.name}/${skillTree.name}`, `${skillTree.skills[i].name}.png`));
     let skillImage;
     const userHasSkill = userCharacter.UserGroupClassSkills.find((o) => o.skillId === skillTree.skills[i].id);

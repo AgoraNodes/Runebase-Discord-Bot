@@ -29,7 +29,9 @@ function printAtWordWrap(context, text, x, y, lineHeight, fitWidth) {
       currentLine++;
       words = words.splice(idx - 1);
       idx = 1;
-    } else { idx++; }
+    } else {
+      idx++;
+    }
   }
   if (idx > 0) { context.fillText(words.join(' '), x, y + (lineHeight * currentLine)); }
 }
@@ -108,5 +110,4 @@ export const renderPickClassImage = async (
 
   const finalImage = await canvas.toBuffer();
   return finalImage;
-  return new MessageAttachment(canvas.toBuffer(), 'class.png');
 };

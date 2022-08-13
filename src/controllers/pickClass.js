@@ -4,8 +4,6 @@ import {
 } from "sequelize";
 import {
   ActionRowBuilder,
-  // MessageButton,
-  // MessageAttachment,
 } from 'discord.js';
 import {
   cannotSendMessageUser,
@@ -447,7 +445,12 @@ export const discordPickClass = async (
       return;
     }
     // Increase/decrease index
-    interaction.customId === 'back' ? (currentIndex -= 1) : (currentIndex += 1);
+
+    if (interaction.customId === 'back') {
+      currentIndex -= 1;
+    } else {
+      currentIndex += 1;
+    }
 
     // Load another character
     await interaction.update({

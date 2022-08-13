@@ -9,21 +9,21 @@ export const generateModifierStringArray = (newItem) => {
         || key === 'dexterity'
         || key === 'vitality'
         || key === 'energy')
-      && newItem[key] !== null
+      && newItem[String(key)] !== null
     ) {
-      modifierStringArray.push(`+${newItem[key]} to ${key}`);
+      modifierStringArray.push(`+${newItem[String(key)]} to ${key}`);
     }
     if (
       (key === 'eDefense')
-      && newItem[key] !== null
+      && newItem[String(key)] !== null
     ) {
-      modifierStringArray.push(`+${newItem[key]}% Enhanced Defense`);
+      modifierStringArray.push(`+${newItem[String(key)]}% Enhanced Defense`);
     }
     if (
       (key === 'eDamage')
-      && newItem[key] !== null
+      && newItem[String(key)] !== null
     ) {
-      modifierStringArray.push(`+${newItem[key]}% Enhanced Damage`);
+      modifierStringArray.push(`+${newItem[String(key)]}% Enhanced Damage`);
     }
   });
   modifierStringArray.sort((a, b) => (b.endsWith('Defense')) - (a.endsWith('Defense')));

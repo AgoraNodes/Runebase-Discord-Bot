@@ -2,7 +2,6 @@
 import {
   ActionRowBuilder,
   SelectMenuBuilder,
-  // MessageEmbed,
 } from 'discord.js';
 import { fetchUserCurrentCharacter } from "../helpers/character/character";
 import { fetchDiscordUserIdFromMessageOrInteraction } from '../helpers/client/fetchDiscordUserIdFromMessageOrInteraction';
@@ -227,7 +226,7 @@ export const discordSkills = async (
       default: index === skillTreeIndex,
     }));
 
-    const skillMapEdit = userCurrentCharacter.class.skillTrees[skillTreeIndex].skills.map((
+    const skillMapEdit = userCurrentCharacter.class.skillTrees[Number(skillTreeIndex)].skills.map((
       mySkill,
       index,
     ) => {
@@ -260,7 +259,7 @@ export const discordSkills = async (
         {
           attachment: await renderSkillScreen(
             userCurrentCharacter,
-            userCurrentCharacter.class.skillTrees[skillTreeIndex],
+            userCurrentCharacter.class.skillTrees[Number(skillTreeIndex)],
             skillTreeIndex,
             selectedSkill,
             jsonSkillInfo,

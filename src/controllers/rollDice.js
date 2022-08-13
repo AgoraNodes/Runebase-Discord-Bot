@@ -1,16 +1,9 @@
 import {
   Transaction,
-  // Op,
 } from "sequelize";
 import {
   ActionRowBuilder,
-  MessageButton,
 } from "discord.js";
-import {
-  createCanvas,
-  loadImage,
-} from 'canvas';
-import path from 'path';
 import {
   rollDiceTooFastMessage,
   rolledDiceMessage,

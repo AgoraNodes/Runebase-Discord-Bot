@@ -16,7 +16,6 @@ export const discordHelp = async (
   message,
   io,
 ) => {
-  console.log('help 1');
   const activity = [];
   await db.sequelize.transaction({
     isolationLevel: Transaction.ISOLATION_LEVELS.SERIALIZABLE,
@@ -33,19 +32,18 @@ export const discordHelp = async (
       activity.unshift(userActivity);
     }
     if (!user) return;
-    console.log('help 2');
     const discordChannel = await fetchDiscordChannel(
       discordClient,
       message,
     );
     if (!discordChannel) return;
-    console.log('help 3');
+
     await discordChannel.send({
       embeds: [
         helpMessage(),
       ],
     });
-    console.log('help 4');
+
     const preActivity = await db.activity.create({
       type: 'help_s',
       earnerId: user.id,
@@ -53,7 +51,7 @@ export const discordHelp = async (
       lock: t.LOCK.UPDATE,
       transaction: t,
     });
-    console.log('help 4');
+
     const finalActivity = await db.activity.findOne({
       where: {
         id: preActivity.id,

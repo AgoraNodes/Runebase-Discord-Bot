@@ -1,6 +1,4 @@
-import {
-  Op,
-} from "sequelize";
+// import { Op } from "sequelize";
 import db from '../../models';
 
 // ARGUMENTS //
