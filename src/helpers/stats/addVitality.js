@@ -105,7 +105,7 @@ export const addVitality = async (
       } else if (
         user.currentClass.name === 'Druid'
         || user.currentClass.name === 'Necromancer'
-        || user.currentClass.name === 'Sorceress'
+        || user.currentClass.name === 'Wizard'
       ) {
         addLife = 2;
       }

@@ -152,7 +152,7 @@ export const calculateCharacterStats = async (
     addedManaByItemEnergy = Math.round((energy - initialEnergy) * 2);
   }
   if (
-    currentCharacter.class.name === 'Sorceress'
+    currentCharacter.class.name === 'Wizard'
   ) {
     addedLifeByItemVitality = (vitality - initialVitality) * 2;
     addedManaByItemEnergy = Math.round((energy - initialEnergy) * 2);

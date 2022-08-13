@@ -1,6 +1,6 @@
 import { generateSpecificStartItem } from "./utils/generateSpecificStartGear";
 
-export const generateSorceressStartGear = async (
+export const generateWizardStartGear = async (
   t,
 ) => {
   const mainHand = await generateSpecificStartItem(

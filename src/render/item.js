@@ -36,7 +36,7 @@ export const renderItemImage = async (
     || newItem.itemBase.itemFamily.itemType.name === "Necromancer Shrunken Heads"
     || newItem.itemBase.itemFamily.itemType.name === "Paladin Shields"
     || newItem.itemBase.itemFamily.itemType.name === "Amazon Weapons"
-    || newItem.itemBase.itemFamily.itemType.name === "Sorceress Orbs"
+    || newItem.itemBase.itemFamily.itemType.name === "Wizard Orbs"
     || newItem.itemBase.itemFamily.itemType.name === "Assassin Katars"
   ));
   const isShield = newItem.itemBase.itemFamily.itemType.name === "Shields";
@@ -339,15 +339,15 @@ export const renderItemImage = async (
     );
   }
 
-  if (newItem.itemBase.itemFamily.itemType.name === "Sorceress Orbs") {
+  if (newItem.itemBase.itemFamily.itemType.name === "Wizard Orbs") {
     ctx.strokeText(
-      `(Sorceress Only)`,
+      `(Wizard Only)`,
       100,
       (itemImage.height) + 95 + shieldAndBootsDamageHeight + extraWeaponsHeight + extraShieldBlockHeight + extraThrowingJavelinHeight,
       200,
     );
     ctx.fillText(
-      `(Sorceress Only)`,
+      `(Wizard Only)`,
       100,
       (itemImage.height) + 95 + shieldAndBootsDamageHeight + extraWeaponsHeight + extraShieldBlockHeight + extraThrowingJavelinHeight,
       200,

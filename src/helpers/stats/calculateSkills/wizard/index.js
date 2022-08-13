@@ -1,4 +1,4 @@
-export const calculateSorcSkillDamage = (
+export const calculateWizardSkillDamage = (
   skillToCalculate,
   attack,
 ) => {

@@ -205,7 +205,7 @@ export const unEquipItem = async (
       }
       if (
         findItemToUnEquip.itemBase.itemFamily.itemType.name === 'Shields'
-        || findItemToUnEquip.itemBase.itemFamily.itemType.name === 'Sorceress Orbs'
+        || findItemToUnEquip.itemBase.itemFamily.itemType.name === 'Wizard Orbs'
         || findItemToUnEquip.itemBase.itemFamily.itemType.name === 'Paladin Shields'
         || findItemToUnEquip.itemBase.itemFamily.itemType.name === 'Necromancer Shrunken Heads'
       ) {

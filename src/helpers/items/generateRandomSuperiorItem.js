@@ -124,7 +124,7 @@ export const generateRandomSuperiorItem = async (level) => {
     || randomBaseItem.itemFamily.itemType.name === 'Wands'
     || randomBaseItem.itemFamily.itemType.name === 'Amazon Weapons'
     || randomBaseItem.itemFamily.itemType.name === 'Assassin Katars'
-    || randomBaseItem.itemFamily.itemType.name === 'Sorceress Orbs'
+    || randomBaseItem.itemFamily.itemType.name === 'Wizard Orbs'
   ) {
     const rndEdamage = randomIntFromInterval(
       5,

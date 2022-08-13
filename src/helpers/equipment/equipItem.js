@@ -234,8 +234,8 @@ export const equipItem = async (
 
       if (
         (
-          findItemToEquip.itemBase.itemFamily.itemType.name === 'Sorceress Orbs'
-          && userCurrentCharacter.UserGroup.user.currentClass.name !== 'Sorceress'
+          findItemToEquip.itemBase.itemFamily.itemType.name === 'Wizard Orbs'
+          && userCurrentCharacter.UserGroup.user.currentClass.name !== 'Wizard'
         )
         || (
           findItemToEquip.itemBase.itemFamily.itemType.name === 'Paladin Shields'
@@ -331,7 +331,7 @@ export const equipItem = async (
       }
       if (
         findItemToEquip.itemBase.itemFamily.itemType.name === 'Shields'
-        || findItemToEquip.itemBase.itemFamily.itemType.name === 'Sorceress Orbs'
+        || findItemToEquip.itemBase.itemFamily.itemType.name === 'Wizard Orbs'
         || findItemToEquip.itemBase.itemFamily.itemType.name === 'Paladin Shields'
         || findItemToEquip.itemBase.itemFamily.itemType.name === 'Necromancer Shrunken Heads'
       ) {

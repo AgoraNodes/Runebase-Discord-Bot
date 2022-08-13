@@ -1,6 +1,6 @@
 import { generateWarriorStartGear } from "./warrior";
 import { generatePaladinStartGear } from './paladin';
-import { generateSorceressStartGear } from './sorceress';
+import { generateWizardStartGear } from './wizard';
 import { generateDruidStartGear } from './druid';
 import { generateAssassinStartGear } from './assassin';
 import { generateNecromancerStartGear } from "./necromancer";
@@ -36,11 +36,11 @@ export const generateStartGear = async (
       t,
     );
   }
-  if (className === 'Sorceress') {
+  if (className === 'Wizard') {
     [
       mainHand,
       offHand,
-    ] = await generateSorceressStartGear(
+    ] = await generateWizardStartGear(
       t,
     );
   }

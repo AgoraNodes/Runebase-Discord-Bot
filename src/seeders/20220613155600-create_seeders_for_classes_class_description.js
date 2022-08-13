@@ -37,7 +37,7 @@ module.exports = {
 
     const newWarriorDescription = await queryInterface.rawSelect('classDescription', {
       where: {
-        name: 'Warrior',
+        name: 'Barbarian',
       },
     }, ['id']);
 

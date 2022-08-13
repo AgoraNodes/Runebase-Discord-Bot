@@ -4,7 +4,7 @@ import { calculateAssaSkillDamage } from './assassin';
 import { calculatePalaSkillDamage } from './paladin';
 import { calculateDruidSkillDamage } from './druid';
 import { calculateNecroSkillDamage } from './necromancer';
-import { calculateSorcSkillDamage } from './sorceress';
+import { calculateWizardSkillDamage } from './wizard';
 
 export const calculateSkillDamage = async (
   userCharacter,
@@ -40,8 +40,8 @@ export const calculateSkillDamage = async (
       attackOne,
     );
   }
-  if (userCharacter.class.name === 'Sorceress') {
-    attack = await calculateSorcSkillDamage(
+  if (userCharacter.class.name === 'Wizard') {
+    attack = await calculateWizardSkillDamage(
       skillToCalculate,
       attackOne,
     );

@@ -92,7 +92,7 @@ export const addEnergy = async (
       } else if (
         user.currentClass.name === 'Druid'
         || user.currentClass.name === 'Necromancer'
-        || user.currentClass.name === 'Sorceress'
+        || user.currentClass.name === 'Wizard'
       ) {
         addMana = 2;
       } else if (
