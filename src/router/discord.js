@@ -71,6 +71,10 @@ export const discordRouter = async (
     userInvites[invite.code] = invite.uses;
   });
 
+  discordClient.on("inviteDelete", (invite) => {
+    delete userInvites[invite.code];
+  });
+
   discordClient.on('guildMemberAdd', async (member) => {
     const setting = await db.setting.findOne();
     const newUser = await createUpdateDiscordUser(
@@ -81,7 +85,10 @@ export const discordRouter = async (
     if (member.guild.id === setting.discordHomeServerGuildId) {
       member.guild.invites.fetch().then((guildInvites) => { // get all guild invites
         guildInvites.each(async (invite) => { // basically a for loop over the invites
-          if (invite.uses !== userInvites[invite.code]) { // if it doesn't match what we stored:
+          if (
+            invite.uses !== userInvites[invite.code]
+          ) {
+            userInvites[invite.code] = invite.uses;
             await queue.add(async () => {
               const findUserJoinedRecord = await db.userJoined.findOne({
                 where: {
@@ -91,11 +98,11 @@ export const discordRouter = async (
               if (!findUserJoinedRecord) {
                 const inviter = await db.user.findOne({
                   where: {
-                    user_id: invite.inviter.id,
+                    user_id: String(invite.inviterId),
                   },
                 });
                 if (inviter) {
-                  const newUserJoinedRecord = await db.userJoined.create({
+                  await db.userJoined.create({
                     userJoinedId: newUser.id,
                     userInvitedById: inviter.id,
                   });
