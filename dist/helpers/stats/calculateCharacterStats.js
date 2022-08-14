@@ -213,7 +213,7 @@ var calculateCharacterStats = /*#__PURE__*/function () {
               addedManaByItemEnergy = Math.round((energy - initialEnergy) * 2);
             }
 
-            if (currentCharacter["class"].name === 'Sorceress') {
+            if (currentCharacter["class"].name === 'Wizard') {
               addedLifeByItemVitality = (vitality - initialVitality) * 2;
               addedManaByItemEnergy = Math.round((energy - initialEnergy) * 2);
             }

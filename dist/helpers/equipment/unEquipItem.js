@@ -227,7 +227,7 @@ var unEquipItem = /*#__PURE__*/function () {
                                   return (0, _Armor.unEquipArmor)(userCurrentCharacter, t);
 
                                 case 30:
-                                  if (!(findItemToUnEquip.itemBase.itemFamily.itemType.name === 'Shields' || findItemToUnEquip.itemBase.itemFamily.itemType.name === 'Sorceress Orbs' || findItemToUnEquip.itemBase.itemFamily.itemType.name === 'Paladin Shields' || findItemToUnEquip.itemBase.itemFamily.itemType.name === 'Necromancer Shrunken Heads')) {
+                                  if (!(findItemToUnEquip.itemBase.itemFamily.itemType.name === 'Shields' || findItemToUnEquip.itemBase.itemFamily.itemType.name === 'Wizard Orbs' || findItemToUnEquip.itemBase.itemFamily.itemType.name === 'Paladin Shields' || findItemToUnEquip.itemBase.itemFamily.itemType.name === 'Necromancer Shrunken Heads')) {
                                     _context.next = 33;
                                     break;
                                   }

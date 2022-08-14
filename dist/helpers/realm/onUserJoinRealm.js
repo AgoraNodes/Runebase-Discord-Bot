@@ -15,8 +15,6 @@ var _asyncToGenerator2 = _interopRequireDefault(require("@babel/runtime/helpers/
 
 var _sequelize = require("sequelize");
 
-var _discord = require("discord.js");
-
 var _embeds = require("../../embeds");
 
 var _models = _interopRequireDefault(require("../../models"));

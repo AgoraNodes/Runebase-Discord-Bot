@@ -17,10 +17,6 @@ var _sequelize = require("sequelize");
 
 var _discord = require("discord.js");
 
-var _canvas = require("canvas");
-
-var _path = _interopRequireDefault(require("path"));
-
 var _embeds = require("../embeds");
 
 var _models = _interopRequireDefault(require("../models"));

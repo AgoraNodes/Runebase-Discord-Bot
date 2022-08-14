@@ -104,7 +104,7 @@ var addEnergy = /*#__PURE__*/function () {
 
                                   if (user.currentClass.name === 'Warrior') {
                                     addMana = 1;
-                                  } else if (user.currentClass.name === 'Druid' || user.currentClass.name === 'Necromancer' || user.currentClass.name === 'Sorceress') {
+                                  } else if (user.currentClass.name === 'Druid' || user.currentClass.name === 'Necromancer' || user.currentClass.name === 'Wizard') {
                                     addMana = 2;
                                   } else if (user.currentClass.name === 'Amazon' || user.currentClass.name === 'Paladin') {
                                     addMana = 1;

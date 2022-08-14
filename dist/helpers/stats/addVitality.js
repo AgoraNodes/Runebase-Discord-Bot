@@ -113,7 +113,7 @@ var addVitality = /*#__PURE__*/function () {
                                     addLife = 4;
                                   } else if (user.currentClass.name === 'Amazon' || user.currentClass.name === 'Assassin' || user.currentClass.name === 'Paladin') {
                                     addLife = 3;
-                                  } else if (user.currentClass.name === 'Druid' || user.currentClass.name === 'Necromancer' || user.currentClass.name === 'Sorceress') {
+                                  } else if (user.currentClass.name === 'Druid' || user.currentClass.name === 'Necromancer' || user.currentClass.name === 'Wizard') {
                                     addLife = 2;
                                   }
 

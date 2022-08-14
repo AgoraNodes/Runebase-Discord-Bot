@@ -326,7 +326,7 @@ var discordSkills = /*#__PURE__*/function () {
                             "default": index === skillTreeIndex
                           };
                         });
-                        skillMapEdit = userCurrentCharacter["class"].skillTrees[skillTreeIndex].skills.map(function (mySkill, index) {
+                        skillMapEdit = userCurrentCharacter["class"].skillTrees[Number(skillTreeIndex)].skills.map(function (mySkill, index) {
                           var emoji = _skillEmoji["default"].find(function (a) {
                             return a.name === mySkill.name;
                           });
@@ -344,7 +344,7 @@ var discordSkills = /*#__PURE__*/function () {
                         _context.t19 = (0, _messages.playingOnRealmMessage)(userCurrentCharacter);
                         _context.t20 = (0, _toConsumableArray2["default"])(jsonSkillInfo ? [(0, _embeds.skillInfoMessage)(jsonSkillInfo && jsonSkillInfo.name, jsonSkillInfo && jsonSkillInfo.description)] : []);
                         _context.next = 60;
-                        return (0, _skills.renderSkillScreen)(userCurrentCharacter, userCurrentCharacter["class"].skillTrees[skillTreeIndex], skillTreeIndex, selectedSkill, jsonSkillInfo, failAddSkillReason);
+                        return (0, _skills.renderSkillScreen)(userCurrentCharacter, userCurrentCharacter["class"].skillTrees[Number(skillTreeIndex)], skillTreeIndex, selectedSkill, jsonSkillInfo, failAddSkillReason);
 
                       case 60:
                         _context.t21 = _context.sent;

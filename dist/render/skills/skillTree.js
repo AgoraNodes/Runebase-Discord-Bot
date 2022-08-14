@@ -21,6 +21,7 @@ var _lodash = _interopRequireDefault(require("lodash"));
 
 var _grayScaleIcon = require("./grayScaleIcon");
 
+/* eslint-disable no-await-in-loop */
 function printAtWordWrap(context, text, x, y, lineHeight, fitWidth) {
   fitWidth = fitWidth || 0;
 
@@ -273,7 +274,7 @@ var renderSkillTreeImage = /*#__PURE__*/function () {
             return _context2.delegateYield(_loop2(_i), "t0", 63);
 
           case 63:
-            _i++;
+            _i += 1;
             _context2.next = 61;
             break;
 

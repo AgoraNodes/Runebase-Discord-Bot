@@ -36,7 +36,7 @@ var renderItemImage = /*#__PURE__*/function () {
             dexterityReqHeight = newItem.itemBase.dexterityReq ? 25 : 0;
             shieldAndBootsDamageHeight = (newItem.itemBase.itemFamily.itemType.name === "Shields" || newItem.itemBase.itemFamily.itemType.name === "Boots") && newItem.minDamage && newItem.maxDamage ? 25 : 0;
             isWeapon = !!(newItem.itemBase.itemFamily.itemType.name === "Axes" || newItem.itemBase.itemFamily.itemType.name === "Bows" || newItem.itemBase.itemFamily.itemType.name === "Crossbows" || newItem.itemBase.itemFamily.itemType.name === "Daggers" || newItem.itemBase.itemFamily.itemType.name === "Javelins" || newItem.itemBase.itemFamily.itemType.name === "Maces" || newItem.itemBase.itemFamily.itemType.name === "Polearms");
-            isClassSpecific = !!(newItem.itemBase.itemFamily.itemType.name === "Warrior Helms" || newItem.itemBase.itemFamily.itemType.name === "Druid Pelts" || newItem.itemBase.itemFamily.itemType.name === "Necromancer Shrunken Heads" || newItem.itemBase.itemFamily.itemType.name === "Paladin Shields" || newItem.itemBase.itemFamily.itemType.name === "Amazon Weapons" || newItem.itemBase.itemFamily.itemType.name === "Sorceress Orbs" || newItem.itemBase.itemFamily.itemType.name === "Assassin Katars");
+            isClassSpecific = !!(newItem.itemBase.itemFamily.itemType.name === "Warrior Helms" || newItem.itemBase.itemFamily.itemType.name === "Druid Pelts" || newItem.itemBase.itemFamily.itemType.name === "Necromancer Shrunken Heads" || newItem.itemBase.itemFamily.itemType.name === "Paladin Shields" || newItem.itemBase.itemFamily.itemType.name === "Amazon Weapons" || newItem.itemBase.itemFamily.itemType.name === "Wizard Orbs" || newItem.itemBase.itemFamily.itemType.name === "Assassin Katars");
             isShield = newItem.itemBase.itemFamily.itemType.name === "Shields";
             isBow = newItem.itemBase.itemFamily.itemType.name === "Bows";
             isRing = newItem.itemBase.itemFamily.itemType.name === "Rings";
@@ -171,9 +171,9 @@ var renderItemImage = /*#__PURE__*/function () {
               ctx.fillText("(Amazon Only)", 100, itemImage.height + 95 + shieldAndBootsDamageHeight + extraWeaponsHeight + extraShieldBlockHeight + extraThrowingJavelinHeight, 200);
             }
 
-            if (newItem.itemBase.itemFamily.itemType.name === "Sorceress Orbs") {
-              ctx.strokeText("(Sorceress Only)", 100, itemImage.height + 95 + shieldAndBootsDamageHeight + extraWeaponsHeight + extraShieldBlockHeight + extraThrowingJavelinHeight, 200);
-              ctx.fillText("(Sorceress Only)", 100, itemImage.height + 95 + shieldAndBootsDamageHeight + extraWeaponsHeight + extraShieldBlockHeight + extraThrowingJavelinHeight, 200);
+            if (newItem.itemBase.itemFamily.itemType.name === "Wizard Orbs") {
+              ctx.strokeText("(Wizard Only)", 100, itemImage.height + 95 + shieldAndBootsDamageHeight + extraWeaponsHeight + extraShieldBlockHeight + extraThrowingJavelinHeight, 200);
+              ctx.fillText("(Wizard Only)", 100, itemImage.height + 95 + shieldAndBootsDamageHeight + extraWeaponsHeight + extraShieldBlockHeight + extraThrowingJavelinHeight, 200);
             } // Level Req
 
 
@@ -199,9 +199,9 @@ var renderItemImage = /*#__PURE__*/function () {
             ctx.fillStyle = newItem.itemQuality.color;
             ctx.strokeStyle = "#164179";
 
-            for (i = 0; i < modifierStringArray.length; i++) {
-              ctx.strokeText(modifierStringArray[i], 100, itemImage.height + 95 + i * 25 + totalExtraHeight, 200);
-              ctx.fillText(modifierStringArray[i], 100, itemImage.height + 95 + i * 25 + totalExtraHeight, 200);
+            for (i = 0; i < modifierStringArray.length; i += 1) {
+              ctx.strokeText(modifierStringArray[parseInt(i, 10)], 100, itemImage.height + 95 + i * 25 + totalExtraHeight, 200);
+              ctx.fillText(modifierStringArray[parseInt(i, 10)], 100, itemImage.height + 95 + i * 25 + totalExtraHeight, 200);
             }
 
             _context.next = 64;

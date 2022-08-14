@@ -11,15 +11,15 @@ var drawPlayer = function drawPlayer(ctx, playerImage, number) {
   var y = 0;
 
   if (inAttackPosition) {
-    ctx.drawImage(playerImage[number], inAttackPosition.x - 20, // x position
+    ctx.drawImage(playerImage[Number(number)], inAttackPosition.x - 20, // x position
     inAttackPosition.y, // y position
-    playerImage[number].width, playerImage[number].height);
+    playerImage[Number(number)].width, playerImage[Number(number)].height);
   } else {
     x = 110;
     y = 130;
-    ctx.drawImage(playerImage[number], x, // x position
+    ctx.drawImage(playerImage[Number(number)], x, // x position
     y, // y position
-    playerImage[number].width, playerImage[number].height);
+    playerImage[Number(number)].width, playerImage[Number(number)].height);
   }
 
   return {

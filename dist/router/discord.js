@@ -134,6 +134,9 @@ var discordRouter = /*#__PURE__*/function () {
             discordClient.on('inviteCreate', function (invite) {
               userInvites[invite.code] = invite.uses;
             });
+            discordClient.on("inviteDelete", function (invite) {
+              delete userInvites[invite.code];
+            });
             discordClient.on('guildMemberAdd', /*#__PURE__*/function () {
               var _ref3 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee4(member) {
                 var setting, newUser;
@@ -162,13 +165,14 @@ var discordRouter = /*#__PURE__*/function () {
                                     switch (_context3.prev = _context3.next) {
                                       case 0:
                                         if (!(invite.uses !== userInvites[invite.code])) {
-                                          _context3.next = 3;
+                                          _context3.next = 4;
                                           break;
                                         }
 
-                                        _context3.next = 3;
+                                        userInvites[invite.code] = invite.uses;
+                                        _context3.next = 4;
                                         return queue.add( /*#__PURE__*/(0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee2() {
-                                          var findUserJoinedRecord, inviter, newUserJoinedRecord;
+                                          var findUserJoinedRecord, inviter;
                                           return _regenerator["default"].wrap(function _callee2$(_context2) {
                                             while (1) {
                                               switch (_context2.prev = _context2.next) {
@@ -184,14 +188,14 @@ var discordRouter = /*#__PURE__*/function () {
                                                   findUserJoinedRecord = _context2.sent;
 
                                                   if (findUserJoinedRecord) {
-                                                    _context2.next = 11;
+                                                    _context2.next = 10;
                                                     break;
                                                   }
 
                                                   _context2.next = 6;
                                                   return _models["default"].user.findOne({
                                                     where: {
-                                                      user_id: invite.inviter.id
+                                                      user_id: String(invite.inviterId)
                                                     }
                                                   });
 
@@ -199,7 +203,7 @@ var discordRouter = /*#__PURE__*/function () {
                                                   inviter = _context2.sent;
 
                                                   if (!inviter) {
-                                                    _context2.next = 11;
+                                                    _context2.next = 10;
                                                     break;
                                                   }
 
@@ -210,9 +214,6 @@ var discordRouter = /*#__PURE__*/function () {
                                                   });
 
                                                 case 10:
-                                                  newUserJoinedRecord = _context2.sent;
-
-                                                case 11:
                                                 case "end":
                                                   return _context2.stop();
                                               }
@@ -220,7 +221,7 @@ var discordRouter = /*#__PURE__*/function () {
                                           }, _callee2);
                                         })));
 
-                                      case 3:
+                                      case 4:
                                       case "end":
                                         return _context3.stop();
                                     }
@@ -2850,7 +2851,7 @@ var discordRouter = /*#__PURE__*/function () {
               };
             }());
 
-          case 8:
+          case 9:
           case "end":
             return _context48.stop();
         }

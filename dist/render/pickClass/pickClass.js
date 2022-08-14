@@ -118,7 +118,7 @@ var renderPickClassImage = /*#__PURE__*/function () {
             finalImage = _context.sent;
             return _context.abrupt("return", finalImage);
 
-          case 42:
+          case 41:
           case "end":
             return _context.stop();
         }

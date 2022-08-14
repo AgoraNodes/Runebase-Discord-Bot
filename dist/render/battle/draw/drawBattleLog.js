@@ -14,8 +14,8 @@ var drawBattleLog = function drawBattleLog(ctx, battleLogs) {
   ctx.font = 'normal 15px serif';
   ctx.fillStyle = 'black';
 
-  for (var i = 0; i < battleLogs.length; i++) {
-    ctx.fillText(battleLogs[i].log, 430, 17 + (i + 1) * 20, 210);
+  for (var i = 0; i < battleLogs.length; i += 1) {
+    ctx.fillText(battleLogs[Number(i)].log, 430, 17 + (i + 1) * 20, 210);
   }
 };
 

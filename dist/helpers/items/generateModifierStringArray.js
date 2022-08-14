@@ -11,16 +11,16 @@ var generateModifierStringArray = function generateModifierStringArray(newItem) 
   // console.log(newItem.itemBase.itemFamily.itemType);
   var modifierStringArray = [];
   Object.keys(newItem).forEach(function (key) {
-    if ((key === 'strength' || key === 'dexterity' || key === 'vitality' || key === 'energy') && newItem[key] !== null) {
-      modifierStringArray.push("+".concat(newItem[key], " to ").concat(key));
+    if ((key === 'strength' || key === 'dexterity' || key === 'vitality' || key === 'energy') && newItem[String(key)] !== null) {
+      modifierStringArray.push("+".concat(newItem[String(key)], " to ").concat(key));
     }
 
-    if (key === 'eDefense' && newItem[key] !== null) {
-      modifierStringArray.push("+".concat(newItem[key], "% Enhanced Defense"));
+    if (key === 'eDefense' && newItem[String(key)] !== null) {
+      modifierStringArray.push("+".concat(newItem[String(key)], "% Enhanced Defense"));
     }
 
-    if (key === 'eDamage' && newItem[key] !== null) {
-      modifierStringArray.push("+".concat(newItem[key], "% Enhanced Damage"));
+    if (key === 'eDamage' && newItem[String(key)] !== null) {
+      modifierStringArray.push("+".concat(newItem[String(key)], "% Enhanced Damage"));
     }
   });
   modifierStringArray.sort(function (a, b) {

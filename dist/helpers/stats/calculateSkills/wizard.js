@@ -3,9 +3,9 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.calculateSorcSkillDamage = void 0;
+exports.calculateWizardSkillDamage = void 0;
 
-var calculateSorcSkillDamage = function calculateSorcSkillDamage(skillToCalculate, attack) {
+var calculateWizardSkillDamage = function calculateWizardSkillDamage(skillToCalculate, attack) {
   var newMinDamage = attack.min;
   var newMaxDamage = attack.max;
   var newAttackRating = attack.ar;
@@ -27,4 +27,4 @@ var calculateSorcSkillDamage = function calculateSorcSkillDamage(skillToCalculat
   };
 };
 
-exports.calculateSorcSkillDamage = calculateSorcSkillDamage;
+exports.calculateWizardSkillDamage = calculateWizardSkillDamage;

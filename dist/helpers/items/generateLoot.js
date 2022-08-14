@@ -65,7 +65,7 @@ var generateLoot = /*#__PURE__*/function () {
               break;
             }
 
-            loot = lootQualityTable[i];
+            loot = lootQualityTable[Number(i)];
             chance = loot.chance;
 
             if (!(roll < chance)) {
@@ -80,7 +80,7 @@ var generateLoot = /*#__PURE__*/function () {
             roll -= chance;
 
           case 13:
-            ++i;
+            i += 1;
             _context.next = 6;
             break;
 

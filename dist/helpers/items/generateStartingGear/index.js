@@ -17,7 +17,7 @@ var _warrior = require("./warrior");
 
 var _paladin = require("./paladin");
 
-var _sorceress = require("./sorceress");
+var _wizard = require("./wizard");
 
 var _druid = require("./druid");
 
@@ -29,7 +29,7 @@ var _amazon = require("./amazon");
 
 var generateStartGear = /*#__PURE__*/function () {
   var _ref = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(className, t) {
-    var mainHand, offHand, _yield$generateWarrio, _yield$generateWarrio2, _yield$generatePaladi, _yield$generatePaladi2, _yield$generateNecrom, _yield$generateNecrom2, _yield$generateSorcer, _yield$generateSorcer2, _yield$generateDruidS, _yield$generateDruidS2, _yield$generateAssass, _yield$generateAssass2, _yield$generateAmazon, _yield$generateAmazon2;
+    var mainHand, offHand, _yield$generateWarrio, _yield$generateWarrio2, _yield$generatePaladi, _yield$generatePaladi2, _yield$generateNecrom, _yield$generateNecrom2, _yield$generateWizard, _yield$generateWizard2, _yield$generateDruidS, _yield$generateDruidS2, _yield$generateAssass, _yield$generateAssass2, _yield$generateAmazon, _yield$generateAmazon2;
 
     return _regenerator["default"].wrap(function _callee$(_context) {
       while (1) {
@@ -80,19 +80,19 @@ var generateStartGear = /*#__PURE__*/function () {
             offHand = _yield$generateNecrom2[1];
 
           case 21:
-            if (!(className === 'Sorceress')) {
+            if (!(className === 'Wizard')) {
               _context.next = 28;
               break;
             }
 
             _context.next = 24;
-            return (0, _sorceress.generateSorceressStartGear)(t);
+            return (0, _wizard.generateWizardStartGear)(t);
 
           case 24:
-            _yield$generateSorcer = _context.sent;
-            _yield$generateSorcer2 = (0, _slicedToArray2["default"])(_yield$generateSorcer, 2);
-            mainHand = _yield$generateSorcer2[0];
-            offHand = _yield$generateSorcer2[1];
+            _yield$generateWizard = _context.sent;
+            _yield$generateWizard2 = (0, _slicedToArray2["default"])(_yield$generateWizard, 2);
+            mainHand = _yield$generateWizard2[0];
+            offHand = _yield$generateWizard2[1];
 
           case 28:
             if (!(className === 'Druid')) {

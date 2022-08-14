@@ -706,7 +706,12 @@ var discordPickClass = /*#__PURE__*/function () {
 
                       case 17:
                         // Increase/decrease index
-                        interaction.customId === 'back' ? currentIndex -= 1 : currentIndex += 1; // Load another character
+                        if (interaction.customId === 'back') {
+                          currentIndex -= 1;
+                        } else {
+                          currentIndex += 1;
+                        } // Load another character
+
 
                         _context4.t6 = interaction;
                         _context4.next = 21;

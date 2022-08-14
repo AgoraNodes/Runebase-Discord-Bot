@@ -17,8 +17,6 @@ var _path = _interopRequireDefault(require("path"));
 
 var _lodash = _interopRequireDefault(require("lodash"));
 
-var _discord = require("discord.js");
-
 var renderClassPicked = /*#__PURE__*/function () {
   var _ref = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(start, classes, user) {
     var current, canvas, ctx, newClassImage, finalImage;

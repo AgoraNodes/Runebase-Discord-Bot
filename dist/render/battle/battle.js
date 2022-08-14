@@ -377,7 +377,7 @@ var renderBattleGif = /*#__PURE__*/function () {
                     battleMonster = _step5$value[1];
 
                 if (battleMonster.currentHp > 0) {
-                  enemyPosition[i] = (0, _drawEnemy.drawEnemy)(ctx, // CTX
+                  enemyPosition[Number(i)] = (0, _drawEnemy.drawEnemy)(ctx, // CTX
                   BattleMonsters.find(function (element) {
                     return element.id === battleMonster.id;
                   }), // MonsterState
@@ -465,7 +465,7 @@ var renderBattleGif = /*#__PURE__*/function () {
 
                               if (battleMonster.currentHp > 0) {
                                 // const findUpdatedMonsterState = monsterInfo.find((element) => element.monsterId === battleMonster.id);
-                                enemyPosition[i] = (0, _drawEnemy.drawEnemy)(ctx, // CTX
+                                enemyPosition[Number(i)] = (0, _drawEnemy.drawEnemy)(ctx, // CTX
                                 BattleMonsters.find(function (element) {
                                   return element.id === battleMonster.id;
                                 }), // MonsterState
@@ -549,7 +549,7 @@ var renderBattleGif = /*#__PURE__*/function () {
                                   battleMonster = _step11$value[1];
 
                               if (battleMonster.currentHp > 0) {
-                                enemyPosition[i] = (0, _drawEnemy.drawEnemy)(ctx, // CTX
+                                enemyPosition[Number(i)] = (0, _drawEnemy.drawEnemy)(ctx, // CTX
                                 BattleMonsters.find(function (element) {
                                   return element.id === battleMonster.id;
                                 }), // MonsterState
@@ -682,7 +682,7 @@ var renderBattleGif = /*#__PURE__*/function () {
 
                       if (battleMonster.currentHp > 0) {
                         // const findUpdatedMonsterState = monsterInfo.find((element) => element.monsterId === battleMonster.id);
-                        enemyPosition[i] = (0, _drawEnemy.drawEnemy)(ctx, // CTX
+                        enemyPosition[Number(i)] = (0, _drawEnemy.drawEnemy)(ctx, // CTX
                         BattleMonsters.find(function (element) {
                           return element.id === battleMonster.id;
                         }), // MonsterState
@@ -769,7 +769,7 @@ var renderBattleGif = /*#__PURE__*/function () {
                           battleMonster = _step16$value[1];
 
                       if (battleMonster.currentHp > 0) {
-                        enemyPosition[i] = (0, _drawEnemy.drawEnemy)(ctx, // CTX
+                        enemyPosition[Number(i)] = (0, _drawEnemy.drawEnemy)(ctx, // CTX
                         BattleMonsters.find(function (element) {
                           return element.id === battleMonster.id;
                         }), // MonsterState
@@ -863,7 +863,7 @@ var renderBattleGif = /*#__PURE__*/function () {
                           battleMonster = _step18$value[1];
 
                       if (battleMonster.currentHp > 0) {
-                        enemyPosition[i] = (0, _drawEnemy.drawEnemy)(ctx, // CTX
+                        enemyPosition[Number(i)] = (0, _drawEnemy.drawEnemy)(ctx, // CTX
                         BattleMonsters.find(function (element) {
                           return element.id === battleMonster.id;
                         }), // MonsterState
@@ -977,7 +977,7 @@ var renderBattleGif = /*#__PURE__*/function () {
                           battleMonster = _step21$value[1];
 
                       if (battleMonster.currentHp > 0) {
-                        enemyPosition[i] = (0, _drawEnemy.drawEnemy)(ctx, // CTX
+                        enemyPosition[Number(i)] = (0, _drawEnemy.drawEnemy)(ctx, // CTX
                         BattleMonsters.find(function (element) {
                           return element.id === battleMonster.id;
                         }), // MonsterState
@@ -1039,7 +1039,7 @@ var renderBattleGif = /*#__PURE__*/function () {
                           battleMonster = _step22$value[1];
 
                       if (battleMonster.currentHp > 0) {
-                        enemyPosition[i] = (0, _drawEnemy.drawEnemy)(ctx, // CTX
+                        enemyPosition[Number(i)] = (0, _drawEnemy.drawEnemy)(ctx, // CTX
                         BattleMonsters.find(function (element) {
                           return element.id === battleMonster.id;
                         }), // MonsterState
@@ -1114,7 +1114,7 @@ var renderBattleGif = /*#__PURE__*/function () {
                           battleMonster = _step23$value[1];
 
                       if (battleMonster.currentHp > 0) {
-                        enemyPosition[i] = (0, _drawEnemy.drawEnemy)(ctx, // CTX
+                        enemyPosition[Number(i)] = (0, _drawEnemy.drawEnemy)(ctx, // CTX
                         BattleMonsters.find(function (element) {
                           return element.id === battleMonster.id;
                         }), // MonsterState
@@ -1180,7 +1180,7 @@ var renderBattleGif = /*#__PURE__*/function () {
                           battleMonster = _step24$value[1];
 
                       if (battleMonster.currentHp > 0) {
-                        enemyPosition[i] = (0, _drawEnemy.drawEnemy)(ctx, // CTX
+                        enemyPosition[Number(i)] = (0, _drawEnemy.drawEnemy)(ctx, // CTX
                         BattleMonsters.find(function (element) {
                           return element.id === battleMonster.id;
                         }), // MonsterState
@@ -1246,7 +1246,7 @@ var renderBattleGif = /*#__PURE__*/function () {
                           battleMonster = _step25$value[1];
 
                       if (battleMonster.currentHp > 0) {
-                        enemyPosition[i] = (0, _drawEnemy.drawEnemy)(ctx, // CTX
+                        enemyPosition[Number(i)] = (0, _drawEnemy.drawEnemy)(ctx, // CTX
                         BattleMonsters.find(function (element) {
                           return element.id === battleMonster.id;
                         }), // MonsterState
@@ -1325,7 +1325,7 @@ var renderBattleGif = /*#__PURE__*/function () {
                           battleMonster = _step27$value[1];
 
                       if (battleMonster.currentHp > 0) {
-                        enemyPosition[i] = (0, _drawEnemy.drawEnemy)(ctx, // CTX
+                        enemyPosition[Number(i)] = (0, _drawEnemy.drawEnemy)(ctx, // CTX
                         BattleMonsters.find(function (element) {
                           return element.id === battleMonster.id;
                         }), // MonsterState
@@ -1374,7 +1374,7 @@ var renderBattleGif = /*#__PURE__*/function () {
 
                       if (battleMonster.currentHp > 0) {
                         // const findUpdatedMonsterState = monsterInfo.find((element) => element.monsterId === battleMonster.id);
-                        enemyPosition[i] = (0, _drawEnemy.drawEnemy)(ctx, // CTX
+                        enemyPosition[Number(i)] = (0, _drawEnemy.drawEnemy)(ctx, // CTX
                         BattleMonsters.find(function (element) {
                           return element.id === battleMonster.id;
                         }), // MonsterState
@@ -1467,7 +1467,7 @@ var renderBattleGif = /*#__PURE__*/function () {
                           battleMonster = _step30$value[1];
 
                       if (battleMonster.currentHp > 0) {
-                        enemyPosition[i] = (0, _drawEnemy.drawEnemy)(ctx, // CTX
+                        enemyPosition[Number(i)] = (0, _drawEnemy.drawEnemy)(ctx, // CTX
                         BattleMonsters.find(function (element) {
                           return element.id === battleMonster.id;
                         }), // MonsterState
@@ -1557,7 +1557,7 @@ var renderBattleGif = /*#__PURE__*/function () {
                           battleMonster = _step32$value[1];
 
                       if (battleMonster.currentHp > 0) {
-                        enemyPosition[i] = (0, _drawEnemy.drawEnemy)(ctx, // CTX
+                        enemyPosition[Number(i)] = (0, _drawEnemy.drawEnemy)(ctx, // CTX
                         BattleMonsters.find(function (element) {
                           return element.id === battleMonster.id;
                         }), // MonsterState
@@ -1638,7 +1638,7 @@ var renderBattleGif = /*#__PURE__*/function () {
                           battleMonster = _step34$value[1];
 
                       if (battleMonster.currentHp > 0) {
-                        enemyPosition[i] = (0, _drawEnemy.drawEnemy)(ctx, // CTX
+                        enemyPosition[Number(i)] = (0, _drawEnemy.drawEnemy)(ctx, // CTX
                         BattleMonsters.find(function (element) {
                           return element.id === battleMonster.id;
                         }), // MonsterState
@@ -1726,7 +1726,7 @@ var renderBattleGif = /*#__PURE__*/function () {
                           battleMonster = _step36$value[1];
 
                       if (battleMonster.currentHp > 0) {
-                        enemyPosition[i] = (0, _drawEnemy.drawEnemy)(ctx, // CTX
+                        enemyPosition[Number(i)] = (0, _drawEnemy.drawEnemy)(ctx, // CTX
                         BattleMonsters.find(function (element) {
                           return element.id === battleMonster.id;
                         }), // MonsterState
@@ -1775,7 +1775,7 @@ var renderBattleGif = /*#__PURE__*/function () {
 
                       if (battleMonster.currentHp > 0) {
                         // const findUpdatedMonsterState = monsterInfo.find((element) => element.monsterId === battleMonster.id);
-                        enemyPosition[i] = (0, _drawEnemy.drawEnemy)(ctx, // CTX
+                        enemyPosition[Number(i)] = (0, _drawEnemy.drawEnemy)(ctx, // CTX
                         BattleMonsters.find(function (element) {
                           return element.id === battleMonster.id;
                         }), // MonsterState
@@ -1864,7 +1864,7 @@ var renderBattleGif = /*#__PURE__*/function () {
                           battleMonster = _step39$value[1];
 
                       if (battleMonster.currentHp > 0) {
-                        enemyPosition[i] = (0, _drawEnemy.drawEnemy)(ctx, // CTX
+                        enemyPosition[Number(i)] = (0, _drawEnemy.drawEnemy)(ctx, // CTX
                         BattleMonsters.find(function (element) {
                           return element.id === battleMonster.id;
                         }), // MonsterState
@@ -1954,7 +1954,7 @@ var renderBattleGif = /*#__PURE__*/function () {
                           battleMonster = _step41$value[1];
 
                       if (battleMonster.currentHp > 0) {
-                        enemyPosition[i] = (0, _drawEnemy.drawEnemy)(ctx, // CTX
+                        enemyPosition[Number(i)] = (0, _drawEnemy.drawEnemy)(ctx, // CTX
                         BattleMonsters.find(function (element) {
                           return element.id === battleMonster.id;
                         }), // MonsterState
@@ -2035,7 +2035,7 @@ var renderBattleGif = /*#__PURE__*/function () {
                           battleMonster = _step43$value[1];
 
                       if (battleMonster.currentHp > 0) {
-                        enemyPosition[i] = (0, _drawEnemy.drawEnemy)(ctx, // CTX
+                        enemyPosition[Number(i)] = (0, _drawEnemy.drawEnemy)(ctx, // CTX
                         BattleMonsters.find(function (element) {
                           return element.id === battleMonster.id;
                         }), // MonsterState
@@ -2114,7 +2114,7 @@ var renderBattleGif = /*#__PURE__*/function () {
                           battleMonster = _step45$value[1];
 
                       if (battleMonster.currentHp > 0) {
-                        enemyPosition[i] = (0, _drawEnemy.drawEnemy)(ctx, // CTX
+                        enemyPosition[Number(i)] = (0, _drawEnemy.drawEnemy)(ctx, // CTX
                         BattleMonsters.find(function (element) {
                           return element.id === battleMonster.id;
                         }), // MonsterState
@@ -2163,7 +2163,7 @@ var renderBattleGif = /*#__PURE__*/function () {
 
                       if (battleMonster.currentHp > 0) {
                         // const findUpdatedMonsterState = monsterInfo.find((element) => element.monsterId === battleMonster.id);
-                        enemyPosition[i] = (0, _drawEnemy.drawEnemy)(ctx, // CTX
+                        enemyPosition[Number(i)] = (0, _drawEnemy.drawEnemy)(ctx, // CTX
                         BattleMonsters.find(function (element) {
                           return element.id === battleMonster.id;
                         }), // MonsterState
@@ -2226,7 +2226,7 @@ var renderBattleGif = /*#__PURE__*/function () {
                           battleMonster = _step47$value[1];
 
                       if (battleMonster.currentHp > 0) {
-                        enemyPosition[i] = (0, _drawEnemy.drawEnemy)(ctx, // CTX
+                        enemyPosition[Number(i)] = (0, _drawEnemy.drawEnemy)(ctx, // CTX
                         BattleMonsters.find(function (element) {
                           return element.id === battleMonster.id;
                         }), // MonsterState
@@ -2291,7 +2291,7 @@ var renderBattleGif = /*#__PURE__*/function () {
                           battleMonster = _step48$value[1];
 
                       if (battleMonster.currentHp > 0) {
-                        enemyPosition[i] = (0, _drawEnemy.drawEnemy)(ctx, // CTX
+                        enemyPosition[Number(i)] = (0, _drawEnemy.drawEnemy)(ctx, // CTX
                         BattleMonsters.find(function (element) {
                           return element.id === battleMonster.id;
                         }), // MonsterState
@@ -2347,7 +2347,7 @@ var renderBattleGif = /*#__PURE__*/function () {
                           battleMonster = _step49$value[1];
 
                       if (battleMonster.currentHp > 0) {
-                        enemyPosition[i] = (0, _drawEnemy.drawEnemy)(ctx, // CTX
+                        enemyPosition[Number(i)] = (0, _drawEnemy.drawEnemy)(ctx, // CTX
                         BattleMonsters.find(function (element) {
                           return element.id === battleMonster.id;
                         }), // MonsterState
@@ -2421,7 +2421,7 @@ var renderBattleGif = /*#__PURE__*/function () {
                           battleMonster = _step51$value[1];
 
                       if (battleMonster.currentHp > 0) {
-                        enemyPosition[i] = (0, _drawEnemy.drawEnemy)(ctx, // CTX
+                        enemyPosition[Number(i)] = (0, _drawEnemy.drawEnemy)(ctx, // CTX
                         BattleMonsters.find(function (element) {
                           return element.id === battleMonster.id;
                         }), // MonsterState
@@ -2468,7 +2468,7 @@ var renderBattleGif = /*#__PURE__*/function () {
 
                       if (battleMonster.currentHp > 0) {
                         // const findUpdatedMonsterState = monsterInfo.find((element) => element.monsterId === battleMonster.id);
-                        enemyPosition[i] = (0, _drawEnemy.drawEnemy)(ctx, // CTX
+                        enemyPosition[Number(i)] = (0, _drawEnemy.drawEnemy)(ctx, // CTX
                         BattleMonsters.find(function (element) {
                           return element.id === battleMonster.id;
                         }), // MonsterState
@@ -2530,7 +2530,7 @@ var renderBattleGif = /*#__PURE__*/function () {
                           battleMonster = _step53$value[1];
 
                       if (battleMonster.currentHp > 0) {
-                        enemyPosition[i] = (0, _drawEnemy.drawEnemy)(ctx, // CTX
+                        enemyPosition[Number(i)] = (0, _drawEnemy.drawEnemy)(ctx, // CTX
                         BattleMonsters.find(function (element) {
                           return element.id === battleMonster.id;
                         }), // MonsterState
@@ -2601,7 +2601,7 @@ var renderBattleGif = /*#__PURE__*/function () {
                           battleMonster = _step54$value[1];
 
                       if (battleMonster.currentHp > 0) {
-                        enemyPosition[i] = (0, _drawEnemy.drawEnemy)(ctx, // CTX
+                        enemyPosition[Number(i)] = (0, _drawEnemy.drawEnemy)(ctx, // CTX
                         BattleMonsters.find(function (element) {
                           return element.id === battleMonster.id;
                         }), // MonsterState
@@ -2648,7 +2648,7 @@ var renderBattleGif = /*#__PURE__*/function () {
 
                       if (battleMonster.currentHp > 0) {
                         // const findUpdatedMonsterState = monsterInfo.find((element) => element.monsterId === battleMonster.id);
-                        enemyPosition[i] = (0, _drawEnemy.drawEnemy)(ctx, // CTX
+                        enemyPosition[Number(i)] = (0, _drawEnemy.drawEnemy)(ctx, // CTX
                         BattleMonsters.find(function (element) {
                           return element.id === battleMonster.id;
                         }), // MonsterState

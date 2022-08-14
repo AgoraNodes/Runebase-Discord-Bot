@@ -33,9 +33,8 @@ var discordHelp = /*#__PURE__*/function () {
       while (1) {
         switch (_context3.prev = _context3.next) {
           case 0:
-            console.log('help 1');
             activity = [];
-            _context3.next = 4;
+            _context3.next = 3;
             return _models["default"].sequelize.transaction({
               isolationLevel: _sequelize.Transaction.ISOLATION_LEVELS.SERIALIZABLE
             }, /*#__PURE__*/function () {
@@ -67,30 +66,27 @@ var discordHelp = /*#__PURE__*/function () {
                         return _context.abrupt("return");
 
                       case 9:
-                        console.log('help 2');
-                        _context.next = 12;
+                        _context.next = 11;
                         return (0, _fetchDiscordChannel.fetchDiscordChannel)(discordClient, message);
 
-                      case 12:
+                      case 11:
                         discordChannel = _context.sent;
 
                         if (discordChannel) {
-                          _context.next = 15;
+                          _context.next = 14;
                           break;
                         }
 
                         return _context.abrupt("return");
 
-                      case 15:
-                        console.log('help 3');
-                        _context.next = 18;
+                      case 14:
+                        _context.next = 16;
                         return discordChannel.send({
                           embeds: [(0, _embeds.helpMessage)()]
                         });
 
-                      case 18:
-                        console.log('help 4');
-                        _context.next = 21;
+                      case 16:
+                        _context.next = 18;
                         return _models["default"].activity.create({
                           type: 'help_s',
                           earnerId: user.id
@@ -99,10 +95,9 @@ var discordHelp = /*#__PURE__*/function () {
                           transaction: t
                         });
 
-                      case 21:
+                      case 18:
                         preActivity = _context.sent;
-                        console.log('help 4');
-                        _context.next = 25;
+                        _context.next = 21;
                         return _models["default"].activity.findOne({
                           where: {
                             id: preActivity.id
@@ -115,11 +110,11 @@ var discordHelp = /*#__PURE__*/function () {
                           transaction: t
                         });
 
-                      case 25:
+                      case 21:
                         finalActivity = _context.sent;
                         activity.unshift(finalActivity);
 
-                      case 27:
+                      case 23:
                       case "end":
                         return _context.stop();
                     }
@@ -239,14 +234,14 @@ var discordHelp = /*#__PURE__*/function () {
               };
             }());
 
-          case 4:
+          case 3:
             if (activity.length > 0) {
               io.to('admin').emit('updateActivity', {
                 activity: activity
               });
             }
 
-          case 5:
+          case 4:
           case "end":
             return _context3.stop();
         }

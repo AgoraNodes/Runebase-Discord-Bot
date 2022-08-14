@@ -125,9 +125,9 @@ var renderSkillDescriptionImage = /*#__PURE__*/function () {
                       var skillValue;
 
                       if (key === 'rounds' || key === 'heal %') {
-                        skillValue = Math.round(value + jsonSkillInfo.next[key] * (_x / 18 - 1));
+                        skillValue = Math.round(value + jsonSkillInfo.next[String(key)] * (_x / 18 - 1));
                       } else {
-                        skillValue = value + jsonSkillInfo.next[key] * (_x / 18 - 1);
+                        skillValue = value + jsonSkillInfo.next[String(key)] * (_x / 18 - 1);
                       }
 
                       ctx.strokeText(skillValue, 40 + (p + 1) * columnWidth - columnWidth / 2, p + 74 + _x, columnWidth);

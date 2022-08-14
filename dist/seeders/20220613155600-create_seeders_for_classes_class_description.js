@@ -68,7 +68,7 @@ module.exports = {
               _context.next = 17;
               return queryInterface.rawSelect('classDescription', {
                 where: {
-                  name: 'Warrior'
+                  name: 'Barbarian'
                 }
               }, ['id']);
 

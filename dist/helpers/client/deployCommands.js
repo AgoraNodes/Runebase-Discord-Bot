@@ -13,7 +13,7 @@ var _asyncToGenerator2 = _interopRequireDefault(require("@babel/runtime/helpers/
 
 var _dotenv = require("dotenv");
 
-var _builders = require("@discordjs/builders");
+var _discord = require("discord.js");
 
 var _rest = require("@discordjs/rest");
 
@@ -22,7 +22,7 @@ var _v = require("discord-api-types/v9");
 var _models = _interopRequireDefault(require("../../models"));
 
 (0, _dotenv.config)();
-var commands = [new _builders.SlashCommandBuilder().setName('help').setDescription('DM\'s you with a help message'), new _builders.SlashCommandBuilder().setName('pickclass').setDescription('Select a new class'), new _builders.SlashCommandBuilder().setName('stats').setDescription('Select stats (attributes) for your class'), new _builders.SlashCommandBuilder().setName('skills').setDescription('Skill Management'), new _builders.SlashCommandBuilder().setName('resetstats').setDescription('Reset your Attributes/Stats'), new _builders.SlashCommandBuilder().setName('resetskills').setDescription('Reset your skills'), new _builders.SlashCommandBuilder().setName('changerealm').setDescription('Change your Realm'), new _builders.SlashCommandBuilder().setName('inventory').setDescription('Inventory Management'), new _builders.SlashCommandBuilder().setName('equipment').setDescription('Equipment Management'), new _builders.SlashCommandBuilder().setName('battle').setDescription('Battle a monster'), new _builders.SlashCommandBuilder().setName('heal').setDescription('Heal yourself'), new _builders.SlashCommandBuilder().setName('myrank').setDescription('Displays the user\'s rank'), new _builders.SlashCommandBuilder().setName('ranks').setDescription('Displays all the ranks'), new _builders.SlashCommandBuilder().setName('leaderboard').setDescription('Displays the top ten leaderboard'), new _builders.SlashCommandBuilder().setName('mostactive').setDescription('Displays the top ten most active users (chatting)'), new _builders.SlashCommandBuilder().setName('balance').setDescription('Display your balance'), new _builders.SlashCommandBuilder().setName('deposit').setDescription('Displays your deposit address!'), new _builders.SlashCommandBuilder().setName('withdraw').setDescription('Starts Withdrawal process'), new _builders.SlashCommandBuilder().setName('roll').setDescription('Roll the dice'), new _builders.SlashCommandBuilder().setName('price').setDescription('Displays Runebase price')].map(function (command) {
+var commands = [new _discord.SlashCommandBuilder().setName('help').setDescription('DM\'s you with a help message'), new _discord.SlashCommandBuilder().setName('pickclass').setDescription('Select a new class'), new _discord.SlashCommandBuilder().setName('stats').setDescription('Select stats (attributes) for your class'), new _discord.SlashCommandBuilder().setName('skills').setDescription('Skill Management'), new _discord.SlashCommandBuilder().setName('resetstats').setDescription('Reset your Attributes/Stats'), new _discord.SlashCommandBuilder().setName('resetskills').setDescription('Reset your skills'), new _discord.SlashCommandBuilder().setName('changerealm').setDescription('Change your Realm'), new _discord.SlashCommandBuilder().setName('inventory').setDescription('Inventory Management'), new _discord.SlashCommandBuilder().setName('equipment').setDescription('Equipment Management'), new _discord.SlashCommandBuilder().setName('battle').setDescription('Battle a monster'), new _discord.SlashCommandBuilder().setName('heal').setDescription('Heal yourself'), new _discord.SlashCommandBuilder().setName('myrank').setDescription('Displays the user\'s rank'), new _discord.SlashCommandBuilder().setName('ranks').setDescription('Displays all the ranks'), new _discord.SlashCommandBuilder().setName('leaderboard').setDescription('Displays the top ten leaderboard'), new _discord.SlashCommandBuilder().setName('mostactive').setDescription('Displays the top ten most active users (chatting)'), new _discord.SlashCommandBuilder().setName('balance').setDescription('Display your balance'), new _discord.SlashCommandBuilder().setName('deposit').setDescription('Displays your deposit address!'), new _discord.SlashCommandBuilder().setName('withdraw').setDescription('Starts Withdrawal process'), new _discord.SlashCommandBuilder().setName('roll').setDescription('Roll the dice'), new _discord.SlashCommandBuilder().setName('price').setDescription('Displays Runebase price')].map(function (command) {
   return command.toJSON();
 });
 
@@ -39,7 +39,7 @@ var deployCommands = /*#__PURE__*/function () {
           case 2:
             setting = _context.sent;
             rest = new _rest.REST({
-              version: '9'
+              version: '10'
             }).setToken(botToken);
             rest.put(_v.Routes.applicationCommands(clientId), {
               body: commands

@@ -108,9 +108,9 @@ var drawEnemy = function drawEnemy(ctx, monster, isSelected, enemyFrame, debuffI
   ctx.strokeStyle = 'red';
   ctx.strokeRect(x - 5, y, 40 * hpPercentage, 0); // Enemy Image
 
-  ctx.drawImage(enemyFrame[number], x, // x position
+  ctx.drawImage(enemyFrame[Number(number)], x, // x position
   y, // y position
-  enemyFrame[number].width / 1.5, enemyFrame[number].height / 1.5); // console.log(monster);
+  enemyFrame[Number(number)].width / 1.5, enemyFrame[Number(number)].height / 1.5); // console.log(monster);
   // console.log('monster');
 
   if (monster.stunned) {

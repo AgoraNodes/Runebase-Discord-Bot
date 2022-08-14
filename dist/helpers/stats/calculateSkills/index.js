@@ -23,7 +23,7 @@ var _druid = require("./druid");
 
 var _necromancer = require("./necromancer");
 
-var _sorceress = require("./sorceress");
+var _wizard = require("./wizard");
 
 var calculateSkillDamage = /*#__PURE__*/function () {
   var _ref = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(userCharacter, skillToCalculate, attackOne, t) {
@@ -84,13 +84,13 @@ var calculateSkillDamage = /*#__PURE__*/function () {
             attack = _context.sent;
 
           case 18:
-            if (!(userCharacter["class"].name === 'Sorceress')) {
+            if (!(userCharacter["class"].name === 'Wizard')) {
               _context.next = 22;
               break;
             }
 
             _context.next = 21;
-            return (0, _sorceress.calculateSorcSkillDamage)(skillToCalculate, attackOne);
+            return (0, _wizard.calculateWizardSkillDamage)(skillToCalculate, attackOne);
 
           case 21:
             attack = _context.sent;

@@ -5,7 +5,7 @@ var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefau
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.generateSorceressStartGear = void 0;
+exports.generateWizardStartGear = void 0;
 
 var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
 
@@ -13,7 +13,7 @@ var _asyncToGenerator2 = _interopRequireDefault(require("@babel/runtime/helpers/
 
 var _generateSpecificStartGear = require("./utils/generateSpecificStartGear");
 
-var generateSorceressStartGear = /*#__PURE__*/function () {
+var generateWizardStartGear = /*#__PURE__*/function () {
   var _ref = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(t) {
     var mainHand, offHand;
     return _regenerator["default"].wrap(function _callee$(_context) {
@@ -36,9 +36,9 @@ var generateSorceressStartGear = /*#__PURE__*/function () {
     }, _callee);
   }));
 
-  return function generateSorceressStartGear(_x) {
+  return function generateWizardStartGear(_x) {
     return _ref.apply(this, arguments);
   };
 }();
 
-exports.generateSorceressStartGear = generateSorceressStartGear;
+exports.generateWizardStartGear = generateWizardStartGear;
