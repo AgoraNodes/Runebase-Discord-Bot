@@ -7,6 +7,7 @@
   ],
   "conventionalCommits.scopes": [
     "package.json",
-    "myRank"
+    "myRank",
+    "skills"
   ]
 }

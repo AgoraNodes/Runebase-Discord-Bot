@@ -306,6 +306,154 @@ const wizard = [
       "damageBonus %": 5,
     },
   },
+
+  // Lightning Spells
+  {
+    name: "Charged Bolt",
+    description: "Creates a charged bolt.",
+    initial: {
+      minDamage: 2, // Starting min damage
+      maxDamage: 4, // Starting max damage
+      cost: 3,
+    },
+    next: {
+      minDamage: 55, // Percentage damage added each level (on starting damage)
+      maxDamage: 47, // Percentage damage added each level (on starting damage)
+      cost: 0, // mana cost added each level
+    },
+  },
+  {
+    name: "Telekinesis",
+    description: "Creates a charged bolt.",
+    initial: {
+      minDamage: 2, // Starting min damage
+      maxDamage: 4, // Starting max damage
+      "stun %": 10,
+      cost: 3,
+    },
+    next: {
+      minDamage: 55, // Percentage damage added each level (on starting damage)
+      maxDamage: 47, // Percentage damage added each level (on starting damage)
+      "stun %": 2,
+      cost: 0, // mana cost added each level
+    },
+  },
+  {
+    name: "Static Field",
+    description: "Removes % of enemies health",
+    initial: {
+      damage: 5,
+      cost: 3,
+    },
+    next: {
+      damage: 3,
+      cost: 0, // mana cost added each level
+    },
+  },
+  {
+    name: "Lightning",
+    description: "Shock all enemies",
+    initial: {
+      minDamage: 1, // Starting min damage
+      maxDamage: 43, // Starting max damage
+      cost: 3,
+    },
+    next: {
+      minDamage: 55, // Starting min damage
+      maxDamage: 47, // Starting max damage
+      cost: 0, // mana cost added each level
+    },
+  },
+  {
+    name: "Nova",
+    description: "Shock all enemies and chance to stun enemy",
+    initial: {
+      minDamage: 1, // Starting min damage
+      maxDamage: 20, // Starting max damage
+      "stun %": 5,
+      cost: 3,
+    },
+    next: {
+      minDamage: 55, // Starting min damage
+      maxDamage: 47, // Starting max damage
+      "stun %": 3,
+      cost: 0, // mana cost added each level
+    },
+  },
+  {
+    name: "Chain Lightning",
+    description: "Damages x amount of enemies and chance to stun enemy",
+    initial: {
+      minDamage: 1, // Starting min damage
+      maxDamage: 40, // Starting max damage
+      enemies: 2,
+      "stun %": 5,
+      cost: 3,
+    },
+    next: {
+      minDamage: 55, // Starting min damage
+      maxDamage: 47, // Starting max damage
+      enemies: 0.1,
+      "stun %": 1,
+      cost: 0, // mana cost added each level
+    },
+  },
+  {
+    name: "Teleport",
+    description: "This will be renamed to Lightning Armor (armor + chance to stun enemy)",
+    initial: {
+      "armorBonus %": 45,
+      "stun %": 10,
+      rounds: 3,
+      cost: 11,
+    },
+    next: {
+      "armorBonus %": 5,
+      "stun %": 2,
+      rounds: 1,
+      cost: 0,
+    },
+  },
+  {
+    name: "Thunder Storm",
+    description: "Hit a random enemy with lightning damage each round",
+    initial: {
+      minDamage: 1, // Starting min damage
+      maxDamage: 100, // Starting max damage
+      rounds: 2,
+      cost: 19,
+    },
+    next: {
+      minDamage: 10, // Starting min damage
+      maxDamage: 10, // Starting max damage
+      rounds: 1,
+      cost: 0, // mana cost added each level
+    },
+  },
+  {
+    name: "Energy Shield",
+    description: "Absorbs damage to Mana instead of Life for x amount of rounds.",
+    initial: {
+      'absorb %': 20, // Starting min damage
+      rounds: 2,
+      cost: 19,
+    },
+    next: {
+      'absorb %': 3, // Starting min damage
+      rounds: 1,
+      cost: 0,
+    },
+  },
+  {
+    name: "Lightning Mastery",
+    description: "Add extra Lightning Damage",
+    initial: {
+      "damageBonus %": 20,
+    },
+    next: {
+      "damageBonus %": 5,
+    },
+  },
 ];
 
 export default wizard;
