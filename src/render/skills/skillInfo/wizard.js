@@ -156,6 +156,156 @@ const wizard = [
       "damageBonus %": 5,
     },
   },
+
+  // Fire Spells
+  {
+    name: "Fire Bolt",
+    description: "Creates a bolt of fire.",
+    initial: {
+      minDamage: 3, // Starting min damage
+      maxDamage: 6, // Starting max damage
+      cost: 3,
+    },
+    next: {
+      minDamage: 55, // Percentage damage added each level (on starting damage)
+      maxDamage: 47, // Percentage damage added each level (on starting damage)
+      cost: 0, // mana cost added each level
+    },
+  },
+  {
+    name: "Fireball",
+    description: "Creates a ball of fire that explodes on impact.",
+    initial: {
+      minDamage: 6, // Starting min damage
+      maxDamage: 15, // Starting max damage
+      cost: 5,
+    },
+    next: {
+      minDamage: 55, // Percentage damage added each level (on starting damage)
+      maxDamage: 47, // Percentage damage added each level (on starting damage)
+      cost: 1, // mana cost added each level
+    },
+  },
+  {
+    name: "Fire Wall",
+    description: "Creates a wall of fire.",
+    initial: {
+      minDamage: 70, // Starting min damage
+      maxDamage: 94, // Starting max damage
+      rounds: 2,
+      cost: 22,
+    },
+    next: {
+      minDamage: 55, // Percentage damage added each level (on starting damage)
+      maxDamage: 47, // Percentage damage added each level (on starting damage)
+      rounds: 1,
+      cost: 1, // mana cost added each level
+    },
+  },
+  {
+    name: "Inferno",
+    description: "Put enemies on fire",
+    initial: {
+      minDamage: 12, // Starting min damage
+      maxDamage: 25, // Starting max damage
+      rounds: 2,
+      cost: 7,
+    },
+    next: {
+      minDamage: 55, // Percentage damage added each level (on starting damage)
+      maxDamage: 47, // Percentage damage added each level (on starting damage)
+      rounds: 0.5,
+      cost: 0, // mana cost added each level
+    },
+  },
+  {
+    name: "Meteor",
+    description: "Draws down a meteor from the heavens to smash your enemies. puts enemies on fire for x rounds",
+    initial: {
+      minDamage: 12, // Starting min damage
+      maxDamage: 25, // Starting max damage
+      rounds: 2,
+      cost: 17,
+    },
+    next: {
+      minDamage: 55, // Percentage damage added each level (on starting damage)
+      maxDamage: 47, // Percentage damage added each level (on starting damage)
+      rounds: 0.5,
+      cost: 2, // mana cost added each level
+    },
+  },
+  {
+    name: "Blaze",
+    description: "Smoke a pipe, increase fire damage and add critical strike to fire spells for x amount of rounds",
+    initial: {
+      "damageBonus %": 28,
+      "critcalStrike %": 5,
+      rounds: 2,
+      cost: 11,
+    },
+    next: {
+      "damageBonus %": 5,
+      "critcalStrike %": 2,
+      rounds: 1,
+      cost: 0, // mana cost added each level
+    },
+  },
+  {
+    name: "Warmth",
+    description: "Regenerates Mana each round",
+    initial: {
+      regen: 1, // Amount of mana regenerated
+    },
+    next: {
+      regen: 1, // Amount of mana regenerated added each level
+    },
+  },
+  {
+    name: "Enchant",
+    description: "This will be renamed to Fire Armor (armor + chance to put enemy on fire)",
+    initial: {
+      "armorBonus %": 45,
+      "immolate %": 10,
+      minDamage: 5,
+      maxDamage: 10,
+      rounds: 3,
+      cost: 11,
+    },
+    next: {
+      "armorBonus %": 5,
+      "immolate %": 2,
+      minDamage: 20,
+      maxDamage: 20,
+      rounds: 1,
+      cost: 0,
+    },
+  },
+  {
+    name: "Hydra",
+    description: "This will be renamed to Fireball Armor (armor + chance to cast a fireball)",
+    initial: {
+      "armorBonus %": 50,
+      "fireball %": 10,
+      rounds: 3,
+      cost: 11,
+    },
+    next: {
+      "armorBonus %": 5,
+      "fireball %": 2,
+      rounds: 1,
+      cost: 0,
+    },
+  },
+  {
+    name: "Fire Mastery",
+    description: "Add extra Fire Damage",
+    initial: {
+      "damageBonus %": 20,
+    },
+    next: {
+      "damageBonus %": 5,
+    },
+  },
 ];
 
 export default wizard;
