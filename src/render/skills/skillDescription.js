@@ -168,6 +168,11 @@ export const renderSkillDescriptionImage = async (
             || key === 'heal %'
           ) {
             skillValue = Math.round(value + (jsonSkillInfo.next[String(key)] * ((x / 18) - 1)));
+          } else if (
+            key === 'minDamage'
+            || key === 'maxDamage'
+          ) {
+            skillValue = Math.round(value * (1 + ((jsonSkillInfo.next[String(key)] * ((x / 18) - 1)) / 100)));
           } else {
             skillValue = value + (jsonSkillInfo.next[String(key)] * ((x / 18) - 1));
           }
